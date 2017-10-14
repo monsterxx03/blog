@@ -1,14 +1,15 @@
 baseURL = "https://blog.monsterxx03.com"
 title = "Shining Moon"
+publishDir="docs"
 # for smart copyright line, leave this blank and check [params.copyright]
-copyright = ""
+copyright = "monsterxx03"
 
 theme = "minimo"
 
 disqusShortname = ""
 googleAnalytics = ""
 
-Paginate = 5
+Paginate = 10
 preserveTaxonomyNames = false
 
 enableRobotsTXT = true # generate robots.txt
