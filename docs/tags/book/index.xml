@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Book on Shining Moon</title>
+    <link>https://blog.monsterxx03.com/tags/book/</link>
+    <description>Recent content in Book on Shining Moon</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 17 May 2017 09:12:44 +0000</lastBuildDate>
+    
+	<atom:link href="https://blog.monsterxx03.com/tags/book/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Designing data intensive application, reading notes, Part 2</title>
+      <link>https://blog.monsterxx03.com/2017/05/17/designing-data-intensive-application-reading-notes-part-2/</link>
+      <pubDate>Wed, 17 May 2017 09:12:44 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/05/17/designing-data-intensive-application-reading-notes-part-2/</guid>
+      <description>Chapter 4, 5, 6
+Encoding formats xml, json, msgpack are text based encoding format, they can&amp;#8217;t carry binary bytes (useless you encode them in base64, size grows 33%). And they cary schema definition with data, wast a lot of space.
+thrift, protobuf are binary format, can take binary bytes, only carry data, the schema is defined with IDL(interface definition language). They have code generation tool to generate code to encode and decode data, along with check.</description>
+    </item>
+    
+    <item>
+      <title>Designing data intensive application, reading notes, Part 1</title>
+      <link>https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/</link>
+      <pubDate>Thu, 04 May 2017 16:27:52 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/</guid>
+      <description>&lt;p&gt;Notes when reading chapter 2 &amp;#8220;Data models and query languages&amp;#8221;, chapter 3 &amp;#8220;Storage and retrieval&amp;#8221;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Concurrency in Go, Reading Notes</title>
+      <link>https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/</link>
+      <pubDate>Wed, 19 Apr 2017 16:26:58 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/</guid>
+      <description>&lt;p&gt;A few notes taken when reading &lt;Concurrency in Go&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

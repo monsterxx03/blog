@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Shining Moon</title>
+    <link>https://blog.monsterxx03.com/tags/</link>
+    <description>Recent content in Tags on Shining Moon</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 23 Jun 2017 09:40:58 +0000</lastBuildDate>
+    
+	<atom:link href="https://blog.monsterxx03.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Aptly</title>
+      <link>https://blog.monsterxx03.com/tags/aptly/</link>
+      <pubDate>Fri, 23 Jun 2017 09:40:58 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/aptly/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Aws</title>
+      <link>https://blog.monsterxx03.com/tags/aws/</link>
+      <pubDate>Fri, 29 Sep 2017 08:55:18 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/aws/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Bigtable</title>
+      <link>https://blog.monsterxx03.com/tags/bigtable/</link>
+      <pubDate>Sun, 11 Dec 2016 16:20:24 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/bigtable/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Book</title>
+      <link>https://blog.monsterxx03.com/tags/book/</link>
+      <pubDate>Wed, 17 May 2017 09:12:44 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/book/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Coredump</title>
+      <link>https://blog.monsterxx03.com/tags/coredump/</link>
+      <pubDate>Sat, 15 Jul 2017 02:35:52 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/coredump/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Database</title>
+      <link>https://blog.monsterxx03.com/tags/database/</link>
+      <pubDate>Thu, 04 May 2017 16:27:52 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/database/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Distribute</title>
+      <link>https://blog.monsterxx03.com/tags/distribute/</link>
+      <pubDate>Wed, 22 Mar 2017 16:22:32 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/distribute/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Elasticsearch</title>
+      <link>https://blog.monsterxx03.com/tags/elasticsearch/</link>
+      <pubDate>Wed, 22 Mar 2017 16:22:32 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/elasticsearch/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Fpm</title>
+      <link>https://blog.monsterxx03.com/tags/fpm/</link>
+      <pubDate>Fri, 23 Jun 2017 09:40:58 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/fpm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Gfs</title>
+      <link>https://blog.monsterxx03.com/tags/gfs/</link>
+      <pubDate>Sat, 19 Nov 2016 16:18:41 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/gfs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Golang</title>
+      <link>https://blog.monsterxx03.com/tags/golang/</link>
+      <pubDate>Wed, 19 Apr 2017 16:26:58 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/golang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Mysql</title>
+      <link>https://blog.monsterxx03.com/tags/mysql/</link>
+      <pubDate>Wed, 05 Apr 2017 16:23:32 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/mysql/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Paper</title>
+      <link>https://blog.monsterxx03.com/tags/paper/</link>
+      <pubDate>Sun, 11 Dec 2016 16:20:24 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/paper/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Python</title>
+      <link>https://blog.monsterxx03.com/tags/python/</link>
+      <pubDate>Mon, 05 Jun 2017 09:50:44 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Redshift</title>
+      <link>https://blog.monsterxx03.com/tags/redshift/</link>
+      <pubDate>Fri, 21 Jul 2017 03:10:58 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/redshift/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Route53</title>
+      <link>https://blog.monsterxx03.com/tags/route53/</link>
+      <pubDate>Fri, 29 Sep 2017 08:55:18 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/route53/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>S3</title>
+      <link>https://blog.monsterxx03.com/tags/s3/</link>
+      <pubDate>Sat, 19 Aug 2017 07:28:16 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/s3/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Spark</title>
+      <link>https://blog.monsterxx03.com/tags/spark/</link>
+      <pubDate>Fri, 21 Jul 2017 03:10:58 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/spark/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>System</title>
+      <link>https://blog.monsterxx03.com/tags/system/</link>
+      <pubDate>Sat, 15 Jul 2017 02:35:52 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/system/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Type Moon</title>
+      <link>https://blog.monsterxx03.com/tags/type-moon/</link>
+      <pubDate>Sat, 06 Aug 2016 16:16:23 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/type-moon/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Ubuntu</title>
+      <link>https://blog.monsterxx03.com/tags/ubuntu/</link>
+      <pubDate>Sat, 15 Jul 2017 02:35:52 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/ubuntu/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

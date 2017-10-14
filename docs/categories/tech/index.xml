@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tech on Shining Moon</title>
+    <link>https://blog.monsterxx03.com/categories/tech/</link>
+    <description>Recent content in Tech on Shining Moon</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 29 Sep 2017 08:55:18 +0000</lastBuildDate>
+    
+	<atom:link href="https://blog.monsterxx03.com/categories/tech/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Get all invalid PTR record on  Route53</title>
+      <link>https://blog.monsterxx03.com/2017/09/29/get-all-invalid-ptr-record-on-route53/</link>
+      <pubDate>Fri, 29 Sep 2017 08:55:18 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/09/29/get-all-invalid-ptr-record-on-route53/</guid>
+      <description>I use autoscaling group to manage stateless servers. Servers goes up and done every day.
+Once server is up, I will add a PTR record for it&amp;#8217;s internal ip. But when it&amp;#8217;s down, I didn&amp;#8217;t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.
+To cleanup those PTR record in realtime, you can write a lambda function, use server termination event as trigger.</description>
+    </item>
+    
+    <item>
+      <title>Build private static website on S3</title>
+      <link>https://blog.monsterxx03.com/2017/08/19/build-private-staticwebsite-on-s3/</link>
+      <pubDate>Sat, 19 Aug 2017 07:28:16 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/08/19/build-private-staticwebsite-on-s3/</guid>
+      <description>Build static website on S3 is very easy, but by default, it can be accessed by open internet.It will be super helpful if we can build website only available in VPC. Then we can use it to host internal deb repo, doc site&amp;#8230;
+Steps are very easy, you only need VPC endpoints and S3 bucket policy.
+AWS api is open to internet, if you need to access S3 in VPC, your requests will pass through VPC&amp;#8217;s internet gateway or NAT gateway.</description>
+    </item>
+    
+    <item>
+      <title>Use redshift spectrum to do query on s3</title>
+      <link>https://blog.monsterxx03.com/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/</link>
+      <pubDate>Fri, 21 Jul 2017 03:10:58 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/</guid>
+      <description>使用 redshift spectrum 查询 S3 数据 通常使用 redshift 做数据仓库的时候要做大量的 ETL 工作，一般流程是把各种来源的数据捣鼓捣鼓丢到 S3 上去，再从 S3 倒腾进 redshift. 如果你有大量的历史数据要导进 redshift，这个过程就会很痛苦，redshift 对一次倒入大量数据并不友好，你要分批来做。
+今年4月的时候， redshift 发布了一个新功能 spectrum, 可以从 redshift 里直接查询 s3 上的结构化数据。最近把部分数据仓库直接迁移到了 spectrum, 正好来讲讲。
+动机 Glow 的数据仓库建在 redshift 上， 又分成了两个集群，一个 ssd 的集群存放最近 4 个月的数据，供产品分析，metrics report, debug 等等 adhoc 的查询。4个月之前的数据存放在一个 hdd 的集群里，便宜容量大，查询慢。
+但是时间长了 hdd 的集群也是有扩容需求的，而使用频率又实在是不高，其实很浪费, 这就是迁移到 spectrum 的动机。
+使用 Spectrum Redshift spectrum 底层其实是基于 AWS 的另一个服务 athena 的。athena 是个 Presto 和 Hive 杂交产物， DDL 用 Hive 语法， 查询用的 sql 由 Presto 支持, 感觉怪怪的，这里不多展开讲 athena, 知道 redshift spectrum 其实是通过 athena 对接的 s3 就行了。</description>
+    </item>
+    
+    <item>
+      <title>Enable coredump on ubuntu 16.04</title>
+      <link>https://blog.monsterxx03.com/2017/07/15/__trashed/</link>
+      <pubDate>Sat, 15 Jul 2017 02:35:52 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/07/15/__trashed/</guid>
+      <description>Coredump file is useful for debuging program crash. This post will show several settings related to coredump.
+Enable coredump If you run program from shell , enable coredump via unlimit -c unlimited， then check unlimit -a | grep core, if it shows unlimited, coredump is enabled for your current session.
+If your program is hosted by systemd, you need to edit your program&amp;#8217;s service unit file&amp;#8217;s [Service] section, add LimitCORE=infinity to enable coredump.</description>
+    </item>
+    
+    <item>
+      <title>Build deb repository with fpm , aptly and s3</title>
+      <link>https://blog.monsterxx03.com/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/</link>
+      <pubDate>Fri, 23 Jun 2017 09:40:58 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/</guid>
+      <description>I&amp;#8217;m lazy, I don&amp;#8217;t want to be deb/rpm expert, I don&amp;#8217;t want to maintain repo server. I want as less maintenance effort as possible. 🙂
+Combine tools fpm, aptly with aws s3, we can do it.
+Use fpm to convert python package to deb fpm can transform python/gem/npm/dir/&amp;#8230; to deb/rpm/solaris/&amp;#8230; packages
+Example:
+fpm -s python -t deb -m xyj.asmy@gmail.com --verbose -v 0.10.1 --python-pip /usr/local/pip Flask  It will transform Flask 0.</description>
+    </item>
+    
+    <item>
+      <title>Debug python performance issue with pyflame</title>
+      <link>https://blog.monsterxx03.com/2017/06/05/debug-python-performance-issue-with-pyflame/</link>
+      <pubDate>Mon, 05 Jun 2017 09:50:44 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/06/05/debug-python-performance-issue-with-pyflame/</guid>
+      <description>pyflame is an opensource tool developed by uber: https://github.com/uber/pyflame
+It can take snapshots of running python process, combined with flamegraph.pl, can output flamegraph picture of python call stacks. Help analyze bottleneck of python program, needn&amp;#8217;t inject any perf code into your application, and overhead is very low.
+Basic Usage sudo pyflame -s 10 -x -r 0.001 $pid | ./flamegraph.pl &amp;gt; perf.svg
+ -s, how many seconds to run -r, sample rate (seconds)  Your output will be something like following:</description>
+    </item>
+    
+    <item>
+      <title>Designing data intensive application, reading notes, Part 2</title>
+      <link>https://blog.monsterxx03.com/2017/05/17/designing-data-intensive-application-reading-notes-part-2/</link>
+      <pubDate>Wed, 17 May 2017 09:12:44 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/05/17/designing-data-intensive-application-reading-notes-part-2/</guid>
+      <description>Chapter 4, 5, 6
+Encoding formats xml, json, msgpack are text based encoding format, they can&amp;#8217;t carry binary bytes (useless you encode them in base64, size grows 33%). And they cary schema definition with data, wast a lot of space.
+thrift, protobuf are binary format, can take binary bytes, only carry data, the schema is defined with IDL(interface definition language). They have code generation tool to generate code to encode and decode data, along with check.</description>
+    </item>
+    
+    <item>
+      <title>Designing data intensive application, reading notes, Part 1</title>
+      <link>https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/</link>
+      <pubDate>Thu, 04 May 2017 16:27:52 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/</guid>
+      <description>&lt;p&gt;Notes when reading chapter 2 &amp;#8220;Data models and query languages&amp;#8221;, chapter 3 &amp;#8220;Storage and retrieval&amp;#8221;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Infrastructure as Code</title>
+      <link>https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/</link>
+      <pubDate>Fri, 21 Apr 2017 16:25:07 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/</guid>
+      <description>&lt;p&gt;Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.&lt;/p&gt;
+
+&lt;p&gt;You will come to:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what&amp;#8217;s the DHCP option set?), navigate around AWS console is okay, but not convenient.&lt;/li&gt;
+&lt;li&gt;Who did what to which resource at when? AWS have a service called &lt;code&gt;Config&lt;/code&gt;, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Ideally, we should manage AWS resources like code, all changes kept in VCS, so called &lt;code&gt;Infrastructure as Code&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#8217;ve tried three ways to do it:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ansible&lt;/li&gt;
+&lt;li&gt;CloudFormation&lt;/li&gt;
+&lt;li&gt;terraform&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In this article, I&amp;#8217;ll compare them, however, the conclusion is to use terraform 🙂&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Concurrency in Go, Reading Notes</title>
+      <link>https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/</link>
+      <pubDate>Wed, 19 Apr 2017 16:26:58 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/</guid>
+      <description>&lt;p&gt;A few notes taken when reading &lt;Concurrency in Go&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>MySQL partition table</title>
+      <link>https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/</link>
+      <pubDate>Wed, 05 Apr 2017 16:23:32 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/</guid>
+      <description>&lt;h1 id=&#34;overview&#34;&gt;Overview&lt;/h1&gt;
+
+&lt;p&gt;MySQL has buildin partition table support, which can help split data accross multi tables,&lt;/p&gt;
+
+&lt;p&gt;and provide a unified query interface as normal tables.&lt;/p&gt;
+
+&lt;p&gt;Benefit:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly.&lt;/li&gt;
+&lt;li&gt;Speed up query based on partition key(partitoin pruning)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Limit:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;For partition table, every unique key must use every column in table&amp;#8217;s partition expression(include primary key)&lt;/li&gt;
+&lt;li&gt;For innodb engine, paritioned table can&amp;#8217;t have foreign key,and can&amp;#8217;t have columns referenced by foreign keys.&lt;/li&gt;
+&lt;li&gt;For MyISAM engine, mysql version &amp;lt;= 5.6.5, DML operation will lock all partition as a whole.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>ElasticSearch cluster</title>
+      <link>https://blog.monsterxx03.com/2017/03/22/elasticsearch-cluster/</link>
+      <pubDate>Wed, 22 Mar 2017 16:22:32 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/03/22/elasticsearch-cluster/</guid>
+      <description>&lt;p&gt;In this article, let&amp;#8217;s talk about ElasticSearch&amp;#8217;s cluster mode, which means multi nodes ElasticSearch.&lt;/p&gt;
+
+&lt;h2 id=&#34;basic-concepts&#34;&gt;Basic concepts&lt;/h2&gt;
+
+&lt;p&gt;cluster: A collection of server nodes with same &lt;code&gt;cluster.name&lt;/code&gt; settings in elasticsearch.yaml&lt;/p&gt;
+
+&lt;p&gt;primary shards: Divide a index into multi parts(by default 5), shards of an index can be distributed over multi nodes. It enables scale index horizontally and make access to index parallelly(accross multi nodes).&lt;/p&gt;
+
+&lt;p&gt;replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Bigtable notes</title>
+      <link>https://blog.monsterxx03.com/2016/12/11/bigtable-notes/</link>
+      <pubDate>Sun, 11 Dec 2016 16:20:24 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2016/12/11/bigtable-notes/</guid>
+      <description>&lt;p&gt;杂乱笔记，辅助读paper.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>GFS notes</title>
+      <link>https://blog.monsterxx03.com/2016/11/19/gfs-notes/</link>
+      <pubDate>Sat, 19 Nov 2016 16:18:41 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2016/11/19/gfs-notes/</guid>
+      <description>&lt;p&gt;看了下很久前 google 的 GFS 论文， 做点笔记。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Migrate to encrypted RDS</title>
+      <link>https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/</link>
+      <pubDate>Fri, 28 Oct 2016 16:17:30 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/</guid>
+      <description>&lt;p&gt;最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.&lt;/p&gt;
+
+&lt;p&gt;比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>MySQL 索引优化</title>
+      <link>https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/</link>
+      <pubDate>Tue, 26 Jul 2016 16:13:54 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/</guid>
+      <description>&lt;p&gt;什么是索引,索引怎么建这些基本的就跳过不谈了,整理一些前段时间优化线上 SQL 查询时碰到的一些问题. 主要解决下面几个问题:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;建立索引怎样选择合适的列.&lt;/li&gt;
+&lt;li&gt;怎样让 SQL 能有效利用索引.&lt;/li&gt;
+&lt;li&gt;如果对 SQL 效率进行评估(即设置索引前后是否真的有性能提升).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Redshift as data warehouse</title>
+      <link>https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/</link>
+      <pubDate>Sat, 16 Jul 2016 16:11:39 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/</guid>
+      <description>&lt;p&gt;Glow 的 server infrastructure 全部搭建在 AWS 上，一般要选择一些基础服务的时候，总是先看 AWS, 只要功能和成本符合要求，不会特意选择开源方案。&lt;/p&gt;
+
+&lt;p&gt;数据仓库我们选择了 AWS 的 Redshift.&lt;/p&gt;
+
+&lt;p&gt;在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>MySQL innodb buffer pool</title>
+      <link>https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/</link>
+      <pubDate>Sat, 16 Jul 2016 16:07:14 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/</guid>
+      <description>&lt;p&gt;最近在对公司的 MySQL 服务器做性能优化, 一直对 innodb 的内存使用方式不是很清楚, 乘这机会做点总结.&lt;/p&gt;
+
+&lt;p&gt;在配置 MySQL 的时候, 一般都会需要设置 _innodb_buffer_pool&lt;em&gt;size&lt;/em&gt;, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.&lt;/p&gt;
+
+&lt;p&gt;之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

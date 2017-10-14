@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Route53 on Shining Moon</title>
+    <link>https://blog.monsterxx03.com/tags/route53/</link>
+    <description>Recent content in Route53 on Shining Moon</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 29 Sep 2017 08:55:18 +0000</lastBuildDate>
+    
+	<atom:link href="https://blog.monsterxx03.com/tags/route53/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Get all invalid PTR record on  Route53</title>
+      <link>https://blog.monsterxx03.com/2017/09/29/get-all-invalid-ptr-record-on-route53/</link>
+      <pubDate>Fri, 29 Sep 2017 08:55:18 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/09/29/get-all-invalid-ptr-record-on-route53/</guid>
+      <description>I use autoscaling group to manage stateless servers. Servers goes up and done every day.
+Once server is up, I will add a PTR record for it&amp;#8217;s internal ip. But when it&amp;#8217;s down, I didn&amp;#8217;t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.
+To cleanup those PTR record in realtime, you can write a lambda function, use server termination event as trigger.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.
+
+比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.
+
+'>
+
+<meta property='og:title' content='Migrate to encrypted RDS • Shining Moon'>
+<meta property='og:description' content='最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.
+
+比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.
+
+'>
+<meta property='og:url' content='https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/'>
+<meta property='og:site_name' content='Shining Moon'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='AWS'><meta property='article:tag' content='Database'><meta property='article:tag' content='MySQL'><meta property='article:published_time' content='2016-10-28T16:17:30Z'/><meta property='article:modified_time' content='2016-10-28T16:17:30Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.29" />
+
+  <title>Migrate to encrypted RDS • Shining Moon</title>
+  <link rel='canonical' href='https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-post'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>HOME</a>
+    </li>
+  <li>
+      <a href='/categories/tech/'>Tech</a>
+    </li>
+  <li>
+      <a href='/categories/life/'>Life</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Shining Moon</p>
+          
+          <p class='site-description subtitle'>百种弊病,皆从懒生</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Migrate to encrypted RDS</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2016-10-28T16:17:30Z'>2016, Oct 28</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+2 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  <p>最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.</p>
+
+<p>比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.</p>
+
+<p></p>
+
+<p>主要有以下两种方法:</p>
+
+<ol>
+<li>通过RDS 的snapshot 做迁移。</li>
+<li>通过mysqldump 手工迁移。</li>
+</ol>
+
+<p>准备工作, 在原db上执行:</p>
+
+<ul>
+<li>show variables like &#8216;sync_binlog&#8217;, 确保设置成1, 否则binlog可能会不全(通过db parameter group 设置).</li>
+<li>call mysql.rds_set_configuration(&#8216;binlog retention hours&#8217;, 24) , 默认rds 不保留binlog 文件, 让它保留24 小时，方便我们迁移。</li>
+</ul>
+
+<h2 id="snapshot-方式">Snapshot 方式</h2>
+
+<ol>
+<li>将线上应用停止</li>
+<li>将db 设置为read only
+
+<ul>
+<li>FLUSH TABLES WITH READ LOCK;</li>
+<li>SET GLOBAL read_only = ON;</li>
+</ul></li>
+<li>获取当前数据库的binlog 文件和位置: <code>show master status</code></li>
+<li>对当前 db 打snapshot</li>
+<li>恢复线上数据库, 和应用程序
+
+<ul>
+<li>SET GLOBAL read_only = OFF;</li>
+<li>UNLOCK TABLES;</li>
+</ul></li>
+<li>将完成的snapshot 执行 Copy, Copy 的时候可以选择使用 KMS 进行加密。</li>
+
+<li><p>使用完成的加密 snapshot launch 新的 db instance, 注意 security group 和db parameter group 只能在db 创建后修改，为了让 db parameter group</p>
+
+<p>生效，还要重启一次新db.</p></li>
+
+<li><p>登陆新db, 设置replication 对象为原 db: <code>call mysql.rds_set_external_master('&lt;src_db_host&gt;', 3306, '&lt;repl_user&gt;', '&lt;password&gt;', 'log_file', position, 0)</code>.</p>
+
+<p>log_file, 和 postition 由第3步获得，最后一个参数0表示不使用ssl.</p></li>
+
+<li><p>开始replication, <code>call mysql.rds_start_replication</code></p></li>
+
+<li><p>在新 db 上用 <code>show slave status</code>, 检查 <code>Seconds_Behind_Master</code> 字段，如果变成0，表示slave已经追上了master.</p></li>
+
+<li><p>准备执行切换，再次停止所有的应用，然后停止replication:</p>
+
+<ul>
+<li>call mysql.rds_stop_replication;</li>
+<li>call mysql.rds_reset_external_master</li>
+</ul></li>
+
+<li><p>将应用程序的db url 指向新的db后重新启动应用。</p></li>
+</ol>
+
+<h2 id="mysqldump方式">mysqldump方式</h2>
+
+<p>mysqldump 步骤和snapshot 差不多，只不过把创建snapshot的过程换成mysqldump 出文件，恢复过程变成先手工launch一台</p>
+
+<p>加密的新db，然后在把文件倒入。</p>
+
+<p>详细的过程可以参考 AWS 的这篇文档:</p>
+
+<p><a href="http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/MySQL.Procedural.Importing.NonRDSRepl.html" target="_blank">http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/MySQL.Procedural.Importing.NonRDSRepl.html</a></p>
+
+<h2 id="尽量减少server-的-down-time">尽量减少server 的 down time</h2>
+
+<p>以上两种方式都需要将将live db 设置成 read_only, 以获得准确的 binlog 文件和position. 在做snapshot 和dump的过程</p>
+
+<p>中需要停机较长的时间， 但这两种方式都比较保险。</p>
+
+<p>还有一种方式在snapshot的基础上做一些改进，可以只stop，start 一次应用完成迁移, 中间不需要等。</p>
+
+<p>在创建snapshot 的时候，不停应用，也不设置read_only. 然后从加密的 snapshot 创建新的db.</p>
+
+<p>在原db 和新 db 上执行， <code>show binary logs</code>, 获取文件列表,</p>
+
+<p>原db 上的输出:</p>
+
+<pre><code>mysql-bin-changelog.138398  3221126
+mysql-bin-changelog.138399  4136769
+mysql-bin-changelog.138400  74066
+mysql-bin-changelog.138401  3637534
+mysql-bin-changelog.138402  6071405
+</code></pre>
+
+<p>新db上的输出:</p>
+
+<pre><code>mysql-bin-changelog.138398  3221126
+mysql-bin-changelog.138399  4136769
+mysql-bin-changelog.138400  74066
+mysql-bin-changelog.138401  35261
+mysql-bin-changelog.138402  1768
+</code></pre>
+
+<p>其实就是找到binlog 文件 size 出现分歧的地方，这里是138401. 说明新db 的binlog是停在了这个文件。</p>
+
+<p>我的做法是直接从138401 文件，position 0 开始做sync.</p>
+
+<p>这样的做法会导致部分binlog在新db上被重复执行, 但我们线上的sql DML操作只有update/insert, 没有delete, 且insert 的表</p>
+
+<p>都有 unique key 约束。</p>
+
+<p>当插入重复数据的时候，replication 会停止， 报<code>show slave status</code> 能看到 duplicate entry error 的错误，此时可以直接 <code>call mysql.rds_skip_repl_error</code>, 来跳过错误往下执行。</p>
+
+<p>同一row 被update多次也没有问题，反正最终值还是对的。</p>
+
+<p>如果有delete语句就不能这么做了，当然如果你能忍受少部分数据不一致，也可以从下一个binlog 文件开始做sync, 否则只能乖乖停机按标准流程走。</p>
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='categories'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/tech'>Tech</a></div>
+<div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/aws'>Aws</a>, <a class='tag' href='/tags/database'>Database</a>, <a class='tag' href='/tags/mysql'>Mysql</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/2016/08/06/witch-night/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>魔法使</a>
+    </div><div class='next-entry'>
+      <a href='/2016/11/19/gfs-notes/'>
+        <span class='screen-reader'>Next post: </span>GFS notes<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://twitter.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Twitter account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:xyj.asmy@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+      
+
+       &copy; 2017 monsterxx03 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

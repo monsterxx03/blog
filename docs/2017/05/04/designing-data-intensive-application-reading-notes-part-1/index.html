@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Notes when reading chapter 2 &#8220;Data models and query languages&#8221;, chapter 3 &#8220;Storage and retrieval&#8221;
+
+'>
+
+<meta property='og:title' content='Designing data intensive application, reading notes, Part 1 • Shining Moon'>
+<meta property='og:description' content='Notes when reading chapter 2 &#8220;Data models and query languages&#8221;, chapter 3 &#8220;Storage and retrieval&#8221;
+
+'>
+<meta property='og:url' content='https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/'>
+<meta property='og:site_name' content='Shining Moon'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='book'><meta property='article:tag' content='Database'><meta property='article:published_time' content='2017-05-04T16:27:52Z'/><meta property='article:modified_time' content='2017-05-04T16:27:52Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.29" />
+
+  <title>Designing data intensive application, reading notes, Part 1 • Shining Moon</title>
+  <link rel='canonical' href='https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-post'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>HOME</a>
+    </li>
+  <li>
+      <a href='/categories/tech/'>Tech</a>
+    </li>
+  <li>
+      <a href='/categories/life/'>Life</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Shining Moon</p>
+          
+          <p class='site-description subtitle'>百种弊病,皆从懒生</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Designing data intensive application, reading notes, Part 1</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2017-05-04T16:27:52Z'>2017, May 04</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+4 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  <p>Notes when reading chapter 2 &#8220;Data models and query languages&#8221;, chapter 3 &#8220;Storage and retrieval&#8221;</p>
+
+<p></p>
+
+<h2 id="data-model">Data model</h2>
+
+<h3 id="document-model-like-mongodb">Document model(like mongoDB)</h3>
+
+<p>good parts:</p>
+
+<ul>
+<li>schema less, do DDL on relational database is painful,</li>
+<li>can store all related objects in one document(maybe not so good &#8230; refer by id is more flexible)</li>
+<li>easy to scale in size.</li>
+</ul>
+
+<p>bad parts:</p>
+
+<ul>
+<li>hard to describe many-to-many relationship</li>
+<li>hard to do join</li>
+<li>lack of transaction</li>
+</ul>
+
+<h3 id="graph-model">Graph model</h3>
+
+<p>Tow categories:</p>
+
+<ol>
+<li>property graph model, like: Neo4j, Titan</li>
+<li>triple-store model, like: Datomic, AllegroGraph. triple means: (subject, predicate, object), eg: (Jim, likes, apple)</li>
+</ol>
+
+<p>Graph model used in case: everything is potentially related to everything.</p>
+
+<p>Different type of objects are placed in same graph, your query start at a vertex to traverse the graph to get result.</p>
+
+<h2 id="storage-and-retrieval">Storage and retrieval</h2>
+
+<h3 id="sstable-and-lsm-tree">SSTable and LSM tree</h3>
+
+<p>From Bigtable, opensource: LevelDB, RocksDB.</p>
+
+<p>Insert,update,delete key just append a log on disk, maintain memtable(maybe a B tree) in RAM.</p>
+
+<p>Write operation is fast(sequential writes on disk). Read operation need to check memtable first, if not found, search on disk, from newest sstable to oldest, since data is stored in sorted order, do range query on disk is quick(scan block&#8217;s maxium and minium, like redshift store data by sortkey).</p>
+
+<p>To reclaim disk space, will do compaction for sstable on disk(merge duplicated keys, only keep the latest one).</p>
+
+<p>Tow strategies to decide when to do compaction: size-tiered and leveled.</p>
+
+<p>HBase use size-tired, Cassandra use both, LevelDB and RocksDB use leveled compaction.</p>
+
+<p>size-tired: newer and smaller SSTables are successively merged into older and larger SSTables.</p>
+
+<p>leveled: key range is split up into smaller SSTables and older data is moved into separate &#8220;levels&#8221;, allows the compaction to proceed more incrementally and use less disk space.</p>
+
+<p>downside of LSM:</p>
+
+<ul>
+<li>compaction can will cause high write throughput.</li>
+<li>if write throughput is high, and compaction is not configured carefully, compaction maybe can&#8217;t keep up with incoming write, then the unmerged segments on disk keeps growing.</li>
+</ul>
+
+<h3 id="b-tree">B tree</h3>
+
+<p>B tree keep key-value pairs sorted by key, allows efficient key-value lookups and range query, this is like LSM tree.</p>
+
+<p>B tree break database into fixed-size blocks or pages, 4 KB(usually), read or write one page at a time. Every page can refer to another, they construct a tree together.</p>
+
+<p>If key number is n, tree depth is O(log n).</p>
+
+<p>LSM is appendonly, but B tree will update pages in place, if the size is over 4 KB, one page will be splitted into two pages, and update their parent page&#8217;s reference. If database crashed during this process, the index will be corrupted. To avoid it, B tree use WAL(write head log) or called redo-log to track every B tree modification, it&#8217;s an append-only file, all operation must be write to it before apply to B tree. If database crashed, it can be used to restore back to a consistent state.</p>
+
+<p>B tree optimization:</p>
+
+<ul>
+<li>LMDB don&#8217;t modify page in place, it do it copy-on-write, a modified page is written to a different location and a new version of parent pages in the tree is created.</li>
+<li>Don&#8217;t store whole key in pages, only provide a few words to act as boundaries between key ranges. Lead to higher branching factor, and fewer level.</li>
+<li>Try to maintain leaf pages appear in sequential order on disk, then range scan for keys will be efficient.</li>
+<li>Add pointers for leaf pages, to refer to its sibling pages on left and right, then scaning keys in order needn&#8217;t go back to parent pages.</li>
+</ul>
+
+<h3 id="data-warehouse">Data warehouse</h3>
+
+<p>Stars and snowflakes: fact table and dimension table.</p>
+
+<p>Fact table usually stores events, which is very large in number, some cols are attributes, other columns are foreign keys refer to dimension tables. every row in a fact table is an event.</p>
+
+<p>Dimension tables: user table, product list table&#8230; usually means: who, what, where, how, why &#8230; of the event in fact table.</p>
+
+<p>Data warehouse usually designed as columnar storage, benefits:</p>
+
+<ul>
+<li>can only fetch need columns from table (fact table usually have hundreds of columns)</li>
+<li>can use different compression algorithms for every columns.</li>
+</ul>
+
+<p>Columnar storage store data on disk by sortkey, # &gt;= 1, advantages:</p>
+
+<ul>
+<li>Help narrow down query range quick.</li>
+<li>If the firt sortkey don&#8217;t have many distinct values, there will be long sequences with same values, then will have great compression ratio.</li>
+</ul>
+
+<p>Columbar storage usually replicate data to different nodes for HA, it&#8217;s possible to use different sort order on replication, when querying, master node can decide choose which version based on query, Vertica did so.</p>
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='categories'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/tech'>Tech</a></div>
+<div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/book'>Book</a>, <a class='tag' href='/tags/database'>Database</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/2017/04/23/4%E6%9C%88%E5%91%A8%E6%9C%AB%E6%9D%82%E8%AE%B0/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>4月周末杂记</a>
+    </div><div class='next-entry'>
+      <a href='/2017/05/17/designing-data-intensive-application-reading-notes-part-2/'>
+        <span class='screen-reader'>Next post: </span>Designing data intensive application, reading notes, Part 2<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://twitter.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Twitter account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:xyj.asmy@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+      
+
+       &copy; 2017 monsterxx03 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Chapter 4, 5, 6
+Encoding formats xml, json, msgpack are text based encoding format, they can&#8217;t carry binary bytes (useless you encode them in base64, size grows 33%). And they cary schema definition with data, wast a lot of space.
+thrift, protobuf are binary format, can take binary bytes, only carry data, the schema is defined with IDL(interface definition language). They have code generation tool to generate code to encode and decode data, along with check.'>
+
+<meta property='og:title' content='Designing data intensive application, reading notes, Part 2 • Shining Moon'>
+<meta property='og:description' content='Chapter 4, 5, 6
+Encoding formats xml, json, msgpack are text based encoding format, they can&#8217;t carry binary bytes (useless you encode them in base64, size grows 33%). And they cary schema definition with data, wast a lot of space.
+thrift, protobuf are binary format, can take binary bytes, only carry data, the schema is defined with IDL(interface definition language). They have code generation tool to generate code to encode and decode data, along with check.'>
+<meta property='og:url' content='https://blog.monsterxx03.com/2017/05/17/designing-data-intensive-application-reading-notes-part-2/'>
+<meta property='og:site_name' content='Shining Moon'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='book'><meta property='article:published_time' content='2017-05-17T09:12:44Z'/><meta property='article:modified_time' content='2017-05-17T09:12:44Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.29" />
+
+  <title>Designing data intensive application, reading notes, Part 2 • Shining Moon</title>
+  <link rel='canonical' href='https://blog.monsterxx03.com/2017/05/17/designing-data-intensive-application-reading-notes-part-2/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-post'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>HOME</a>
+    </li>
+  <li>
+      <a href='/categories/tech/'>Tech</a>
+    </li>
+  <li>
+      <a href='/categories/life/'>Life</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Shining Moon</p>
+          
+          <p class='site-description subtitle'>百种弊病,皆从懒生</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Designing data intensive application, reading notes, Part 2</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2017-05-17T09:12:44Z'>2017, May 17</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+5 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p>Chapter 4, 5, 6</p>
+
+<h2 id="encoding-formats">Encoding formats</h2>
+
+<p>xml, json, msgpack are text based encoding format, they can&#8217;t carry binary bytes (useless you encode them in base64, size grows 33%). And they cary schema definition with data, wast a lot of space.</p>
+
+<p>thrift, protobuf are binary format, can take binary bytes, only carry data, the schema is defined with IDL(interface definition language). They have code generation tool to generate code to encode and decode data, along with check. Every field of data is binded with a tag(mapped to a field in IDL file). If a field is defined is required, it can&#8217;t by removed or change tag value, otherwise old code will not be able to decode it.</p>
+
+<p>avro (used in hadoop), have a write schema and a read schema, when store a large file in avro format(contain many records with same schema), the avro write schama file is appended to the data. If use avro in RPC, the avro schema is exchanged during connection setup. When decoding avro, the lib will look both write schema and read schema, and translate write schema into read schema. Forward compatibility means that you can have a new version of the schema as writer and an old version of the schema as reader, backward compatibility means that you can have a new version of the schema as reader and an old version as writer.</p>
+
+<h2 id="replication">Replication</h2>
+
+<p>purpose:</p>
+
+<ul>
+<li>reduce latency (replication via geo location)</li>
+<li>HA</li>
+<li>increase read throughput</li>
+</ul>
+
+<h3 id="sinle-leader-replication">sinle-leader replication</h3>
+
+<p>Also called master/slave or active/passive</p>
+
+<p>Use case: postgresql, MySQL, Oracle Data guard, SQLServer Always On, MongoDB, RethinkDB,Espresso, Kafka, RabbitMQ, DRBD&#8230;.</p>
+
+<p>If replication is synchronous, leader is usually setup to replicate to one slave synchronously, to other slaves asynchronously.</p>
+
+<p>Complete asynchronously replication is used more often.</p>
+
+<p>Process of setting up new slave:</p>
+
+<ul>
+<li>Take snapshot of leader&#8217;s database, without lock if possible. (like innobackupex for MySQL)</li>
+<li>Copy snapshot to slave.</li>
+<li>Slave connects to the leader and requests all the data changes that have happened since the snapshot was taken (snapshot must have position info)</li>
+<li>slave wait until catch up with master, then it can handle incoming data.</li>
+</ul>
+
+<p>Failover for leader:</p>
+
+<ul>
+<li>Determining leader has failed. Failure may have many reasons, usually use timeout.</li>
+<li>Choosing a new leader. Choose slave with least lag with leader, let all slave agree on new leader involved consensus problem(raft, paxos)</li>
+<li>Reconfigure system to use new leader.</li>
+</ul>
+
+<h2 id="multi-leader">multi-leader</h2>
+
+<p>Also called master/master or active/active. Usually used in multi data centers, every data center have a master.</p>
+
+<p>Benefit:</p>
+
+<ul>
+<li>Can make database closer to users in geo, reduce latency.</li>
+<li>If one master fails, promote remote master to be new master.</li>
+</ul>
+
+<p>related projects:</p>
+
+<ul>
+<li>Tungsten Replicator for MySQL</li>
+<li>BDR for PostgreSQL</li>
+<li>GoldenGate for Oracle</li>
+</ul>
+
+<p>Some db features will be problem when working with multi-leader: autoincreasementing keys, triggers,integrity constraints.</p>
+
+<p>multi-leader replication must resolve data conflict problem:</p>
+
+<ul>
+<li>try to avoid conflict completely, if one user&#8217;s action is restricted to one leader strictly(maybe based on location), you won&#8217;t come to this issue.</li>
+</ul>
+
+<h3 id="leaderless">leaderless</h3>
+
+<p>System like amazon&#8217;s dynamo(raik, openstack swift).</p>
+
+<p>Write requests are sent to multi replicas at the same time, client needn&#8217;t wait for all replicas response ok, use formula <code>W + R &gt; N</code>(N is # of configured replicas) to decide whether the write successed or not. You can configure the value of W and R to make system more efficient for write or read requests.</p>
+
+<p>A backgroup repair will check data consistent between replicas and resolve conflicts, so value should have a version.</p>
+
+<h2 id="partition">Partition</h2>
+
+<p>Based on key range or hash.</p>
+
+<p>Hash can reduce hot spots than key range (since hash value is meanless), but if a key is very hot, may still come to problem. A protential solution is adding a random number(2 digits) at the begin or end of the key to split the key across 100 keys, but whening reading, you need to read whole 100 keys and combine them (not very clear, if need to write 100 times and read 100 times, what&#8217;s the meaning?).</p>
+
+<h3 id="rebalancing">Rebalancing</h3>
+
+<p>If you use hash, better to devide possible hash value into ranges, and assign each range a partition. But you can&#8217;t simply mod # of nodes. Since if add nodes, the value will change, and you must rebalancing all your data.</p>
+
+<p>Better way is to do presharding, create much more partitions than nodes. You can mod # of partitions to place your keys, then place the partitions to ndoes. If you need to add more nodes, just move partitions, key -&gt; partition mapping will not change. Raik, ElasticSearch, Couchbase, Voldemort and RedisCluster use this way.</p>
+
+<h3 id="dynamic-partition">Dynamic partition</h3>
+
+<p>For key range based partition, if you configure the range wrong, the distribution will be very skewed, reconfigure the range is very tedious.</p>
+
+<p>HBase and RethinkDB create partitions dynamically. If a partition grows to specific size, it will be splited into two partitions.If lots of data are deleted, it can be merged with a adjacent partition.</p>
+
+<h3 id="request-routing">Request routing</h3>
+
+<p>One way is use service discover(mostly, rely on zookeeper) to track partition assignment. When partitions changed, ZooKeeper will notify its client where to find the moved partition.</p>
+
+<p>Another way is use gossip protocol to tell all nodes the change in cluster.Request can be sent to any nodes, then the node will forward the request to appropriate node for the requested partition. (Cassandra, Raik, RedisCluster, Consul)</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='categories'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/tech'>Tech</a></div>
+<div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/book'>Book</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/2017/05/04/designing-data-intensive-application-reading-notes-part-1/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Designing data intensive application, reading notes, Part 1</a>
+    </div><div class='next-entry'>
+      <a href='/2017/06/05/debug-python-performance-issue-with-pyflame/'>
+        <span class='screen-reader'>Next post: </span>Debug python performance issue with pyflame<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://twitter.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Twitter account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:xyj.asmy@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+      
+
+       &copy; 2017 monsterxx03 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

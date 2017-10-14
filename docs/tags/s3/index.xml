@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>S3 on Shining Moon</title>
+    <link>https://blog.monsterxx03.com/tags/s3/</link>
+    <description>Recent content in S3 on Shining Moon</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 19 Aug 2017 07:28:16 +0000</lastBuildDate>
+    
+	<atom:link href="https://blog.monsterxx03.com/tags/s3/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Build private static website on S3</title>
+      <link>https://blog.monsterxx03.com/2017/08/19/build-private-staticwebsite-on-s3/</link>
+      <pubDate>Sat, 19 Aug 2017 07:28:16 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/08/19/build-private-staticwebsite-on-s3/</guid>
+      <description>Build static website on S3 is very easy, but by default, it can be accessed by open internet.It will be super helpful if we can build website only available in VPC. Then we can use it to host internal deb repo, doc site&amp;#8230;
+Steps are very easy, you only need VPC endpoints and S3 bucket policy.
+AWS api is open to internet, if you need to access S3 in VPC, your requests will pass through VPC&amp;#8217;s internet gateway or NAT gateway.</description>
+    </item>
+    
+  </channel>
+</rss>

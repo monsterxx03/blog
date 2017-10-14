@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Database on Shining Moon</title>
+    <link>https://blog.monsterxx03.com/tags/database/</link>
+    <description>Recent content in Database on Shining Moon</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 04 May 2017 16:27:52 +0000</lastBuildDate>
+    
+	<atom:link href="https://blog.monsterxx03.com/tags/database/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Designing data intensive application, reading notes, Part 1</title>
+      <link>https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/</link>
+      <pubDate>Thu, 04 May 2017 16:27:52 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/</guid>
+      <description>&lt;p&gt;Notes when reading chapter 2 &amp;#8220;Data models and query languages&amp;#8221;, chapter 3 &amp;#8220;Storage and retrieval&amp;#8221;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>MySQL partition table</title>
+      <link>https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/</link>
+      <pubDate>Wed, 05 Apr 2017 16:23:32 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/</guid>
+      <description>&lt;h1 id=&#34;overview&#34;&gt;Overview&lt;/h1&gt;
+
+&lt;p&gt;MySQL has buildin partition table support, which can help split data accross multi tables,&lt;/p&gt;
+
+&lt;p&gt;and provide a unified query interface as normal tables.&lt;/p&gt;
+
+&lt;p&gt;Benefit:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly.&lt;/li&gt;
+&lt;li&gt;Speed up query based on partition key(partitoin pruning)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Limit:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;For partition table, every unique key must use every column in table&amp;#8217;s partition expression(include primary key)&lt;/li&gt;
+&lt;li&gt;For innodb engine, paritioned table can&amp;#8217;t have foreign key,and can&amp;#8217;t have columns referenced by foreign keys.&lt;/li&gt;
+&lt;li&gt;For MyISAM engine, mysql version &amp;lt;= 5.6.5, DML operation will lock all partition as a whole.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Migrate to encrypted RDS</title>
+      <link>https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/</link>
+      <pubDate>Fri, 28 Oct 2016 16:17:30 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/</guid>
+      <description>&lt;p&gt;最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.&lt;/p&gt;
+
+&lt;p&gt;比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>MySQL 索引优化</title>
+      <link>https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/</link>
+      <pubDate>Tue, 26 Jul 2016 16:13:54 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/</guid>
+      <description>&lt;p&gt;什么是索引,索引怎么建这些基本的就跳过不谈了,整理一些前段时间优化线上 SQL 查询时碰到的一些问题. 主要解决下面几个问题:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;建立索引怎样选择合适的列.&lt;/li&gt;
+&lt;li&gt;怎样让 SQL 能有效利用索引.&lt;/li&gt;
+&lt;li&gt;如果对 SQL 效率进行评估(即设置索引前后是否真的有性能提升).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Redshift as data warehouse</title>
+      <link>https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/</link>
+      <pubDate>Sat, 16 Jul 2016 16:11:39 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/</guid>
+      <description>&lt;p&gt;Glow 的 server infrastructure 全部搭建在 AWS 上，一般要选择一些基础服务的时候，总是先看 AWS, 只要功能和成本符合要求，不会特意选择开源方案。&lt;/p&gt;
+
+&lt;p&gt;数据仓库我们选择了 AWS 的 Redshift.&lt;/p&gt;
+
+&lt;p&gt;在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>MySQL innodb buffer pool</title>
+      <link>https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/</link>
+      <pubDate>Sat, 16 Jul 2016 16:07:14 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/</guid>
+      <description>&lt;p&gt;最近在对公司的 MySQL 服务器做性能优化, 一直对 innodb 的内存使用方式不是很清楚, 乘这机会做点总结.&lt;/p&gt;
+
+&lt;p&gt;在配置 MySQL 的时候, 一般都会需要设置 _innodb_buffer_pool&lt;em&gt;size&lt;/em&gt;, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.&lt;/p&gt;
+
+&lt;p&gt;之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

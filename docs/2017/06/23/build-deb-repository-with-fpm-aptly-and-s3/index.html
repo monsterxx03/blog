@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='I&#8217;m lazy, I don&#8217;t want to be deb/rpm expert, I don&#8217;t want to maintain repo server. I want as less maintenance effort as possible. 🙂
+Combine tools fpm, aptly with aws s3, we can do it.
+Use fpm to convert python package to deb fpm can transform python/gem/npm/dir/&#8230; to deb/rpm/solaris/&#8230; packages
+Example:
+fpm -s python -t deb -m xyj.asmy@gmail.com --verbose -v 0.10.1 --python-pip /usr/local/pip Flask  It will transform Flask 0.'>
+
+<meta property='og:title' content='Build deb repository with fpm , aptly and s3 • Shining Moon'>
+<meta property='og:description' content='I&#8217;m lazy, I don&#8217;t want to be deb/rpm expert, I don&#8217;t want to maintain repo server. I want as less maintenance effort as possible. 🙂
+Combine tools fpm, aptly with aws s3, we can do it.
+Use fpm to convert python package to deb fpm can transform python/gem/npm/dir/&#8230; to deb/rpm/solaris/&#8230; packages
+Example:
+fpm -s python -t deb -m xyj.asmy@gmail.com --verbose -v 0.10.1 --python-pip /usr/local/pip Flask  It will transform Flask 0.'>
+<meta property='og:url' content='https://blog.monsterxx03.com/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/'>
+<meta property='og:site_name' content='Shining Moon'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='aptly'><meta property='article:tag' content='fpm'><meta property='article:published_time' content='2017-06-23T09:40:58Z'/><meta property='article:modified_time' content='2017-06-23T09:40:58Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.29" />
+
+  <title>Build deb repository with fpm , aptly and s3 • Shining Moon</title>
+  <link rel='canonical' href='https://blog.monsterxx03.com/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-post'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>HOME</a>
+    </li>
+  <li>
+      <a href='/categories/tech/'>Tech</a>
+    </li>
+  <li>
+      <a href='/categories/life/'>Life</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Shining Moon</p>
+          
+          <p class='site-description subtitle'>百种弊病,皆从懒生</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Build deb repository with fpm , aptly and s3</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2017-06-23T09:40:58Z'>2017, Jun 23</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+3 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p>I&#8217;m lazy, I don&#8217;t want to be deb/rpm expert, I don&#8217;t want to maintain repo server. I want as less maintenance effort as possible. 🙂</p>
+
+<p>Combine tools fpm, aptly with aws s3, we can do it.</p>
+
+<h2 id="use-fpm-to-convert-python-package-to-deb">Use fpm to convert python package to deb</h2>
+
+<p><a href="https://fpm.readthedocs.io/en/latest/" target="_blank">fpm</a> can transform python/gem/npm/dir/&#8230; to deb/rpm/solaris/&#8230; packages</p>
+
+<p>Example:</p>
+
+<pre><code>fpm -s python -t  deb -m xyj.asmy@gmail.com --verbose  -v 0.10.1 --python-pip /usr/local/pip Flask
+</code></pre>
+
+<p>It will transform Flask 0.10.1 package to deb. Output package will be <code>python-flask_0.10.1_all.deb</code></p>
+
+<p>Notes:</p>
+
+<ul>
+<li>If python packages rely on some c libs like <code>MySQLdb</code> (libmysqlclient-dev), you need to install them on the machine to build deb binary.</li>
+<li>By default fpm use easy_install to build packages, some packages like httplib2 have permission bug with easy_install, so I use pip</li>
+<li>By default, msgpack-python will be convert to <code>python-msgpack-python</code>, I don&#8217;t like it, so add <code>-n python-msgpack</code> to normalize the package name.</li>
+<li>Some package&#8217;s dependencies&#8217; version number is not valid(eg: celery 3.1.25 deps pytz &gt;= dev), so I replace the dependencies with <code>--python-disable-dependency pytz -d 'pytz &gt;= 2016.7'</code></li>
+<li>fpm will not dowload package&#8217;s dependency automatically, you need to do it by your self</li>
+</ul>
+
+<h2 id="use-aptly-to-setup-deb-repository">Use aptly to setup deb repository</h2>
+
+<p><a href="https://www.aptly.info/" target="_blank">aptly</a> can help build a self host deb repository and publish it on s3.</p>
+
+<h3 id="gpg-key">gpg key</h3>
+
+<p>Before setup aptly, ensure you have vaild gpg key, deb reporistory need gpg key to sign packages.</p>
+
+<p>Quick tips about gpg key:</p>
+
+<ul>
+<li>generate gpg key: <code>gpg --gen-key</code>. on OSX, use <code>gpg2 --full-generate-key</code></li>
+<li>export private key: <code>gpg --export-secret-key -a &quot;User Name&quot; &gt; private.key</code></li>
+<li>export public key: <code>gpg --export -a &quot;User Name&quot; &gt; public.key</code></li>
+<li>import private key: <code>gpg --allow-secret-key-import --import private.key</code></li>
+<li>import public key: <code>gpg --import public.key</code></li>
+</ul>
+
+<p>Assume we&#8217;re going to setup a dep repo named <code>release</code>:</p>
+
+<h3 id="aptly">aptly</h3>
+
+<p>Create local repo:</p>
+
+<p><code>aptly repo create -distribution=xenial -component=main release</code></p>
+
+<p>By default, it will create config file at <code>~/.aptly.conf</code>, and data dir <code>~/.aptly</code></p>
+
+<p>Import all deb packages in dir /mnt/debs to repo <code>release</code></p>
+
+<p><code>aptly repo add release /mnt/debs/</code></p>
+
+<p>setup s3 bucket info in ~/.aptly.conf:</p>
+
+<pre><code>{
+   &quot;architectures&quot;:[],
+   ....
+   &quot;S3PublishEndpoints&quot;:{
+      &quot;repo.example.com&quot;:{
+         &quot;region&quot;:&quot;us-east-1&quot;,
+         &quot;bucket&quot;:&quot;repo.example.com&quot;,
+         &quot;acl&quot;:&quot;public-read&quot;
+      }
+   }
+}
+</code></pre>
+
+<p>Publish repo to s3:</p>
+
+<p><code>aptly publish repo release s3:repo.example.com:</code></p>
+
+<p>If you added/updated/delete some packages in local repo, update s3: <code>aptly publish update  xenial  s3:repo.example.com:</code></p>
+
+<h2 id="use-the-repo">Use the repo</h2>
+
+<p>First, your client machine must import the gpg public key:</p>
+
+<p><code>apt-key add public.key</code></p>
+
+<p>Add repo url:</p>
+
+<p><code>echo 'deb http://repo.example.com xenial main' &gt;&gt; /etc/apt/sources.list &amp;&amp; apt update</code></p>
+
+<p>Since I want my repo have high priority than system default repo, I need to setup apt preferences, create /etc/apt/preferences, with content:</p>
+
+<pre><code>Package: *
+Pin: origin &quot;repo.example.com&quot;
+Pin-Priority: 1000
+</code></pre>
+
+<p>Then all packages will be installed from host <code>repo.example.com</code> first, priority 1000 means even package version in remote repo is lower than your installed version, still downgrade it.</p>
+
+<p>For detail about apt preferences: <code>man 5 apt_preference</code></p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='categories'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/tech'>Tech</a></div>
+<div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/aptly'>Aptly</a>, <a class='tag' href='/tags/fpm'>Fpm</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/2017/06/05/debug-python-performance-issue-with-pyflame/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Debug python performance issue with pyflame</a>
+    </div><div class='next-entry'>
+      <a href='/2017/07/15/__trashed/'>
+        <span class='screen-reader'>Next post: </span>Enable coredump on ubuntu 16.04<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://twitter.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Twitter account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:xyj.asmy@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+      
+
+       &copy; 2017 monsterxx03 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

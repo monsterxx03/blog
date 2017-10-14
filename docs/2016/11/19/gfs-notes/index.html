@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='看了下很久前 google 的 GFS 论文， 做点笔记。
+
+'>
+
+<meta property='og:title' content='GFS notes • Shining Moon'>
+<meta property='og:description' content='看了下很久前 google 的 GFS 论文， 做点笔记。
+
+'>
+<meta property='og:url' content='https://blog.monsterxx03.com/2016/11/19/gfs-notes/'>
+<meta property='og:site_name' content='Shining Moon'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='distribute'><meta property='article:tag' content='gfs'><meta property='article:tag' content='paper'><meta property='article:published_time' content='2016-11-19T16:18:41Z'/><meta property='article:modified_time' content='2016-11-19T16:18:41Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.29" />
+
+  <title>GFS notes • Shining Moon</title>
+  <link rel='canonical' href='https://blog.monsterxx03.com/2016/11/19/gfs-notes/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-post'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>HOME</a>
+    </li>
+  <li>
+      <a href='/categories/tech/'>Tech</a>
+    </li>
+  <li>
+      <a href='/categories/life/'>Life</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Shining Moon</p>
+          
+          <p class='site-description subtitle'>百种弊病,皆从懒生</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>GFS notes</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2016-11-19T16:18:41Z'>2016, Nov 19</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+2 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  <p>看了下很久前 google 的 GFS 论文， 做点笔记。</p>
+
+<p></p>
+
+<h3 id="设计目标">设计目标</h3>
+
+<p>一上来就看架构，看性能是不合适的，讨论GFS前，先看看它的设计是为了解决什么问题。</p>
+
+<ul>
+<li>用于存储中等大小的文件， 通常是100MB或更大，上GB的文件也很常见，需要高效得支持，小文件需要支持，但不用特别优化</li>
+<li>系统中主要有两种读：
+
+<ul>
+<li>large streaming read (单次操作几百KB, 1MB或更多, 来自一个client的操作通常位于一个文件的连续区域)</li>
+<li>small random read (发生在一个文件的任意位置，通常就几KB的量)</li>
+</ul></li>
+<li>可能有大量连续的写操作，操作大小和读操作差不多，一旦写入，文件很少会修改。在文件的任意位置进行小写操作，需要支持，但不用很高效。</li>
+<li>支持对同一文件的并发写入，支持原子性，同步开销尽可能小。</li>
+<li>throughput 优先级高于 latency</li>
+</ul>
+
+<h3 id="接口">接口</h3>
+
+<ul>
+<li>没有实现posix</li>
+<li>支持 create, delete, open, close, read, write 操作</li>
+<li>支持 snapshot 和 record append</li>
+</ul>
+
+<h3 id="架构">架构</h3>
+
+<p>single master + multiple chunkservers</p>
+
+<p>chunk: 每个文件会被分割成等长的chunk, 每个chunk 会在创建的时候由 master分配一个 全局唯一的64位长的标识符(chunk handle) .</p>
+
+<p>Chunkserver: chunk 存储在 chunkserver 本地磁盘，通过chunk handle 和 byte range 读写文件。每个chunk默认在3副本，可配置。</p>
+
+<p>Master:</p>
+
+<ul>
+<li>存储所有的文件系统元数据, 包括：namespace, 访问控制信息，文件到chunk的mapping, chunk的当前位置。</li>
+<li>管理chunkd lease(后详)</li>
+<li>回收 orphan chunk</li>
+<li>在chunk server 之间迁移chunk.</li>
+<li>Master 定期和所有的chunk server 做heatbeat, 发送指令，收集状态。</li>
+</ul>
+
+<p>Gfs 的client 代码实现了文件系统api，和master 做metadata操作，文件的读写直接和chunk server交互，</p>
+
+<p>Chunk Size: 64MB, 每个chunk作为一个普通linux文件存在chunk server 上，</p>
+
+<p>好处：</p>
+
+<ul>
+<li>减少和master的通讯</li>
+<li>Chunk 设置得比较大的话，client有比较高的可能性只需要和一个chunk server通讯(开头说过大部分文件是100MB左右的)，这样就只需要一个tcp connection.</li>
+<li>减少了master存储的metadata</li>
+</ul>
+
+<p>坏处：一个文件只有一个chunk的话，如果这个文件成为热点，那就会造成少部分chunk server成为热点，带来瓶颈。 解决办法是为这种可能成为热点的文件设置更多的replication数目，让client从不同的chunk server处读取。</p>
+
+<h3 id="metadata">Metadata:</h3>
+
+<p>所有metdata存在 master 内存里，主要有三种，文件和chunk的namespace, 文件到chunk的mapping,每个chunk 副本的位置。</p>
+
+<p>前两种会做持久化，通过记录下operation log, 先存在master的本地磁盘，然后复制到远端机器。使用log可以避免master crash的时候造成的数据不一致。</p>
+
+<p>第三种数据，master不存，master在启动的时候问一次所有 chunk server它们的chunk信息，在新chunk server加入的时候也问一次</p>
+
+<p>Operation log: 记录metadata的历史变化，是GFS的中心，只有当operation log成功写入master的本地磁盘，和远端机器之后，master才对client作出反应。当log 文件超过一定大小的时候，master会对log对checkpoint,checkpoint是一种紧凑的B 树结构，可以直接映射进内存来用于namespace的查找，不需要额外的parse. master恢复的时候只需要加载最新的chekpoint 文件， 和在checkpoint之后生成的新log文件。</p>
+
+<h3 id="chunk-lease">Chunk lease:</h3>
+
+<p>当对一个file chunk进行修改(mutation)时, 会在所有的副本上同时执行。master会从拥有该文件副本的所有chunk server中挑选出一个临时master, 该master会得到临时的租约(lease，初始为60s), 它被称为primiary, 由primiary来决定对chunk的修改顺序, 所有的chunk遵从primiary决定的顺序执行修改。 (master -&gt; primiary, primiary decide order during lease ).</p>
+
+<p>使用租约机制可以最小化master的压力。在chunk的修改过程中，primiary可以向master申请延长租约（通过heartbeat）。如果master和primiary失去通信，它可以在lease过期后再挑选一个primiary.</p>
+
+<h3 id="snapshot">Snapshot</h3>
+
+<p>使用 copy-on-write 实现snapshot。 master受到对某个file 的snapshot 请求时，会取消该文件所有chunk正在执行的lease. lease全部取消或过期后，master将log写入磁盘，并为原文件复制一份metadata， 新的snapshot文件指向原文件相同的chunk。</p>
+
+<p>当client第一次要对该文件某个chunk执行写操作时，先从master处得到当前获取lease的primiary，master发现对chunk的引用计数 &gt; 1, master会让当前持有该chunk副本的所有replica在本地复制一份chunk， 因此副本的复制发生在本地，不需要跨网络传输。</p>
+
+<h3 id="文件的删除">文件的删除</h3>
+
+<p>执行删除时， master立刻将删除操作log下来，文件会被重命名为一个隐藏文件名+删除时间戳，master会定期扫描namespace, 发现有这样的文件存在超过三天，就会将它真正删除，在真正删除前，仍可以用新名字访问待删除文件，想取消删除只要将文件重命名回去就行。</p>
+
+<h3 id="检测-stale-replica">检测 stale replica</h3>
+
+<p>如果 chunk server 宕机， 错过了master对chunk的修改，那上面存储的chunk就是脏数据(stale).</p>
+
+<p>master 为每个chunk 维护一个version number, 来区分up-to-date 的 replicas 和 state 的replicas.</p>
+
+<p>每次master将lease 授予一个primiary的时候，会将chunk的version number 加1，并通知所有的replicas.如果此时有chunk server 宕机，就会错过version的bump , master 下次看到这个chunk 的版本不是最新的就会将它回收。</p>
+
+<h3 id="ha">HA</h3>
+
+<p>fast recovery 和 replication.</p>
+
+<p>无论service以什么样的方式终止，master 和 chunk server 都被设计成可以在几秒内恢复状态并启动. 并不区分正常终止和异常终止。如果某一台server shutdown或restart，client的请求就会超时，接着client 就会进行重试。</p>
+
+<p>chunk server 的replication 通过多副本实现（其他可能方式， parity or erasure codes? )</p>
+
+<p>master 的replication 称为shadows, 是read only 的， 当master宕机时， master 的dns 会被切换到shadows。</p>
+
+<h3 id="数据一致性">数据一致性</h3>
+
+<p>每个 chunk server 使用checksum检测数据一致性，checksum和其他metadata一样，存在内存中，通过log做持久化。</p>
+
+<p>read的时候，chunkserver会检查数据的一致性，发现和checksum不符，会对client报错，client就会向其他的replicas请求chunk，同时master会进行调度，从数据完整的chunk server上复制正确的chunk来覆盖错误的数据。</p>
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='categories'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/tech'>Tech</a></div>
+<div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/distribute'>Distribute</a>, <a class='tag' href='/tags/gfs'>Gfs</a>, <a class='tag' href='/tags/paper'>Paper</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/2016/10/28/migrate-to-encrypted-rds/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Migrate to encrypted RDS</a>
+    </div><div class='next-entry'>
+      <a href='/2016/12/11/bigtable-notes/'>
+        <span class='screen-reader'>Next post: </span>Bigtable notes<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://twitter.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Twitter account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:xyj.asmy@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+      
+
+       &copy; 2017 monsterxx03 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

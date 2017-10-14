@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.
+
+You will come to:
+
+
+How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what&#8217;s the DHCP option set?), navigate around AWS console is okay, but not convenient.
+Who did what to which resource at when? AWS have a service called Config, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do.
+
+
+Ideally, we should manage AWS resources like code, all changes kept in VCS, so called Infrastructure as Code.
+
+I&#8217;ve tried three ways to do it:
+
+
+ansible
+CloudFormation
+terraform
+
+
+In this article, I&#8217;ll compare them, however, the conclusion is to use terraform 🙂
+
+'>
+
+<meta property='og:title' content='Infrastructure as Code • Shining Moon'>
+<meta property='og:description' content='Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.
+
+You will come to:
+
+
+How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what&#8217;s the DHCP option set?), navigate around AWS console is okay, but not convenient.
+Who did what to which resource at when? AWS have a service called Config, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do.
+
+
+Ideally, we should manage AWS resources like code, all changes kept in VCS, so called Infrastructure as Code.
+
+I&#8217;ve tried three ways to do it:
+
+
+ansible
+CloudFormation
+terraform
+
+
+In this article, I&#8217;ll compare them, however, the conclusion is to use terraform 🙂
+
+'>
+<meta property='og:url' content='https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/'>
+<meta property='og:site_name' content='Shining Moon'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='AWS'><meta property='article:published_time' content='2017-04-21T16:25:07Z'/><meta property='article:modified_time' content='2017-04-21T16:25:07Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.29" />
+
+  <title>Infrastructure as Code • Shining Moon</title>
+  <link rel='canonical' href='https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-post'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>HOME</a>
+    </li>
+  <li>
+      <a href='/categories/tech/'>Tech</a>
+    </li>
+  <li>
+      <a href='/categories/life/'>Life</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Shining Moon</p>
+          
+          <p class='site-description subtitle'>百种弊病,皆从懒生</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Infrastructure as Code</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2017-04-21T16:25:07Z'>2017, Apr 21</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+7 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  <p>Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.</p>
+
+<p>You will come to:</p>
+
+<ul>
+<li>How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what&#8217;s the DHCP option set?), navigate around AWS console is okay, but not convenient.</li>
+<li>Who did what to which resource at when? AWS have a service called <code>Config</code>, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do.</li>
+</ul>
+
+<p>Ideally, we should manage AWS resources like code, all changes kept in VCS, so called <code>Infrastructure as Code</code>.</p>
+
+<p>I&#8217;ve tried three ways to do it:</p>
+
+<ul>
+<li>ansible</li>
+<li>CloudFormation</li>
+<li>terraform</li>
+</ul>
+
+<p>In this article, I&#8217;ll compare them, however, the conclusion is to use terraform 🙂</p>
+
+<p></p>
+
+<h2 id="ansible">Ansible</h2>
+
+<p>Provision tools, like ansible/chef/puppet, all can be used to create aws resources, but they have some common problems:</p>
+
+<ul>
+<li>Hard to track changes after bootstrap.</li>
+<li>No confident what it will do to existing resources.</li>
+</ul>
+
+<p>For example, I define a security group in ansibble:</p>
+
+<pre><code>ec2_group:
+  name: &quot;web&quot;
+  description: &quot;security group in web&quot;
+  vpc_id: &quot;vpc-xxx&quot;
+  region: &quot;us-east-1&quot;
+  rules:
+    - proto: tcp
+      from_port: 80
+      to_port: 80
+      cidr_ip: 0.0.0.0/0
+</code></pre>
+
+<p>It will create a security group named &#8220;web&#8221; in vpc-xxx. At first glance, it&#8217;s convenient and straightforward.</p>
+
+<p>After several months, we will come to some problems:</p>
+
+<ul>
+<li>If someone deleted <code>web</code> from console, how can I know?</li>
+<li>If someone changed the name <code>web</code> in ansible, this code will create a complete new security group, and I&#8217;ll lose track of original <code>web</code>.</li>
+<li>If someone change the rules, to make <code>80-80</code> to <code>443-443</code>, what it will do? delete original rule and add a new one? or just create a new rule? Actually, you don&#8217;t know, must test it before apply those changes to any resources.</li>
+</ul>
+
+<p>The root cause is ansible lack a mapping between its code and real online resources.</p>
+
+<p>Those provision tools only declare they want some specific resources, if resources exist, they will try to update them, however not all attributes of AWS resources support updating after creation.</p>
+
+<p>So after first creating, I really don&#8217;t have confidence whether this code work anymore.</p>
+
+<h2 id="cloudformation">CloudFormation</h2>
+
+<p>CloudFormation is AWS&#8217;s official solution. It also use yaml as configuration format, along with a fancy web interface named <code>CloudFormation Designer</code>.</p>
+
+<p>But from my experience, it really sucks&#8230;.</p>
+
+<h3 id="annoying-syntax">Annoying syntax</h3>
+
+<p>The template syntax is very complex and hard to read, reading the doc for 10 mins, I think you will be lost.</p>
+
+<pre><code>Resources:
+  Ec2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      SecurityGroups:
+      - Ref: InstanceSecurityGroup
+      KeyName: mykey
+      ImageId: ''
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH access via port 22
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '22'
+        ToPort: '22'
+        CidrIp: 0.0.0.0/0
+</code></pre>
+
+<p>It took me whole day to accept its syntax, and now I don&#8217;t want to touch it anymore.</p>
+
+<h3 id="update-policy-is-too-strong">Update policy is too strong.</h3>
+
+<p>The main problem is it forbids update resources in stack manually.Otherwise next stack update will come to error.</p>
+
+<p>But real world will never be so clear.</p>
+
+<p>Every resource have a lot of properties, some of them can be updated smoothly, but changes to some of them need to recreate the resource.</p>
+
+<p>Eg: update RDS DBInstance&#8217;s <code>StorageEncrypted</code> attribute will require to replace the original db.</p>
+
+<p>Last time when I&#8217;m doing HIPAA compliance for my company, I need to migrate my existing RDS to encrypted one without downtime, the flow is very complex.</p>
+
+<p>Simply change property in CloudFormation will delete my DB&#8230;My ideal way is do some changes to resources manually and change CloudFormation templates to match the new resources. However, with CloudFormation you can&#8217;t do it simply.</p>
+
+<p>Another wired things is some attributes can be changed in console directly, but with CloudFormation, it will require a recreation of resource, like: RDS db port&#8230;</p>
+
+<p>Last time, when I checking, change ELBs associated with AutoScaling group also requires destroy the autoscaling group first, it&#8217;s crazy. But now it&#8217;s can be updated dynamically.</p>
+
+<p>And for complex prod environment, the fancy designer interface don&#8217;t have many use &#8230;.</p>
+
+<p>But there is still some case you can use CloudFormation: create similar and short lifetime dev environment for many teams. If the data in the environment is not important, you just need repeatable clear environment, CloudFormation deserves take a look.</p>
+
+<h2 id="terraform">Terraform</h2>
+
+<p>Okay, let&#8217;s make a conclusion why tracking infrastructure on AWS is hard:</p>
+
+<ul>
+<li>Dependence between resources is complex</li>
+<li>How can we predict our changes before apply them?</li>
+<li>Interaction with human operation or existing resource.</li>
+</ul>
+
+<p><a href="http://terraform.io" target="_blank">terraform</a> havn&#8217;t solved those problems perfectly, but it&#8217;s more usable compared with others so far.</p>
+
+<p>I won&#8217;t explain how to use terraform too much, just talk about the good part I&#8217;m using it.</p>
+
+<h3 id="dependence-management">Dependence management</h3>
+
+<p>terraform use the simple <code>DAG</code> concept to management dependences, which I alrady used in ELT job management a lot.</p>
+
+<p>The core concept is there shouldn&#8217;t be any loop in state transformation, your resource just change from one state to another, but need to wait for its dependent resource change done first.</p>
+
+<pre><code>resource &quot;aws_key_pair&quot; &quot;master&quot; {
+  key_name   = &quot;master&quot;
+  public_key = &quot;....&quot;
+}
+
+resource &quot;aws_instance&quot; &quot;web0&quot; {
+  ami = &quot;ami-xxxx&quot;
+  instance_type = &quot;m3.medium&quot;
+  key_name = &quot;${aws_key_pair.master.key_name}&quot;
+}
+</code></pre>
+
+<p>The dependence relationship here is implict, ec2 instance web0 requires key pair to be created first, so when running, terraform will create the key pair first, then create instance. Also, the relationship can be defined with attribute <code>depends_on</code> explictly.</p>
+
+<h3 id="predictable-change">Predictable change</h3>
+
+<p>CloudFormation have <code>ChangeSet</code>, but it&#8217;s differences between two templates, not compared with real online resources (it assume all changes happen within CloudFormation).</p>
+
+<p>terraform can generate execution plan by <code>terraform plan</code>, it&#8217;s configuration declare the desired state those resource should have, it will compare with real resource,</p>
+
+<p>and show your what will happen if you do <code>terraform apply</code>.</p>
+
+<p>The output have three color, red means this resource will be destroied, yellow means update, green menas create a new one. If there&#8217;s a <code>+/-</code> mark with green msg, it will destroy existing resource and create a new one.</p>
+
+<p>How terraform map online resource with its code?</p>
+
+<p>With <code>state</code> data. I use the default local tfstate file backend.</p>
+
+<p>In my above example, <code>master</code> and <code>web0</code> are unique marks in terraform, every resource type can&#8217;t have two resources with same name,</p>
+
+<p>the terraform name mark and real resource id mapping is in tfstate file, so we can know exactly which instance <code>web0</code> means, won&#8217;t have the problem we have in ansible.</p>
+
+<p>If you delete definition in terraform config file, since the state file still tracking it, <code>terraform plan</code> will show you&#8217;re going to delete the resource. Then it&#8217;s upon to you, whether to delete the reosurce via terraform, or make the resource untrack by delete the data in tfstate file.</p>
+
+<h3 id="handle-the-dirty-world">Handle the dirty world</h3>
+
+<p>Since our infrastructure have existed long time ago. I need to make terraform work with those resources.</p>
+
+<p><code>terraform import</code> can import existing resources. But only resources will unique id is importable.</p>
+
+<p>If you do a complex migration for live servers manually, the real instance id has changed, you can just delete related data in tfstate file, and reimport the resource again.</p>
+
+<h3 id="modular-composite-multi-resources">Modular composite multi resources</h3>
+
+<p>Create a vpc is complex, involved resources are: vpc, public/private subnet,dhcp options, internet gateway, nat gateway, route table.</p>
+
+<p>Make vpc creation a module can reuse code, provide it different parameters create different environments. I did something similar like this <code>https://github.com/terraform-community-modules/tf_aws_vpc</code>, so when using, I can define a vpc like this:</p>
+
+<pre><code>module &quot;vpc&quot; {
+  source         = &quot;../modules/aws_vpc&quot;
+  cidr           = &quot;10.100.0.0/16&quot;
+  azs            = [&quot;us-west-1a&quot;, &quot;us-west-1c&quot;]
+  internal_domain = &quot;test.com&quot;
+  nat_eip_id     = &quot;eip-xxx&quot;
+  public_subnets = [&quot;10.100.1.0/24&quot;, &quot;10.100.2.0/24&quot;]
+  app_subnets    = [&quot;10.100.10.0/24&quot;, &quot;10.100.20.0/24&quot;]
+  data_subnets   = [&quot;10.100.30.0/24&quot;, &quot;10.100.40.0/24&quot;]
+}
+</code></pre>
+
+<p>You can also import online resource into a module.</p>
+
+<h3 id="handle-unimportable-resources">Handle unimportable resources</h3>
+
+<p>Resources like vpc route table rule, can&#8217;t be imported, but you can write your config and make sure they&#8217;re right, then do a <code>terraform apply</code> operation, terraform will not change online settings if they&#8217;re matching, just update local state file.</p>
+
+<p>Some relationships between resources are also defined as resources in terraform, like ebs device mapping. They can&#8217;t be imported as well,</p>
+
+<p>If you create them manually, you can only write the config with same settings manually and do a <code>terraform apply</code> to let terraform update state file.</p>
+
+<p>It&#8217;s not good and a little dangerous, but seems no better way so far.</p>
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='categories'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/tech'>Tech</a></div>
+<div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/aws'>Aws</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/2017/04/19/concurrency-in-go-reading-notes/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Concurrency in Go, Reading Notes</a>
+    </div><div class='next-entry'>
+      <a href='/2017/04/23/4%E6%9C%88%E5%91%A8%E6%9C%AB%E6%9D%82%E8%AE%B0/'>
+        <span class='screen-reader'>Next post: </span>4月周末杂记<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://twitter.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Twitter account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:xyj.asmy@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+      
+
+       &copy; 2017 monsterxx03 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

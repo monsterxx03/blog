@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='In this article, let&#8217;s talk about ElasticSearch&#8217;s cluster mode, which means multi nodes ElasticSearch.
+
+Basic concepts
+
+cluster: A collection of server nodes with same cluster.name settings in elasticsearch.yaml
+
+primary shards: Divide a index into multi parts(by default 5), shards of an index can be distributed over multi nodes. It enables scale index horizontally and make access to index parallelly(accross multi nodes).
+
+replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.
+
+'>
+
+<meta property='og:title' content='ElasticSearch cluster • Shining Moon'>
+<meta property='og:description' content='In this article, let&#8217;s talk about ElasticSearch&#8217;s cluster mode, which means multi nodes ElasticSearch.
+
+Basic concepts
+
+cluster: A collection of server nodes with same cluster.name settings in elasticsearch.yaml
+
+primary shards: Divide a index into multi parts(by default 5), shards of an index can be distributed over multi nodes. It enables scale index horizontally and make access to index parallelly(accross multi nodes).
+
+replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.
+
+'>
+<meta property='og:url' content='https://blog.monsterxx03.com/2017/03/22/elasticsearch-cluster/'>
+<meta property='og:site_name' content='Shining Moon'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='distribute'><meta property='article:tag' content='elasticsearch'><meta property='article:published_time' content='2017-03-22T16:22:32Z'/><meta property='article:modified_time' content='2017-03-22T16:22:32Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.29" />
+
+  <title>ElasticSearch cluster • Shining Moon</title>
+  <link rel='canonical' href='https://blog.monsterxx03.com/2017/03/22/elasticsearch-cluster/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-post'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>HOME</a>
+    </li>
+  <li>
+      <a href='/categories/tech/'>Tech</a>
+    </li>
+  <li>
+      <a href='/categories/life/'>Life</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Shining Moon</p>
+          
+          <p class='site-description subtitle'>百种弊病,皆从懒生</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>ElasticSearch cluster</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2017-03-22T16:22:32Z'>2017, Mar 22</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+3 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  <p>In this article, let&#8217;s talk about ElasticSearch&#8217;s cluster mode, which means multi nodes ElasticSearch.</p>
+
+<h2 id="basic-concepts">Basic concepts</h2>
+
+<p>cluster: A collection of server nodes with same <code>cluster.name</code> settings in elasticsearch.yaml</p>
+
+<p>primary shards: Divide a index into multi parts(by default 5), shards of an index can be distributed over multi nodes. It enables scale index horizontally and make access to index parallelly(accross multi nodes).</p>
+
+<p>replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.</p>
+
+<p></p>
+
+<h2 id="single-node">Single node</h2>
+
+<p>If you setup a single node ES, all shards will be hosted together, and there will be no replicas.</p>
+
+<p>Host replicas and shards on a same node make no sense, they will be lost at same time. If no additional node is available, ES will not allocate replicas.</p>
+
+<p>Get all shards info: <code>curl http://localhost:9200/_cat/shards?v</code></p>
+
+<pre><code>forum                 2     p      STARTED       0  159b 127.0.0.1 dev-host
+forum                 2     r      UNASSIGNED
+forum                 3     p      STARTED       0  159b 127.0.0.1 dev-host
+forum                 3     r      UNASSIGNED
+forum                 4     p      STARTED       0  159b 127.0.0.1 dev-host
+forum                 4     r      UNASSIGNED
+forum                 1     p      STARTED       0  159b 127.0.0.1 dev-host
+forum                 1     r      UNASSIGNED
+forum                 0     p      STARTED       0  160b 127.0.0.1 dev-host
+forum                 0     r      UNASSIGNED
+</code></pre>
+
+<p>You can see, by default, a index will have 5 primary shards(symbol <code>p</code>), all replicas(symbol <code>r</code>) are not assigned.</p>
+
+<p>Also cluster status will be yellow, since there&#8217;re no replicas available.</p>
+
+<h2 id="two-nodes">Two nodes</h2>
+
+<p>Let&#8217;s add one node into cluster.</p>
+
+<p>ES have two ways to find other nodes in cluster: multicast and unicast.</p>
+
+<p><code>multicast</code> works via send a UDP ping to local network, in production environment, we should disable it(disabled by default), I think no body will like it.</p>
+
+<p><code>unicast</code> works via provide an initial host list (defined by <code>discovery.zen.ping.unicast.hosts</code>), nodes communite with each other via gossip protocol. So a new node needn&#8217;t know complete list of cluster, it can only talk to a few nodes to get whole cluster info. Some projects like consul and redis cluster also work like this way.</p>
+
+<p>One more thing to care is you need to specify <code>network.publish_host</code> explicitly. By default it will be 127.0.0.1, you need to change it to a ip/host which other nodes can access.</p>
+
+<p><img src="http://blog.monsterxx03.com/wp-content/uploads/2017/05/two-nodes.png" alt="two-nodes-es" /></p>
+
+<p>In two nodes setup, all replicas will be hosted on another host. All write operations to NODE 2 will be forwarded to NODE 1 internally on server. As comparison, redis cluster use so called smart client, server only tell client the right one to query.</p>
+
+<p>With two nodes setup, we can suffer one node down with no data loss. However, network partition will make two nodes brain split.</p>
+
+<p>Each node think another one is down, so it make self be master. At the same time, client&#8217;s write operations still sucess on both. But data will split on two nodes, you will not be aware of it unless search return wired result. So you may come to data inconsistency on two nodes setup.</p>
+
+<p>Cluster status will be green, since all shards will have one replicas.</p>
+
+<h3 id="three-nodes">Three nodes</h3>
+
+<p>Three nodes can suffer network partition. But you need to set <code>discovery.zen.minimum_master_nodes</code> to 2. If one node failed, left two will elect a new master. If two nodes failed, there will not be enough master eligible nodes, client will come to error, so no data inconsistency will happen.</p>
+
+<p><img src="https://blog.monsterxx03.com/wp-content/uploads/2017/05/three-nodes.png" alt="three-nodes-es" /></p>
+
+<p>Picture taken from es official doc, it uses 3 replicas as example.</p>
+
+<h3 id="notes">Notes</h3>
+
+<p>ES has very flexible configuration, you can setup dedicated master eligible node, data only node, ingest only node, tribe noly node based on your size: <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html" target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html</a></p>
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='categories'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/tech'>Tech</a></div>
+<div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/distribute'>Distribute</a>, <a class='tag' href='/tags/elasticsearch'>Elasticsearch</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/2017/03/11/matrix-14-years-later/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Matrix 14 years later</a>
+    </div><div class='next-entry'>
+      <a href='/2017/04/05/mysql-partition-table/'>
+        <span class='screen-reader'>Next post: </span>MySQL partition table<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://twitter.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Twitter account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:xyj.asmy@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+      
+
+       &copy; 2017 monsterxx03 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Coredump on Shining Moon</title>
+    <link>https://blog.monsterxx03.com/tags/coredump/</link>
+    <description>Recent content in Coredump on Shining Moon</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 15 Jul 2017 02:35:52 +0000</lastBuildDate>
+    
+	<atom:link href="https://blog.monsterxx03.com/tags/coredump/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Enable coredump on ubuntu 16.04</title>
+      <link>https://blog.monsterxx03.com/2017/07/15/__trashed/</link>
+      <pubDate>Sat, 15 Jul 2017 02:35:52 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/07/15/__trashed/</guid>
+      <description>Coredump file is useful for debuging program crash. This post will show several settings related to coredump.
+Enable coredump If you run program from shell , enable coredump via unlimit -c unlimited， then check unlimit -a | grep core, if it shows unlimited, coredump is enabled for your current session.
+If your program is hosted by systemd, you need to edit your program&amp;#8217;s service unit file&amp;#8217;s [Service] section, add LimitCORE=infinity to enable coredump.</description>
+    </item>
+    
+  </channel>
+</rss>

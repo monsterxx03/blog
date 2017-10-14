@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Python on Shining Moon</title>
+    <link>https://blog.monsterxx03.com/tags/python/</link>
+    <description>Recent content in Python on Shining Moon</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Mon, 05 Jun 2017 09:50:44 +0000</lastBuildDate>
+    
+	<atom:link href="https://blog.monsterxx03.com/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Debug python performance issue with pyflame</title>
+      <link>https://blog.monsterxx03.com/2017/06/05/debug-python-performance-issue-with-pyflame/</link>
+      <pubDate>Mon, 05 Jun 2017 09:50:44 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/06/05/debug-python-performance-issue-with-pyflame/</guid>
+      <description>pyflame is an opensource tool developed by uber: https://github.com/uber/pyflame
+It can take snapshots of running python process, combined with flamegraph.pl, can output flamegraph picture of python call stacks. Help analyze bottleneck of python program, needn&amp;#8217;t inject any perf code into your application, and overhead is very low.
+Basic Usage sudo pyflame -s 10 -x -r 0.001 $pid | ./flamegraph.pl &amp;gt; perf.svg
+ -s, how many seconds to run -r, sample rate (seconds)  Your output will be something like following:</description>
+    </item>
+    
+  </channel>
+</rss>

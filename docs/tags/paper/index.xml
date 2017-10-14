@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Paper on Shining Moon</title>
+    <link>https://blog.monsterxx03.com/tags/paper/</link>
+    <description>Recent content in Paper on Shining Moon</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sun, 11 Dec 2016 16:20:24 +0000</lastBuildDate>
+    
+	<atom:link href="https://blog.monsterxx03.com/tags/paper/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Bigtable notes</title>
+      <link>https://blog.monsterxx03.com/2016/12/11/bigtable-notes/</link>
+      <pubDate>Sun, 11 Dec 2016 16:20:24 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2016/12/11/bigtable-notes/</guid>
+      <description>&lt;p&gt;杂乱笔记，辅助读paper.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>GFS notes</title>
+      <link>https://blog.monsterxx03.com/2016/11/19/gfs-notes/</link>
+      <pubDate>Sat, 19 Nov 2016 16:18:41 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2016/11/19/gfs-notes/</guid>
+      <description>&lt;p&gt;看了下很久前 google 的 GFS 论文， 做点笔记。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
