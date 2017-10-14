@@ -1,0 +1,105 @@
+baseURL = "https://blog.monsterxx03.com"
+title = "Shining Moon"
+# for smart copyright line, leave this blank and check [params.copyright]
+copyright = ""
+
+theme = "minimo"
+
+disqusShortname = ""
+googleAnalytics = ""
+
+Paginate = 5
+preserveTaxonomyNames = false
+
+enableRobotsTXT = true # generate robots.txt
+
+# Syntax Highlighting ( https://gohugo.io/content-management/syntax-highlighting/ )
+pygmentsCodefences = true
+
+# Language Configuration
+defaultContentLanguage = "en"
+
+[params.info]
+description = "百种弊病,皆从懒生"
+title404 = "Nothing's here!"
+
+[params.assets]
+favicon = "favicon.ico"
+customCSS = ["css/custom.css"]
+customJS = ["js/custom.js"]
+gopher = "" # used in 404 template ( Generator: https://gopherize.me )
+
+[params.copyright]
+prefix = ""
+holder = "monsterxx03"
+startYear = "2017"
+suffix = ""
+
+[params.settings]
+# date & time format: https://golang.org/pkg/time/
+dateFormat = "2006, Jan 02"
+listDateFormat = "2006, Jan 02"
+hideEntryNavigation = [] # boolean / array of sections
+hideSocialMenu = false
+showReadingTime = true
+
+[params.opengraph.facebook]
+admins = [] # array of Facebook IDs
+appID = ""
+pageID = ""
+
+[params.opengraph.twitter]
+page = "" # Twitter page username
+
+[params.seo]
+# Title Separator: - – — · • * ⋆ | ~ « » < >
+titleSeparator = "•"
+
+[params.social]
+codepen = ""
+email = "xyj.asmy@gmail.com"
+facebook = ""
+github = "monsterxx03"
+instagram = ""
+linkedin = "徐-叶佳-43564554"
+twitter = "monsterxx03"
+
+[params.social.config]
+platforms = ["github","twitter","email"]
+
+[taxonomies]
+author = "authors"
+category = "categories"
+tag = "tags"
+
+[permalinks]
+page = "/:slug/"
+
+[[menu.main]]
+name = "HOME"
+weight = -10
+identifier = "home"
+url = "/"
+
+[[menu.main]]
+name = "Tech"
+weight = -9
+identifier = "tech"
+url = "/categories/tech/"
+
+
+[[menu.main]]
+name = "Life"
+weight = 0
+identifier = "life"
+url = "/categories/life/"
+
+[blackfriday]
+hrefTargetBlank = true
+
+[languages]
+# edit this block for your own language
+[languages.en]
+lang = "en"
+languageName = "English"
+weight = 1
