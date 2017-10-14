@@ -75,6 +75,7 @@ tag = "tags"
 
 [permalinks]
 page = "/:slug/"
+posts = "/:year/:month/:day/:title/"
 
 [[menu.main]]
 name = "HOME"
