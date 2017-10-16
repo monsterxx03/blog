@@ -4,14 +4,14 @@
 <head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='I use autoscaling group to manage stateless servers. Servers goes up and done every day.
+<meta name='description' content='I use autoscaling group to manage stateless servers. Servers go up and down every day.
 Once server is up, I will add a PTR record for it&#8217;s internal ip. But when it&#8217;s down, I didn&#8217;t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.
-To cleanup those PTR record in realtime, you can write a lambda function, use server termination event as trigger.'>
+To cleanup those PTR records realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?'>
 
 <meta property='og:title' content='Get all invalid PTR record on  Route53 • Shining Moon'>
-<meta property='og:description' content='I use autoscaling group to manage stateless servers. Servers goes up and done every day.
+<meta property='og:description' content='I use autoscaling group to manage stateless servers. Servers go up and down every day.
 Once server is up, I will add a PTR record for it&#8217;s internal ip. But when it&#8217;s down, I didn&#8217;t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.
-To cleanup those PTR record in realtime, you can write a lambda function, use server termination event as trigger.'>
+To cleanup those PTR records realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?'>
 <meta property='og:url' content='https://blog.monsterxx03.com/2017/09/29/get-all-invalid-ptr-record-on-route53/'>
 <meta property='og:site_name' content='Shining Moon'>
 <meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='AWS'><meta property='article:tag' content='route53'><meta property='article:published_time' content='2017-09-29T08:55:18Z'/><meta property='article:modified_time' content='2017-09-29T08:55:18Z'/><meta name='twitter:card' content='summary'>
@@ -107,13 +107,13 @@ To cleanup those PTR record in realtime, you can write a lambda function, use se
     <div class='entry-content'>
   
 
-<p>I use autoscaling group to manage stateless servers. Servers goes up and done every day.</p>
+<p>I use autoscaling group to manage stateless servers. Servers go up and down every day.</p>
 
 <p>Once server is up, I will add a PTR record for it&#8217;s internal ip. But when it&#8217;s down, I didn&#8217;t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.</p>
 
-<p>To cleanup those PTR record in realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?</p>
+<p>To cleanup those PTR records realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?</p>
 
-<p>Straightford way is write a script to call AWS API to get a PTR list, get ip from record, test whether the ip is live, if not, delete it.</p>
+<p>Straightforward way is write a script to call AWS API to get a PTR list, get ip from record, test whether the ip is live, if not, delete it.</p>
 
 <p>Since use awscli to delete a Route53 record is very troublesome (involve json format), you&#8217;d better write a python script to delete them. I just demo some ideas to collect those records via shell.</p>
 
