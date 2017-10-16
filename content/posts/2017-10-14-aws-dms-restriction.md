@@ -26,7 +26,7 @@ Source RDS must:
 Redshift has some limits on change columns:
 
 - New column only must be added in the end
-- Change rename columns
+- Can't rename columns
 
 So for DDL on source MySQL, you can't add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
 
@@ -36,13 +36,13 @@ So for DDL on source MySQL, you can't add columns at non end postition, otherwis
             "HandleSourceTableAltered":false
         },
     
-I source table schema changed, I just drop and reload target table on console.
+If source table schema changed, I just drop and reload target table on console.
 
 ## Control write speed on Redshift
 
 Since Redshift is an OLAP database, write operation is slow and concurrency is low, streaming data directly will have big impact on it.
 
-And we have may analysis job running on redshift all the times, directly streaming will lock target table and make my analysis job timeout.
+And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.
 
 So I need to batch apply changes on DMS. Follow settings need to tweak in task settings json:
 
@@ -68,7 +68,7 @@ So I need to batch apply changes on DMS. Follow settings need to tweak in task s
 
 DMS support transform rules in table mapping, you can `add-prefix`, `remove-prefix`... on a table.
 
-But it doesn't support multiple transformations on same entity, means you can add a prefix and a sufix for a same table, and its doc doesn't mention it.
+But it doesn't support multiple transformations on same entity, means you can't add a prefix and a sufix for a same table, and its doc doesn't mention it.
 
 After contact AWS support engineers, they confirmed it, and saied:
 
@@ -79,7 +79,7 @@ After contact AWS support engineers, they confirmed it, and saied:
 I use terraform to manage AWS infrastruction (v0.10.7), one problem is after I created DMS tasks via terraform, do `terraform plan` again will still see changes on `replication_task_settings` option,  
 
 Problem is `CloudWatchLogGroup` and `CloudWatchLogStream` in task settings json don't work. Even you specific it,
-AWS still create a log stream with random name for you.
+AWS still creates a log stream with random name for you.
 
 One workaround is go to AWS console, get the `CloudWatchLogGroup` and `CloudWatchLogStream` settings, modify your local one.
 
