@@ -28,9 +28,9 @@ Prerequisites Source RDS must:
       <pubDate>Fri, 29 Sep 2017 08:55:18 +0000</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/09/29/get-all-invalid-ptr-record-on-route53/</guid>
-      <description>I use autoscaling group to manage stateless servers. Servers goes up and done every day.
+      <description>I use autoscaling group to manage stateless servers. Servers go up and down every day.
 Once server is up, I will add a PTR record for it&amp;#8217;s internal ip. But when it&amp;#8217;s down, I didn&amp;#8217;t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.
-To cleanup those PTR record in realtime, you can write a lambda function, use server termination event as trigger.</description>
+To cleanup those PTR records realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?</description>
     </item>
     
     <item>
@@ -76,10 +76,10 @@ AWS api is open to internet, if you need to access S3 in VPC, your requests will
     
     <item>
       <title>Enable coredump on ubuntu 16.04</title>
-      <link>https://blog.monsterxx03.com/2017/07/15/__trashed/</link>
+      <link>https://blog.monsterxx03.com/2017/07/15/enable-coredump-on-ubuntu-16.04/</link>
       <pubDate>Sat, 15 Jul 2017 02:35:52 +0000</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2017/07/15/__trashed/</guid>
+      <guid>https://blog.monsterxx03.com/2017/07/15/enable-coredump-on-ubuntu-16.04/</guid>
       <description>Coredump file is useful for debuging program crash. This post will show several settings related to coredump.
 Enable coredump If you run program from shell , enable coredump via unlimit -c unlimited， then check unlimit -a | grep core, if it shows unlimited, coredump is enabled for your current session.
 If your program is hosted by systemd, you need to edit your program&amp;#8217;s service unit file&amp;#8217;s [Service] section, add LimitCORE=infinity to enable coredump.</description>

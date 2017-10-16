@@ -3,7 +3,7 @@ title: Enable coredump on ubuntu 16.04
 author: will
 type: post
 date: 2017-07-15T02:35:52+00:00
-url: /2017/07/15/__trashed/
+url: /2017/07/15/enable-coredump-on-ubuntu-16.04/
 categories:
   - tech
 tags:

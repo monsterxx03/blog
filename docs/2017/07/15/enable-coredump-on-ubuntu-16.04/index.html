@@ -4,22 +4,22 @@
 <head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='I use autoscaling group to manage stateless servers. Servers go up and down every day.
-Once server is up, I will add a PTR record for it&#8217;s internal ip. But when it&#8217;s down, I didn&#8217;t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.
-To cleanup those PTR records realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?'>
+<meta name='description' content='Coredump file is useful for debuging program crash. This post will show several settings related to coredump.
+Enable coredump If you run program from shell , enable coredump via unlimit -c unlimited， then check unlimit -a | grep core, if it shows unlimited, coredump is enabled for your current session.
+If your program is hosted by systemd, you need to edit your program&#8217;s service unit file&#8217;s [Service] section, add LimitCORE=infinity to enable coredump.'>
 
-<meta property='og:title' content='Get all invalid PTR record on  Route53 • Shining Moon'>
-<meta property='og:description' content='I use autoscaling group to manage stateless servers. Servers go up and down every day.
-Once server is up, I will add a PTR record for it&#8217;s internal ip. But when it&#8217;s down, I didn&#8217;t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.
-To cleanup those PTR records realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?'>
-<meta property='og:url' content='https://blog.monsterxx03.com/2017/09/29/get-all-invalid-ptr-record-on-route53/'>
+<meta property='og:title' content='Enable coredump on ubuntu 16.04 • Shining Moon'>
+<meta property='og:description' content='Coredump file is useful for debuging program crash. This post will show several settings related to coredump.
+Enable coredump If you run program from shell , enable coredump via unlimit -c unlimited， then check unlimit -a | grep core, if it shows unlimited, coredump is enabled for your current session.
+If your program is hosted by systemd, you need to edit your program&#8217;s service unit file&#8217;s [Service] section, add LimitCORE=infinity to enable coredump.'>
+<meta property='og:url' content='https://blog.monsterxx03.com/2017/07/15/enable-coredump-on-ubuntu-16.04/'>
 <meta property='og:site_name' content='Shining Moon'>
-<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='AWS'><meta property='article:tag' content='route53'><meta property='article:published_time' content='2017-09-29T08:55:18Z'/><meta property='article:modified_time' content='2017-09-29T08:55:18Z'/><meta name='twitter:card' content='summary'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='coredump'><meta property='article:tag' content='system'><meta property='article:tag' content='ubuntu'><meta property='article:published_time' content='2017-07-15T02:35:52Z'/><meta property='article:modified_time' content='2017-07-15T02:35:52Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.30" />
+<meta name="generator" content="Hugo 0.29" />
 
-  <title>Get all invalid PTR record on  Route53 • Shining Moon</title>
-  <link rel='canonical' href='https://blog.monsterxx03.com/2017/09/29/get-all-invalid-ptr-record-on-route53/'>
+  <title>Enable coredump on ubuntu 16.04 • Shining Moon</title>
+  <link rel='canonical' href='https://blog.monsterxx03.com/2017/07/15/enable-coredump-on-ubuntu-16.04/'>
   
   
   <link rel='icon' href='/favicon.ico'>
@@ -65,7 +65,7 @@ To cleanup those PTR records realtime, you can write a lambda function, use serv
     <header class='header-container'>
   <div class='header entry-header'>
     <div class='header-info'>
-      <h1 class='title'>Get all invalid PTR record on  Route53</h1>
+      <h1 class='title'>Enable coredump on ubuntu 16.04</h1>
       
 
     </div>
@@ -80,7 +80,7 @@ To cleanup those PTR records realtime, you can write a lambda function, use serv
   
 </svg>
 <span class='screen-reader'>Posted on </span>
-  <time class='date' datetime='2017-09-29T08:55:18Z'>2017, Sep 29</time>
+  <time class='date' datetime='2017-07-15T02:35:52Z'>2017, Jul 15</time>
 </span>
 
   
@@ -107,53 +107,43 @@ To cleanup those PTR records realtime, you can write a lambda function, use serv
     <div class='entry-content'>
   
 
-<p>I use autoscaling group to manage stateless servers. Servers go up and down every day.</p>
+<p>Coredump file is useful for debuging program crash. This post will show several settings related to coredump.</p>
 
-<p>Once server is up, I will add a PTR record for it&#8217;s internal ip. But when it&#8217;s down, I didn&#8217;t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.</p>
+<h2 id="enable-coredump">Enable coredump</h2>
 
-<p>To cleanup those PTR records realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?</p>
+<p>If you run program from shell , enable coredump via <code>unlimit  -c unlimited</code>， then check <code>unlimit -a | grep core</code>, if it shows <code>unlimited</code>, coredump is enabled for your current session.</p>
 
-<p>Straightforward way is write a script to call AWS API to get a PTR list, get ip from record, test whether the ip is live, if not, delete it.</p>
+<p>If your program is hosted by systemd, you need to edit your program&#8217;s service unit file&#8217;s <code>[Service]</code> section, add <code>LimitCORE=infinity</code> to enable coredump.</p>
 
-<p>Since use awscli to delete a Route53 record is very troublesome (involve json format), you&#8217;d better write a python script to delete them. I just demo some ideas to collect those records via shell.</p>
+<h2 id="coredump-location">coredump location</h2>
 
-<p>You can do it in a single line, but make things clear and easy to debug, I split it into several steps.</p>
+<p>Coredump file&#8217;s location is determined by kernerl parameter <code>kernel.core_pattern</code>.</p>
 
-<h2 id="get-ptr-record-list">Get PTR record list</h2>
+<p>On ubuntu 16.04 <code>kernel.core_pattern</code> default value is <code>|/usr/share/apport/apport %p %s %c %P</code>. Leading <code>|</code> means pass coredump file to following program. <code>%p %c %P</code> is used to create dump filename, their meaning can check via <code>man core</code>. apport will save dump file in /var/crash</p>
 
-<pre><code>aws route53 list-resource-record-sets  --hosted-zone-id xxxxx --query &quot;ResourceRecordSets[?Type=='PTR'].Name&quot; |  grep -Po '&quot;(.+?)&quot;' | tr -d \&quot; &gt; ptr.txt
-</code></pre>
+<p>If your default disk partition don&#8217;t have enough space to hold dump file, you can change <code>kernel.core_pattern</code> to another location, eg: <code>/mnt/core/%e-%t.%P</code>. If redis-server crashes, the dump file will be something like /mnt/core/redis-server-1500000000.1452. Also ensure crash process&#8217;s running user have write privilege on target location.</p>
 
-<p>ptr.txt will contain lines like:</p>
+<h2 id="systemd-coredump">systemd-coredump</h2>
 
-<pre><code>1.0.0.10.in-addr.arpa.
-2.0.0.10.in-addr.arpa.
-</code></pre>
+<p>You can install systemd-coredump to control dump file deeply, like: size, compression&#8230;.</p>
 
-<h2 id="get-ip-list-from-ptr-records">Get ip list from PTR records</h2>
+<p>Its config file is /etc/systemd/coredump.conf.</p>
 
-<pre><code>cat ptr.txt | while read -r line ; do echo -n $line | tac -s. | cut -d. -f3- | sed 's/.$//' ; done &gt; ip.txt
-</code></pre>
+<p>After install, it will change <code>kernel.core_pattern</code> to <code>|/lib/systemd/systemd-coredump %P %u %g %s %t 9223372036854775808 %e</code>.</p>
 
-<p>ip.txt:</p>
+<p>By default it will save dump file in /var/lib/systemd/coredump/. But I didn&#8217;t find how to modify it to a customize location other than journal log.</p>
 
-<pre><code>10.0.0.1
-10.0.0.2
-</code></pre>
+<p>After dumped, you can retrive dump file via <code>coredumpctl</code> command.</p>
 
-<h2 id="filter-out-invalid-ips">Filter out invalid ips</h2>
+<h2 id="trigger-process-dump-core-manually">Trigger process dump core manually.</h2>
 
-<p>Please do it on server where you can access internal ips.</p>
+<p>Send siginal: <code>sudo kill -s SIGSEGV   {pid}</code>, it will crash process and save coredump.</p>
 
-<pre><code>cat ip.txt | while read -r line  ; do ping -W1 -c1 $line &gt; /dev/null  2&gt;&amp;1 || echo $line  &gt;&gt; invalid_ip.txt ; done
-</code></pre>
+<p>Or <code>gcore {pid}</code>, it will make process save core file in current dir, won&#8217;t crash it.</p>
 
-<p>Then invalid_ip.txt will have all ips not valid</p>
+<h2 id="attach-coredump-file-to-gdb">Attach coredump file to gdb</h2>
 
-<h2 id="transfer-invalid-ipts-to-ptr-records">Transfer invalid ipts to PTR records</h2>
-
-<pre><code>cat invalid_ip.txt  | while read -r line; do echo -n $line. | tac -s. &amp;&amp; echo in-addr.arpa ; done &gt; ptr_del.txt
-</code></pre>
+<p>Very simple, if the process is redis, and its binary is <code>/usr/local/bin/redis-server</code>, dump file is <code>core</code>. Just <code>gdb /usr/local/bin/redis-server core</code>, needn&#8217;t config file. Then you can debug process memory when it crashed.</p>
 
 </div>
 
@@ -176,7 +166,7 @@ To cleanup those PTR records realtime, you can write a lambda function, use serv
   
 </svg>
 </span>
-  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/aws'>Aws</a>, <a class='tag' href='/tags/route53'>Route53</a></div>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/coredump'>Coredump</a>, <a class='tag' href='/tags/system'>System</a>, <a class='tag' href='/tags/ubuntu'>Ubuntu</a></div>
 
   </div>
 </footer>
@@ -186,7 +176,7 @@ To cleanup those PTR records realtime, you can write a lambda function, use serv
   
 <nav class='entry-nav-container'>
   <div class='entry-nav'><div class='prev-entry'>
-      <a href='/2017/08/19/build-private-staticwebsite-on-s3/'>
+      <a href='/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -194,10 +184,10 @@ To cleanup those PTR records realtime, you can write a lambda function, use serv
   
 </svg>
  Previous</span>
-        <span class='screen-reader'>Previous post: </span>Build private static website on S3</a>
+        <span class='screen-reader'>Previous post: </span>Build deb repository with fpm , aptly and s3</a>
     </div><div class='next-entry'>
-      <a href='/2017/10/14/aws-dms-notes/'>
-        <span class='screen-reader'>Next post: </span>AWS DMS notes<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/'>
+        <span class='screen-reader'>Next post: </span>Use redshift spectrum to do query on s3<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
