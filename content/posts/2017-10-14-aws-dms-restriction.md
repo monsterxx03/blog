@@ -76,7 +76,7 @@ After contact AWS support engineers, they confirmed it, and saied:
 
 ## Problem with terraform
 
-I use terraform to manage AWS infrastruction (v0.10.7), one problem is after I created DMS tasks via terraform, do `terraform plan` again will still see changes on `replication_task_settings` option,  
+I use terraform to manage AWS infrastructure (v0.10.7), one problem is after I created DMS tasks via terraform, do `terraform plan` again will still see changes on `replication_task_settings` option,  
 
 Problem is `CloudWatchLogGroup` and `CloudWatchLogStream` in task settings json don't work. Even you specific it,
 AWS still creates a log stream with random name for you.
