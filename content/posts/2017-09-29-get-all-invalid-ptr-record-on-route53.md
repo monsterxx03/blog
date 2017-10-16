@@ -11,13 +11,13 @@ tags:
   - route53
 
 ---
-I use autoscaling group to manage stateless servers. Servers goes up and done every day.
+I use autoscaling group to manage stateless servers. Servers go up and down every day.
 
 Once server is up, I will add a PTR record for it&#8217;s internal ip. But when it&#8217;s down, I didn&#8217;t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.
 
-To cleanup those PTR record in realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?
+To cleanup those PTR records realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?
 
-Straightford way is write a script to call AWS API to get a PTR list, get ip from record, test whether the ip is live, if not, delete it.
+Straightforward way is write a script to call AWS API to get a PTR list, get ip from record, test whether the ip is live, if not, delete it.
 
 Since use awscli to delete a Route53 record is very troublesome (involve json format), you&#8217;d better write a python script to delete them. I just demo some ideas to collect those records via shell.
 
