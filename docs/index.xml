@@ -5,10 +5,20 @@
     <link>https://blog.monsterxx03.com/</link>
     <description>Recent content on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 14 Oct 2017 22:33:36 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 10 Dec 2017 11:13:53 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Handle outage</title>
+      <link>https://blog.monsterxx03.com/2017/12/10/handle-outage/</link>
+      <pubDate>Sun, 10 Dec 2017 11:13:53 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/12/10/handle-outage/</guid>
+      <description>A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&amp;rsquo;m working on a long term solution. I learned some important things from this accident.
+The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&amp;rsquo;s health check failed due to high load.</description>
+    </item>
     
     <item>
       <title>AWS DMS notes</title>

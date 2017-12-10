@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&rsquo;m working on a long term solution. I learned some important things from this accident.
+The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&rsquo;s health check failed due to high load.'>
+
+<meta property='og:title' content='Handle outage • Shining Moon'>
+<meta property='og:description' content='A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&rsquo;m working on a long term solution. I learned some important things from this accident.
+The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&rsquo;s health check failed due to high load.'>
+<meta property='og:url' content='https://blog.monsterxx03.com/2017/12/10/handle-outage/'>
+<meta property='og:site_name' content='Shining Moon'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:published_time' content='2017-12-10T11:13:53&#43;08:00'/><meta property='article:modified_time' content='2017-12-10T11:13:53&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.31.1" />
+
+  <title>Handle outage • Shining Moon</title>
+  <link rel='canonical' href='https://blog.monsterxx03.com/2017/12/10/handle-outage/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>HOME</a>
+    </li>
+  <li>
+      <a href='/categories/tech/'>Tech</a>
+    </li>
+  <li>
+      <a href='/categories/life/'>Life</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Shining Moon</p>
+          
+          <p class='site-description subtitle'>百种弊病,皆从懒生</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Handle outage</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2017-12-10T11:13:53&#43;08:00'>2017, Dec 10</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+3 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p>A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&rsquo;m working on a long term solution. I learned some important things from this accident.</p>
+
+<h2 id="the-outage">The outage</h2>
+
+<p>I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&rsquo;s health check failed due to high load.</p>
+
+<p>I did following:</p>
+
+<ol>
+<li>Check monitor</li>
+<li>Identify the problem is caused by KV system</li>
+</ol>
+
+<p>Okay, problem is here, I know the problem is KV system&rsquo;s performance issue. But I can&rsquo;t figure out the root case right now, I need a temporary solution.
+Straightward way is redirect traffic to slave instance. But I know it won&rsquo;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&rsquo;t work.</p>
+
+<p>The real down time was not long, performance recovered to some degree soon, but latency was still high, not normal. I monitored it for long time, and tried to find out the root case until morning. Since traffic was growing when peak hour coming, performance became problem again.</p>
+
+<p>I decided to upgrade the server to a large tier with more cpu cores, since the problem is caused by high cpu usage. After it, latency back to normal, at least users won&rsquo;t feel anyting unusual, but KV server&rsquo;s cpu usage is still high, so the problem needs more inspectation.</p>
+
+<p>In the following working day, I worked on investigating the root case. And finally figured out the problem is caused by a lot of keys in KV expired at the same time. And the underlying storage engine can&rsquo;t hanle this condition well. I&rsquo;m working on migrate KV system to another one(AWS DynamoDB).</p>
+
+<h2 id="review">Review</h2>
+
+<p>There is something I did wrong before when reviewing this accident.</p>
+
+<p>Our campany&rsquo;s original KV system is hosted by redis (with AOF enabled), but the total size is limited by RAM, and data size grows quickly and can&rsquo;t fit in RAM anymore. So I need to migrate to a disk based choice, and I perfer to migrate a system compatible with redis protocol, then I needn&rsquo;t change live code and migrating data will be simple.</p>
+
+<p>After investigating several choices, I choosed current one, since its compatibility is best. I came to several bugs when testing, reported it to author,he fixed it very quickly (really appreciated). The reason why I didn&rsquo;t migrate to DynamoDB is also migration effort is big, although I must do it now. When running on live, performance is great, but I came to crash issue sometime, the author also fixed it. Looing back today, I feel it&rsquo;s too bugy, and I should consider migratition earlier. The codebase is too large and I&rsquo;m not familiar with C++, every time came to bug, I can&rsquo;t figure out the root case indenpendently.</p>
+
+<p>When loooking my process of handling outage, I&rsquo;m lack of mitigation solution, most thing I can do is just waiting and monitoring.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>When choosing core technology, we should be more careful, not only considering the migration effort, but also backup, recovering, monitor and outage handling.</p>
+
+<p>So the right process if handling outage is:</p>
+
+<ol>
+<li>Notice the problem (receive alerm).</li>
+<li>Reponse to it quick. (Let team know I&rsquo;m handling it)</li>
+<li>Migitation, make business back to normal. (Maybe fail over to slave)</li>
+<li>Cleanup and fix previous workaround.</li>
+<li>Postmortem.</li>
+</ol>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='categories'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/tech'>Tech</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/2017/10/14/aws-dms-notes/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>AWS DMS notes</a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://twitter.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Twitter account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:xyj.asmy@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+      
+
+       &copy; 2017 monsterxx03 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+
