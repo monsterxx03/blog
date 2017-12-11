@@ -27,13 +27,13 @@ In the following working day, I worked on investigating the root case. And final
 
 ## Review
 
-There is something I did wrong before when reviewing this accident.
+There is something I did wrong when reviewing this accident.
 
-Our campany's original KV system is hosted by redis (with AOF enabled), but the total size is limited by RAM, and data size grows quickly and can't fit in RAM anymore. So I need to migrate to a disk based choice, and I perfer to migrate a system compatible with redis protocol, then I needn't change live code and migrating data will be simple.
+Our campany's original KV system is hosted by redis (with AOF enabled), but the total size is limited by RAM, and data size grows quickly, can't fit in RAM anymore. So I need to migrate to a disk based choice, and I perfer to migrate a system compatible with redis protocol, then I needn't change live code and migrating data will be simple.
 
-After investigating several choices, I choosed current one, since its compatibility is best. I came to several bugs when testing, reported it to author,he fixed it very quickly (really appreciated). The reason why I didn't migrate to DynamoDB is also migration effort is big, although I must do it now. When running on live, performance is great, but I came to crash issue sometime, the author also fixed it. Looing back today, I feel it's too bugy, and I should consider migratition earlier. The codebase is too large and I'm not familiar with C++, every time came to bug, I can't figure out the root case indenpendently.
+After investigating several choices, I choosed current one, since its compatibility is best. I came to several bugs when testing, reported it to author,he fixed it very quickly (really appreciated). The reason why I didn't migrate to DynamoDB is also migration effort is big, although I must do it now. When running on live, performance is great, but I came to crash issue sometime, the author also fixed it. Looking back today, I feel it's too bugy, and I should consider migratition earlier. The codebase is too large and I'm not familiar with C++, every time came to bug, I can't figure out the root case indenpendently.
 
-When loooking my process of handling outage, I'm lack of mitigation solution, most thing I can do is just waiting and monitoring.
+When reviewing my process of handling outage, I'm lack of mitigation solution, most thing I can do is just waiting and monitoring.
 
 ## Conclusion
 
