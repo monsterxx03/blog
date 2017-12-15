@@ -18,7 +18,7 @@ attribute 对应的 value 支持以下几种类型:
  Number, 由于 DynamoDB 的传输协议是 http &#43; json, 为了跨语言的兼容性, number 一律会被转成 string 传输. Binary, 用来表示任意的二进制数据，会用 base64 encode 后传输. Boolean, true or false Null Document 类型包含 List 和 Map, 可以互相嵌套.  List, 个数无限制, 总大小不超过 400KB Map, 属性个数无限制，总大小不超过 400 KB, 嵌套层级不超过 32 级.'>
 <meta property='og:url' content='https://blog.monsterxx03.com/2017/12/15/dynamodb/'>
 <meta property='og:site_name' content='Shining Moon'>
-<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:published_time' content='2017-12-15T22:24:36&#43;08:00'/><meta property='article:modified_time' content='2017-12-15T22:24:36&#43;08:00'/><meta name='twitter:card' content='summary'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='AWS'><meta property='article:tag' content='Database'><meta property='article:tag' content='NoSQL'><meta property='article:published_time' content='2017-12-15T22:24:36&#43;08:00'/><meta property='article:modified_time' content='2017-12-15T22:24:36&#43;08:00'/><meta name='twitter:card' content='summary'>
 
 <meta name="generator" content="Hugo 0.31.1" />
 
@@ -267,7 +267,24 @@ for i in range(100):
     
 <footer class='entry-footer-container'>
   <div class='entry-footer'>
+  <div class='categories'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/tech'>Tech</a></div>
+<div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/aws'>Aws</a>, <a class='tag' href='/tags/database'>Database</a>, <a class='tag' href='/tags/nosql'>Nosql</a></div>
+
   </div>
 </footer>
 

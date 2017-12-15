@@ -140,7 +140,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/aws/</loc>
-    <lastmod>2017-10-14T22:33:36+08:00</lastmod>
+    <lastmod>2017-12-15T22:24:36+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -169,7 +169,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/database/</loc>
-    <lastmod>2017-05-04T16:27:52+00:00</lastmod>
+    <lastmod>2017-12-15T22:24:36+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -218,6 +218,12 @@
   <url>
     <loc>https://blog.monsterxx03.com/tags/mysql/</loc>
     <lastmod>2017-04-05T16:23:32+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/nosql/</loc>
+    <lastmod>2017-12-15T22:24:36+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -283,7 +289,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/categories/tech/</loc>
-    <lastmod>2017-12-10T11:13:53+08:00</lastmod>
+    <lastmod>2017-12-15T22:24:36+08:00</lastmod>
     <priority>0</priority>
   </url>
   
