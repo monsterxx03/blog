@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='DynamoDB 是 AWS 的托管 NoSQL 数据库，可以当作简单的 KV 数据库使用，也可以作为文档数据库使用.
+Data model 组织数据的单位是 table, 每张 table 必须设置 primary key, 可以设置可选的 sort key 来做索引.
+每条数据记作一个 item, 每个 item 含有一个或多个 attribute, 其中必须包括 primary key.
+attribute 对应的 value 支持以下几种类型:
+ Number, 由于 DynamoDB 的传输协议是 http &#43; json, 为了跨语言的兼容性, number 一律会被转成 string 传输. Binary, 用来表示任意的二进制数据，会用 base64 encode 后传输. Boolean, true or false Null Document 类型包含 List 和 Map, 可以互相嵌套.  List, 个数无限制, 总大小不超过 400KB Map, 属性个数无限制，总大小不超过 400 KB, 嵌套层级不超过 32 级.'>
+
+<meta property='og:title' content='DynamoDB • Shining Moon'>
+<meta property='og:description' content='DynamoDB 是 AWS 的托管 NoSQL 数据库，可以当作简单的 KV 数据库使用，也可以作为文档数据库使用.
+Data model 组织数据的单位是 table, 每张 table 必须设置 primary key, 可以设置可选的 sort key 来做索引.
+每条数据记作一个 item, 每个 item 含有一个或多个 attribute, 其中必须包括 primary key.
+attribute 对应的 value 支持以下几种类型:
+ Number, 由于 DynamoDB 的传输协议是 http &#43; json, 为了跨语言的兼容性, number 一律会被转成 string 传输. Binary, 用来表示任意的二进制数据，会用 base64 encode 后传输. Boolean, true or false Null Document 类型包含 List 和 Map, 可以互相嵌套.  List, 个数无限制, 总大小不超过 400KB Map, 属性个数无限制，总大小不超过 400 KB, 嵌套层级不超过 32 级.'>
+<meta property='og:url' content='https://blog.monsterxx03.com/2017/12/15/dynamodb/'>
+<meta property='og:site_name' content='Shining Moon'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:published_time' content='2017-12-15T22:24:36&#43;08:00'/><meta property='article:modified_time' content='2017-12-15T22:24:36&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.31.1" />
+
+  <title>DynamoDB • Shining Moon</title>
+  <link rel='canonical' href='https://blog.monsterxx03.com/2017/12/15/dynamodb/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>HOME</a>
+    </li>
+  <li>
+      <a href='/categories/tech/'>Tech</a>
+    </li>
+  <li>
+      <a href='/categories/life/'>Life</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Shining Moon</p>
+          
+          <p class='site-description subtitle'>百种弊病,皆从懒生</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>DynamoDB</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2017-12-15T22:24:36&#43;08:00'>2017, Dec 15</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+3 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p>DynamoDB 是 AWS 的托管 NoSQL 数据库，可以当作简单的 KV 数据库使用，也可以作为文档数据库使用.</p>
+
+<h2 id="data-model">Data model</h2>
+
+<p>组织数据的单位是 table, 每张 table 必须设置 primary key, 可以设置可选的 sort key 来做索引.</p>
+
+<p>每条数据记作一个 item, 每个 item 含有一个或多个 attribute, 其中必须包括 primary key.</p>
+
+<p>attribute 对应的 value 支持以下几种类型:</p>
+
+<ul>
+<li>Number, 由于 DynamoDB 的传输协议是 http + json, 为了跨语言的兼容性, number 一律会被转成 string 传输.</li>
+<li>Binary, 用来表示任意的二进制数据，会用 base64 encode 后传输.</li>
+<li>Boolean, true or false</li>
+<li>Null</li>
+<li>Document 类型包含 List 和 Map, 可以互相嵌套.
+
+<ul>
+<li>List, 个数无限制, 总大小不超过 400KB</li>
+<li>Map, 属性个数无限制，总大小不超过 400 KB, 嵌套层级不超过 32 级.</li>
+</ul></li>
+<li>Set,  一个 set 内元素数目无限制, 无序，不超过 400KB, 但必须属于同一类型, 支持 number set, binary set, string set.</li>
+</ul>
+
+<h2 id="选择-primary-key">选择 primary key</h2>
+
+<p>Table 的 primary key 支持单一的 partition key 或复合的 partition key + sort key. 不管哪种，最后的组成的primary key 在一张表中必须唯一.</p>
+
+<p>简单说 partition key 用来做 hash, 决定了数据存储在底层哪个 partition 中. sort key 用来做排序, 如果几个item 共享相同的 partition key, 他们
+的 sort key 必须不同, sort key 用来在同一个 partition key 下快速定位数据。</p>
+
+<p>partition key 的选择比较关键，需要能将数据尽量打散，同一张 table 中每个 partition key 中的 item 个数要尽量均匀, 数据倾斜太严重或单个partition key 是热点
+的话会导致 DynamoDB 的 read/write capacity 无法完全利用.</p>
+
+<p>partition key 的错误设计:</p>
+
+<p>如果用 DynamoDB 记录用户的活动记录， 用月份作 partition key, user id 作 sort key, 由于这些数据很有实效性, 一般都是比较近的时间点读写频繁，老数据基本不动，这样就会导致严重的数据倾斜和热点，只有最近几个月的数据所在 partition 在使用.</p>
+
+<p>正确的做法，按月分表, user id 作 partition key, 老数据所在表设置设置较低的 read/write capacity, 要删除可以直接删表.</p>
+
+<p>正确的 partition key 选择: <code>user_id</code>, <code>device_id</code> 等区分度比较高的属性.</p>
+
+<p>错误的 partition key 选择: 年月日,  product type 等分布,访问模式不均匀，或区分度小的属性.</p>
+
+<h2 id="read-write-capacity-和价格">Read/Write capacity 和价格</h2>
+
+<p>DynamoDB 的并发能力和价格由 read/write capacity 决定.</p>
+
+<p>一个 write capacity 在 1s 内可以处理一个写入请求.</p>
+
+<p>一个 read capacity 在 1s 内可以处理1个 strong consistent read 或 2 个 eventually consistent read.</p>
+
+<p>价格:</p>
+
+<ul>
+<li>WCU (write capacity unit), 0.47$/月</li>
+<li>RCU (read capacity unit), 0.09$/月</li>
+<li>存储价格  0.25$/GB/月</li>
+</ul>
+
+<p>假设系统设计容量 300 write/s, 3000 strong consistent read/s, 价格:  0.47 * 300 + 3000 * 0.09 = 411$/m</p>
+
+<p>如果 read 全部可以用 eventually consistent read 代替，价格: 0.47 *  300 + 1500 * 0.09 = 276$/m</p>
+
+<p>DynamoDB 可以购买 reverse capacity (以100 为单位购买), 整体价格可以再减少 53%, 变成 193.17$/m 和129.72 $/m</p>
+
+<h2 id="partition">Partition</h2>
+
+<p>partition 的个数由 WCU/RCU  还有数据量共同决定: 一个 partition 最多存储 10GB 数据，支持3000 RCU 或 1000 WCU</p>
+
+<p>WCU/RCU 和 partition 数目的公式:</p>
+
+<pre><code>( readCapacityUnits / 3,000 ) + ( writeCapacityUnits / 1,000 ) = initialPartitions (rounded up)
+</code></pre>
+
+<p>我们上面的例子:</p>
+
+<pre><code>(3000 / 3000) + (300 / 1000) = 1.3
+</code></pre>
+
+<p>向上取整，就需要 2 个 partition.</p>
+
+<p>假设我们的系统需要存储50GB 数据，3000 RCU, 300 WCU, 最终就需要 5 个 partition. 每个 partition 的处理能力会被均分,
+可以处理 600r/s, 60w/s, 这也是为什么我们选择 partition key 的时候要尽量打散数据，避免热点，分散不均匀的话，单个 partition
+可能达到处理上限，但并没有达到系统的总上限.</p>
+
+<p>如果单个 partition 的数据量超过了10GB, 这个 partition  会在后台自动分裂成两个 partition, 这个过程对上层透明，不会影响应用.</p>
+
+<h2 id="ttl-time-to-live">TTL (time to live)</h2>
+
+<p>创建表的时候可以指定一个 attribute 作为ttl 字段，这个字段里面写入的必须是 unix timestamp.</p>
+
+<p>DynamoDB 会在后台定时扫描数据，过期数据会在 48 小时内删除(如果应用对 ttl 有精度要求，必须自己检查 ttl 字段). 如果 ttl 写入了一个5年前的值(eg: 0),
+DynamoDB 将不会删除这条数据.</p>
+
+<h2 id="limits">Limits</h2>
+
+<p>1 RCU 最多可以读取4KB 的数据,如果返回的 item size 是 6KB, 就需要消耗2个RCU.</p>
+
+<p>1 WCU 最多可以写入1KB 数据,如果写入 2KB 的数据， 就要消耗2 个 WCU</p>
+
+<p>在 us-east-1 region, 每张表最高40000 RCU 和 40000 WCU, 每账户最高 80000 RCU 和 80000 WCU.</p>
+
+<p>每个 item 的 size 不能超过 400KB.</p>
+
+<p>BatchWriteItem api 一次最多写入25 个 item, 总大小不能超过16MB.</p>
+
+<p>BatchGetItem api 一次最多读取 100 个 item, 返回数据不能超过 16MB.</p>
+
+<h2 id="strong-consistent-read-eventually-consistent-read">Strong consistent read &amp; eventually consistent read</h2>
+
+<ul>
+<li>strong consistent read,  写入成功之后, 后续读取都会读到最新值.</li>
+<li>eventually consistent read, 写入后立刻读取有可能会读到旧的值，但最终能读到最新值.</li>
+</ul>
+
+<p>关于 eventually consistent read:</p>
+
+<ul>
+<li>写入一个之前不存在的key, 立刻读， 一定能读到该值</li>
+<li>更新一个已存在key 的值，立刻读，可能读到旧的值</li>
+<li>删除一个key, 立刻读，一定读不到该值</li>
+</ul>
+
+<p>简单测试下 DynamoDB 的eventually consistent read 延迟情况怎么样.</p>
+
+<p>对于同一个key, 循环写入100 次,每次写入一个随机值,然后立刻读取, 比较得到的是否是刚刚写入的值.</p>
+
+<pre><code>value_list = []
+for i in range(100): 
+    value = random.randint(1, 1000)
+    value_list.append(value)
+    table.write('key', value)
+    return_value = table.read('key')
+    if return_value != value:  # 检查读到的值
+        print  'fail at count {}, read value at {}'.format(i, value_list.index(return_value))
+        time.sleep(0.1)   # 等待 0.1s 再次读取
+        return_value = table.read('key')
+    assert return_value == value
+</code></pre>
+
+<p>在100 次读写中，大概有2 次会碰到读到上一次写入的值, 如果等待 0.1s 后再读, 在测试中读到的一定是最新值.</p>
+
+<p>注意, AWS 并没有对 eventually consistent read 的延迟做任何保证，这可能会受到 RCU/WCU 等各种因素影响, 应根据业务情况决定是否使用 strong consistent read.</p>
+
+<p>为了保证数据的持久性，每次写入一个值，DynamoDB 会将它写入后端 N 台服务器副本(N &gt;= 3), 写入过程是并行的，只要有一个节点写入成功就可以返回, DynamoDB 后台会检测数据，如果有节点写入失败，会从写入成功的节点上同步最新的数据, 这也是最终一致性的由来, 如果全部节点还没有完全更新成功，client  就可能读到含有老数据的节点.</p>
+
+<p>问题, 向N 台服务器同时写入数据，怎么判断有一个节点数据写入成功了呢(为了保证数据没写坏，写入后需要触发下读取做完整性校验)? 有个简单公式: W + R &gt; N, W 是写入成功的节点个数, R 是读取成功的节点个数.</p>
+
+<p>N 是副本个数, 如果N = 3, W = 2, R =2 就成功， 两次写入和读取不一定是一样的2 个几点，但由于总数是3，说明一定有一台机器是既写入成功又读取成功(关键就是保证 overlap), 表明数据一定已经正确得写入了系统.</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/2017/12/10/handle-outage/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Handle outage</a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://twitter.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Twitter account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:xyj.asmy@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+      
+
+       &copy; 2017 monsterxx03 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+
