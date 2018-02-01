@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/</loc>
+    <lastmod>2018-02-01T15:20:37+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.monsterxx03.com/2017/12/15/dynamodb/</loc>
     <lastmod>2017-12-15T22:24:36+08:00</lastmod>
   </url>
@@ -128,6 +133,12 @@
   </url>
   
   <url>
+    <loc>https://blog.monsterxx03.com/tags/alb/</loc>
+    <lastmod>2018-02-01T15:20:37+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.monsterxx03.com/tags/aptly/</loc>
     <lastmod>2017-06-23T09:40:58+00:00</lastmod>
     <priority>0</priority>
@@ -140,7 +151,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/aws/</loc>
-    <lastmod>2017-12-15T22:24:36+08:00</lastmod>
+    <lastmod>2018-02-01T15:20:37+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -158,6 +169,12 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/cloudfront/</loc>
+    <lastmod>2018-02-01T15:20:37+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -235,7 +252,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/posts/</loc>
-    <lastmod>2017-12-15T22:24:36+08:00</lastmod>
+    <lastmod>2018-02-01T15:20:37+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -265,7 +282,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/</loc>
-    <lastmod>2017-12-15T22:24:36+08:00</lastmod>
+    <lastmod>2018-02-01T15:20:37+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -283,13 +300,13 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/</loc>
-    <lastmod>2017-06-23T09:40:58+00:00</lastmod>
+    <lastmod>2018-02-01T15:20:37+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://blog.monsterxx03.com/categories/tech/</loc>
-    <lastmod>2017-12-15T22:24:36+08:00</lastmod>
+    <lastmod>2018-02-01T15:20:37+08:00</lastmod>
     <priority>0</priority>
   </url>
   

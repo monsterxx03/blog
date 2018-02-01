@@ -5,10 +5,24 @@
     <link>https://blog.monsterxx03.com/tags/aws/</link>
     <description>Recent content in Aws on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 15 Dec 2017 22:24:36 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 01 Feb 2018 15:20:37 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/tags/aws/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Get Real Client Ip on AWS</title>
+      <link>https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/</link>
+      <pubDate>Thu, 01 Feb 2018 15:20:37 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/</guid>
+      <description>If you run a webserver on AWS, get real client ip will be tricky if you didn&amp;rsquo;t configure server right and write code correctly.
+Things related to client real ip:
+ CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application).  Request sequence diagram will be like following:
+User&amp;rsquo;s real client ip is forwarded by front proxies one by one in head X-Forwarded-For.
+For CloudFront:
+ If user&amp;rsquo;s req header don&amp;rsquo;t have X-Forwarded-For, it will set user&amp;rsquo;s ip(from tcp connection) in X-Forwarded-For If user&amp;rsquo;s req already have X-Forwarded-For, it will append user&amp;rsquo;s ip(from tcp connection) to the end of X-Forwarded-For  For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront&amp;rsquo;s ip.</description>
+    </item>
     
     <item>
       <title>DynamoDB</title>
