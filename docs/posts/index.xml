@@ -6,10 +6,27 @@
     <description>Recent content in Posts on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 15 Dec 2017 22:24:36 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 25 Feb 2018 13:59:11 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>用 google spreadsheet 计算房贷等额本息还款</title>
+      <link>https://blog.monsterxx03.com/2018/02/25/%E7%94%A8-google-spreadsheet-%E8%AE%A1%E7%AE%97%E6%88%BF%E8%B4%B7%E7%AD%89%E9%A2%9D%E6%9C%AC%E6%81%AF%E8%BF%98%E6%AC%BE/</link>
+      <pubDate>Sun, 25 Feb 2018 13:59:11 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/02/25/%E7%94%A8-google-spreadsheet-%E8%AE%A1%E7%AE%97%E6%88%BF%E8%B4%B7%E7%AD%89%E9%A2%9D%E6%9C%AC%E6%81%AF%E8%BF%98%E6%AC%BE/</guid>
+      <description>看房看的眼花缭乱, 网上有很多房贷计算器, 但都没什么方便的比价功能, 能直观得看到首付和月供就好啦, 但也不想注册，不想老收中介的广告,索性用 google spreadsheet 自己做个简单的吧.
+PMT 公式 可以用 PMT 公式来计算等额本息的月供金额: https://support.google.com/docs/answer/3093185?hl=zh-Hans
+PMT(rate, number_of_periods, present_value, [future_value, end_or_beginning])  rate 是每期的利率, 如果商贷基准利率是 0.049, 每月还款, rate 就是 0.049/12.
+number_of_periods 是贷款期数, 年数 * 12.
+present_value 是贷款数额.
+PMT 公式算出的值是负数，需要取反.
+实际例子:
+商贷基准利率=0.049 利率倍数=1 首付百分比=0.3 贷款年数=30 公积金贷款利率=0.0325 公积金贷款数额=300000 房产单价=14000 建筑面积=85  房屋总价=14000 * 85=1190000 首付= 1190000 * 0.3 = 357000 商贷=1190000-357000-300000=533000
+月供= -PMT(0.049/12 * 1, 30*12, 533000) - PMT(0.0325/12, 30 * 12, 300000) =4134</description>
+    </item>
     
     <item>
       <title>DynamoDB</title>
