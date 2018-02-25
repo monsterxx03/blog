@@ -1,0 +1,6 @@
+@startuml
+User --> CloudFront 
+CloudFront --> ALB : X-Forwarded-For: clientIP
+ALB --> Nginx:  X-Forwarded-For: clientIP,CloudFrontIP
+Nginx --> webserver : X-Forwarded-For: clientIP,CloudFrontIP
+@enduml
