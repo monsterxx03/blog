@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&hellip;
+Usually, we inject secrets as environment variables, but they&rsquo;re still visable on lambda console. I don&rsquo;t use it in aws lambda.
+The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
+Code example:
+client = boto3.client(&#39;ssm&#39;) resp = client.get_parameter( Name=&#39;/redshift/admin/password&#39;, WithDecryption=True ) resp: { &quot;Parameter&quot;: { &quot;Name&quot;: &quot;/redshift/admin/password&quot;, &quot;Type&quot;: &quot;SecureString&quot;, &quot;Value&quot;: &quot;password value&quot;, &quot;Version&quot;: 1 } }  Things you need to do to make it work:'>
+
+<meta property='og:title' content='Access sensitive variables on AWS lambda • Shining Moon'>
+<meta property='og:description' content='AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&hellip;
+Usually, we inject secrets as environment variables, but they&rsquo;re still visable on lambda console. I don&rsquo;t use it in aws lambda.
+The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
+Code example:
+client = boto3.client(&#39;ssm&#39;) resp = client.get_parameter( Name=&#39;/redshift/admin/password&#39;, WithDecryption=True ) resp: { &quot;Parameter&quot;: { &quot;Name&quot;: &quot;/redshift/admin/password&quot;, &quot;Type&quot;: &quot;SecureString&quot;, &quot;Value&quot;: &quot;password value&quot;, &quot;Version&quot;: 1 } }  Things you need to do to make it work:'>
+<meta property='og:url' content='https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/'>
+<meta property='og:site_name' content='Shining Moon'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='AWS'><meta property='article:tag' content='lambda'><meta property='article:published_time' content='2018-02-28T21:45:23&#43;08:00'/><meta property='article:modified_time' content='2018-02-28T21:45:23&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.36.1" />
+
+  <title>Access sensitive variables on AWS lambda • Shining Moon</title>
+  <link rel='canonical' href='https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>HOME</a>
+    </li>
+  <li>
+      <a href='/categories/tech/'>Tech</a>
+    </li>
+  <li>
+      <a href='/categories/life/'>Life</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Shining Moon</p>
+          
+          <p class='site-description subtitle'>百种弊病,皆从懒生</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Access sensitive variables on AWS lambda</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2018-02-28T21:45:23&#43;08:00'>2018, Feb 28</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+One min read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  <p>AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&hellip;</p>
+
+<p>Usually, we inject secrets as environment variables, but they&rsquo;re still visable on lambda console. I don&rsquo;t use it in aws lambda.</p>
+
+<p>The better way is use <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html" target="_blank">aws parameter store</a> as configuration center. It can work with KMS to encrypt your data.</p>
+
+<p>Code example:</p>
+
+<pre><code>client = boto3.client('ssm')
+resp = client.get_parameter(
+    Name='/redshift/admin/password',
+    WithDecryption=True
+)
+resp:
+
+    {
+        &quot;Parameter&quot;: {
+            &quot;Name&quot;: &quot;/redshift/admin/password&quot;,
+            &quot;Type&quot;: &quot;SecureString&quot;,
+            &quot;Value&quot;: &quot;password value&quot;,
+            &quot;Version&quot;: 1
+        }
+    }
+</code></pre>
+
+<p>Things you need to do to make it work:</p>
+
+<ul>
+<li>Create a new KMS key</li>
+<li>Use new created KMS key to encrypt your data in parameter store.</li>
+<li>Set a execution role for your lambda function.</li>
+<li>In the KMS key&rsquo;s setting page, add the lambda execution role to the list which can read this KMS key.</li>
+</ul>
+
+<p>Then your lambda code can access encrypted data at runtime, and you needn&rsquo;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.</p>
+
+<p>BTW, parameter store support hierarchy(at most 15 levels), splitted by <code>/</code>. You can retrive data under same level in one call, deltails can be found in doc, eg: <a href="http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path" target="_blank">http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path</a></p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='categories'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/tech'>Tech</a></div>
+<div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/aws'>Aws</a>, <a class='tag' href='/tags/lambda'>Lambda</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/2018/02/25/%E7%94%A8-google-spreadsheet-%E8%AE%A1%E7%AE%97%E6%88%BF%E8%B4%B7%E7%AD%89%E9%A2%9D%E6%9C%AC%E6%81%AF%E8%BF%98%E6%AC%BE/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>用 google spreadsheet 计算房贷等额本息还款</a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://twitter.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Twitter account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:xyj.asmy@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>monsterxx03
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

@@ -6,10 +6,23 @@
     <description>Recent content on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sun, 25 Feb 2018 13:59:11 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 28 Feb 2018 21:45:23 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Access sensitive variables on AWS lambda</title>
+      <link>https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/</link>
+      <pubDate>Wed, 28 Feb 2018 21:45:23 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/</guid>
+      <description>AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&amp;hellip;
+Usually, we inject secrets as environment variables, but they&amp;rsquo;re still visable on lambda console. I don&amp;rsquo;t use it in aws lambda.
+The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
+Code example:
+client = boto3.client(&#39;ssm&#39;) resp = client.get_parameter( Name=&#39;/redshift/admin/password&#39;, WithDecryption=True ) resp: { &amp;quot;Parameter&amp;quot;: { &amp;quot;Name&amp;quot;: &amp;quot;/redshift/admin/password&amp;quot;, &amp;quot;Type&amp;quot;: &amp;quot;SecureString&amp;quot;, &amp;quot;Value&amp;quot;: &amp;quot;password value&amp;quot;, &amp;quot;Version&amp;quot;: 1 } }  Things you need to do to make it work:</description>
+    </item>
     
     <item>
       <title>用 google spreadsheet 计算房贷等额本息还款</title>
