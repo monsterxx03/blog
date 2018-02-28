@@ -6,8 +6,8 @@ copyright = "monsterxx03"
 
 theme = "minimo"
 
-disqusShortname = ""
-googleAnalytics = ""
+disqusShortname = "monsterxx03"
+googleAnalytics = "UA-98667627-1"
 
 Paginate = 10
 preserveTaxonomyNames = false
