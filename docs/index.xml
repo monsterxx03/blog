@@ -179,16 +179,6 @@ Basic Usage sudo pyflame -s 10 -x -r 0.001 $pid | ./flamegraph.pl &amp;gt; perf.
     </item>
     
     <item>
-      <title>杂言</title>
-      <link>https://blog.monsterxx03.com/2017/05/28/%E6%9D%82%E8%A8%80/</link>
-      <pubDate>Sun, 28 May 2017 12:30:09 +0000</pubDate>
-      
-      <guid>https://blog.monsterxx03.com/2017/05/28/%E6%9D%82%E8%A8%80/</guid>
-      <description>端午不怎么情愿得回了家，大太阳，一头汗，高铁还只买到了站票，到家后一身汗，想想也就是回来睡两天，这么来回折腾干嘛呢。
-晚上和奶奶聊了会天，实话说，小和爸妈关系都很一般，在家也没什么话讲，但我特别喜欢奶奶，很小的时候都是和她一起睡的，虽然她老是打呼:) 。现在真的感到奶奶年纪好大了，说的话过几秒就忘了，一件事来来回回反复说好几遍，爸妈时常念叨着奶奶估计没几年了，我特别讨厌他们说这话时候的语气，好冷漠&amp;#8230;.</description>
-    </item>
-    
-    <item>
       <title>Designing data intensive application, reading notes, Part 2</title>
       <link>https://blog.monsterxx03.com/2017/05/17/designing-data-intensive-application-reading-notes-part-2/</link>
       <pubDate>Wed, 17 May 2017 09:12:44 +0000</pubDate>
