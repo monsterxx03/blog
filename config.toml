@@ -92,9 +92,15 @@ url = "/categories/tech/"
 
 [[menu.main]]
 name = "Life"
-weight = 0
+weight = -8
 identifier = "life"
 url = "/categories/life/"
+
+[[menu.main]]
+name = "Me"
+weight = -7
+identifier = "aboutme"
+url = "/aboutme"
 
 [blackfriday]
 hrefTargetBlank = true

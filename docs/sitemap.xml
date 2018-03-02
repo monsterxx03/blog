@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://blog.monsterxx03.com/aboutme/</loc>
+    <lastmod>2018-03-02T23:49:46+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/</loc>
     <lastmod>2018-02-28T21:45:23+08:00</lastmod>
   </url>
@@ -320,7 +325,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/</loc>
-    <lastmod>2018-02-28T21:45:23+08:00</lastmod>
+    <lastmod>2018-03-02T23:49:46+08:00</lastmod>
     <priority>0</priority>
   </url>
   

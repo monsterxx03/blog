@@ -6,10 +6,21 @@
     <description>Recent content on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Wed, 28 Feb 2018 21:45:23 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 02 Mar 2018 23:49:46 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>About Me</title>
+      <link>https://blog.monsterxx03.com/aboutme/</link>
+      <pubDate>Fri, 02 Mar 2018 23:49:46 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/aboutme/</guid>
+      <description>Work with tech, belive in magic, live on fun :)
+Daily work:
+ Cloud infrastructure: AWS management, config management/monitoring/alerting/performance tuning. Data infrastructure: data warehouse/lake, ETL. Build CI/CD pipeline for fast deployment flow. Chaose is my friend.  I work with python/golang/js/shell, but always think language is the most trival part in life. Be professional, write robust code and useful doc.</description>
+    </item>
     
     <item>
       <title>Access sensitive variables on AWS lambda</title>
