@@ -10,6 +10,7 @@ tags:
   - AWS
   - Database
   - Redshift
+  - glow
 
 ---
 Glow 的 server infrastructure 全部搭建在 AWS 上，一般要选择一些基础服务的时候，总是先看 AWS, 只要功能和成本符合要求，不会特意选择开源方案。
