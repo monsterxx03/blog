@@ -1,0 +1,41 @@
+@startuml
+"Master DB" -> Slave :replication
+"Analysis Query" -> Slave
+@enduml
+
+@startuml
+"Analysis Query" --> Redshift
+S3 -> Redshift
+Slave -> S3: daily full update
+"td-agent" -> S3: hourly incremental update
+"metrics log" -> "td-agent"
+@enduml
+
+
+@startuml
+Master -> DMS
+"Analysis Query" --> Redshift
+S3 -> Redshift
+"td-agent" -> S3: hourly incremental update
+DMS -> Redshift: hourly incremental update
+"metrics log" -> "td-agent"
+@enduml
+
+@startuml
+"Analysis Query" --> Redshift
+Redshift -> S3: unload raw data
+Redshift --> S3: create spectrum external table on s3 parquet data
+S3 -> EMR: use spark to convert to parquet
+EMR --> S3: Output parquet data in S3
+@enduml
+
+@startuml
+RDS -> Maxwell: mysql replication
+Maxwell --> kinesis
+
+kinesis -> firehose
+firehose -> lambda
+lambda -> s3
+s3 <-- athena
+s3 <-- redshift
+@enduml
