@@ -460,7 +460,7 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
       <guid>https://blog.monsterxx03.com/aboutme/</guid>
       <description>Work with tech, belive in magic, live on fun :)
 Daily work:
- Cloud infrastructure: AWS management, config management/monitoring/alerting/performance tuning. Data infrastructure: data warehouse/lake, ETL. Build CI/CD pipeline for fast deployment flow. Chaose is my friend.  I work with python/golang/js/shell, but always think language is the most trival part in life. Be professional, write robust code and useful doc.</description>
+ Cloud infrastructure: AWS management, config management/monitoring/alerting/performance tuning. Data infrastructure: data warehouse/lake, ETL. Build CI/CD pipeline for fast deployment flow. Chaos is my friend.  I work with python/golang/js/shell, but always think language is the most trival part in life. Be professional, write robust code and useful doc.</description>
     </item>
     
   </channel>
