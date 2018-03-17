@@ -6,10 +6,23 @@
     <description>Recent content on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Wed, 28 Feb 2018 21:45:23 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 17 Mar 2018 14:24:33 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>一次失败的性能问题排查</title>
+      <link>https://blog.monsterxx03.com/2018/03/17/%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</link>
+      <pubDate>Sat, 17 Mar 2018 14:24:33 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/03/17/%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</guid>
+      <description>一叶障目, 不见泰山. 前阵子一直在排查一个性能问题, 结果由于一些惯性思维, 费了好大劲才弄明白原因, 而且原因非常简单&amp;hellip;.把这事记录下来,免得以后再掉坑里去.
+现象是到了晚上10点多, server lantency 突然一瞬间变高, 但持续时间很短，马上就会恢复, timeout 的请求也不多，影响不大.问题其实从蛮久前就出现了, 但一直也没很重视, 因为持续时间短,影响也不大,简单看了下也没看出明显的问题, 就一直搁置着. 直到最近，觉得问题变严重了, latency 变的更高了，而且在10～11点间多次变高, 开始认真看为什么.
+以下是 debug 过程:
+ 时间段非常固定，每天的晚上10 ~ 11点之间, 每次持续时间很短, 触发时间不是很有规律. 查看那段时间每个 group 的 load 情况, 有变高,但不明显. 查看 qps, 并没显著变化. 查看 qps * avg_latency, 可以看到在一段时间内最耗时的接口, 只能看到几乎所有接口都变高了, 占比最高的还是那几个最慢的接口, 并不能解释突发的 latency 变化.  开始推测, 晚上的 10 点到 11 点,美国那边用户差不多起床,是每天第一次打开 app 的时候, 而我们有些接口里很慢的 code path 只有用户在一天内第一次使用 app 的时候才会触发, 那边的业务逻辑本来就很混乱, 开始着手优化业务代码.
+ 看 datadog 的 apm tracing, 查看慢接口对各种 service 的调用情况 (Redis, MySQL, ElasticSearch,DynamoDB&amp;hellip;) 通过 pyflame 抓取进程运行时的 stack trace.</description>
+    </item>
     
     <item>
       <title>Access sensitive variables on AWS lambda</title>
