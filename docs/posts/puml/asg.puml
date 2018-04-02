@@ -1,0 +1,6 @@
+@startuml
+AutoScalingGroup --> SNS: LAUNCH
+SNS --> Lambda
+Lambda --> Jenkins
+Jenkins --> NewServer: Provision
+@enduml

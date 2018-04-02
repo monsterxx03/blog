@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='这几年吹 serverless 的比较多, 在公司内部也用 lambda , 记录一下, 这东西挺有用, 但远不到万能, 场景比较有限.
+lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平台, 我们就只在 aws lambda 上了.
+我基本上就把 lambda 当成 trigger 和 web hook 用.
+和 auto scaling group 一起用 线上所有分组的机器都是用 auto scaling group 管理的, 只不过 stateless 的 server 开了自动伸缩, 带状态的 (ElasticSearch cluster, redis cache cluster) 只用来维护固定 size.
+在往一个 group 里加 server 的时候, 要做的事情挺多的, 给新 server 添加组内编号 tag, 添加内网域名, provision, 部署最新代码.
+这些事都用 jenkins 来做, 但怎么触发 jenkins job 呢?'>
+
+<meta property='og:title' content='AWS lambda 的一些应用场景 • Shining Moon'>
+<meta property='og:description' content='这几年吹 serverless 的比较多, 在公司内部也用 lambda , 记录一下, 这东西挺有用, 但远不到万能, 场景比较有限.
+lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平台, 我们就只在 aws lambda 上了.
+我基本上就把 lambda 当成 trigger 和 web hook 用.
+和 auto scaling group 一起用 线上所有分组的机器都是用 auto scaling group 管理的, 只不过 stateless 的 server 开了自动伸缩, 带状态的 (ElasticSearch cluster, redis cache cluster) 只用来维护固定 size.
+在往一个 group 里加 server 的时候, 要做的事情挺多的, 给新 server 添加组内编号 tag, 添加内网域名, provision, 部署最新代码.
+这些事都用 jenkins 来做, 但怎么触发 jenkins job 呢?'>
+<meta property='og:url' content='https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/'>
+<meta property='og:site_name' content='Shining Moon'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:published_time' content='2018-03-23T17:40:54&#43;08:00'/><meta property='article:modified_time' content='2018-03-23T17:40:54&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.29" />
+
+  <title>AWS lambda 的一些应用场景 • Shining Moon</title>
+  <link rel='canonical' href='https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-98667627-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>HOME</a>
+    </li>
+  <li>
+      <a href='/categories/tech/'>Tech</a>
+    </li>
+  <li>
+      <a href='/categories/life/'>Life</a>
+    </li>
+  <li>
+      <a href='/aboutme'>Me</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Shining Moon</p>
+          
+          <p class='site-description subtitle'>百种弊病,皆从懒生</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>AWS lambda 的一些应用场景</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2018-03-23T17:40:54&#43;08:00'>2018, Mar 23</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+2 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p>这几年吹 serverless 的比较多,  在公司内部也用 lambda , 记录一下, 这东西挺有用, 但远不到万能, 场景比较有限.</p>
+
+<p>lambda 的代码的部署用的 <a href="https://serverless.com" target="_blank">serverless</a> 框架, 本身支持多种 cloud 平台, 我们就只在 aws lambda 上了.</p>
+
+<p>我基本上就把 lambda 当成 trigger 和 web hook 用.</p>
+
+<h2 id="和-auto-scaling-group-一起-用">和  auto scaling group 一起用</h2>
+
+<p>线上所有分组的机器都是用 auto scaling group 管理的, 只不过 stateless 的 server 开了自动伸缩, 带状态的 (ElasticSearch cluster, redis cache cluster) 只用来维护固定 size.</p>
+
+<p>在往一个 group 里加 server 的时候, 要做的事情挺多的, 给新 server 添加组内编号 tag, 添加内网域名, provision, 部署最新代码.</p>
+
+<p>这些事都用 jenkins 来做, 但怎么触发 jenkins job 呢?</p>
+
+<p>让 auto scaling group 在 scale out 的时候发一个 notification 到 SNS topic, lambda function 订阅这个 topic, lambda function 从 SNS message 中解析出 新 server 的 instance id, 调用 jenkins 的 api 触发 provision.</p>
+
+<p>provision 完成后，等 service 起来了, ALB 的 health check 就能过了, 用户的流量就过来了, 目前 provision 的过程大概要 2 mins.</p>
+
+<p><img src="/posts/images/asg.png" alt="asg" /></p>
+
+<p>Notes:</p>
+
+<ul>
+<li>如果把一台 auto scaling group 内的机器设置成 sandby 状态， 在把它放回去的时候, SNS topic 里的 Action 字段和新起 server 时候是一样的 LAUNCH, 如果不想有重复的 provision, 需要自己判断下 description 字段.</li>
+<li>因为 jenkins 部署在内网, lambda function 需要设置好相应的 vpc 和安全组 才能访问.</li>
+<li>auto scaling group scale in 时候的关闭策略, 我选的是 newest server, 虽然 provision 的代码每次改动都很小心, 但万一有问题, 需要把新加的 server 销毁, 这样的策略比较方便.</li>
+</ul>
+
+<h2 id="对-log-做-audit">对 log 做 audit</h2>
+
+<p>Redshift 的 audit log 会被定时上传到 S3, 用 lambda 做了一个 S3 upload object 的 trigger, 每次上传会检测日志内容, 如果有登陆失败, 或账号创建删除等事件的 log 时候, 发邮件出来.</p>
+
+<h2 id="做-webhook">做 webhook</h2>
+
+<p>和第三方服务有一些交互, 他们会定时 post 一些数据过来, 需要把这些数据导入 redshift.</p>
+
+<p>结合 api gateway 和 lambda, 可以很方便地做 webhook, 收到 post 消息, 后导入 redshift.</p>
+
+<p>一般一个 lambda function 只处理一件事， 如果有好几个 webhook 举要设置好多个 lambda, 管理起来比较麻烦, 可以用 <a href="https://github.com/logandk/serverless-wsgi" target="_blank">service-wsgi</a>, 这样一个 lambda function 可以做成一个 python wsgi app, 就能直接用 flask 之类的框架来做路由, 内部根据 url path 处理多个 webhook.</p>
+
+<h2 id="做-external-health-check">做 external health check</h2>
+
+<p>lambda 支持像 cronjob 一样定时运行, 配合 aws 的多 region, 可以很方便的从全球各个地区对 server 做 health check.</p>
+
+<h2 id="lambda-的一些限制">lambda 的一些限制</h2>
+
+<ul>
+<li>本地临时目录最多写入 512MB</li>
+<li>单个 function 内存最多分配 3008 MB</li>
+<li>FD 最多 1024 个</li>
+<li>最长运行时间 300s (所以不适合当作cron 来作 ETL)</li>
+<li>单账户最多并发 1000 (太低了&hellip;不适合跑业务)</li>
+<li>单个 deployment package 未压缩前大小不能超过 250MB, 压缩后不能超过 50MB.</li>
+</ul>
+
+<p>&hellip;</p>
+
+<p>限制还是挺多的, 实际使用下来, lambda 适合跑一些简单, 功能独立的代码, 复杂业务逻辑放上去, debug 会很麻烦, 设置一致的本地开发环境也很麻烦.</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/2018/03/17/%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>一次失败的性能问题排查</a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mx03" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://twitter.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Twitter account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:xyj.asmy@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+       &copy; 2017-2018 monsterxx03 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+
