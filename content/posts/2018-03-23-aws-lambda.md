@@ -1,6 +1,8 @@
 ---
 title: "AWS lambda 的一些应用场景"
 date: 2018-03-23T17:40:54+08:00
+categories:
+  - tech
 ---
 
 这几年吹 serverless 的比较多,  在公司内部也用 lambda , 记录一下, 这东西挺有用, 但远不到万能, 场景比较有限.
