@@ -1,0 +1,81 @@
+---
+title: "AWS 的 K8S CNI Plugin"
+date: 2018-04-09T15:28:38+08:00
+categories:
+  - tech
+tags:
+    - AWS
+    - vpc
+    - k8s
+---
+
+EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别.
+
+K8S 集群对网络有几个基本要求:
+
+- container 之间网络必须可达，且不通过 NAT
+- 所有 node 必须可以和所有 container 通信, 且不通过 NAT
+- container 自己看到的 IP, 必须和其他 container 看到的它的 ip 相同.
+
+## Flannel in VPC
+
+flannel 是 K8S 的一个 CNI 插件, 在 VPC 里使用 flannel 的话, 有几个选择:
+
+1. 通过 VXLAN/UDP 进行封包, 封包影响网络性能, 而且不好 debug 
+2. 用 aws vpc backend, 这种方式会把每台主机的 docker 网段添加进 vpc routing table, 但默认 routing table 里只能有50条规则, 所以只能 50 个 node, 可以发 ticket 提升, 但数量太多会影响 vpc 性能.
+3. host-gw, 在每个 node 上直接维护集群中所有节点的路由, 没测试过, 感觉出问题也很难 debug, 假如用 autoscaling group 管理 node 集群, 能否让 K8S 在 scale in/out 的时候修改所有节点的路由? 
+
+以上方式都只能利用 EC2 上的单网卡, security group 也没法作用在 pod 上.
+
+## VPC CNI plugin
+
+每个 EC2 可以分配多网卡, 每张网卡可以分配多个 IP, aws 的 cni 插件就是利用了这个, 这样可以直接给每个 pod 分配一个 eni 上的 secondary ip. 既利用了多网卡的性能, 也可以把 security group 绑到 pod 上.
+
+每个 node 上跑一个 L-IPAM (local ip address manager) 作为 daemonset, 这个进程在启动的时候会预分配 eni 和 secondary ip: https://github.com/aws/amazon-vpc-cni-k8s/blob/3168630f86c0af63724a1a018341c819ca935a9c/ipamd/ipamd.go#L151
+
+不同类型的 EC2 可以 attach 的 eni 个数，还有每个 eni 上 ip 数目都是不同的: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-eni.html#AvailableIpPerENI
+
+每个 pod 一个 ip 的话, 单个 EC2 可以放置的 pod 理论个数上限就是: (# of eni) * (# of ip per eni), 比如 c5.large 类型就是 3 * 10 = 30
+
+初始化 ip pool 的代码很简单粗暴, 在死循环里强制分配 eni 直到 aws api 告诉它 eni 达到上限, secondary ip 也是一样分配. 这里有个问题, 没法人工控制单个 ec2 的 ip数目, 如果开始 vpc 的 cidr 设的比较小，很容易就会耗尽 vpc 内ip.
+
+cni plugin 是一个 binary, 由 kubelet 调用. cni plugin 通过 grpc 和 L-IPAM 通信, 由它来告诉 L-IPAM 分配和删除网络:  https://github.com/aws/amazon-vpc-cni-k8s/blob/master/plugins/routed-eni/cni.go
+
+在 node 上 路由表设置了每个 pod 的 IP 去到那个网卡:
+
+    # ip route show
+    default via 10.0.96.1 dev eth0 
+    10.0.96.0/19 dev eth0  proto kernel  scope link  src 10.0.104.183 
+    10.0.97.30 dev aws8db0408c9a8  scope link  <------------------------Pod's IP
+    10.0.97.159 dev awsbcd978401eb  scope link 
+    10.0.97.226 dev awsc2f87dc4cdd  scope link 
+    10.0.102.98 dev aws4914061689b  scope link 
+    ...
+
+为每张网卡设置策略路由:
+
+    # ip rule list
+    0:	from all lookup local 
+    512:	from all to 10.0.97.30 lookup main <---------- to Pod's traffic
+    1025:	not from all to 10.0.0.0/16 lookup main 
+    1536:	from 10.0.97.30 lookup eni-1 <-------------- from Pod's traffic
+
+pod 内部的 eth0 就是分配到的 secondary ip:
+
+    / # ip addr show
+    1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN qlen 1
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+        valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+        valid_lft forever preferred_lft forever
+    3: eth0@if231: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue state UP 
+    link/ether 56:41:95:26:17:41 brd ff:ff:ff:ff:ff:ff
+    inet 10.0.97.30/32 brd 10.0.97.226 scope global eth0 <<<<<<< ENI's secondary IP address
+        valid_lft forever preferred_lft forever
+    inet6 fe80::5441:95ff:fe26:1741/64 scope link 
+        valid_lft forever preferred_lft forever
+
+pod 到 vpc 外部的流量通过 EC2 的 primary ip 走 NAT 出去:
+
+    -A POSTROUTING ! -d <VPC-CIDR> -m comment --comment "kubenetes: SNAT for outbound traffic from cluster" -m addrtype ! --dst-type LOCAL -j SNAT --to-source <Primary IP on the Primary ENI>

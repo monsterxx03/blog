@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/</loc>
+    <lastmod>2018-04-09T15:28:38+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</loc>
     <lastmod>2018-03-23T17:40:54+08:00</lastmod>
   </url>
@@ -192,7 +197,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/aws/</loc>
-    <lastmod>2018-02-28T21:45:23+08:00</lastmod>
+    <lastmod>2018-04-09T15:28:38+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -274,8 +279,14 @@
   </url>
   
   <url>
+    <loc>https://blog.monsterxx03.com/tags/k8s/</loc>
+    <lastmod>2018-04-09T15:28:38+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.monsterxx03.com/tags/lambda/</loc>
-    <lastmod>2018-02-28T21:45:23+08:00</lastmod>
+    <lastmod>2018-03-23T17:40:54+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -305,7 +316,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/posts/</loc>
-    <lastmod>2018-03-23T17:40:54+08:00</lastmod>
+    <lastmod>2018-04-09T15:28:38+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -335,7 +346,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/</loc>
-    <lastmod>2018-03-23T17:40:54+08:00</lastmod>
+    <lastmod>2018-04-09T15:28:38+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -365,7 +376,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/categories/tech/</loc>
-    <lastmod>2018-03-23T17:40:54+08:00</lastmod>
+    <lastmod>2018-04-09T15:28:38+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -378,6 +389,12 @@
   <url>
     <loc>https://blog.monsterxx03.com/tags/ubuntu/</loc>
     <lastmod>2017-07-15T02:35:52+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/vpc/</loc>
+    <lastmod>2018-04-09T15:28:38+08:00</lastmod>
     <priority>0</priority>
   </url>
   

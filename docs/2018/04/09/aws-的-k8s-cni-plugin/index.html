@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别.
+K8S 集群对网络有几个基本要求:
+ container 之间网络必须可达，且不通过 NAT 所有 node 必须可以和所有 container 通信, 且不通过 NAT container 自己看到的 IP, 必须和其他 container 看到的它的 ip 相同.  Flannel in VPC flannel 是 K8S 的一个 CNI 插件, 在 VPC 里使用 flannel 的话, 有几个选择:
+ 通过 VXLAN/UDP 进行封包, 封包影响网络性能, 而且不好 debug 用 aws vpc backend, 这种方式会把每台主机的 docker 网段添加进 vpc routing table, 但默认 routing table 里只能有50条规则, 所以只能 50 个 node, 可以发 ticket 提升, 但数量太多会影响 vpc 性能.'>
+
+<meta property='og:title' content='AWS 的 K8S CNI Plugin • Shining Moon'>
+<meta property='og:description' content='EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别.
+K8S 集群对网络有几个基本要求:
+ container 之间网络必须可达，且不通过 NAT 所有 node 必须可以和所有 container 通信, 且不通过 NAT container 自己看到的 IP, 必须和其他 container 看到的它的 ip 相同.  Flannel in VPC flannel 是 K8S 的一个 CNI 插件, 在 VPC 里使用 flannel 的话, 有几个选择:
+ 通过 VXLAN/UDP 进行封包, 封包影响网络性能, 而且不好 debug 用 aws vpc backend, 这种方式会把每台主机的 docker 网段添加进 vpc routing table, 但默认 routing table 里只能有50条规则, 所以只能 50 个 node, 可以发 ticket 提升, 但数量太多会影响 vpc 性能.'>
+<meta property='og:url' content='https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/'>
+<meta property='og:site_name' content='Shining Moon'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='AWS'><meta property='article:tag' content='vpc'><meta property='article:tag' content='k8s'><meta property='article:published_time' content='2018-04-09T15:28:38&#43;08:00'/><meta property='article:modified_time' content='2018-04-09T15:28:38&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.29" />
+
+  <title>AWS 的 K8S CNI Plugin • Shining Moon</title>
+  <link rel='canonical' href='https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-98667627-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>HOME</a>
+    </li>
+  <li>
+      <a href='/categories/tech/'>Tech</a>
+    </li>
+  <li>
+      <a href='/categories/life/'>Life</a>
+    </li>
+  <li>
+      <a href='/aboutme'>Me</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Shining Moon</p>
+          
+          <p class='site-description subtitle'>百种弊病,皆从懒生</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>AWS 的 K8S CNI Plugin</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2018-04-09T15:28:38&#43;08:00'>2018, Apr 09</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+3 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p>EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别.</p>
+
+<p>K8S 集群对网络有几个基本要求:</p>
+
+<ul>
+<li>container 之间网络必须可达，且不通过 NAT</li>
+<li>所有 node 必须可以和所有 container 通信, 且不通过 NAT</li>
+<li>container 自己看到的 IP, 必须和其他 container 看到的它的 ip 相同.</li>
+</ul>
+
+<h2 id="flannel-in-vpc">Flannel in VPC</h2>
+
+<p>flannel 是 K8S 的一个 CNI 插件, 在 VPC 里使用 flannel 的话, 有几个选择:</p>
+
+<ol>
+<li>通过 VXLAN/UDP 进行封包, 封包影响网络性能, 而且不好 debug</li>
+<li>用 aws vpc backend, 这种方式会把每台主机的 docker 网段添加进 vpc routing table, 但默认 routing table 里只能有50条规则, 所以只能 50 个 node, 可以发 ticket 提升, 但数量太多会影响 vpc 性能.</li>
+<li>host-gw, 在每个 node 上直接维护集群中所有节点的路由, 没测试过, 感觉出问题也很难 debug, 假如用 autoscaling group 管理 node 集群, 能否让 K8S 在 scale in/out 的时候修改所有节点的路由?</li>
+</ol>
+
+<p>以上方式都只能利用 EC2 上的单网卡, security group 也没法作用在 pod 上.</p>
+
+<h2 id="vpc-cni-plugin">VPC CNI plugin</h2>
+
+<p>每个 EC2 可以分配多网卡, 每张网卡可以分配多个 IP, aws 的 cni 插件就是利用了这个, 这样可以直接给每个 pod 分配一个 eni 上的 secondary ip. 既利用了多网卡的性能, 也可以把 security group 绑到 pod 上.</p>
+
+<p>每个 node 上跑一个 L-IPAM (local ip address manager) 作为 daemonset, 这个进程在启动的时候会预分配 eni 和 secondary ip: <a href="https://github.com/aws/amazon-vpc-cni-k8s/blob/3168630f86c0af63724a1a018341c819ca935a9c/ipamd/ipamd.go#L151" target="_blank">https://github.com/aws/amazon-vpc-cni-k8s/blob/3168630f86c0af63724a1a018341c819ca935a9c/ipamd/ipamd.go#L151</a></p>
+
+<p>不同类型的 EC2 可以 attach 的 eni 个数，还有每个 eni 上 ip 数目都是不同的: <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-eni.html#AvailableIpPerENI" target="_blank">https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-eni.html#AvailableIpPerENI</a></p>
+
+<p>每个 pod 一个 ip 的话, 单个 EC2 可以放置的 pod 理论个数上限就是: (# of eni) * (# of ip per eni), 比如 c5.large 类型就是 3 * 10 = 30</p>
+
+<p>初始化 ip pool 的代码很简单粗暴, 在死循环里强制分配 eni 直到 aws api 告诉它 eni 达到上限, secondary ip 也是一样分配. 这里有个问题, 没法人工控制单个 ec2 的 ip数目, 如果开始 vpc 的 cidr 设的比较小，很容易就会耗尽 vpc 内ip.</p>
+
+<p>cni plugin 是一个 binary, 由 kubelet 调用. cni plugin 通过 grpc 和 L-IPAM 通信, 由它来告诉 L-IPAM 分配和删除网络:  <a href="https://github.com/aws/amazon-vpc-cni-k8s/blob/master/plugins/routed-eni/cni.go" target="_blank">https://github.com/aws/amazon-vpc-cni-k8s/blob/master/plugins/routed-eni/cni.go</a></p>
+
+<p>在 node 上 路由表设置了每个 pod 的 IP 去到那个网卡:</p>
+
+<pre><code># ip route show
+default via 10.0.96.1 dev eth0 
+10.0.96.0/19 dev eth0  proto kernel  scope link  src 10.0.104.183 
+10.0.97.30 dev aws8db0408c9a8  scope link  &lt;------------------------Pod's IP
+10.0.97.159 dev awsbcd978401eb  scope link 
+10.0.97.226 dev awsc2f87dc4cdd  scope link 
+10.0.102.98 dev aws4914061689b  scope link 
+...
+</code></pre>
+
+<p>为每张网卡设置策略路由:</p>
+
+<pre><code># ip rule list
+0:  from all lookup local 
+512:    from all to 10.0.97.30 lookup main &lt;---------- to Pod's traffic
+1025:   not from all to 10.0.0.0/16 lookup main 
+1536:   from 10.0.97.30 lookup eni-1 &lt;-------------- from Pod's traffic
+</code></pre>
+
+<p>pod 内部的 eth0 就是分配到的 secondary ip:</p>
+
+<pre><code>/ # ip addr show
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN qlen 1
+link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+inet 127.0.0.1/8 scope host lo
+    valid_lft forever preferred_lft forever
+inet6 ::1/128 scope host 
+    valid_lft forever preferred_lft forever
+3: eth0@if231: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu 1500 qdisc noqueue state UP 
+link/ether 56:41:95:26:17:41 brd ff:ff:ff:ff:ff:ff
+inet 10.0.97.30/32 brd 10.0.97.226 scope global eth0 &lt;&lt;&lt;&lt;&lt;&lt;&lt; ENI's secondary IP address
+    valid_lft forever preferred_lft forever
+inet6 fe80::5441:95ff:fe26:1741/64 scope link 
+    valid_lft forever preferred_lft forever
+</code></pre>
+
+<p>pod 到 vpc 外部的流量通过 EC2 的 primary ip 走 NAT 出去:</p>
+
+<pre><code>-A POSTROUTING ! -d &lt;VPC-CIDR&gt; -m comment --comment &quot;kubenetes: SNAT for outbound traffic from cluster&quot; -m addrtype ! --dst-type LOCAL -j SNAT --to-source &lt;Primary IP on the Primary ENI&gt;
+</code></pre>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='categories'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/tech'>Tech</a></div>
+<div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/aws'>Aws</a>, <a class='tag' href='/tags/vpc'>Vpc</a>, <a class='tag' href='/tags/k8s'>K8s</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>AWS lambda 的一些应用场景</a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mx03" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://twitter.com/monsterxx03' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Twitter account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:xyj.asmy@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+       &copy; 2017-2018 monsterxx03 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+
