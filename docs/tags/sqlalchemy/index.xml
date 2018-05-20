@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Sqlalchemy on Shining Moon</title>
+    <link>https://blog.monsterxx03.com/tags/sqlalchemy/</link>
+    <description>Recent content in Sqlalchemy on Shining Moon</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>monsterxx03</copyright>
+    <lastBuildDate>Sun, 20 May 2018 15:11:31 +0800</lastBuildDate>
+    
+	<atom:link href="https://blog.monsterxx03.com/tags/sqlalchemy/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Migrate to Sqlalchemy</title>
+      <link>https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/</link>
+      <pubDate>Sun, 20 May 2018 15:11:31 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/</guid>
+      <description>最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些.
+原来的 db 层代码历史非常古老(10年以上&amp;hellip;), 最早写代码的人早就不在了, 问题很多:
+ 完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表结构，只能直接看数据库.  重写时候要考虑到的:
+ 现有业务代码基于老 db 代码已经写了很多了, 重写不现实, 迁移到 sqlalchemy 需要封装一套完全兼容的 api, 没用到的混乱的老 api 趁机清理. db migration 需要重新实现, 只用 alembic 不能满足需求, 后详. 重写完的代码保证高测试覆盖率.  ORM or Core sqlalchemy 分成两部分, 底层的 sqlalchemy core 是一套 sql 语法生成器, 通过重载 python 的 magic function 实现用比较漂亮的 python 语法来构造 sql.</description>
+    </item>
+    
+  </channel>
+</rss>

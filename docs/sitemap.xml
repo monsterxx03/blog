@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/</loc>
+    <lastmod>2018-05-20T15:11:31+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/</loc>
     <lastmod>2018-04-09T15:28:38+08:00</lastmod>
   </url>
@@ -316,13 +321,13 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/posts/</loc>
-    <lastmod>2018-04-09T15:28:38+08:00</lastmod>
+    <lastmod>2018-05-20T15:11:31+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/python/</loc>
-    <lastmod>2017-06-05T09:50:44+00:00</lastmod>
+    <lastmod>2018-05-20T15:11:31+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -346,7 +351,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/</loc>
-    <lastmod>2018-04-09T15:28:38+08:00</lastmod>
+    <lastmod>2018-05-20T15:11:31+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -359,6 +364,12 @@
   <url>
     <loc>https://blog.monsterxx03.com/tags/spectrum/</loc>
     <lastmod>2018-02-23T23:25:13+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/sqlalchemy/</loc>
+    <lastmod>2018-05-20T15:11:31+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -376,7 +387,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/categories/tech/</loc>
-    <lastmod>2018-04-09T15:28:38+08:00</lastmod>
+    <lastmod>2018-05-20T15:11:31+08:00</lastmod>
     <priority>0</priority>
   </url>
   

@@ -1,7 +1,6 @@
 ---
 title: "Migrate to Sqlalchemy"
-date: 2018-05-18T16:42:31+08:00
-draft: true
+date: 2018-05-20T15:11:31+08:00
 categories:
   - tech
 tags:
@@ -9,7 +8,7 @@ tags:
   - sqlalchemy
 ---
 
-最近把公司 db 层的封装代码基于 sqlalchemy 重写了一下, 记录一下.
+最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些.
 
 原来的 db 层代码历史非常古老(10年以上...), 最早写代码的人早就不在了, 问题很多:
 
@@ -20,7 +19,7 @@ tags:
 
 重写时候要考虑到的:
 
-- 现有业务代码基于老 db 代码已经写了很多了, 重写不现实, 迁移到 sqlalchemy 需要封装一套完全兼容的 api, 一些没用到的混乱的老 api 趁机清理. 
+- 现有业务代码基于老 db 代码已经写了很多了, 重写不现实, 迁移到 sqlalchemy 需要封装一套完全兼容的 api, 没用到的混乱的老 api 趁机清理. 
 - db migration 需要重新实现, 只用 alembic 不能满足需求, 后详. 
 - 重写完的代码保证高测试覆盖率.
 
@@ -56,6 +55,8 @@ ORM 部分是基于 core 做的面向对象封装.
 
 已存在的表比较多, 用 https://pypi.org/project/sqlacodegen/ 这个工具自动化生成 model 代码后手工修改.
 
+需要注意的是原来的项目里很多字段定义成了 unsigned int, 但 unsigned 是 MySQL 专属的数据类型, 需要用 `sqlalchemy.dialects.mysql` 里的 INTEGER, 为了统一, 所有数据类型都使用该包下的.
+
 ## Simulate old api
 
 这倒不难, 原来的 api 暴露出一组类似下面的函数:
@@ -89,16 +90,24 @@ select 里的 where 是个 dict, 会被转成 sql 的 where 部分:
 
 模拟之后老的 api 向上是透明的，调用老 api 的人完全不会 sqlalchemy 也没问题, 新的业务需要使用 join 或 orm 的话，直接拿 model class 自己去处理就行.
 
+要调试生成的 sql 可以通过以下方法:
+
+    import sqlparse
+    from sqlalchemy.dialects import mysql
+
+    stmt = stmt.compile(dialect=mysql.dialect(), compile_kwargs={"literal_binds": True})
+    print sqlparse.format(str(stmt), reindent=True)
+
 ## DB migration based on alembic 
 
-alembic 是 sqlalchemy 官方的 migration 工具, 但有点简陋, 不会在数据库里记录历次 migration 的内容, 只能看代码, 数据库里只有一张 `alembic_version` 表表示数据库当前处在的版本.
+alembic 是 sqlalchemy 官方的 migration 工具, 但有点简陋, 不会在数据库里记录历次 migration 的内容, 只能看代码, 数据库里只有一张 `alembic_version` 表记录数据库当前处在的版本.
 
 对 db migration 的需求:
 
 1. migration 版本号使用递增的数字，而不是 alembic 默认的 hash id.
 2. 通过修改 model 能生成对应的 schema ddl sql, 最后到 live 上运行的一定要是 raw sql, 不是 alembic 的 python 脚本.
-3. 在数据库里用一张 db_revisions 表记录每次运行 migration 的时候在什么时候对什么表做了什么操作.
-4. 可以重复运行一个 revision, 并检测其中哪张表已经运行过 migration 了, 直接跳过, 只 apply 没运行过的表. 原因是一个项目经常有多个分支在同时开发, 大家可能同时在修改数据库，生成了 revision 005, 但一般是对不同表的修改, 比如 branchA  修改了 User, branchB 修改了 Topic, branchA 先 merge 回 master 上线了, 所以线上已经是 revision 005, 希望 branchB 的人 merge master代码的时候没有冲突，上线 branchB 时候再运行一次 revision 005, 这回只 apply Topic 表的修改. 如果两分支同时修改了一张表，那merge 时候生成的 sql 会冲突, 人工解决冲突, 这种情况比较少.
+3. 在数据库里用一张 db_revisions 表记录每次运行 migration 的时候在什么时候对什么表做了什么操作.
+4. 可以重复运行一个 revision, 并检测其中哪张表已经运行过 migration 了, 直接跳过, 只 apply 没运行过的表. 原因是一个项目经常有多个分支在同时开发, 大家可能同时在修改数据库，生成了 revision 005, 但一般是对不同表的修改, 比如 branchA  修改了 User, branchB 修改了 Topic, branchA 先 merge 回 master 上线了, 所以线上已经是 revision 005, 希望 branchB 的人 merge master代码的时候没有冲突，上线 branchB 时候再运行一次 revision 005, 这回只 apply Topic 表的修改. 如果两分支同时修改了一张表，那merge 时候生成的 sql 会冲突, 人工解决冲突, 这种情况比较少.
 
 实现:
 
@@ -106,3 +115,77 @@ raw sql 可以通过 alembic 的 offline 模式生成, 但有几个问题:
 
 - 生成的语句不支持 online ddl, `ALGORITHM=INPLACE, LOCK=None` 语法.
 - add column 默认总是加在最后面, developer 希望保持 column 在 class 定义时候顺序.
+- 如果一次修改了多个 model class, offline 模式生成的 sql 是混合在一起的一个大字符串, 需求是每次生成的 revision 中将 sql 按表名分组.
+
+这些可以通过 `sqlparse` 将大 sql 字符串拆分成单句 sql, 然后用正则处理单句 sql, 给 `alter table add column` 语句添加 `ALGORITHM=INPLACE, LOCK=None`, column 的顺序可以通过 `User.__table__.columns` 来得到, 提取新加 column的前一个 column name, 给 sql 添加 `after xxx` 部分. 用正则从所有类型的 sql 中提取 table name 进行分组.
+
+递增的 migration 版本号数字 id 通过 `alembic revision --autogenerate --rev-id {next_rev}` 传进去.
+
+在线上运行 migration 的时候, 就直接将指定 revision 的 sql 文件运行就行了.
+
+测试过程中 alembic 有些更改是检测不到或有问题的:
+
+- 更改 column name 会生成一句 `drop column` 和 `add column`
+- 更改表名会生成一句 `drop table` 和 `create table`
+- 无法检测 index 结构的变化
+- 更改一个整型字段的 unsigned 属性无法检测
+- 删除 index 无法检测
+- 更改 index name 会生成一句创建新 index 的语句
+
+因为生成的 raw sql 是完全可以自己编辑的所以这些问题不大, 只要注意 review 生成的 sql 就行.
+
+alembic 默认不会比较字段类型的变化, 需要在 alembic 的 env.py 中设置 `compare_type=True`.
+
+alembic 默认不会比较server default值的变化, 需要设置 `compare_server_default`, 但 alembic 默认的比较函数有 bug, 如果原来没设置过 server_default 会报错, 所以把 `alembic.ddl.mysql.compare_server_default` 拷贝出来稍作修改传递给 `compare_server_default`:
+
+    def compare_server_default(
+        context,
+        inspected_column,
+        metadata_column,
+        rendered_inspector_default,
+        metadata_default, # = metadata_column.server_default
+        rendered_metadata_default):
+    # copy from alembic.ddl.mysql -> compare_server_default
+    if metadata_column.type._type_affinity is sqltypes.Integer and \
+            inspected_column.primary_key and \
+            not inspected_column.autoincrement and \
+            not rendered_metadata_default and \
+                    rendered_inspector_default == "'0'":
+        return False
+    elif inspected_column.type._type_affinity is sqltypes.Integer:
+        # original code can't don't handle rendered_inspector_default is None case
+        if rendered_inspector_default is None and rendered_metadata_default is not None:
+            return True
+        rendered_inspector_default = re.sub(
+            r"^'|'$", '', rendered_inspector_default)
+        return rendered_inspector_default != rendered_metadata_default
+    elif rendered_inspector_default and rendered_metadata_default:
+        # adjust for "function()" vs. "FUNCTION"
+        return (
+            re.sub(
+                r'(.*?)(?:\(\))?$', r'\1',
+                rendered_inspector_default.lower()) !=
+            re.sub(
+                r'(.*?)(?:\(\))?$', r'\1',
+                rendered_metadata_default.lower())
+        )
+    else:
+        return rendered_inspector_default != rendered_metadata_default
+
+### migration steps
+
+生成 migration sql 的过程:
+
+1. 修改 model class
+2. `alembic revision --autogenerate --rev-id {next_rev}`  生成 alembic 的 python 脚本 
+3. `alembic upgrade --sql {last_ver:next_ver}` 将刚在的 python 脚本转换成 sql 语句.
+4. 用 `sqlparse` 拆分大 sql, 并按需求修改单行 sql, 按表名分文件存储. 
+
+以上2-4过程封装成 `migrate.py create` 命令. 注意在生成之前要先检查当前的所有 revision 是不是已经在当前数据库中运行过了(检查 db_revisions 表), 如果没有要终止生成, 否则代码和生成的 migration sql 对不上.
+
+对数据库运行某个 revision 的时候需要检查该 revision 中每个表是否已经在数据库中运行过了, 运行过了就跳过, 没有就执行. 这个操作封装成 `migrate.py apply` 命令.
+
+
+## 总结
+
+基于 sqlalchemy 重写后, db 层代码干净了很多, 也保证了 100% 的测试覆盖率, 也有了直接操作 model class 可以生成复杂 sql 的能力, 达到了效果.
