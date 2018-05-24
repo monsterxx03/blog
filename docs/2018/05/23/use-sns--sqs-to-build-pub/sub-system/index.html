@@ -4,12 +4,12 @@
 <head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, record some notes.
-Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&rsquo;t support redivery as well, if subscribe failed to process the message, the message will be dropped.'>
+<meta name='description' content='Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, take some notes.
+Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.'>
 
 <meta property='og:title' content='Use SNS &amp; SQS to build Pub/Sub System • Shining Moon'>
-<meta property='og:description' content='Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, record some notes.
-Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&rsquo;t support redivery as well, if subscribe failed to process the message, the message will be dropped.'>
+<meta property='og:description' content='Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, take some notes.
+Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.'>
 <meta property='og:url' content='https://blog.monsterxx03.com/2018/05/23/use-sns--sqs-to-build-pub/sub-system/'>
 <meta property='og:site_name' content='Shining Moon'>
 <meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='AWS'><meta property='article:tag' content='SNS'><meta property='article:tag' content='SQS'><meta property='article:published_time' content='2018-05-23T18:05:28&#43;08:00'/><meta property='article:modified_time' content='2018-05-23T18:05:28&#43;08:00'/><meta name='twitter:card' content='summary'>
@@ -113,12 +113,12 @@ ga('send', 'pageview');
     
 
     <div class='entry-content'>
-  <p>Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, record some notes.</p>
+  <p>Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, take some notes.</p>
 
 <p>Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s
 really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex
-pubsub logic, eg: topic based distribution. It don&rsquo;t support redivery as well, if subscribe failed to process
-the message, the message will be dropped.</p>
+pubsub logic, eg: topic based distribution. It don&rsquo;t support redelivery as well, if subscribers failed to process
+the message, message will be dropped.</p>
 
 <p>There&rsquo;re three obvious choices in my mind:</p>
 
@@ -156,12 +156,12 @@ the message, the message will be dropped.</p>
 <p>SQS and SNS is very simple, not too much to say, just some notes:</p>
 
 <ul>
-<li>SQS have two type queues, FIFO queue and standard queue. FIFO queue will ensure message order, and ensure exactly once delivery, tps is limited(3000/s)
+<li>SQS queue have two types, FIFO queue and standard queue. FIFO queue will ensure message order, and ensure exactly once delivery, tps is limited(3000/s)
 standard queue is at least once delivery, message order is not ensured, tps is unlimited. In my case, I use standard queue, order is not very important.</li>
 <li>SQS message size limit is 256KB.</li>
 <li>Use <a href="https://github.com/p4tin/goaws" target="_blank">goaws</a> for local development, it has problem on processing message attributes, but I just use message body. messages only store in ram,
 will be cleared after restarted.</li>
-<li>If you failed to delivery message to sqs from sns, can setup topic&rsquo;s <code>sqs failure feedback role</code> to log to cloudwatch, in most case it&rsquo;s caused by iam permission.</li>
+<li>If you failed to deliver message to sqs from sns, can setup topic&rsquo;s <code>sqs failure feedback role</code> to log to cloudwatch, in most case it&rsquo;s caused by iam permission.</li>
 <li>Message in sqs can retain at most 14 days.</li>
 <li>Once a message is received by a client, it will be invisible to other clients in <code>visibility_timeout_seconds</code>(default 30s). It means if your client failed to process
 the message, it will be redelivered after 30s.</li>

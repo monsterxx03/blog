@@ -9,12 +9,12 @@ tags:
     - SQS
 ---
 
-Recently, we build pub/sub system based on AWS's SNS & SQS service, record some notes.
+Recently, we build pub/sub system based on AWS's SNS & SQS service, take some notes.
 
 Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It's
 really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex
-pubsub logic, eg: topic based distribution. It don't support redivery as well, if subscribe failed to process
-the message, the message will be dropped.
+pubsub logic, eg: topic based distribution. It don't support redelivery as well, if subscribers failed to process
+the message, message will be dropped.
 
 There're three obvious choices in my mind:
 
@@ -43,12 +43,12 @@ So my decision is:
 
 SQS and SNS is very simple, not too much to say, just some notes:
 
-- SQS have two type queues, FIFO queue and standard queue. FIFO queue will ensure message order, and ensure exactly once delivery, tps is limited(3000/s)
+- SQS queue have two types, FIFO queue and standard queue. FIFO queue will ensure message order, and ensure exactly once delivery, tps is limited(3000/s)
   standard queue is at least once delivery, message order is not ensured, tps is unlimited. In my case, I use standard queue, order is not very important.
 - SQS message size limit is 256KB.
 - Use [goaws](https://github.com/p4tin/goaws) for local development, it has problem on processing message attributes, but I just use message body. messages only store in ram,
   will be cleared after restarted.
-- If you failed to delivery message to sqs from sns, can setup topic's `sqs failure feedback role` to log to cloudwatch, in most case it's caused by iam permission. 
+- If you failed to deliver message to sqs from sns, can setup topic's `sqs failure feedback role` to log to cloudwatch, in most case it's caused by iam permission. 
 - Message in sqs can retain at most 14 days.
 - Once a message is received by a client, it will be invisible to other clients in `visibility_timeout_seconds`(default 30s). It means if your client failed to process
 the message, it will be redelivered after 30s.
