@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://blog.monsterxx03.com/2018/05/23/use-sns--sqs-to-build-pub/sub-system/</loc>
+    <lastmod>2018-05-23T18:05:28+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/</loc>
     <lastmod>2018-05-20T15:11:31+08:00</lastmod>
   </url>
@@ -202,7 +207,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/aws/</loc>
-    <lastmod>2018-04-09T15:28:38+08:00</lastmod>
+    <lastmod>2018-05-23T18:05:28+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -321,7 +326,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/posts/</loc>
-    <lastmod>2018-05-20T15:11:31+08:00</lastmod>
+    <lastmod>2018-05-23T18:05:28+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -351,7 +356,13 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/</loc>
-    <lastmod>2018-05-20T15:11:31+08:00</lastmod>
+    <lastmod>2018-05-23T18:05:28+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/sns/</loc>
+    <lastmod>2018-05-23T18:05:28+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -374,6 +385,12 @@
   </url>
   
   <url>
+    <loc>https://blog.monsterxx03.com/tags/sqs/</loc>
+    <lastmod>2018-05-23T18:05:28+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.monsterxx03.com/tags/system/</loc>
     <lastmod>2017-07-15T02:35:52+00:00</lastmod>
     <priority>0</priority>
@@ -387,7 +404,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/categories/tech/</loc>
-    <lastmod>2018-05-20T15:11:31+08:00</lastmod>
+    <lastmod>2018-05-23T18:05:28+08:00</lastmod>
     <priority>0</priority>
   </url>
   
