@@ -5,10 +5,22 @@
     <link>https://blog.monsterxx03.com/categories/tech/</link>
     <description>Recent content in Tech on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 23 May 2018 18:05:28 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 01 Jun 2018 17:03:24 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/categories/tech/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>在python3.7 中实现python2.7 的内置 hash 函数</title>
+      <link>https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/</link>
+      <pubDate>Fri, 01 Jun 2018 17:03:24 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/</guid>
+      <description>最近着手准备从 python2.7 迁移到 python3.7, 还没开始就碰到一个问题. 老系统里有一部分竟然是将 python 内置 hash 函数的结果存进了数据库, 这个做法绝对是错的, hash 的结果本来就没有保证过在各个版本的 python 中保证一致. 而且 python3 中算法完全变了, 默认在进程初始化的时候会用随机种子加进 hash 过程, 所以python 进程 一重启结果就不一样了. 木已成舟， 目前看将数据库里的值全部改掉是不可能了, 只能在 python3 中重新实现一下这个算法.
+python2.7 中的hash 算法是 fnv (有修改), python3 中变成了 sip, pep-456.
+fnv 的实现很简单， 引用 wikipedia 上的伪代码:
+hash = FNV_offset_basis for each byte_of_data to be hashed hash = hash × FNV_prime hash = hash XOR byte_of_data return hash  FNV_prime 是 1000003, python 实现和标准 fnv 的不同在于, 在进入循环 hash 之前将数据左移了7位, 在最后又和长度做了次XOR, 生成的数据随机性更大一点.</description>
+    </item>
     
     <item>
       <title>Use SNS &amp; SQS to build Pub/Sub System</title>
