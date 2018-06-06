@@ -1,123 +1,98 @@
 <!DOCTYPE html>
-<html lang='en'>
-
+<html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-  <meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='pyflame is an opensource tool developed by uber: https://github.com/uber/pyflame
-It can take snapshots of running python process, combined with flamegraph.pl, can output flamegraph picture of python call stacks. Help analyze bottleneck of python program, needn&#8217;t inject any perf code into your application, and overhead is very low.
-Basic Usage sudo pyflame -s 10 -x -r 0.001 $pid | ./flamegraph.pl &gt; perf.svg
- -s, how many seconds to run -r, sample rate (seconds)  Your output will be something like following:'>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<meta property='og:title' content='Debug python performance issue with pyflame • Shining Moon'>
-<meta property='og:description' content='pyflame is an opensource tool developed by uber: https://github.com/uber/pyflame
-It can take snapshots of running python process, combined with flamegraph.pl, can output flamegraph picture of python call stacks. Help analyze bottleneck of python program, needn&#8217;t inject any perf code into your application, and overhead is very low.
-Basic Usage sudo pyflame -s 10 -x -r 0.001 $pid | ./flamegraph.pl &gt; perf.svg
- -s, how many seconds to run -r, sample rate (seconds)  Your output will be something like following:'>
-<meta property='og:url' content='https://blog.monsterxx03.com/2017/06/05/debug-python-performance-issue-with-pyflame/'>
-<meta property='og:site_name' content='Shining Moon'>
-<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='python'><meta property='article:published_time' content='2017-06-05T09:50:44Z'/><meta property='article:modified_time' content='2017-06-05T09:50:44Z'/><meta name='twitter:card' content='summary'>
+<title>Debug python performance issue with pyflame | Shining Moon</title>
 
-<meta name="generator" content="Hugo 0.29" />
 
-  <title>Debug python performance issue with pyflame • Shining Moon</title>
-  <link rel='canonical' href='https://blog.monsterxx03.com/2017/06/05/debug-python-performance-issue-with-pyflame/'>
-  
-  
-  <link rel='icon' href='/favicon.ico'>
-<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
-<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
-<script>
-window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-ga('create', 'UA-98667627-1', 'auto');
-ga('send', 'pageview');
-</script>
-<script async src='//www.google-analytics.com/analytics.js'></script>
-
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://blog.monsterxx03.com/css/custom.css'><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
 </head>
+<body>
 
 
-<body class='page type-post'>
-  <div class='site'>
-
-    <a class='screen-reader' href='#main'>Skip to Content</a>
-
-    <header id='header' class='header-container'>
-      <div class='header site-header'>
-        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
-  <ul class='main-menu'>
-  <li>
-      <a href='/'>HOME</a>
-    </li>
-  <li>
-      <a href='/categories/tech/'>Tech</a>
-    </li>
-  <li>
-      <a href='/categories/life/'>Life</a>
-    </li>
-  <li>
-      <a href='/aboutme'>Me</a>
-    </li>
-  
-  </ul>
-</nav>
-
-        <div class='header-info'>
-          
-          <p class='site-title title'>Shining Moon</p>
-          
-          <p class='site-description subtitle'>百种弊病,皆从懒生</p>
-        </div>
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://blog.monsterxx03.com"><h1 class="title is-4">Shining Moon</h1></a>
       </div>
-    </header>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="config" href='#ZgotmplZ' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+  </svg></i>
+            </span>
+          </a><a class="level-item" aria-label="email" href='mailto:xyj.asmy@gmail.com' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+    <polyline points="22,6 12,13 2,6"/>
+    
+  </svg></i>
+            </span>
+          </a><a class="level-item" aria-label="github" href='https://github.com/monsterxx03' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg></i>
+            </span>
+          </a><a class="level-item" aria-label="linkedin" href='https://linkedin.com/in/%e5%be%90-%e5%8f%b6%e4%bd%b3-43564554' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+    <path stroke-width="1.8" d="m5.839218,4.101561c0,1.211972 -0.974141,2.194011 -2.176459,2.194011s-2.176459,-0.982039 -2.176459,-2.194011c0,-1.211094 0.974141,-2.194011 2.176459,-2.194011s2.176459,0.982917 2.176459,2.194011zm0.017552,3.94922l-4.388022,0l0,14.04167l4.388022,0l0,-14.04167zm7.005038,0l-4.359939,0l0,14.04167l4.360816,0l0,-7.370999c0,-4.098413 5.291077,-4.433657 5.291077,0l0,7.370999l4.377491,0l0,-8.89101c0,-6.915523 -7.829986,-6.66365 -9.669445,-3.259423l0,-1.891237z"/>
+    
+  </svg></i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/monsterxx03' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg></i>
+            </span>
+          </a></nav>
+      </div>
+    </nav>
 
-
-<main id='main' class='main'>
-  <article lang='en' class='entry'>
-    <header class='header-container'>
-  <div class='header entry-header'>
-    <div class='header-info'>
-      <h1 class='title'>Debug python performance issue with pyflame</h1>
+    <nav class="nav">
       
 
-    </div>
-    
-<div class='meta'>
-  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-  <line x1="16" y1="2" x2="16" y2="6"/>
-  <line x1="8" y1="2" x2="8" y2="6"/>
-  <line x1="3" y1="10" x2="21" y2="10"/>
-  
-</svg>
-<span class='screen-reader'>Posted on </span>
-  <time class='date' datetime='2017-06-05T09:50:44Z'>2017, Jun 05</time>
-</span>
-
-  
-  
-<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <circle cx="12" cy="12" r="10"/>
-  <polyline points="12 6 12 12 15 15"/>
-  
-</svg>
-2 mins read
-</span>
-
-
-</div>
-
+      
+    </nav>
 
   </div>
-</header>
+</section>
 
-    
-    
+<section class="section">
+  <div class="container">
+    <div class="subtitle tags is-6 is-pulled-right">
+      
+      
+<a class="subtitle is-6" href="/tags/python">#python</a>
 
-    <div class='entry-content'>
-  
+
+
+      
+    </div>
+    <h2 class="subtitle is-6">June 5, 2017</h2>
+    <h1 class="title">Debug python performance issue with pyflame</h1>
+    
+    <div class="content">
+      
 
 <p>pyflame is an opensource tool developed by uber: <a href="https://github.com/uber/pyflame" target="_blank">https://github.com/uber/pyflame</a></p>
 
@@ -154,132 +129,48 @@ ga('send', 'pageview');
 
 <p>When perfing uwsgi worker process, pyflame may fail to detect the running python version, a workaround is apply <code>-p2</code> or <code>-p3</code> option to tell it.</p>
 
-</div>
-
-    
-<footer class='entry-footer-container'>
-  <div class='entry-footer'>
-  <div class='categories'>
-  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
-  
-</svg>
-</span>
-  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/tech'>Tech</a></div>
-<div class='tags'>
-  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
-  <line x1="7" y1="7" x2="7" y2="7"/>
-  
-</svg>
-</span>
-  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/python'>Python</a></div>
-
-  </div>
-</footer>
-
-
-  </article>
-  
-<nav class='entry-nav-container'>
-  <div class='entry-nav'><div class='prev-entry'>
-      <a href='/2017/05/17/designing-data-intensive-application-reading-notes-part-2/'>
-        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="20" y1="12" x2="4" y2="12"/>
-  <polyline points="10 18 4 12 10 6"/>
-  
-</svg>
- Previous</span>
-        <span class='screen-reader'>Previous post: </span>Designing data intensive application, reading notes, Part 2</a>
-    </div><div class='next-entry'>
-      <a href='/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/'>
-        <span class='screen-reader'>Next post: </span>Build deb repository with fpm , aptly and s3<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
-    </div></div>
-</nav>
-
-  
-<div class='comments-container'>
-  <div id="disqus_thread"></div>
-<script>
-    var disqus_config = function () {
-    
-    
-    
-    };
-    (function() {
-        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
-            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
-            return;
-        }
-        var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "mx03" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-</div>
-
-</main>
-
-    <footer id='footer' class='footer-container'>
-      <div class='footer'>
-        <div class='social-menu-container'>
-  <nav aria-label='Social Menu'>
-    <ul class='social-menu'><li>
-        <a href='https://github.com/monsterxx03' target='_blank' rel='noopener'>
-          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
-  
-</svg>
-</a>
-      </li><li>
-        <a href='https://twitter.com/monsterxx03' target='_blank' rel='noopener'>
-          <span class='screen-reader'>Open Twitter account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
-  
-</svg>
-</a>
-      </li><li>
-        <a href='mailto:xyj.asmy@gmail.com' target='_blank' rel='noopener'>
-          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-  <polyline points="22,6 12,13 2,6"/>
-  
-</svg>
-</a>
-      </li></ul>
-  </nav>
-</div>
-        <div class='copyright'>
-  <p>
-        
-          
-        
       
+    </div>
+    
+  </div>
+</section>
 
-       &copy; 2017-2018 monsterxx03 
-  </p>
-</div>
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'mx03';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
 
-      </div>
-    </footer>
 
-  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+<section class="section">
+  <div class="container has-text-centered">
+    <p>monsterxx03</p>
+    
+  </div>
+</section>
 
+
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-98667627-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+</body>
 </html>
 

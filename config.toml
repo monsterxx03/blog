@@ -4,13 +4,12 @@ publishDir="docs"
 # for smart copyright line, leave this blank and check [params.copyright]
 copyright = "monsterxx03"
 
-theme = "minimo"
+theme = "kiss"
 
 disqusShortname = "mx03"
 googleAnalytics = "UA-98667627-1"
 
 Paginate = 10
-preserveTaxonomyNames = false
 
 enableRobotsTXT = true # generate robots.txt
 
@@ -21,7 +20,7 @@ pygmentsCodefences = true
 defaultContentLanguage = "en"
 
 [params.info]
-description = "百种弊病,皆从懒生"
+homeTitle = "百种弊病,皆从懒生"
 title404 = "Nothing's here!"
 
 [params.assets]
@@ -76,31 +75,6 @@ tag = "tags"
 [permalinks]
 page = "/:slug/"
 posts = "/:year/:month/:day/:title/"
-
-[[menu.main]]
-name = "HOME"
-weight = -10
-identifier = "home"
-url = "/"
-
-[[menu.main]]
-name = "Tech"
-weight = -9
-identifier = "tech"
-url = "/categories/tech/"
-
-
-[[menu.main]]
-name = "Life"
-weight = -8
-identifier = "life"
-url = "/categories/life/"
-
-[[menu.main]]
-name = "Me"
-weight = -7
-identifier = "aboutme"
-url = "/aboutme"
 
 [blackfriday]
 hrefTargetBlank = true
