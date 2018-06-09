@@ -89,6 +89,33 @@
 
 
 
+        
+      </div>
+      <h2 class="subtitle is-6">May 17, 2017</h2>
+      <h1 class="title"><a href="https://blog.monsterxx03.com/2017/05/17/designing-data-intensive-application-reading-notes-part-2/">Designing data intensive application, reading notes, Part 2</a></h1>
+      <div class="content">
+        Chapter 4, 5, 6
+Encoding formats xml, json, msgpack are text based encoding format, they can&#8217;t carry binary bytes (useless you encode them in base64, size grows 33%). And they cary schema definition with data, wast a lot of space.
+thrift, protobuf are binary format, can take binary bytes, only carry data, the schema is defined with IDL(interface definition language). They have code generation tool to generate code to encode and decode data, along with check.
+        
+        <a class="button is-link" href="https://blog.monsterxx03.com/2017/05/17/designing-data-intensive-application-reading-notes-part-2/" style="height:28px">
+          Read more
+          <span class="icon is-small">
+            <i class="fa fa-angle-double-right"></i>
+          </span>
+        </a>
+        
+      </div>
+    </article>
+    
+    <article>
+      <div class="subtitle tags is-6 is-pulled-right">
+        
+        
+<a class="subtitle is-6" href="/tags/book">#book</a>
+
+
+
   
   | <a class="subtitle is-6" href="/tags/database">#Database</a>
   
@@ -363,43 +390,6 @@ replicas: backup for shards, also replicas can handle search requests, which mea
 
         
         <a class="button is-link" href="https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/" style="height:28px">
-          Read more
-          <span class="icon is-small">
-            <i class="fa fa-angle-double-right"></i>
-          </span>
-        </a>
-        
-      </div>
-    </article>
-    
-    <article>
-      <div class="subtitle tags is-6 is-pulled-right">
-        
-        
-<a class="subtitle is-6" href="/tags/aws">#AWS</a>
-
-
-
-  
-  | <a class="subtitle is-6" href="/tags/database">#Database</a>
-  
-  | <a class="subtitle is-6" href="/tags/redshift">#Redshift</a>
-  
-  | <a class="subtitle is-6" href="/tags/glow">#glow</a>
-  
-
-        
-      </div>
-      <h2 class="subtitle is-6">July 16, 2016</h2>
-      <h1 class="title"><a href="https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/">Redshift as data warehouse</a></h1>
-      <div class="content">
-        Glow 的 server infrastructure 全部搭建在 AWS 上，一般要选择一些基础服务的时候，总是先看 AWS, 只要功能和成本符合要求，不会特意选择开源方案。
-数据仓库我们选择了 AWS 的 Redshift.
-在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.
-
-
-        
-        <a class="button is-link" href="https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/" style="height:28px">
           Read more
           <span class="icon is-small">
             <i class="fa fa-angle-double-right"></i>

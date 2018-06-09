@@ -91,6 +91,34 @@
 
         
       </div>
+      <h2 class="subtitle is-6">June 7, 2018</h2>
+      <h1 class="title"><a href="https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/">From python2 to python3</a></h1>
+      <div class="content">
+        This article won&rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&rsquo;t finished this project, also I didn&rsquo;t gave up so far :).
+Won&rsquo;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
+The codebase I&rsquo;m working on:
+ Only support python2.
+        
+        <a class="button is-link" href="https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/" style="height:28px">
+          Read more
+          <span class="icon is-small">
+            <i class="fa fa-angle-double-right"></i>
+          </span>
+        </a>
+        
+      </div>
+    </article>
+    
+    <article>
+      <div class="subtitle tags is-6 is-pulled-right">
+        
+        
+<a class="subtitle is-6" href="/tags/python">#python</a>
+
+
+
+        
+      </div>
       <h2 class="subtitle is-6">June 1, 2018</h2>
       <h1 class="title"><a href="https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/">在python3.7 中实现python2.7 的内置 hash 函数</a></h1>
       <div class="content">
@@ -362,41 +390,6 @@ For CloudFront:
  If user&rsquo;s req header don&rsquo;t have X-Forwarded-For, it will set user&rsquo;s ip(from tcp connection) in X-Forwarded-For If user&rsquo;s req already have X-Forwarded-For, it will append user&rsquo;s ip(from tcp connection) to the end of X-Forwarded-For  For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront&rsquo;s ip.
         
         <a class="button is-link" href="https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/" style="height:28px">
-          Read more
-          <span class="icon is-small">
-            <i class="fa fa-angle-double-right"></i>
-          </span>
-        </a>
-        
-      </div>
-    </article>
-    
-    <article>
-      <div class="subtitle tags is-6 is-pulled-right">
-        
-        
-<a class="subtitle is-6" href="/tags/aws">#AWS</a>
-
-
-
-  
-  | <a class="subtitle is-6" href="/tags/database">#Database</a>
-  
-  | <a class="subtitle is-6" href="/tags/nosql">#NoSQL</a>
-  
-
-        
-      </div>
-      <h2 class="subtitle is-6">December 15, 2017</h2>
-      <h1 class="title"><a href="https://blog.monsterxx03.com/2017/12/15/dynamodb/">DynamoDB</a></h1>
-      <div class="content">
-        DynamoDB 是 AWS 的托管 NoSQL 数据库，可以当作简单的 KV 数据库使用，也可以作为文档数据库使用.
-Data model 组织数据的单位是 table, 每张 table 必须设置 primary key, 可以设置可选的 sort key 来做索引.
-每条数据记作一个 item, 每个 item 含有一个或多个 attribute, 其中必须包括 primary key.
-attribute 对应的 value 支持以下几种类型:
- Number, 由于 DynamoDB 的传输协议是 http + json, 为了跨语言的兼容性, number 一律会被转成 string 传输. Binary, 用来表示任意的二进制数据，会用 base64 encode 后传输. Boolean, true or false Null Document 类型包含 List 和 Map, 可以互相嵌套.  List, 个数无限制, 总大小不超过 400KB Map, 属性个数无限制，总大小不超过 400 KB, 嵌套层级不超过 32 级.
-        
-        <a class="button is-link" href="https://blog.monsterxx03.com/2017/12/15/dynamodb/" style="height:28px">
           Read more
           <span class="icon is-small">
             <i class="fa fa-angle-double-right"></i>

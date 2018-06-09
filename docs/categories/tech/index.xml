@@ -5,10 +5,23 @@
     <link>https://blog.monsterxx03.com/categories/tech/</link>
     <description>Recent content in Tech on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 01 Jun 2018 17:03:24 +0800</lastBuildDate>
+    <copyright>monsterxx03</copyright>
+    <lastBuildDate>Thu, 07 Jun 2018 16:41:57 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/categories/tech/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>From python2 to python3</title>
+      <link>https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/</link>
+      <pubDate>Thu, 07 Jun 2018 16:41:57 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/</guid>
+      <description>This article won&amp;rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&amp;rsquo;t finished this project, also I didn&amp;rsquo;t gave up so far :).
+Won&amp;rsquo;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
+The codebase I&amp;rsquo;m working on:
+ Only support python2.</description>
+    </item>
     
     <item>
       <title>在python3.7 中实现python2.7 的内置 hash 函数</title>

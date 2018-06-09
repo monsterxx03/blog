@@ -92,6 +92,34 @@
 
         
       </div>
+      <h2 class="subtitle is-6">June 7, 2018</h2>
+      <h1 class="title"><a href="https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/">From python2 to python3</a></h1>
+      <div class="content">
+        This article won&rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&rsquo;t finished this project, also I didn&rsquo;t gave up so far :).
+Won&rsquo;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
+The codebase I&rsquo;m working on:
+ Only support python2.
+        
+        <a class="button is-link" href="https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/" style="height:28px">
+          Read more
+          <span class="icon is-small">
+            <i class="fa fa-angle-double-right"></i>
+          </span>
+        </a>
+        
+      </div>
+    </article>
+    
+    <article>
+      <div class="subtitle tags is-6 is-pulled-right">
+        
+        
+<a class="subtitle is-6" href="/tags/python">#python</a>
+
+
+
+        
+      </div>
       <h2 class="subtitle is-6">June 1, 2018</h2>
       <h1 class="title"><a href="https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/">在python3.7 中实现python2.7 的内置 hash 函数</a></h1>
       <div class="content">
@@ -354,42 +382,6 @@ PMT 公式算出的值是负数，需要取反.
  线上业务数据库 用户活动产生的 metrics log 从各种第三方服务 api 拉下来的数据 (email之类)  最早期 刚开始的时候业务单纯，数据量也少, 所有数据都用 MySQL 存储，搭了台 slave, 分析查询都在 slave 上进行.
         
         <a class="button is-link" href="https://blog.monsterxx03.com/2018/02/23/glow-infra-evolution/" style="height:28px">
-          Read more
-          <span class="icon is-small">
-            <i class="fa fa-angle-double-right"></i>
-          </span>
-        </a>
-        
-      </div>
-    </article>
-    
-    <article>
-      <div class="subtitle tags is-6 is-pulled-right">
-        
-        
-<a class="subtitle is-6" href="/tags/aws">#AWS</a>
-
-
-
-  
-  | <a class="subtitle is-6" href="/tags/cloudfront">#CloudFront</a>
-  
-  | <a class="subtitle is-6" href="/tags/alb">#ALB</a>
-  
-
-        
-      </div>
-      <h2 class="subtitle is-6">February 1, 2018</h2>
-      <h1 class="title"><a href="https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/">Get Real Client Ip on AWS</a></h1>
-      <div class="content">
-        If you run a webserver on AWS, get real client ip will be tricky if you didn&rsquo;t configure server right and write code correctly.
-Things related to client real ip:
- CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application).  Request sequence diagram will be like following:
-User&rsquo;s real client ip is forwarded by front proxies one by one in head X-Forwarded-For.
-For CloudFront:
- If user&rsquo;s req header don&rsquo;t have X-Forwarded-For, it will set user&rsquo;s ip(from tcp connection) in X-Forwarded-For If user&rsquo;s req already have X-Forwarded-For, it will append user&rsquo;s ip(from tcp connection) to the end of X-Forwarded-For  For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront&rsquo;s ip.
-        
-        <a class="button is-link" href="https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/" style="height:28px">
           Read more
           <span class="icon is-small">
             <i class="fa fa-angle-double-right"></i>

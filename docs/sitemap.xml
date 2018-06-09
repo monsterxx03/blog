@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/</loc>
+    <lastmod>2018-06-07T16:41:57+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/</loc>
     <lastmod>2018-06-01T17:03:24+08:00</lastmod>
   </url>
@@ -331,13 +336,13 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/posts/</loc>
-    <lastmod>2018-06-01T17:03:24+08:00</lastmod>
+    <lastmod>2018-06-07T16:41:57+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/python/</loc>
-    <lastmod>2018-06-01T17:03:24+08:00</lastmod>
+    <lastmod>2018-06-07T16:41:57+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -361,7 +366,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/</loc>
-    <lastmod>2018-06-01T17:03:24+08:00</lastmod>
+    <lastmod>2018-06-07T16:41:57+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -409,7 +414,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/categories/tech/</loc>
-    <lastmod>2018-06-01T17:03:24+08:00</lastmod>
+    <lastmod>2018-06-07T16:41:57+08:00</lastmod>
     <priority>0</priority>
   </url>
   
