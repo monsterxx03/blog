@@ -90,6 +90,42 @@
 
 
   
+  | <a class="subtitle is-6" href="/tags/cloudfront">#CloudFront</a>
+  
+  | <a class="subtitle is-6" href="/tags/alb">#ALB</a>
+  
+
+        
+      </div>
+      <h2 class="subtitle is-6">February 1, 2018</h2>
+      <h1 class="title"><a href="https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/">Get Real Client Ip on AWS</a></h1>
+      <div class="content">
+        If you run a webserver on AWS, get real client ip will be tricky if you didn&rsquo;t configure server right and write code correctly.
+Things related to client real ip:
+ CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application).  Request sequence diagram will be like following:
+User&rsquo;s real client ip is forwarded by front proxies one by one in head X-Forwarded-For.
+For CloudFront:
+ If user&rsquo;s req header don&rsquo;t have X-Forwarded-For, it will set user&rsquo;s ip(from tcp connection) in X-Forwarded-For If user&rsquo;s req already have X-Forwarded-For, it will append user&rsquo;s ip(from tcp connection) to the end of X-Forwarded-For  For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront&rsquo;s ip.
+        
+        <a class="button is-link" href="https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/" style="height:28px">
+          Read more
+          <span class="icon is-small">
+            <i class="fa fa-angle-double-right"></i>
+          </span>
+        </a>
+        
+      </div>
+    </article>
+    
+    <article>
+      <div class="subtitle tags is-6 is-pulled-right">
+        
+        
+<a class="subtitle is-6" href="/tags/aws">#AWS</a>
+
+
+
+  
   | <a class="subtitle is-6" href="/tags/database">#Database</a>
   
   | <a class="subtitle is-6" href="/tags/nosql">#NoSQL</a>
@@ -354,34 +390,6 @@ Example:
 fpm -s python -t deb -m xyj.asmy@gmail.com --verbose -v 0.10.1 --python-pip /usr/local/pip Flask  It will transform Flask 0.
         
         <a class="button is-link" href="https://blog.monsterxx03.com/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/" style="height:28px">
-          Read more
-          <span class="icon is-small">
-            <i class="fa fa-angle-double-right"></i>
-          </span>
-        </a>
-        
-      </div>
-    </article>
-    
-    <article>
-      <div class="subtitle tags is-6 is-pulled-right">
-        
-        
-<a class="subtitle is-6" href="/tags/python">#python</a>
-
-
-
-        
-      </div>
-      <h2 class="subtitle is-6">June 5, 2017</h2>
-      <h1 class="title"><a href="https://blog.monsterxx03.com/2017/06/05/debug-python-performance-issue-with-pyflame/">Debug python performance issue with pyflame</a></h1>
-      <div class="content">
-        pyflame is an opensource tool developed by uber: https://github.com/uber/pyflame
-It can take snapshots of running python process, combined with flamegraph.pl, can output flamegraph picture of python call stacks. Help analyze bottleneck of python program, needn&#8217;t inject any perf code into your application, and overhead is very low.
-Basic Usage sudo pyflame -s 10 -x -r 0.001 $pid | ./flamegraph.pl &gt; perf.svg
- -s, how many seconds to run -r, sample rate (seconds)  Your output will be something like following:
-        
-        <a class="button is-link" href="https://blog.monsterxx03.com/2017/06/05/debug-python-performance-issue-with-pyflame/" style="height:28px">
           Read more
           <span class="icon is-small">
             <i class="fa fa-angle-double-right"></i>
