@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>编写 python 2/3 兼容代码 | Shining Moon</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://blog.monsterxx03.com/css/custom.css'><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+</head>
+<body>
+
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://blog.monsterxx03.com"><h1 class="title is-4">Shining Moon</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="config" href='#ZgotmplZ' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+  </svg></i>
+            </span>
+          </a><a class="level-item" aria-label="email" href='mailto:xyj.asmy@gmail.com' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+    <polyline points="22,6 12,13 2,6"/>
+    
+  </svg></i>
+            </span>
+          </a><a class="level-item" aria-label="github" href='https://github.com/monsterxx03' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg></i>
+            </span>
+          </a><a class="level-item" aria-label="linkedin" href='https://linkedin.com/in/%e5%be%90-%e5%8f%b6%e4%bd%b3-43564554' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+    <path stroke-width="1.8" d="m5.839218,4.101561c0,1.211972 -0.974141,2.194011 -2.176459,2.194011s-2.176459,-0.982039 -2.176459,-2.194011c0,-1.211094 0.974141,-2.194011 2.176459,-2.194011s2.176459,0.982917 2.176459,2.194011zm0.017552,3.94922l-4.388022,0l0,14.04167l4.388022,0l0,-14.04167zm7.005038,0l-4.359939,0l0,14.04167l4.360816,0l0,-7.370999c0,-4.098413 5.291077,-4.433657 5.291077,0l0,7.370999l4.377491,0l0,-8.89101c0,-6.915523 -7.829986,-6.66365 -9.669445,-3.259423l0,-1.891237z"/>
+    
+  </svg></i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/monsterxx03' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg></i>
+            </span>
+          </a></nav>
+      </div>
+    </nav>
+
+    <nav class="nav">
+      
+
+      
+    </nav>
+
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="subtitle tags is-6 is-pulled-right">
+      
+      
+<a class="subtitle is-6" href="/tags/python">#python</a>
+
+
+
+      
+    </div>
+    <h2 class="subtitle is-6">June 16, 2018</h2>
+    <h1 class="title">编写 python 2/3 兼容代码</h1>
+    
+    <div class="content">
+      
+
+<p><a href="https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/" target="_blank">上一篇</a> 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情.</p>
+
+<h2 id="future">__future__</h2>
+
+<p>python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件.</p>
+
+<p>首先是几个在 python 2.7 里不用特意写，已经默认开启的特性:</p>
+
+<ul>
+<li><code>from __future__ import nested_scopes</code> 2.2 开始就默认开启了，用于修改嵌套函数内的变量搜索作用域, 在此之前, 全局模块的优先级比被嵌套函数的父函数要高, 现在都没这个问题了.</li>
+<li><code>from __future__ import generators</code>, yield 关键词, 2.3 默认支持.</li>
+<li><code>from __future__ import with_statement</code>, with 关键词, 2.6 默认支持.</li>
+</ul>
+
+<p>我显示开启的两个特性:</p>
+
+<ul>
+<li><code>from __future__ import print_function</code>, 就是将 <code>print</code> 关键词变成函数啦, 导入后支持 python3 中 print 的完整参数，再用不带括号的 print 就会在文件被导入的时候报语法错误啦.</li>
+<li><code>from __future__ import absolute_import</code>, python2 导入模块的时候默认是相对路径优先, 比如:在同级目录下有个 <code>email.py</code>, 你在代码中写 <code>import email</code> 的时候就会优先导入同目录的文件, 而不会去找标准库的 email 模块. 开启这个之后, 就会从全局的 PYTHONPATH 里找, 相对导入只能用 <code>from . import xx</code> 这种语法.</li>
+</ul>
+
+<p>还有两个比较有用但因为影响比较大我没用的功能:</p>
+
+<ul>
+<li><code>from __future__ import division</code>, py2 中除法是向下取整的 floor division, 开启后就像 py3 一样 <code>1/2</code> 就返回浮点数了. 因为代码量比较大， 我并没有在每个文件头部加上这句, 实际使用除法的时候, 需要 floor division 就用 <code>//</code>, 否则和以前一样 <code>1 * 1.0/2</code>, 保证代码正确.</li>
+<li><code>from __future__ import unicode_literals</code>, 开启后默认所有的字符串定义都会变成 unicode, 不过 <code>str</code> 还是 byte string 啦, 这个并没法解决 unicode 的问题, 所以也没用.</li>
+</ul>
+
+<h2 id="list-comprehension-中变量作用域的变化">list comprehension 中变量作用域的变化</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
+    [i <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10</span>)]
+    <span style="color:#66d9ef">print</span>(i)</code></pre></div>
+<p>这段代码在 py2 中会打印9, 在 py3 中打印0, list comprehension 中的变量不再污染外部作用域.</p>
+
+<p>不过普通 for 循环中的变量作用域并没什么变化:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    i <span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10</span>):
+        <span style="color:#66d9ef">pass</span>
+    <span style="color:#66d9ef">print</span>(i)</code></pre></div>
+<p>py2 / 3 中都打印 9, 原因是 python 中并没有 block 的概念.</p>
+
+<p>list comprehension 如果作用在 class define 中行为也不太一样, 下面代码在 py2 里是队的， 但在 py3 里就会报错:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>(object):
+        name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;test&#39;</span>
+        d <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;a&#39;</span>: <span style="color:#e6db74">&#39;1&#39;</span>, <span style="color:#e6db74">&#39;b&#39;</span>: <span style="color:#e6db74">&#39;2&#39;</span>}
+        [d<span style="color:#f92672">.</span>update({_k: name}) <span style="color:#66d9ef">for</span> _k <span style="color:#f92672">in</span> d]
+
+    <span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#a6e22e">NameError</span>: name <span style="color:#e6db74">&#39;d&#39;</span> <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> defined</code></pre></div>
+<p>解决方法1, 在 class 的定义之外做更改操作:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>(object):
+        name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;test&#39;</span>
+        d <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;a&#39;</span>: <span style="color:#e6db74">&#39;1&#39;</span>, <span style="color:#e6db74">&#39;b&#39;</span>: <span style="color:#e6db74">&#39;2&#39;</span>}
+
+    [A<span style="color:#f92672">.</span>d<span style="color:#f92672">.</span>update({_k: A<span style="color:#f92672">.</span>name}) <span style="color:#66d9ef">for</span> _k <span style="color:#f92672">in</span> A<span style="color:#f92672">.</span>d]</code></pre></div>
+<p>方法2, 用一个匿名lambda 函数将 class variable 传进去:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>(object):
+        name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;test&#39;</span>
+        (<span style="color:#66d9ef">lambda</span> name<span style="color:#f92672">=</span>name, d<span style="color:#f92672">=</span>d: [d<span style="color:#f92672">.</span>update({_k: name}) <span style="color:#66d9ef">for</span> _k <span style="color:#f92672">in</span> d])()</code></pre></div>
+<p>方法2 看上去太 trick, 我用 1.</p>
+
+<h2 id="长整型">长整型</h2>
+
+<p>py2 中如果 int 数值大于 <code>sys.maxint</code> (2**63-1), 会被隐式得转换成 long, 定义数值变量的时候可以在最后加上 <code>l</code> 或 <code>L</code> 声明这是个 long, py3 中去把 int 和long 合并了, 只用 int 就行, <code>long</code> 不存在了, 使用会报错, <code>l</code> 和 <code>L</code> 也不能再加了,对代码的影响主要是类型判断.</p>
+
+<p><code>isinstance(v, (int, long))</code>, 需要改成 <code>isinstance(v, six.integer_types)</code>,</p>
+
+<p><code>isinstance(v, (int, long, float))</code> &ndash;&gt; <code>isinstance(v,(six.integer_types, float))</code></p>
+
+<h2 id="reload">reload</h2>
+
+<p>不再是 builtin 函数, 用 <code>from imp import reload</code> 可以兼容 2,3.</p>
+
+<h2 id="zip-map-filter">zip, map, filter</h2>
+
+<p>py2 里会返回 list, py3 会返回 iterable 对象, 这样在取 slice, 或多次遍历的时候就会出问题, 需要用 <code>list()</code> 手动转成 list, 我的建议是不使用这些函数, 完全用 list comprehension 改写, 就不会出问题了.</p>
+
+<h2 id="reduce">reduce</h2>
+
+<p>也不再是 built 函数, 需要 <code>from functools import reduce</code>.</p>
+
+<h2 id="xrange">xrange</h2>
+
+<p>py3 中没有啦, 只能用 range, 而且返回结果也是 iterable, 用 <code>six.moves import range</code>, 这个在 py2 下就是 <code>xrange</code>.</p>
+
+<h2 id="dict">dict</h2>
+
+<p><code>iterkeys(), itervalues(), iteritems()</code> 在 py3 中也没有啦, <code>keys(), values(), items()</code> 会返回 iterable, 要
+list也要自己转换, 可以用 <code>six.iteritems(d), six.iterkeys(d), six.itervalues(d)</code>.</p>
+
+<h2 id="异常处理">异常处理</h2>
+
+<p>一些特别老的语法不再支持下, 下面的写法在 py3 下都会报错:</p>
+
+<pre><code>try:
+    1/0
+except Exception, e:
+    pass
+
+raise ValueError, &quot;yahaha&quot;
+</code></pre>
+
+<p>用正常的写法就行:</p>
+
+<pre><code>try:
+    1/0
+except Exception as e:
+    pass
+
+raise ValueError(&quot;yahaha&quot;)
+</code></pre>
+
+<h2 id="stringio">StringIO</h2>
+
+<p>StringIO (cStringIO) 在 py3 里都没了, 用 <code>io.BytesIO</code> 和 <code>io.StringIO</code>, 注意 <code>BytesIO</code> 只接受bytes, <code>StringIO</code> 只接受 unicode.</p>
+
+<h2 id="其他标准库的变化">其他标准库的变化</h2>
+
+<p>只列一些用的比较多的,不常用的就不列了, <code>six</code> 代码里看看就知道了.</p>
+
+<p><code>ConfigParser</code> 变成了 <code>configparser</code>, 在 py2 下有 backport的版本,装一个就行.</p>
+
+<p><code>from HTMLParser import HTMLParser</code> &ndash;&gt; <code>from html.parser import HTMLParser</code>, 如果你装过 <code>future</code> 的话,后一种导入在 py2 里是能用的, future 在安装时候会安装一个假的 html 包, 里面判断了python 版本决定真正的导入方式.</p>
+
+<p><code>Queue</code> &ndash;&gt; <code>queue</code>, 装过 <code>future</code>, 后一种也能用.</p>
+
+<p><code>urlparse</code> &ndash;&gt; <code>from six.moves.urllib import parse as urlparse</code>,  future 有个 backport的版本, 但需要调用它的 <code>install_alias</code> 来修改全局 sys.modules, 这个有坑,前篇讲过,所以我用 six.</p>
+
+<p>一些 urllib 里的 url encode 函数也移到了 <code>urllib.parse</code> 里去, 所以需要 <code>from six.moves.urllib.parse import quote, unquote, unquote_plus, quote_plus, urlencode</code>.</p>
+
+<p>urllib2 也没有了,变成了 <code>urllib.request</code>, 需要用 six: <code>from six.moves.urllib import request</code>.</p>
+
+<h2 id="unicode-和-str">unicode 和 str</h2>
+
+<p>这个坑是最大的, py2 里 <code>str</code> 表示 byte string, 实际上是是带有些字符串行为的 binary data, 它和 <code>unicode</code> 的边界非常模糊,为了使用方便做了很多 hack, 所以 py2 里 <code>str</code> 和 <code>unicode</code> 经常混用, 而 <code>bytes</code> 和 <code>str</code> 完全等价,只是个 alias. py3 里 <code>str</code> 默认就是 unicode, <code>bytes</code> 就是二进制字节, <code>unicode</code> 关键词没了, 而且 <code>str</code> 和 <code>bytes</code> 分界明显,不能混在一起.</p>
+
+<h3 id="in-py2">in py2</h3>
+
+<p>你明白下面的语句,哪些会失败,哪些成功, 失败是报 <code>UnicodeDecodeError</code> 还是 <code>UnicodeEncodeError</code>, 成功的话返回值是 <code>str</code> 还是 <code>unicode</code> 呢? 准确说出来你就明白啦.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#e6db74">&#39;啊啊&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;yaha&#39;</span>
+
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;yaha&#39;</span>
+
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;yaha&#39;</span>
+
+<span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74">&#39;啊&#39;</span>,  <span style="color:#e6db74">&#39;yaha&#39;</span>])
+
+<span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span>, <span style="color:#e6db74">&#39;啊&#39;</span>])
+
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74">&#39;啊&#39;</span>, <span style="color:#e6db74">&#39;abc&#39;</span>])
+
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span>, <span style="color:#e6db74">&#39;abc&#39;</span>])
+
+
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;test {}&#39;</span><span style="color:#f92672">.</span>format(<span style="color:#e6db74">&#39;啊&#39;</span>)
+
+<span style="color:#e6db74">&#39;test {}&#39;</span><span style="color:#f92672">.</span>format(<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span>)
+
+<span style="color:#e6db74">&#39;test {}&#39;</span><span style="color:#f92672">.</span>format(<span style="color:#e6db74">&#39;啊&#39;</span>)
+
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;test {}&#39;</span><span style="color:#f92672">.</span>format(<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span>)
+
+<span style="color:#e6db74">&#39;test </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> <span style="color:#e6db74">&#39;啊&#39;</span>
+
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;test </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> <span style="color:#e6db74">&#39;啊&#39;</span>
+
+<span style="color:#e6db74">&#39;test </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> <span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span>
+
+<span style="color:#e6db74">&#39;黑test </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> <span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span></code></pre></div>
+<p>我把规则总结下, <code>%s</code> 格式化, 字符串内置的 <code>join, replace</code>,其实行为和 <code>+</code> 是一样的:</p>
+
+<ul>
+<li>所有部分都是 <code>str</code>, 结果就是 <code>str</code>, 不会发生 decode, encode</li>
+<li>所有部分都是 <code>unicode</code>, 结果就是 <code>unicode</code>, 不会发生 decode, encode</li>
+<li><code>str</code> 和 <code>unicode</code> 混合, 会将所有 <code>str</code> 用 ascii 解码,  所以可能会报 <code>UnicodeDecodeError</code>, 结果是 unicode.</li>
+</ul>
+
+<p>string format 比较特别:</p>
+
+<ul>
+<li>format的结果和 format string 的类型保持相同</li>
+<li>如果 format string 是 <code>str</code>, 会将所有 format 参数中的 <code>unicode</code> 用 ascii 编码, 可能会有 <code>UnicodeEncodeError</code>, 如果 format string, 会将所有 format 参数中的 <code>str</code> 用 ascii 解码,可能报 <code>UnicodeDecodeError</code>.</li>
+</ul>
+
+<h3 id="in-py3">in py3</h3>
+
+<p><code>bytes</code> 和  <code>str</code> 无法相加, <code>bytes</code> 也无法作为 format string, 也不能用 <code>str</code> 将 bytes 换为字符(会的到 <code>&quot;b'a'&quot;</code> 之类的结果), 原因是 str 会调用传入参数的 <code>__str__</code> 函数,并不会去解码, 你需要指定编码: <code>str(b'abc', encoding='utf-8')</code>  或 <code>b'abc'.decode('utf-8')</code></p>
+
+<h3 id="兼容-py2-3">兼容 py2/3</h3>
+
+<p>简单讲, 如果你代码中出现 <code>unicode</code> 关键词, 在py3一定是错的, 因为 <code>unicode</code> 关键词被移除了, 出现 <code>str</code> 大概率在 py3 下是错的, 因为语义变成了 unicode.</p>
+
+<p>永远不要使用 <code>str(v)</code>, 需要字符串,用 <code>six.text_type(v)</code>.</p>
+
+<p>不要用 <code>isinstance(v, str)</code> 做类型检查, 检查bytes, 用 <code>isinstance(v, bytes)</code>, 检查text, 用 <code>isinstance(v, six.text_type)</code>.</p>
+
+<p>basestring 也没了, 用 <code>isinstance(v, six.string_types)</code>, 注意 py3 下这个就是 <code>str</code>, 所以正确与否要看上下文语义.</p>
+
+<p>在函数之间传递的时候, 统一使用 unicode 类型, 只在程序的边界 encode 成 bytes,比如写入文件, 通过网络发送, base64 编码, 丢给散列函数等.</p>
+
+      
+    </div>
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'mx03';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p>monsterxx03</p>
+    
+  </div>
+</section>
+
+
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-98667627-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+</html>
+

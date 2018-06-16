@@ -91,6 +91,35 @@
 
         
       </div>
+      <h2 class="subtitle is-6">June 16, 2018</h2>
+      <h1 class="title"><a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/">编写 python 2/3 兼容代码</a></h1>
+      <div class="content">
+        上一篇 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情.
+__future__ python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件.
+首先是几个在 python 2.7 里不用特意写，已经默认开启的特性:
+ from __future__ import nested_scopes 2.2 开始就默认开启了，用于修改嵌套函数内的变量搜索作用域, 在此之前, 全局模块的优先级比被嵌套函数的父函数要高, 现在都没这个问题了. from __future__ import generators, yield 关键词, 2.3 默认支持. from __future__ import with_statement, with 关键词, 2.6 默认支持.  我显示开启的两个特性:
+ from __future__ import print_function, 就是将 print 关键词变成函数啦, 导入后支持 python3 中 print 的完整参数，再用不带括号的 print 就会在文件被导入的时候报语法错误啦.
+        
+        <a class="button is-link" href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/" style="height:28px">
+          Read more
+          <span class="icon is-small">
+            <i class="fa fa-angle-double-right"></i>
+          </span>
+        </a>
+        
+      </div>
+    </article>
+    
+    <article>
+      <div class="subtitle tags is-6 is-pulled-right">
+        
+        
+<a class="subtitle is-6" href="/tags/python">#python</a>
+
+
+
+        
+      </div>
       <h2 class="subtitle is-6">June 7, 2018</h2>
       <h1 class="title"><a href="https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/">From python2 to python3</a></h1>
       <div class="content">
