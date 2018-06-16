@@ -115,7 +115,7 @@ list也要自己转换, 可以用 `six.iteritems(d), six.iterkeys(d), six.iterva
 
 ## 异常处理
 
-一些特别老的语法不再支持下, 下面的写法在 py3 下都会报错:
+一些特别老的语法不再支持, 下面的写法在 py3 下都会报错:
 
     try:
         1/0
