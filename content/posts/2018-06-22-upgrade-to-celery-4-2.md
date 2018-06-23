@@ -1,7 +1,6 @@
 ---
 title: "升级celery 到 4.2.0 碰到的坑"
 date: 2018-06-22T16:10:41+08:00
-draft: true
 categories:
     - tech
 tags:
@@ -120,12 +119,14 @@ Memory usage: 44592 (kb)
 
 好吧, 确定问题出在 celery 4.2.0 的 `apply_async` 里.
 
-关于 python 的memory leak profile, 这篇文章 https://chase-seibert.github.io/blog/2013/08/03/diagnosing-memory-leaks-python.html 里提到的 `objgraph`, `guppy` 还不错.
+关于 python 的memory leak perf, 这篇文章 https://chase-seibert.github.io/blog/2013/08/03/diagnosing-memory-leaks-python.html 里提到的 `objgraph`, `guppy` 还不错.
 
 我用 `objgraph` 看到 perf 函数跑完后, 内存里驻留了很多 celery 的`AsyncResult` 对象, 用 3.1.25 跑是没有的. 
 
-继续debug下去发现问题在这行: https://github.com/celery/celery/blob/4.2/celery/result.py#L102, 去掉 `self.on_ready = promise(self._on_fulfilled)` 后内存就能被回收了. 而这个promise 有个 `weak` 参数, 设置成 True 之后就会创建 `self._on_fulfilled` 的弱引用,  那 weak 改成 True 就对了吗? 
+继续debug下去发现问题在这行: https://github.com/celery/celery/blob/4.2/celery/result.py#L102, 去掉 `self.on_ready = promise(self._on_fulfilled)` 后内存就能被回收了. 而这个promise 有个 `weak` 参数, 设置成 True 之后就会创建 `self._on_fulfilled` 的弱引用, AsyncResult 也能被回收, 那 weak 改成 True 就对了吗? 
 
-并不是, 找到以前的一个 pr: https://github.com/celery/celery/pull/4131, 这段代码本来 weak 就是 True 的, 是特意把弱引用去掉的.
+并不是, 找到以前的一个 pr: https://github.com/celery/celery/pull/4131, 这段代码本来 weak 就是 True 的, 当时为什么要把弱引用去掉呢? 因为传入的 `self._on_fulfilled` 是一个对象的 bound method, `weakref.ref` 无法处理, 后续尝试获取引用的时候总会得到 None, 当时的 pr 就是为了解决 `self._on_fulfilled` 不会被执行的问题. 要对 bound method 做弱引用需要使用 [WeakMethod](https://docs.python.org/3/library/weakref.html#weakref.WeakMethod), 但这个只在 python3.4 才开始有.
 
+那内存泄露哪里来的呢，`AsyncResult` 里的确有循环引用 `AsyncResult -> self.on_ready -> promise -> self._on_fulfilled -> self`, python 的 内存管理同时使用 reference count 和 mark and sweep, reference count 碰到循环引用的对象时候无法回收对象, mark and sweep 可以, 可是 `AsyncResult` 这个 class 还定义了 `__del__` 方法, 这会让 python 的 gc 在处理循环引用的对象时不知道该以什么顺序去运行他们的 `__del__` 方法, 这些对象就会一直驻留在内存里: [gc.garbage](https://docs.python.org/2/library/gc.html#gc.garbage)
 
+我提了一个临时的 pr: https://github.com/celery/celery/pull/4839  只是删除了 `__del__` 方法, 这样 python 的 gc 就能正确处理循环引用对象了. 官方打算把 WeakMethod backport 到 celery 用到的异步库 vine 里去: https://github.com/celery/vine/issues/21 这样在 celery 那头设置 `weak=True` 就能正确处理了.
