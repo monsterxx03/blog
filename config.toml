@@ -71,6 +71,7 @@ platforms = ["github","twitter","email"]
 author = "authors"
 category = "categories"
 tag = "tags"
+preserveTaxonomyNames = false
 
 [permalinks]
 page = "/:slug/"

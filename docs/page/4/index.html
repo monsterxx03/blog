@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-	<meta name="generator" content="Hugo 0.41" />
+	<meta name="generator" content="Hugo 0.46" />
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
@@ -81,6 +81,36 @@
 <section class="section">
   <div class="container">
     
+    
+    <article>
+      <div class="subtitle tags is-6 is-pulled-right">
+        
+        
+<a class="subtitle is-6" href="/tags/book">#book</a>
+
+
+
+  
+  | <a class="subtitle is-6" href="/tags/golang">#golang</a>
+  
+
+        
+      </div>
+      <h2 class="subtitle is-6">April 19, 2017</h2>
+      <h1 class="title"><a href="https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/">Concurrency in Go, Reading Notes</a></h1>
+      <div class="content">
+        A few notes taken when reading 
+
+        
+        <a class="button is-link" href="https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/" style="height:28px">
+          Read more
+          <span class="icon is-small">
+            <i class="fa fa-angle-double-right"></i>
+          </span>
+        </a>
+        
+      </div>
+    </article>
     
     <article>
       <div class="subtitle tags is-6 is-pulled-right">
@@ -367,39 +397,6 @@ replicas: backup for shards, also replicas can handle search requests, which mea
       </div>
     </article>
     
-    <article>
-      <div class="subtitle tags is-6 is-pulled-right">
-        
-        
-<a class="subtitle is-6" href="/tags/database">#Database</a>
-
-
-
-  
-  | <a class="subtitle is-6" href="/tags/mysql">#MySQL</a>
-  
-
-        
-      </div>
-      <h2 class="subtitle is-6">July 16, 2016</h2>
-      <h1 class="title"><a href="https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/">MySQL innodb buffer pool</a></h1>
-      <div class="content">
-        最近在对公司的 MySQL 服务器做性能优化, 一直对 innodb 的内存使用方式不是很清楚, 乘这机会做点总结.
-在配置 MySQL 的时候, 一般都会需要设置 _innodb_buffer_poolsize, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.
-之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?
-
-
-        
-        <a class="button is-link" href="https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/" style="height:28px">
-          Read more
-          <span class="icon is-small">
-            <i class="fa fa-angle-double-right"></i>
-          </span>
-        </a>
-        
-      </div>
-    </article>
-    
   </div>
 </section>
 <section class="section">
@@ -458,7 +455,7 @@ if (!doNotTrack) {
 	ga('send', 'pageview');
 }
 </script>
-<script async src='//www.google-analytics.com/analytics.js'></script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
 
 
 </body>
