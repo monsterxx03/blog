@@ -13,10 +13,10 @@
     
     <item>
       <title>升级celery 到 4.2.0 碰到的坑</title>
-      <link>https://blog.monsterxx03.com/post/2018-06-22-upgrade-to-celery-4-2/</link>
+      <link>https://blog.monsterxx03.com/2018/06/22/%E5%8D%87%E7%BA%A7celery-%E5%88%B0-4.2.0-%E7%A2%B0%E5%88%B0%E7%9A%84%E5%9D%91/</link>
       <pubDate>Fri, 22 Jun 2018 16:10:41 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/post/2018-06-22-upgrade-to-celery-4-2/</guid>
+      <guid>https://blog.monsterxx03.com/2018/06/22/%E5%8D%87%E7%BA%A7celery-%E5%88%B0-4.2.0-%E7%A2%B0%E5%88%B0%E7%9A%84%E5%9D%91/</guid>
       <description>在把代码往 python3 迁移的过程中需要升级一些第三方库, 升级了 gevent 后发现 celery 有问题, 于是尝试把 celery 从3.1.25 升级到 4.2.0, 中间碰到了很多问题, 记录一点.
 配置的变化 CELERY_ACCEPT_CONENT 之前默认是都允许的, 4.0 开始默认值只允许 json, 因为我用的是msgpack, 所以需要修改这个配置让它接受 msgpack.
 CELERY_RESULT_SERIALIZER 之前默认是pickle, 现在默认也变成了json, 如果task 的返回结果是 binary 的话, json 无法处理,要么把结果 base64 编码, 要么把CELERY_RESULT_SERIALIZER 配置成 msgpack, pickle 明显 py2 / 3 不兼容, 没用.
@@ -26,10 +26,10 @@ CELERY_RESULT_BACKEND 使用 redis 的坑 配置了 CELERY_RESULT_BACKEND 后, �
     
     <item>
       <title>编写 python 2/3 兼容代码</title>
-      <link>https://blog.monsterxx03.com/post/2018-06-16-write-py2-py3-compatible-code/</link>
+      <link>https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/</link>
       <pubDate>Sat, 16 Jun 2018 14:38:26 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/post/2018-06-16-write-py2-py3-compatible-code/</guid>
+      <guid>https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/</guid>
       <description>上一篇 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情.
 __future__ python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件.
 首先是几个在 python 2.7 里不用特意写，已经默认开启的特性:
@@ -39,10 +39,10 @@ __future__ python2 里自带的向后兼容模块，将 python3 的一些语法�
     
     <item>
       <title>From python2 to python3</title>
-      <link>https://blog.monsterxx03.com/post/2018-06-07-py2-to-py3/</link>
+      <link>https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/</link>
       <pubDate>Thu, 07 Jun 2018 16:41:57 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/post/2018-06-07-py2-to-py3/</guid>
+      <guid>https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/</guid>
       <description>This article won&amp;rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&amp;rsquo;t finished this project, also I haven&amp;rsquo;t gave up so far :).
 Won&amp;rsquo;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
 The codebase I&amp;rsquo;m working on:
@@ -51,10 +51,10 @@ The codebase I&amp;rsquo;m working on:
     
     <item>
       <title>在python3.7 中实现python2.7 的内置 hash 函数</title>
-      <link>https://blog.monsterxx03.com/post/2018-06-01-implement-py2-hash-in-py3/</link>
+      <link>https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/</link>
       <pubDate>Fri, 01 Jun 2018 17:03:24 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/post/2018-06-01-implement-py2-hash-in-py3/</guid>
+      <guid>https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/</guid>
       <description>最近着手准备从 python2.7 迁移到 python3.7, 还没开始就碰到一个问题. 老系统里有一部分竟然是将 python 内置 hash 函数的结果存进了数据库, 这个做法绝对是错的, hash 的结果本来就没有保证过在各个版本的 python 中保证一致. 而且 python3 中算法完全变了, 默认在进程初始化的时候会用随机种子加进 hash 过程, 所以python 进程 一重启结果就不一样了. 木已成舟， 目前看将数据库里的值全部改掉是不可能了, 只能在 python3 中重新实现一下这个算法.
 python2.7 中的hash 算法是 fnv (有修改), python3 中变成了 sip, pep-456.
 fnv 的实现很简单， 引用 wikipedia 上的伪代码:
@@ -63,10 +63,10 @@ hash = FNV_offset_basis for each byte_of_data to be hashed hash = hash × FNV_pr
     
     <item>
       <title>Migrate to Sqlalchemy</title>
-      <link>https://blog.monsterxx03.com/post/2018-05-18-migrate-to-sqlalchemy/</link>
+      <link>https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/</link>
       <pubDate>Sun, 20 May 2018 15:11:31 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/post/2018-05-18-migrate-to-sqlalchemy/</guid>
+      <guid>https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/</guid>
       <description>最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些.
 原来的 db 层代码历史非常古老(10年以上&amp;hellip;), 最早写代码的人早就不在了, 问题很多:
  完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表结构，只能直接看数据库.  重写时候要考虑到的:

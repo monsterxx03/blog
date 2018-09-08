@@ -13,10 +13,10 @@
     
     <item>
       <title>DynamoDB</title>
-      <link>https://blog.monsterxx03.com/post/2017-12-15-dynamodb/</link>
+      <link>https://blog.monsterxx03.com/2017/12/15/dynamodb/</link>
       <pubDate>Fri, 15 Dec 2017 22:24:36 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/post/2017-12-15-dynamodb/</guid>
+      <guid>https://blog.monsterxx03.com/2017/12/15/dynamodb/</guid>
       <description>DynamoDB 是 AWS 的托管 NoSQL 数据库，可以当作简单的 KV 数据库使用，也可以作为文档数据库使用.
 Data model 组织数据的单位是 table, 每张 table 必须设置 primary key, 可以设置可选的 sort key 来做索引.
 每条数据记作一个 item, 每个 item 含有一个或多个 attribute, 其中必须包括 primary key.

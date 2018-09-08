@@ -13,10 +13,10 @@
     
     <item>
       <title>Get Real Client Ip on AWS</title>
-      <link>https://blog.monsterxx03.com/post/2018-02-01-get-real-client-ip-on-aws/</link>
+      <link>https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/</link>
       <pubDate>Thu, 01 Feb 2018 15:20:37 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/post/2018-02-01-get-real-client-ip-on-aws/</guid>
+      <guid>https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/</guid>
       <description>If you run a webserver on AWS, get real client ip will be tricky if you didn&amp;rsquo;t configure server right and write code correctly.
 Things related to client real ip:
  CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application).  Request sequence diagram will be like following:
