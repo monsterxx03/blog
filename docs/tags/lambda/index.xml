@@ -13,10 +13,10 @@
     
     <item>
       <title>AWS lambda 的一些应用场景</title>
-      <link>https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</link>
+      <link>https://blog.monsterxx03.com/post/2018-03-23-aws-lambda/</link>
       <pubDate>Fri, 23 Mar 2018 17:40:54 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-03-23-aws-lambda/</guid>
       <description>这几年吹 serverless 的比较多, 在公司内部也用 lambda , 记录一下, 这东西挺有用, 但远不到万能, 场景比较有限.
 lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平台, 我们就只在 aws lambda 上了.
 我基本上就把 lambda 当成 trigger 和 web hook 用.
@@ -27,10 +27,10 @@ lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平�
     
     <item>
       <title>Access sensitive variables on AWS lambda</title>
-      <link>https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/</link>
+      <link>https://blog.monsterxx03.com/post/2018-02-28-secret-vars-on-lambda/</link>
       <pubDate>Wed, 28 Feb 2018 21:45:23 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-02-28-secret-vars-on-lambda/</guid>
       <description>AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&amp;hellip;
 Usually, we inject secrets as environment variables, but they&amp;rsquo;re still visable on lambda console. I don&amp;rsquo;t use it in aws lambda.
 The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.

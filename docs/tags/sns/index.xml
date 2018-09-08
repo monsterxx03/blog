@@ -13,10 +13,10 @@
     
     <item>
       <title>Use SNS &amp; SQS to build Pub/Sub System</title>
-      <link>https://blog.monsterxx03.com/2018/05/23/use-sns--sqs-to-build-pub/sub-system/</link>
+      <link>https://blog.monsterxx03.com/post/2018-05-23-sns-sqs-as-pubsub-system/</link>
       <pubDate>Wed, 23 May 2018 18:05:28 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/05/23/use-sns--sqs-to-build-pub/sub-system/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-05-23-sns-sqs-as-pubsub-system/</guid>
       <description>Recently, we build pub/sub system based on AWS&amp;rsquo;s SNS &amp;amp; SQS service, take some notes.
 Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&amp;rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&amp;rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.</description>
     </item>

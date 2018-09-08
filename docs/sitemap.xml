@@ -3,92 +3,92 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://blog.monsterxx03.com/2018/09/01/%E6%9D%82%E8%B0%88/</loc>
+    <loc>https://blog.monsterxx03.com/post/2018-09-01-%E6%9D%82%E8%B0%88/</loc>
     <lastmod>2018-09-01T12:03:42+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/2018/06/22/%E5%8D%87%E7%BA%A7celery-%E5%88%B0-4.2.0-%E7%A2%B0%E5%88%B0%E7%9A%84%E5%9D%91/</loc>
+    <loc>https://blog.monsterxx03.com/post/2018-06-22-upgrade-to-celery-4-2/</loc>
     <lastmod>2018-06-22T16:10:41+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/</loc>
+    <loc>https://blog.monsterxx03.com/post/2018-06-16-write-py2-py3-compatible-code/</loc>
     <lastmod>2018-06-16T14:38:26+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/2018/06/10/%E6%9D%82%E8%B0%88%E6%9D%BE%E6%9C%AC%E6%B8%85%E5%BC%A0/</loc>
+    <loc>https://blog.monsterxx03.com/post/2018-06-10-%E6%9D%82%E8%B0%88%E6%9D%BE%E6%9C%AC%E6%B8%85%E5%BC%A0/</loc>
     <lastmod>2018-06-10T17:15:29+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/</loc>
+    <loc>https://blog.monsterxx03.com/post/2018-06-07-py2-to-py3/</loc>
     <lastmod>2018-06-07T16:41:57+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/</loc>
+    <loc>https://blog.monsterxx03.com/post/2018-06-01-implement-py2-hash-in-py3/</loc>
     <lastmod>2018-06-01T17:03:24+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/2018/05/23/use-sns--sqs-to-build-pub/sub-system/</loc>
+    <loc>https://blog.monsterxx03.com/post/2018-05-23-sns-sqs-as-pubsub-system/</loc>
     <lastmod>2018-05-23T18:05:28+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/</loc>
+    <loc>https://blog.monsterxx03.com/post/2018-05-18-migrate-to-sqlalchemy/</loc>
     <lastmod>2018-05-20T15:11:31+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/</loc>
+    <loc>https://blog.monsterxx03.com/post/2018-04-09-aws-cni-plugin/</loc>
     <lastmod>2018-04-09T15:28:38+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</loc>
+    <loc>https://blog.monsterxx03.com/post/2018-03-23-aws-lambda/</loc>
     <lastmod>2018-03-23T17:40:54+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/2018/03/17/%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</loc>
+    <loc>https://blog.monsterxx03.com/post/2018-03-17-a-wrong-performance-debugging/</loc>
     <lastmod>2018-03-17T14:24:33+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/</loc>
+    <loc>https://blog.monsterxx03.com/post/2018-02-28-secret-vars-on-lambda/</loc>
     <lastmod>2018-02-28T21:45:23+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/2018/02/25/%E7%94%A8-google-spreadsheet-%E8%AE%A1%E7%AE%97%E6%88%BF%E8%B4%B7%E7%AD%89%E9%A2%9D%E6%9C%AC%E6%81%AF%E8%BF%98%E6%AC%BE/</loc>
+    <loc>https://blog.monsterxx03.com/post/2018-02-25-house-loan-spreadsheet/</loc>
     <lastmod>2018-02-25T13:59:11+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/2018/02/23/glow-infra-evolution/</loc>
+    <loc>https://blog.monsterxx03.com/post/2018-02-23-glow-infra-evolution/</loc>
     <lastmod>2018-02-23T23:25:13+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/</loc>
+    <loc>https://blog.monsterxx03.com/post/2018-02-01-get-real-client-ip-on-aws/</loc>
     <lastmod>2018-02-01T15:20:37+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/2017/12/15/dynamodb/</loc>
+    <loc>https://blog.monsterxx03.com/post/2017-12-15-dynamodb/</loc>
     <lastmod>2017-12-15T22:24:36+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/2017/12/10/handle-outage/</loc>
+    <loc>https://blog.monsterxx03.com/post/2017-12-10-handle-outage/</loc>
     <lastmod>2017-12-10T11:13:53+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/</loc>
+    <loc>https://blog.monsterxx03.com/post/2017-10-14-aws-dms-restriction/</loc>
     <lastmod>2017-10-14T22:33:36+08:00</lastmod>
   </url>
   
@@ -118,7 +118,7 @@
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/2017/07/01/python-web-%E5%BA%94%E7%94%A8%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</loc>
+    <loc>https://blog.monsterxx03.com/post/2017-07-01-python-web-performance-optimization/</loc>
     <lastmod>2017-07-01T23:38:24+08:00</lastmod>
   </url>
   
@@ -366,7 +366,7 @@
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/posts/</loc>
+    <loc>https://blog.monsterxx03.com/post/</loc>
     <lastmod>2018-09-01T12:03:42+08:00</lastmod>
     <priority>0</priority>
   </url>

@@ -13,10 +13,10 @@
     
     <item>
       <title>杂谈</title>
-      <link>https://blog.monsterxx03.com/2018/09/01/%E6%9D%82%E8%B0%88/</link>
+      <link>https://blog.monsterxx03.com/post/2018-09-01-%E6%9D%82%E8%B0%88/</link>
       <pubDate>Sat, 01 Sep 2018 12:03:42 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/09/01/%E6%9D%82%E8%B0%88/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-09-01-%E6%9D%82%E8%B0%88/</guid>
       <description>忙了好一阵, 两个月没写了, 工作上的事告一段落, 也该补上这笔帐了, 老规矩, 随便写写 :)
 最近在做什么? 把公司的代码环境从 python 2.7 升级到 python3.6, 前后忙了 3 个月, 50w 行代码, 也是够呛, 好歹算是顺利完成了, 具体的过程6月零散写过 几篇文章, 大差不差, 后续又碰了不少坑, 但也都能解决. 下一步打算基于 python3 的一些特性对代码做些重构, 从基础库开始吧.
 最近看了什么书? &amp;lt;特别的猫&amp;gt;, 特别喜欢的一本书, 不是那种猫奴一昧赞美猫咪多么多么可爱的文字, 作者和猫咪过了一辈子, 把它们当成自己的朋友, 家人一样对待, 迫于无奈对猫做过残酷的事情, 也尽力照顾过病痛中的猫,把它从死亡边缘拉回来过, 猫给她带来的快乐和烦恼都在这本书里. 读着读着, 会产生一种错觉, 那一个个精灵古怪的小东西就自己脚边转悠. 作者是一个懂生活的人, 太羡慕了.
@@ -26,10 +26,10 @@
     
     <item>
       <title>升级celery 到 4.2.0 碰到的坑</title>
-      <link>https://blog.monsterxx03.com/2018/06/22/%E5%8D%87%E7%BA%A7celery-%E5%88%B0-4.2.0-%E7%A2%B0%E5%88%B0%E7%9A%84%E5%9D%91/</link>
+      <link>https://blog.monsterxx03.com/post/2018-06-22-upgrade-to-celery-4-2/</link>
       <pubDate>Fri, 22 Jun 2018 16:10:41 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/06/22/%E5%8D%87%E7%BA%A7celery-%E5%88%B0-4.2.0-%E7%A2%B0%E5%88%B0%E7%9A%84%E5%9D%91/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-06-22-upgrade-to-celery-4-2/</guid>
       <description>在把代码往 python3 迁移的过程中需要升级一些第三方库, 升级了 gevent 后发现 celery 有问题, 于是尝试把 celery 从3.1.25 升级到 4.2.0, 中间碰到了很多问题, 记录一点.
 配置的变化 CELERY_ACCEPT_CONENT 之前默认是都允许的, 4.0 开始默认值只允许 json, 因为我用的是msgpack, 所以需要修改这个配置让它接受 msgpack.
 CELERY_RESULT_SERIALIZER 之前默认是pickle, 现在默认也变成了json, 如果task 的返回结果是 binary 的话, json 无法处理,要么把结果 base64 编码, 要么把CELERY_RESULT_SERIALIZER 配置成 msgpack, pickle 明显 py2 / 3 不兼容, 没用.
@@ -39,10 +39,10 @@ CELERY_RESULT_BACKEND 使用 redis 的坑 配置了 CELERY_RESULT_BACKEND 后, �
     
     <item>
       <title>编写 python 2/3 兼容代码</title>
-      <link>https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/</link>
+      <link>https://blog.monsterxx03.com/post/2018-06-16-write-py2-py3-compatible-code/</link>
       <pubDate>Sat, 16 Jun 2018 14:38:26 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-06-16-write-py2-py3-compatible-code/</guid>
       <description>上一篇 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情.
 __future__ python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件.
 首先是几个在 python 2.7 里不用特意写，已经默认开启的特性:
@@ -52,10 +52,10 @@ __future__ python2 里自带的向后兼容模块，将 python3 的一些语法�
     
     <item>
       <title>杂谈松本清张</title>
-      <link>https://blog.monsterxx03.com/2018/06/10/%E6%9D%82%E8%B0%88%E6%9D%BE%E6%9C%AC%E6%B8%85%E5%BC%A0/</link>
+      <link>https://blog.monsterxx03.com/post/2018-06-10-%E6%9D%82%E8%B0%88%E6%9D%BE%E6%9C%AC%E6%B8%85%E5%BC%A0/</link>
       <pubDate>Sun, 10 Jun 2018 17:15:29 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/06/10/%E6%9D%82%E8%B0%88%E6%9D%BE%E6%9C%AC%E6%B8%85%E5%BC%A0/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-06-10-%E6%9D%82%E8%B0%88%E6%9D%BE%E6%9C%AC%E6%B8%85%E5%BC%A0/</guid>
       <description>去年在 kindle 上买了套松本清张的合集, 总共有10本, 断断续续看到现在终于看完了第 9 本&amp;lt;隐花平原&amp;gt;, 随便扯一点(喂，为什么不看完最后一本!
 松本清张 (1909 ~ 1992), 社会派推理开创人, 这套书里的作品各个年代都有, 最有名的&amp;lt;砂之器&amp;gt;(貌似仲间姐姐拍过剧?) 和 &amp;lt;点与线&amp;gt; 却没收录.
 本格派讲究逻辑的精巧， 整个故事就像在玩密室逃脱一样, 一环扣一环, 最后谜底揭开的时候让人惊呼&amp;rdquo;卧槽&amp;rdquo;, 写的就很棒了, 但如果被提前剧透了, 就丧失了大半乐趣.
@@ -66,10 +66,10 @@ __future__ python2 里自带的向后兼容模块，将 python3 的一些语法�
     
     <item>
       <title>From python2 to python3</title>
-      <link>https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/</link>
+      <link>https://blog.monsterxx03.com/post/2018-06-07-py2-to-py3/</link>
       <pubDate>Thu, 07 Jun 2018 16:41:57 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-06-07-py2-to-py3/</guid>
       <description>This article won&amp;rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&amp;rsquo;t finished this project, also I haven&amp;rsquo;t gave up so far :).
 Won&amp;rsquo;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
 The codebase I&amp;rsquo;m working on:
@@ -78,10 +78,10 @@ The codebase I&amp;rsquo;m working on:
     
     <item>
       <title>在python3.7 中实现python2.7 的内置 hash 函数</title>
-      <link>https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/</link>
+      <link>https://blog.monsterxx03.com/post/2018-06-01-implement-py2-hash-in-py3/</link>
       <pubDate>Fri, 01 Jun 2018 17:03:24 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-06-01-implement-py2-hash-in-py3/</guid>
       <description>最近着手准备从 python2.7 迁移到 python3.7, 还没开始就碰到一个问题. 老系统里有一部分竟然是将 python 内置 hash 函数的结果存进了数据库, 这个做法绝对是错的, hash 的结果本来就没有保证过在各个版本的 python 中保证一致. 而且 python3 中算法完全变了, 默认在进程初始化的时候会用随机种子加进 hash 过程, 所以python 进程 一重启结果就不一样了. 木已成舟， 目前看将数据库里的值全部改掉是不可能了, 只能在 python3 中重新实现一下这个算法.
 python2.7 中的hash 算法是 fnv (有修改), python3 中变成了 sip, pep-456.
 fnv 的实现很简单， 引用 wikipedia 上的伪代码:
@@ -90,20 +90,20 @@ hash = FNV_offset_basis for each byte_of_data to be hashed hash = hash × FNV_pr
     
     <item>
       <title>Use SNS &amp; SQS to build Pub/Sub System</title>
-      <link>https://blog.monsterxx03.com/2018/05/23/use-sns--sqs-to-build-pub/sub-system/</link>
+      <link>https://blog.monsterxx03.com/post/2018-05-23-sns-sqs-as-pubsub-system/</link>
       <pubDate>Wed, 23 May 2018 18:05:28 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/05/23/use-sns--sqs-to-build-pub/sub-system/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-05-23-sns-sqs-as-pubsub-system/</guid>
       <description>Recently, we build pub/sub system based on AWS&amp;rsquo;s SNS &amp;amp; SQS service, take some notes.
 Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&amp;rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&amp;rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.</description>
     </item>
     
     <item>
       <title>Migrate to Sqlalchemy</title>
-      <link>https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/</link>
+      <link>https://blog.monsterxx03.com/post/2018-05-18-migrate-to-sqlalchemy/</link>
       <pubDate>Sun, 20 May 2018 15:11:31 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-05-18-migrate-to-sqlalchemy/</guid>
       <description>最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些.
 原来的 db 层代码历史非常古老(10年以上&amp;hellip;), 最早写代码的人早就不在了, 问题很多:
  完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表结构，只能直接看数据库.  重写时候要考虑到的:
@@ -112,10 +112,10 @@ Originally, we have an pub/sub system based on redis(use BLPOP to listen to a re
     
     <item>
       <title>AWS 的 K8S CNI Plugin</title>
-      <link>https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/</link>
+      <link>https://blog.monsterxx03.com/post/2018-04-09-aws-cni-plugin/</link>
       <pubDate>Mon, 09 Apr 2018 15:28:38 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-04-09-aws-cni-plugin/</guid>
       <description>EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别.
 K8S 集群对网络有几个基本要求:
  container 之间网络必须可达，且不通过 NAT 所有 node 必须可以和所有 container 通信, 且不通过 NAT container 自己看到的 IP, 必须和其他 container 看到的它的 ip 相同.  Flannel in VPC flannel 是 K8S 的一个 CNI 插件, 在 VPC 里使用 flannel 的话, 有几个选择:
@@ -124,10 +124,10 @@ K8S 集群对网络有几个基本要求:
     
     <item>
       <title>AWS lambda 的一些应用场景</title>
-      <link>https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</link>
+      <link>https://blog.monsterxx03.com/post/2018-03-23-aws-lambda/</link>
       <pubDate>Fri, 23 Mar 2018 17:40:54 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-03-23-aws-lambda/</guid>
       <description>这几年吹 serverless 的比较多, 在公司内部也用 lambda , 记录一下, 这东西挺有用, 但远不到万能, 场景比较有限.
 lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平台, 我们就只在 aws lambda 上了.
 我基本上就把 lambda 当成 trigger 和 web hook 用.
@@ -138,10 +138,10 @@ lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平�
     
     <item>
       <title>一次失败的性能问题排查</title>
-      <link>https://blog.monsterxx03.com/2018/03/17/%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</link>
+      <link>https://blog.monsterxx03.com/post/2018-03-17-a-wrong-performance-debugging/</link>
       <pubDate>Sat, 17 Mar 2018 14:24:33 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/03/17/%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-03-17-a-wrong-performance-debugging/</guid>
       <description>一叶障目, 不见泰山. 前阵子一直在排查一个性能问题, 结果由于一些惯性思维, 费了好大劲才弄明白原因, 而且原因非常简单&amp;hellip;.把这事记录下来,免得以后再掉坑里去.
 现象是到了晚上10点多, server lantency 突然一瞬间变高, 但持续时间很短，马上就会恢复, timeout 的请求也不多，影响不大.问题其实从蛮久前就出现了, 但一直也没很重视, 因为持续时间短,影响也不大,简单看了下也没看出明显的问题, 就一直搁置着. 直到最近，觉得问题变严重了, latency 变的更高了，而且在10～11点间多次变高, 开始认真看为什么.
 以下是 debug 过程:
@@ -151,10 +151,10 @@ lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平�
     
     <item>
       <title>Access sensitive variables on AWS lambda</title>
-      <link>https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/</link>
+      <link>https://blog.monsterxx03.com/post/2018-02-28-secret-vars-on-lambda/</link>
       <pubDate>Wed, 28 Feb 2018 21:45:23 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-02-28-secret-vars-on-lambda/</guid>
       <description>AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&amp;hellip;
 Usually, we inject secrets as environment variables, but they&amp;rsquo;re still visable on lambda console. I don&amp;rsquo;t use it in aws lambda.
 The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
@@ -164,10 +164,10 @@ client = boto3.client(&#39;ssm&#39;) resp = client.get_parameter( Name=&#39;/red
     
     <item>
       <title>用 google spreadsheet 计算房贷等额本息还款</title>
-      <link>https://blog.monsterxx03.com/2018/02/25/%E7%94%A8-google-spreadsheet-%E8%AE%A1%E7%AE%97%E6%88%BF%E8%B4%B7%E7%AD%89%E9%A2%9D%E6%9C%AC%E6%81%AF%E8%BF%98%E6%AC%BE/</link>
+      <link>https://blog.monsterxx03.com/post/2018-02-25-house-loan-spreadsheet/</link>
       <pubDate>Sun, 25 Feb 2018 13:59:11 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/02/25/%E7%94%A8-google-spreadsheet-%E8%AE%A1%E7%AE%97%E6%88%BF%E8%B4%B7%E7%AD%89%E9%A2%9D%E6%9C%AC%E6%81%AF%E8%BF%98%E6%AC%BE/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-02-25-house-loan-spreadsheet/</guid>
       <description>看房看的眼花缭乱, 网上有很多房贷计算器, 但都没什么方便的比价功能, 能直观得看到首付和月供就好啦, 但也不想注册，不想老收中介的广告,索性用 google spreadsheet 自己做个简单的吧.
 PMT 公式 可以用 PMT 公式来计算等额本息的月供金额: https://support.google.com/docs/answer/3093185?hl=zh-Hans
 PMT(rate, number_of_periods, present_value, [future_value, end_or_beginning])  rate 是每期的利率, 如果商贷基准利率是 0.049, 每月还款, rate 就是 0.049/12.
@@ -181,10 +181,10 @@ PMT 公式算出的值是负数，需要取反.
     
     <item>
       <title>Glow Infra Evolution</title>
-      <link>https://blog.monsterxx03.com/2018/02/23/glow-infra-evolution/</link>
+      <link>https://blog.monsterxx03.com/post/2018-02-23-glow-infra-evolution/</link>
       <pubDate>Fri, 23 Feb 2018 23:25:13 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/02/23/glow-infra-evolution/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-02-23-glow-infra-evolution/</guid>
       <description>Glow data infrastructure 的演化 Glow 一向是一个 data driven 做决策的公司，稳定高效的平台是必不可少的支撑, 本文总结几年里公司 data infrastructure 的演进过程.
 结合业务特点做技术选型和实现时候的几个原则:
  real time 分析的需求不高，时间 delta 控制在1 小时以内可接受 . 支持快速的交互式查询. 底层平台尽量选择 AWS 托管服务, 减少维护成本. 遇到故障, 数据可以 delay 但不能丢. 可回溯历史数据. 成本可控.  用到的 AWS 服务:
@@ -195,10 +195,10 @@ PMT 公式算出的值是负数，需要取反.
     
     <item>
       <title>Get Real Client Ip on AWS</title>
-      <link>https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/</link>
+      <link>https://blog.monsterxx03.com/post/2018-02-01-get-real-client-ip-on-aws/</link>
       <pubDate>Thu, 01 Feb 2018 15:20:37 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-02-01-get-real-client-ip-on-aws/</guid>
       <description>If you run a webserver on AWS, get real client ip will be tricky if you didn&amp;rsquo;t configure server right and write code correctly.
 Things related to client real ip:
  CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application).  Request sequence diagram will be like following:
@@ -209,10 +209,10 @@ For CloudFront:
     
     <item>
       <title>DynamoDB</title>
-      <link>https://blog.monsterxx03.com/2017/12/15/dynamodb/</link>
+      <link>https://blog.monsterxx03.com/post/2017-12-15-dynamodb/</link>
       <pubDate>Fri, 15 Dec 2017 22:24:36 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2017/12/15/dynamodb/</guid>
+      <guid>https://blog.monsterxx03.com/post/2017-12-15-dynamodb/</guid>
       <description>DynamoDB 是 AWS 的托管 NoSQL 数据库，可以当作简单的 KV 数据库使用，也可以作为文档数据库使用.
 Data model 组织数据的单位是 table, 每张 table 必须设置 primary key, 可以设置可选的 sort key 来做索引.
 每条数据记作一个 item, 每个 item 含有一个或多个 attribute, 其中必须包括 primary key.
@@ -222,20 +222,20 @@ attribute 对应的 value 支持以下几种类型:
     
     <item>
       <title>Handle outage</title>
-      <link>https://blog.monsterxx03.com/2017/12/10/handle-outage/</link>
+      <link>https://blog.monsterxx03.com/post/2017-12-10-handle-outage/</link>
       <pubDate>Sun, 10 Dec 2017 11:13:53 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2017/12/10/handle-outage/</guid>
+      <guid>https://blog.monsterxx03.com/post/2017-12-10-handle-outage/</guid>
       <description>A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&amp;rsquo;m working on a long term solution. I learned some important things from this accident.
 The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&amp;rsquo;s health check failed due to high load.</description>
     </item>
     
     <item>
       <title>AWS DMS notes</title>
-      <link>https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/</link>
+      <link>https://blog.monsterxx03.com/post/2017-10-14-aws-dms-restriction/</link>
       <pubDate>Sat, 14 Oct 2017 22:33:36 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/</guid>
+      <guid>https://blog.monsterxx03.com/post/2017-10-14-aws-dms-restriction/</guid>
       <description>AWS&amp;rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
 It works, but have some concerns. Take some notes when doing this project.
 Prerequisites Source RDS must:
@@ -307,10 +307,10 @@ If your program is hosted by systemd, you need to edit your program&amp;#8217;s 
     
     <item>
       <title>Python Web 应用性能调优</title>
-      <link>https://blog.monsterxx03.com/2017/07/01/python-web-%E5%BA%94%E7%94%A8%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</link>
+      <link>https://blog.monsterxx03.com/post/2017-07-01-python-web-performance-optimization/</link>
       <pubDate>Sat, 01 Jul 2017 23:38:24 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2017/07/01/python-web-%E5%BA%94%E7%94%A8%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</guid>
+      <guid>https://blog.monsterxx03.com/post/2017-07-01-python-web-performance-optimization/</guid>
       <description>Python web 应用性能调优 为了快速上线，早期很多代码基本是怎么方便怎么来，这样就留下了很多隐患，性能也不是很理想，python 因为 GIL 的原因，在性能上有天然劣势，即使用了 gevent/eventlet 这种协程方案，也很容易因为耗时的 CPU 操作阻塞住整个进程。前阵子对基础代码做了些重构，效果显著，记录一些。
 设定目标:
  性能提高了，最直接的效果当然是能用更少的机器处理相同流量，目标是关闭 20% 的 stateless webserver. 尽量在框架代码上做改动，不动业务逻辑代码。 低风险 (历史经验告诉我们，动态一时爽，重构火葬场&amp;hellip;.)  治标 常见场景是大家开开心心做完一个 feature， sandbox 测试也没啥问题，上线了，结果 server load 飙升，各种 timeout 都来了，要么 rollback 代码，要么加机器。问题代码在哪?

@@ -13,10 +13,10 @@
     
     <item>
       <title>AWS 的 K8S CNI Plugin</title>
-      <link>https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/</link>
+      <link>https://blog.monsterxx03.com/post/2018-04-09-aws-cni-plugin/</link>
       <pubDate>Mon, 09 Apr 2018 15:28:38 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-04-09-aws-cni-plugin/</guid>
       <description>EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别.
 K8S 集群对网络有几个基本要求:
  container 之间网络必须可达，且不通过 NAT 所有 node 必须可以和所有 container 通信, 且不通过 NAT container 自己看到的 IP, 必须和其他 container 看到的它的 ip 相同.  Flannel in VPC flannel 是 K8S 的一个 CNI 插件, 在 VPC 里使用 flannel 的话, 有几个选择:

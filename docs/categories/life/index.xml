@@ -13,10 +13,10 @@
     
     <item>
       <title>杂谈</title>
-      <link>https://blog.monsterxx03.com/2018/09/01/%E6%9D%82%E8%B0%88/</link>
+      <link>https://blog.monsterxx03.com/post/2018-09-01-%E6%9D%82%E8%B0%88/</link>
       <pubDate>Sat, 01 Sep 2018 12:03:42 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/09/01/%E6%9D%82%E8%B0%88/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-09-01-%E6%9D%82%E8%B0%88/</guid>
       <description>忙了好一阵, 两个月没写了, 工作上的事告一段落, 也该补上这笔帐了, 老规矩, 随便写写 :)
 最近在做什么? 把公司的代码环境从 python 2.7 升级到 python3.6, 前后忙了 3 个月, 50w 行代码, 也是够呛, 好歹算是顺利完成了, 具体的过程6月零散写过 几篇文章, 大差不差, 后续又碰了不少坑, 但也都能解决. 下一步打算基于 python3 的一些特性对代码做些重构, 从基础库开始吧.
 最近看了什么书? &amp;lt;特别的猫&amp;gt;, 特别喜欢的一本书, 不是那种猫奴一昧赞美猫咪多么多么可爱的文字, 作者和猫咪过了一辈子, 把它们当成自己的朋友, 家人一样对待, 迫于无奈对猫做过残酷的事情, 也尽力照顾过病痛中的猫,把它从死亡边缘拉回来过, 猫给她带来的快乐和烦恼都在这本书里. 读着读着, 会产生一种错觉, 那一个个精灵古怪的小东西就自己脚边转悠. 作者是一个懂生活的人, 太羡慕了.
@@ -26,10 +26,10 @@
     
     <item>
       <title>用 google spreadsheet 计算房贷等额本息还款</title>
-      <link>https://blog.monsterxx03.com/2018/02/25/%E7%94%A8-google-spreadsheet-%E8%AE%A1%E7%AE%97%E6%88%BF%E8%B4%B7%E7%AD%89%E9%A2%9D%E6%9C%AC%E6%81%AF%E8%BF%98%E6%AC%BE/</link>
+      <link>https://blog.monsterxx03.com/post/2018-02-25-house-loan-spreadsheet/</link>
       <pubDate>Sun, 25 Feb 2018 13:59:11 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/02/25/%E7%94%A8-google-spreadsheet-%E8%AE%A1%E7%AE%97%E6%88%BF%E8%B4%B7%E7%AD%89%E9%A2%9D%E6%9C%AC%E6%81%AF%E8%BF%98%E6%AC%BE/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-02-25-house-loan-spreadsheet/</guid>
       <description>看房看的眼花缭乱, 网上有很多房贷计算器, 但都没什么方便的比价功能, 能直观得看到首付和月供就好啦, 但也不想注册，不想老收中介的广告,索性用 google spreadsheet 自己做个简单的吧.
 PMT 公式 可以用 PMT 公式来计算等额本息的月供金额: https://support.google.com/docs/answer/3093185?hl=zh-Hans
 PMT(rate, number_of_periods, present_value, [future_value, end_or_beginning])  rate 是每期的利率, 如果商贷基准利率是 0.049, 每月还款, rate 就是 0.049/12.

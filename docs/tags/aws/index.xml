@@ -13,20 +13,20 @@
     
     <item>
       <title>Use SNS &amp; SQS to build Pub/Sub System</title>
-      <link>https://blog.monsterxx03.com/2018/05/23/use-sns--sqs-to-build-pub/sub-system/</link>
+      <link>https://blog.monsterxx03.com/post/2018-05-23-sns-sqs-as-pubsub-system/</link>
       <pubDate>Wed, 23 May 2018 18:05:28 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/05/23/use-sns--sqs-to-build-pub/sub-system/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-05-23-sns-sqs-as-pubsub-system/</guid>
       <description>Recently, we build pub/sub system based on AWS&amp;rsquo;s SNS &amp;amp; SQS service, take some notes.
 Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&amp;rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&amp;rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.</description>
     </item>
     
     <item>
       <title>AWS 的 K8S CNI Plugin</title>
-      <link>https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/</link>
+      <link>https://blog.monsterxx03.com/post/2018-04-09-aws-cni-plugin/</link>
       <pubDate>Mon, 09 Apr 2018 15:28:38 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-04-09-aws-cni-plugin/</guid>
       <description>EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别.
 K8S 集群对网络有几个基本要求:
  container 之间网络必须可达，且不通过 NAT 所有 node 必须可以和所有 container 通信, 且不通过 NAT container 自己看到的 IP, 必须和其他 container 看到的它的 ip 相同.  Flannel in VPC flannel 是 K8S 的一个 CNI 插件, 在 VPC 里使用 flannel 的话, 有几个选择:
@@ -35,10 +35,10 @@ K8S 集群对网络有几个基本要求:
     
     <item>
       <title>AWS lambda 的一些应用场景</title>
-      <link>https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</link>
+      <link>https://blog.monsterxx03.com/post/2018-03-23-aws-lambda/</link>
       <pubDate>Fri, 23 Mar 2018 17:40:54 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-03-23-aws-lambda/</guid>
       <description>这几年吹 serverless 的比较多, 在公司内部也用 lambda , 记录一下, 这东西挺有用, 但远不到万能, 场景比较有限.
 lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平台, 我们就只在 aws lambda 上了.
 我基本上就把 lambda 当成 trigger 和 web hook 用.
@@ -49,10 +49,10 @@ lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平�
     
     <item>
       <title>Access sensitive variables on AWS lambda</title>
-      <link>https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/</link>
+      <link>https://blog.monsterxx03.com/post/2018-02-28-secret-vars-on-lambda/</link>
       <pubDate>Wed, 28 Feb 2018 21:45:23 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-02-28-secret-vars-on-lambda/</guid>
       <description>AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&amp;hellip;
 Usually, we inject secrets as environment variables, but they&amp;rsquo;re still visable on lambda console. I don&amp;rsquo;t use it in aws lambda.
 The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
@@ -62,10 +62,10 @@ client = boto3.client(&#39;ssm&#39;) resp = client.get_parameter( Name=&#39;/red
     
     <item>
       <title>Get Real Client Ip on AWS</title>
-      <link>https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/</link>
+      <link>https://blog.monsterxx03.com/post/2018-02-01-get-real-client-ip-on-aws/</link>
       <pubDate>Thu, 01 Feb 2018 15:20:37 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/</guid>
+      <guid>https://blog.monsterxx03.com/post/2018-02-01-get-real-client-ip-on-aws/</guid>
       <description>If you run a webserver on AWS, get real client ip will be tricky if you didn&amp;rsquo;t configure server right and write code correctly.
 Things related to client real ip:
  CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application).  Request sequence diagram will be like following:
@@ -76,10 +76,10 @@ For CloudFront:
     
     <item>
       <title>DynamoDB</title>
-      <link>https://blog.monsterxx03.com/2017/12/15/dynamodb/</link>
+      <link>https://blog.monsterxx03.com/post/2017-12-15-dynamodb/</link>
       <pubDate>Fri, 15 Dec 2017 22:24:36 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2017/12/15/dynamodb/</guid>
+      <guid>https://blog.monsterxx03.com/post/2017-12-15-dynamodb/</guid>
       <description>DynamoDB 是 AWS 的托管 NoSQL 数据库，可以当作简单的 KV 数据库使用，也可以作为文档数据库使用.
 Data model 组织数据的单位是 table, 每张 table 必须设置 primary key, 可以设置可选的 sort key 来做索引.
 每条数据记作一个 item, 每个 item 含有一个或多个 attribute, 其中必须包括 primary key.
@@ -89,10 +89,10 @@ attribute 对应的 value 支持以下几种类型:
     
     <item>
       <title>AWS DMS notes</title>
-      <link>https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/</link>
+      <link>https://blog.monsterxx03.com/post/2017-10-14-aws-dms-restriction/</link>
       <pubDate>Sat, 14 Oct 2017 22:33:36 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/</guid>
+      <guid>https://blog.monsterxx03.com/post/2017-10-14-aws-dms-restriction/</guid>
       <description>AWS&amp;rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
 It works, but have some concerns. Take some notes when doing this project.
 Prerequisites Source RDS must:
