@@ -1,7 +1,6 @@
 ---
 title: Bigtable notes
 author: will
-type: post
 date: 2016-12-11T16:20:24+00:00
 url: /2016/12/11/bigtable-notes/
 categories:

@@ -1,7 +1,6 @@
 ---
 title: Debug python performance issue with pyflame
 author: will
-type: post
 date: 2017-06-05T09:50:44+00:00
 url: /2017/06/05/debug-python-performance-issue-with-pyflame/
 categories:

@@ -55,6 +55,28 @@
 
 <h2 class="c-title p-tag-title">System</h2>
 
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/07/15/enable-coredump-on-ubuntu-16.04/">Enable coredump on ubuntu 16.04</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2017-07-15T02:35:52Z">
+        Jul 15, 2017
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    Coredump file is useful for debuging program crash. This post will show several settings related to coredump.
+Enable coredump If you run program from shell , enable coredump via unlimit -c unlimited， then check unlimit -a | grep core, if it shows unlimited, coredump is enabled for your current session.
+If your program is hosted by systemd, you need to edit your program&#8217;s service unit file&#8217;s [Service] section, add LimitCORE=infinity to enable coredump.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2017/07/15/enable-coredump-on-ubuntu-16.04/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 <nav class="c-pagination p-pagination">
   <div class="c-pagination__ctrl">
     <div class="c-pagination__newer">
@@ -64,7 +86,7 @@
       
     </div>
   </div>
-  <span class="c-pagination__count p-pagination__count">Page 1 of 0</span>
+  <span class="c-pagination__count p-pagination__count">Page 1 of 1</span>
 </nav>
 
 

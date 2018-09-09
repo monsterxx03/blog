@@ -1,7 +1,6 @@
 ---
 title: Concurrency in Go, Reading Notes
 author: will
-type: post
 date: 2017-04-19T16:26:58+00:00
 url: /2017/04/19/concurrency-in-go-reading-notes/
 categories:

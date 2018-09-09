@@ -1,7 +1,6 @@
 ---
 title: MySQL partition table
 author: will
-type: post
 date: 2017-04-05T16:23:32+00:00
 url: /2017/04/05/mysql-partition-table/
 categories:

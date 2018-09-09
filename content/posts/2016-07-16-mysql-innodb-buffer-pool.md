@@ -1,8 +1,7 @@
 ---
 title: MySQL innodb buffer pool
 author: will
-type: post
-date: 2016-07-16T16:07:14+00:00
+date: 2016-07-16T16:07:14+08:00
 url: /2016/07/16/mysql-innodb-buffer-pool/
 categories:
   - tech

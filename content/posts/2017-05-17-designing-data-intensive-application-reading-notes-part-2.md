@@ -1,7 +1,6 @@
 ---
 title: Designing data intensive application, reading notes, Part 2
 author: will
-type: post
 date: 2017-05-17T09:12:44+00:00
 url: /2017/05/17/designing-data-intensive-application-reading-notes-part-2/
 categories:

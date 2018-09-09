@@ -1,7 +1,6 @@
 ---
 title: Matrix 14 years later
 author: will
-type: post
 date: 2017-03-11T16:21:31+00:00
 url: /2017/03/11/matrix-14-years-later/
 categories:

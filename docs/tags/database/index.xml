@@ -113,7 +113,7 @@ attribute 对应的 value 支持以下几种类型:
     <item>
       <title>MySQL innodb buffer pool</title>
       <link>https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/</link>
-      <pubDate>Sat, 16 Jul 2016 16:07:14 +0000</pubDate>
+      <pubDate>Sat, 16 Jul 2016 16:07:14 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/</guid>
       <description>&lt;p&gt;最近在对公司的 MySQL 服务器做性能优化, 一直对 innodb 的内存使用方式不是很清楚, 乘这机会做点总结.&lt;/p&gt;

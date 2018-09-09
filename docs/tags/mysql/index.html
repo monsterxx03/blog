@@ -55,6 +55,103 @@
 
 <h2 class="c-title p-tag-title">Mysql</h2>
 
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/">MySQL partition table</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2017-04-05T16:23:32Z">
+        Apr 5, 2017
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    Overview MySQL has buildin partition table support, which can help split data accross multi tables,
+and provide a unified query interface as normal tables.
+Benefit:
+ Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly. Speed up query based on partition key(partitoin pruning)  Limit:
+ For partition table, every unique key must use every column in table&#8217;s partition expression(include primary key) For innodb engine, paritioned table can&#8217;t have foreign key,and can&#8217;t have columns referenced by foreign keys. For MyISAM engine, mysql version &lt;= 5.6.5, DML operation will lock all partition as a whole.  
+
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/">Migrate to encrypted RDS</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2016-10-28T16:17:30Z">
+        Oct 28, 2016
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.
+比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.
+
+
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/">MySQL 索引优化</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2016-07-26T16:13:54Z">
+        Jul 26, 2016
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    什么是索引,索引怎么建这些基本的就跳过不谈了,整理一些前段时间优化线上 SQL 查询时碰到的一些问题. 主要解决下面几个问题:
+ 建立索引怎样选择合适的列. 怎样让 SQL 能有效利用索引. 如果对 SQL 效率进行评估(即设置索引前后是否真的有性能提升).  
+
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/">MySQL innodb buffer pool</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2016-07-16T16:07:14&#43;08:00">
+        Jul 16, 2016
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    最近在对公司的 MySQL 服务器做性能优化, 一直对 innodb 的内存使用方式不是很清楚, 乘这机会做点总结.
+在配置 MySQL 的时候, 一般都会需要设置 _innodb_buffer_poolsize, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.
+之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?
+
+
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 <nav class="c-pagination p-pagination">
   <div class="c-pagination__ctrl">
     <div class="c-pagination__newer">
@@ -64,7 +161,7 @@
       
     </div>
   </div>
-  <span class="c-pagination__count p-pagination__count">Page 1 of 0</span>
+  <span class="c-pagination__count p-pagination__count">Page 1 of 1</span>
 </nav>
 
 

@@ -1,7 +1,6 @@
 ---
 title: Migrate to encrypted RDS
 author: will
-type: post
 date: 2016-10-28T16:17:30+00:00
 url: /2016/10/28/migrate-to-encrypted-rds/
 categories:

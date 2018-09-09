@@ -176,6 +176,30 @@ hash = FNV_offset_basis for each byte_of_data to be hashed hash = hash × FNV_pr
 </article>
 
 
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/06/05/debug-python-performance-issue-with-pyflame/">Debug python performance issue with pyflame</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2017-06-05T09:50:44Z">
+        Jun 5, 2017
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    pyflame is an opensource tool developed by uber: https://github.com/uber/pyflame
+It can take snapshots of running python process, combined with flamegraph.pl, can output flamegraph picture of python call stacks. Help analyze bottleneck of python program, needn&#8217;t inject any perf code into your application, and overhead is very low.
+Basic Usage sudo pyflame -s 10 -x -r 0.001 $pid | ./flamegraph.pl &gt; perf.svg
+ -s, how many seconds to run -r, sample rate (seconds)  Your output will be something like following:
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2017/06/05/debug-python-performance-issue-with-pyflame/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 <nav class="c-pagination p-pagination">
   <div class="c-pagination__ctrl">
     <div class="c-pagination__newer">

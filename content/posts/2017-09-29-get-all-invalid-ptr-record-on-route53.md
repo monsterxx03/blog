@@ -1,7 +1,6 @@
 ---
 title: 'Get all invalid PTR record on  Route53'
 author: will
-type: post
 date: 2017-09-29T08:55:18+00:00
 url: /2017/09/29/get-all-invalid-ptr-record-on-route53/
 categories:

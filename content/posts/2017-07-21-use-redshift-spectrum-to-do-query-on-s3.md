@@ -1,7 +1,6 @@
 ---
 title: Use redshift spectrum to do query on s3
 author: will
-type: post
 date: 2017-07-21T03:10:58+00:00
 url: /2017/07/21/use-redshift-spectrum-to-do-query-on-s3/
 categories:

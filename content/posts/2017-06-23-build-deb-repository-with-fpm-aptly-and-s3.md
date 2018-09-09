@@ -1,7 +1,6 @@
 ---
 title: Build deb repository with fpm , aptly and s3
 author: will
-type: post
 date: 2017-06-23T09:40:58+00:00
 url: /2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/
 categories:

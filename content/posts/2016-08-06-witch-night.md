@@ -1,7 +1,6 @@
 ---
 title: 魔法使
 author: will
-type: post
 date: 2016-08-06T16:16:23+00:00
 url: /2016/08/06/witch-night/
 categories:

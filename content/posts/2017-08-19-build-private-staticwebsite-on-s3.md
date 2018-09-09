@@ -1,7 +1,6 @@
 ---
 title: Build private static website on S3
 author: will
-type: post
 date: 2017-08-19T07:28:16+00:00
 url: /2017/08/19/build-private-staticwebsite-on-s3/
 categories:

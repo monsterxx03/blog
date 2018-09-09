@@ -1,7 +1,6 @@
 ---
 title: ElasticSearch cluster
 author: will
-type: post
 date: 2017-03-22T16:22:32+00:00
 url: /2017/03/22/elasticsearch-cluster/
 categories:

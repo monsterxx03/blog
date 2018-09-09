@@ -1,7 +1,6 @@
 ---
 title: Infrastructure as Code
 author: will
-type: post
 date: 2017-04-21T16:25:07+00:00
 url: /2017/04/21/infrastructure-as-code/
 categories:

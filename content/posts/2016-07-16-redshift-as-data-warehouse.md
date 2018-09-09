@@ -1,7 +1,6 @@
 ---
 title: Redshift as data warehouse
 author: will
-type: post
 date: 2016-07-16T16:11:39+00:00
 url: /2016/07/16/redshift-as-data-warehouse/
 categories:

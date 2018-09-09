@@ -7,6 +7,7 @@ copyright = "monsterxx03"
 theme = "pickles"
 
 enableRobotsTXT = true # generate robots.txt
+paginate = 10
 
 # Syntax Highlighting ( https://gohugo.io/content-management/syntax-highlighting/ )
 pygmentsCodefences = true
@@ -21,7 +22,6 @@ startYear = "2017"
 suffix = ""
 
 [params]
-paginate = 10
 subtitle = "百种弊病,皆从懒生"
 email = "xyj.asmy@gmail.com"
 github = "monsterxx03"
