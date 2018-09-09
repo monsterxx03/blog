@@ -30,7 +30,7 @@ twitter = "monsterxx03"
 ga_api_key = "UA-98667627-1"
 disqus = "mx03"
 author = "X"
-avatar = "avatar.png"
+avatar = "/avatar.png"
 bio = "Infrastructure Engineer@Glow"
 contact = "mailto:xyj.asmy@gmail.com"
 
