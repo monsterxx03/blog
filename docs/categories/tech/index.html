@@ -15,7 +15,7 @@
   <meta name="twitter:description" content="百种弊病,皆从懒生">
   
 
-  <meta name="author" content="Y"/>
+  <meta name="author" content="X"/>
   <meta property="og:site_name" content="Shining Moon" />
   <meta property="og:url" content="https://blog.monsterxx03.com/categories/tech/" />
 
@@ -54,6 +54,33 @@
   <main id="main" class="l-main">
 
 <h2 class="c-title p-tag-title">Tech</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/09/03/2018-09-03-kubernetes-in-action-notes/">2018 09 03 Kubernetes in Action Notes</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-09-03T18:20:46&#43;08:00">
+        Sep 3, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    Miscellaneous notes when reading &lt;Kubernetes in Action&gt;.
+api group and api version core api group need&rsquo;t specified in apiVersion field.
+For example, ReplicationController is on core api group, so only:
+apiVersion: v1 kind: ReplicationController ...  ReplicationSet is added later in app group, v1beta2 version (k8s v1.8):
+apiVersion: apps/v1beta2 1 kind: ReplicaSet  https://kubernetes.io/docs/concepts/overview/kubernetes-api/
+ReplicationController VS ReplicationSet ReplicationController is replaced by ReplicationSet, which has more expressive pod selectors.
+ReplicationController&rsquo;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/09/03/2018-09-03-kubernetes-in-action-notes/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">
@@ -274,31 +301,6 @@ lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平�
 </article>
 
 
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/03/17/%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/">一次失败的性能问题排查</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-03-17T14:24:33&#43;08:00">
-        Mar 17, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    一叶障目, 不见泰山. 前阵子一直在排查一个性能问题, 结果由于一些惯性思维, 费了好大劲才弄明白原因, 而且原因非常简单&hellip;.把这事记录下来,免得以后再掉坑里去.
-现象是到了晚上10点多, server lantency 突然一瞬间变高, 但持续时间很短，马上就会恢复, timeout 的请求也不多，影响不大.问题其实从蛮久前就出现了, 但一直也没很重视, 因为持续时间短,影响也不大,简单看了下也没看出明显的问题, 就一直搁置着. 直到最近，觉得问题变严重了, latency 变的更高了，而且在10～11点间多次变高, 开始认真看为什么.
-以下是 debug 过程:
- 时间段非常固定，每天的晚上10 ~ 11点之间, 每次持续时间很短, 触发时间不是很有规律. 查看那段时间每个 group 的 load 情况, 有变高,但不明显. 查看 qps, 并没显著变化. 查看 qps * avg_latency, 可以看到在一段时间内最耗时的接口, 只能看到几乎所有接口都变高了, 占比最高的还是那几个最慢的接口, 并不能解释突发的 latency 变化.  开始推测, 晚上的 10 点到 11 点,美国那边用户差不多起床,是每天第一次打开 app 的时候, 而我们有些接口里很慢的 code path 只有用户在一天内第一次使用 app 的时候才会触发, 那边的业务逻辑本来就很混乱, 开始着手优化业务代码.
- 看 datadog 的 apm tracing, 查看慢接口对各种 service 的调用情况 (Redis, MySQL, ElasticSearch,DynamoDB&hellip;) 通过 pyflame 抓取进程运行时的 stack trace.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/03/17/%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
 <nav class="c-pagination p-pagination">
   <div class="c-pagination__ctrl">
     <div class="c-pagination__newer">
@@ -323,7 +325,7 @@ lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平�
   
   <div class="p-author__body">
     
-    <p class="c-title p-author__name ">Y</p>
+    <p class="c-title p-author__name ">X</p>
     
     
     <p>Infrastructure Engineer@Glow</p>
@@ -403,15 +405,6 @@ lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平�
   
   
   
-  
-  <li class="c-links__item">
-    <a href="https://linkedin.com/in/%e5%be%90-%e5%8f%b6%e4%bd%b3-43564554" target="_blank">
-      <svg viewBox="0 0 64 64" class="c-links__icon">
-        <title>linkedin</title>
-        <use xlink:href="#icon-linkedin"></use>
-      </svg>
-    </a>
-  </li>
   
 </ul>
 

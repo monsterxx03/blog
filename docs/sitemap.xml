@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://blog.monsterxx03.com/2018/09/03/2018-09-03-kubernetes-in-action-notes/</loc>
+    <lastmod>2018-09-03T18:20:46+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.monsterxx03.com/2018/09/01/%E6%9D%82%E8%B0%88/</loc>
     <lastmod>2018-09-01T12:03:42+08:00</lastmod>
   </url>
@@ -249,7 +254,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/book/</loc>
-    <lastmod>2017-05-17T09:12:44+00:00</lastmod>
+    <lastmod>2018-09-03T18:20:46+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -331,7 +336,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/k8s/</loc>
-    <lastmod>2018-04-09T15:28:38+08:00</lastmod>
+    <lastmod>2018-09-03T18:20:46+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -367,7 +372,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/posts/</loc>
-    <lastmod>2018-09-01T12:03:42+08:00</lastmod>
+    <lastmod>2018-09-03T18:20:46+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -397,7 +402,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/</loc>
-    <lastmod>2018-09-01T12:03:42+08:00</lastmod>
+    <lastmod>2018-09-03T18:20:46+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -445,7 +450,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/categories/tech/</loc>
-    <lastmod>2018-06-22T16:10:41+08:00</lastmod>
+    <lastmod>2018-09-03T18:20:46+08:00</lastmod>
     <priority>0</priority>
   </url>
   

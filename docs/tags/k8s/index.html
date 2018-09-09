@@ -15,7 +15,7 @@
   <meta name="twitter:description" content="百种弊病,皆从懒生">
   
 
-  <meta name="author" content="Y"/>
+  <meta name="author" content="X"/>
   <meta property="og:site_name" content="Shining Moon" />
   <meta property="og:url" content="https://blog.monsterxx03.com/tags/k8s/" />
 
@@ -54,6 +54,33 @@
   <main id="main" class="l-main">
 
 <h2 class="c-title p-tag-title">K8s</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/09/03/2018-09-03-kubernetes-in-action-notes/">2018 09 03 Kubernetes in Action Notes</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-09-03T18:20:46&#43;08:00">
+        Sep 3, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    Miscellaneous notes when reading &lt;Kubernetes in Action&gt;.
+api group and api version core api group need&rsquo;t specified in apiVersion field.
+For example, ReplicationController is on core api group, so only:
+apiVersion: v1 kind: ReplicationController ...  ReplicationSet is added later in app group, v1beta2 version (k8s v1.8):
+apiVersion: apps/v1beta2 1 kind: ReplicaSet  https://kubernetes.io/docs/concepts/overview/kubernetes-api/
+ReplicationController VS ReplicationSet ReplicationController is replaced by ReplicationSet, which has more expressive pod selectors.
+ReplicationController&rsquo;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/09/03/2018-09-03-kubernetes-in-action-notes/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">
@@ -100,7 +127,7 @@ K8S 集群对网络有几个基本要求:
   
   <div class="p-author__body">
     
-    <p class="c-title p-author__name ">Y</p>
+    <p class="c-title p-author__name ">X</p>
     
     
     <p>Infrastructure Engineer@Glow</p>
@@ -180,15 +207,6 @@ K8S 集群对网络有几个基本要求:
   
   
   
-  
-  <li class="c-links__item">
-    <a href="https://linkedin.com/in/%e5%be%90-%e5%8f%b6%e4%bd%b3-43564554" target="_blank">
-      <svg viewBox="0 0 64 64" class="c-links__icon">
-        <title>linkedin</title>
-        <use xlink:href="#icon-linkedin"></use>
-      </svg>
-    </a>
-  </li>
   
 </ul>
 

@@ -1,7 +1,11 @@
 ---
 title: "2018 09 03 Kubernetes in Action Notes"
 date: 2018-09-03T18:20:46+08:00
-draft: true
+categories:
+    - tech
+tags:
+    - book
+    - k8s
 ---
 
 Miscellaneous notes when reading `<Kubernetes in Action>`.
