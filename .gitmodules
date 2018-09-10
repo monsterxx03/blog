@@ -1,6 +1,3 @@
-[submodule "themes/kiss"]
-	path = themes/kiss
-	url = https://github.com/ribice/kiss.git
 [submodule "themes/pickles"]
 	path = themes/pickles
 	url = https://github.com/mismith0227/hugo_theme_pickles
