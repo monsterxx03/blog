@@ -1,5 +1,5 @@
 ---
-title: "2018 09 03 Kubernetes in Action Notes"
+title: "Kubernetes in Action Notes"
 date: 2018-09-03T18:20:46+08:00
 categories:
     - tech
