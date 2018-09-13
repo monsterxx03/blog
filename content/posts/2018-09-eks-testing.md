@@ -9,14 +9,11 @@ tags:
     - aws
 ---
 
-记录测试 EKS 过程中碰到的一些问题.
-
+EKS 正式 launch 还没有正经用过, 最近总算试了一把, 记录一点.
 
 ## Setup
 
 AWS 官方的 Guide 只提供了一个 cloudformation template 来设置 worker node, 我喜欢用 terraform, 可以跟着这个文档尝试:https://www.terraform.io/docs/providers/aws/guides/eks-getting-started.html 来设置完整的 eks cluster 和管理 worker node 的 autoscaling  group.
-
-一些要点:
 
 设置完 EKS 后需要添加一条 ConfigMap:
 
@@ -164,6 +161,10 @@ pod 的 scale 由　`HorizonalPodAutoscaler`(aka: HPA) 负责, HPA 通过　metr
     autoDiscovery:
       clusterName:  <ClusterName>
     sslCertPath: /etc/kubernetes/pki/ca.crt
+    rbac:
+      create: true
+
+注意这里的 `sslCertPath` 默认是 `/etc/ssl/certs/ca-certificates.crt`, eks 放的位置不太一样.
 
 cloud-autoscaler 还需要特定的 iam 权限, 可以把它绑定到 worker node 的 instance role 上:
 

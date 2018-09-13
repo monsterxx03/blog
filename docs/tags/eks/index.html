@@ -67,9 +67,8 @@
     </p>
   </header>
   <div class="c-article__summary">
-    记录测试 EKS 过程中碰到的一些问题.
+    EKS 正式 launch 还没有正经用过, 最近总算试了一把, 记录一点.
 Setup AWS 官方的 Guide 只提供了一个 cloudformation template 来设置 worker node, 我喜欢用 terraform, 可以跟着这个文档尝试:https://www.terraform.io/docs/providers/aws/guides/eks-getting-started.html 来设置完整的 eks cluster 和管理 worker node 的 autoscaling group.
-一些要点:
 设置完 EKS 后需要添加一条 ConfigMap:
 apiVersion: v1 kind: ConfigMap metadata: name: aws-auth namespace: kube-system data: mapRoles: | - rolearn: arn:aws:iam::&lt;account-id&gt;:role/eksNodeRole username: system:node:{{EC2PrivateDNSName}} groups: - system:bootstrappers - system:nodes  这样 worker node 节点才能加入集群.
 网络 之前一直没有在 AWS 上尝试构建 k8s 的一个原因, 就是不喜欢 overlay 网络, 给系统带来了额外的复杂度和管理开销, VPC flowlog 看不到 pod 之间流量, 封包后 tcpdump 不好 debug 应用层流量.
