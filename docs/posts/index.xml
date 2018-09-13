@@ -6,17 +6,31 @@
     <description>Recent content in Posts on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Mon, 03 Sep 2018 18:20:46 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 11 Sep 2018 15:02:22 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>2018 09 03 Kubernetes in Action Notes</title>
-      <link>https://blog.monsterxx03.com/2018/09/03/2018-09-03-kubernetes-in-action-notes/</link>
+      <title>EKS 评测</title>
+      <link>https://blog.monsterxx03.com/2018/09/11/eks-%E8%AF%84%E6%B5%8B/</link>
+      <pubDate>Tue, 11 Sep 2018 15:02:22 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/09/11/eks-%E8%AF%84%E6%B5%8B/</guid>
+      <description>记录测试 EKS 过程中碰到的一些问题.
+Setup AWS 官方的 Guide 只提供了一个 cloudformation template 来设置 worker node, 我喜欢用 terraform, 可以跟着这个文档尝试:https://www.terraform.io/docs/providers/aws/guides/eks-getting-started.html 来设置完整的 eks cluster 和管理 worker node 的 autoscaling group.
+一些要点:
+设置完 EKS 后需要添加一条 ConfigMap:
+apiVersion: v1 kind: ConfigMap metadata: name: aws-auth namespace: kube-system data: mapRoles: | - rolearn: arn:aws:iam::&amp;lt;account-id&amp;gt;:role/eksNodeRole username: system:node:{{EC2PrivateDNSName}} groups: - system:bootstrappers - system:nodes  这样 worker node 节点才能加入集群.
+网络 之前一直没有在 AWS 上尝试构建 k8s 的一个原因, 就是不喜欢 overlay 网络, 给系统带来了额外的复杂度和管理开销, VPC flowlog 看不到 pod 之间流量, 封包后 tcpdump 不好 debug 应用层流量.</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes in Action Notes</title>
+      <link>https://blog.monsterxx03.com/2018/09/03/kubernetes-in-action-notes/</link>
       <pubDate>Mon, 03 Sep 2018 18:20:46 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/09/03/2018-09-03-kubernetes-in-action-notes/</guid>
+      <guid>https://blog.monsterxx03.com/2018/09/03/kubernetes-in-action-notes/</guid>
       <description>Miscellaneous notes when reading &amp;lt;Kubernetes in Action&amp;gt;.
 api group and api version core api group need&amp;rsquo;t specified in apiVersion field.
 For example, ReplicationController is on core api group, so only:

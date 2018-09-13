@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.48" /><link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet">
+  <meta name="generator" content="Hugo 0.47.1" /><link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet">
   <link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
   
@@ -54,6 +54,32 @@
   <main id="main" class="l-main">
 
 <h2 class="c-title p-tag-title">Aws</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/09/11/eks-%E8%AF%84%E6%B5%8B/">EKS 评测</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-09-11T15:02:22&#43;08:00">
+        Sep 11, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    记录测试 EKS 过程中碰到的一些问题.
+Setup AWS 官方的 Guide 只提供了一个 cloudformation template 来设置 worker node, 我喜欢用 terraform, 可以跟着这个文档尝试:https://www.terraform.io/docs/providers/aws/guides/eks-getting-started.html 来设置完整的 eks cluster 和管理 worker node 的 autoscaling group.
+一些要点:
+设置完 EKS 后需要添加一条 ConfigMap:
+apiVersion: v1 kind: ConfigMap metadata: name: aws-auth namespace: kube-system data: mapRoles: | - rolearn: arn:aws:iam::&lt;account-id&gt;:role/eksNodeRole username: system:node:{{EC2PrivateDNSName}} groups: - system:bootstrappers - system:nodes  这样 worker node 节点才能加入集群.
+网络 之前一直没有在 AWS 上尝试构建 k8s 的一个原因, 就是不喜欢 overlay 网络, 给系统带来了额外的复杂度和管理开销, VPC flowlog 看不到 pod 之间流量, 封包后 tcpdump 不好 debug 应用层流量.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/09/11/eks-%E8%AF%84%E6%B5%8B/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">
@@ -268,31 +294,6 @@ AWS api is open to internet, if you need to access S3 in VPC, your requests will
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/08/19/build-private-staticwebsite-on-s3/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/">Use redshift spectrum to do query on s3</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2017-07-21T03:10:58Z">
-        Jul 21, 2017
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    使用 redshift spectrum 查询 S3 数据 通常使用 redshift 做数据仓库的时候要做大量的 ETL 工作，一般流程是把各种来源的数据捣鼓捣鼓丢到 S3 上去，再从 S3 倒腾进 redshift. 如果你有大量的历史数据要导进 redshift，这个过程就会很痛苦，redshift 对一次倒入大量数据并不友好，你要分批来做。
-今年4月的时候， redshift 发布了一个新功能 spectrum, 可以从 redshift 里直接查询 s3 上的结构化数据。最近把部分数据仓库直接迁移到了 spectrum, 正好来讲讲。
-动机 Glow 的数据仓库建在 redshift 上， 又分成了两个集群，一个 ssd 的集群存放最近 4 个月的数据，供产品分析，metrics report, debug 等等 adhoc 的查询。4个月之前的数据存放在一个 hdd 的集群里，便宜容量大，查询慢。
-但是时间长了 hdd 的集群也是有扩容需求的，而使用频率又实在是不高，其实很浪费, 这就是迁移到 spectrum 的动机。
-使用 Spectrum Redshift spectrum 底层其实是基于 AWS 的另一个服务 athena 的。athena 是个 Presto 和 Hive 杂交产物， DDL 用 Hive 语法， 查询用的 sql 由 Presto 支持, 感觉怪怪的，这里不多展开讲 athena, 知道 redshift spectrum 其实是通过 athena 对接的 s3 就行了。
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

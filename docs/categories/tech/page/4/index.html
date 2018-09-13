@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.48" /><link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet">
+  <meta name="generator" content="Hugo 0.47.1" /><link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet">
   <link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
   
@@ -54,6 +54,32 @@
   <main id="main" class="l-main">
 
 <h2 class="c-title p-tag-title">Tech</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/03/22/elasticsearch-cluster/">ElasticSearch cluster</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2017-03-22T16:22:32Z">
+        Mar 22, 2017
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    In this article, let&#8217;s talk about ElasticSearch&#8217;s cluster mode, which means multi nodes ElasticSearch.
+Basic concepts cluster: A collection of server nodes with same cluster.name settings in elasticsearch.yaml
+primary shards: Divide a index into multi parts(by default 5), shards of an index can be distributed over multi nodes. It enables scale index horizontally and make access to index parallelly(accross multi nodes).
+replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.
+
+
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2017/03/22/elasticsearch-cluster/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">

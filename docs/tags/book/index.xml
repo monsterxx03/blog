@@ -12,11 +12,11 @@
     
     
     <item>
-      <title>2018 09 03 Kubernetes in Action Notes</title>
-      <link>https://blog.monsterxx03.com/2018/09/03/2018-09-03-kubernetes-in-action-notes/</link>
+      <title>Kubernetes in Action Notes</title>
+      <link>https://blog.monsterxx03.com/2018/09/03/kubernetes-in-action-notes/</link>
       <pubDate>Mon, 03 Sep 2018 18:20:46 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/09/03/2018-09-03-kubernetes-in-action-notes/</guid>
+      <guid>https://blog.monsterxx03.com/2018/09/03/kubernetes-in-action-notes/</guid>
       <description>Miscellaneous notes when reading &amp;lt;Kubernetes in Action&amp;gt;.
 api group and api version core api group need&amp;rsquo;t specified in apiVersion field.
 For example, ReplicationController is on core api group, so only:
