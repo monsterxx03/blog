@@ -92,12 +92,14 @@ metadata:
         storageclass.kubernetes.io/is-default-class: &quot;true&quot;
 provisioner: kubernetes.io/aws-ebs
 reclaimPolicy: Retain
-allowVolumeExpansion: true
 parameters:
     type: gp2
     fsType: ext4
     encrypted: &quot;true&quot;
 </code></pre>
+
+<p>因为 eks 是基于 1.10.3 的, volume expansion 还是 alpha 状态, 没法自动开启(没法改 api server 配置), 所以 storageclass 的 allowVolumeExpansion, 设置了也没用.
+这里 <code>encrypted</code> 的值必须是字符串, 否则会创建失败, 而且报错莫名其妙.</p>
 
 <h2 id="创建-pod-的时候指定一个已存在的-ebs-volume">创建 pod 的时候指定一个已存在的 ebs volume</h2>
 

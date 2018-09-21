@@ -69,7 +69,8 @@
   <div class="c-article__summary">
     上文测试了一下 EKS 和 cluster autoscaler, 本文记录对 persisten volume 的测试.
 PersistentVolume 创建 gp2 类型的 storageclass, 并用 annotations 设置为默认 sc, dynamic volume provision 会用到:
-kind: StorageClass apiVersion: storage.k8s.io/v1 metadata: name: gp2 annotations: storageclass.kubernetes.io/is-default-class: &quot;true&quot; provisioner: kubernetes.io/aws-ebs reclaimPolicy: Retain allowVolumeExpansion: true parameters: type: gp2 fsType: ext4 encrypted: &quot;true&quot;  创建 pod 的时候指定一个已存在的 ebs volume apiVersion: v1 kind: Pod metadata: name: test spec: volumes: - name: test awsElasticBlockStore: fsType: ext4 volumeID: vol-03670d6294ccf29fd containers: - image: nginx name: nginx volumeMounts: - name: test mountPath: /mnt  kubectl -it test -- /bin/bash 进去看一下:
+kind: StorageClass apiVersion: storage.k8s.io/v1 metadata: name: gp2 annotations: storageclass.kubernetes.io/is-default-class: &quot;true&quot; provisioner: kubernetes.io/aws-ebs reclaimPolicy: Retain parameters: type: gp2 fsType: ext4 encrypted: &quot;true&quot;  因为 eks 是基于 1.10.3 的, volume expansion 还是 alpha 状态, 没法自动开启(没法改 api server 配置), 所以 storageclass 的 allowVolumeExpansion, 设置了也没用. 这里 encrypted 的值必须是字符串, 否则会创建失败, 而且报错莫名其妙.
+创建 pod 的时候指定一个已存在的 ebs volume apiVersion: v1 kind: Pod metadata: name: test spec: volumes: - name: test awsElasticBlockStore: fsType: ext4 volumeID: vol-03670d6294ccf29fd containers: - image: nginx name: nginx volumeMounts: - name: test mountPath: /mnt  kubectl -it test -- /bin/bash 进去看一下:
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/09/21/eks-%E8%AF%84%E6%B5%8B-part-2/" class="c-article__btn p-list-article__btn">Read more</a>
