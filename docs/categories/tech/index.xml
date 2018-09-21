@@ -6,10 +6,21 @@
     <description>Recent content in Tech on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Tue, 11 Sep 2018 15:02:22 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 21 Sep 2018 10:28:17 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/categories/tech/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>eks 评测 part-2</title>
+      <link>https://blog.monsterxx03.com/2018/09/21/eks-%E8%AF%84%E6%B5%8B-part-2/</link>
+      <pubDate>Fri, 21 Sep 2018 10:28:17 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/09/21/eks-%E8%AF%84%E6%B5%8B-part-2/</guid>
+      <description>上文测试了一下 EKS 和 cluster autoscaler, 本文记录对 persisten volume 的测试.
+PersistentVolume 创建 gp2 类型的 storageclass, 并用 annotations 设置为默认 sc, dynamic volume provision 会用到:
+kind: StorageClass apiVersion: storage.k8s.io/v1 metadata: name: gp2 annotations: storageclass.kubernetes.io/is-default-class: &amp;quot;true&amp;quot; provisioner: kubernetes.io/aws-ebs reclaimPolicy: Retain allowVolumeExpansion: true parameters: type: gp2 fsType: ext4 encrypted: &amp;quot;true&amp;quot;  创建 pod 的时候指定一个已存在的 ebs volume apiVersion: v1 kind: Pod metadata: name: test spec: volumes: - name: test awsElasticBlockStore: fsType: ext4 volumeID: vol-03670d6294ccf29fd containers: - image: nginx name: nginx volumeMounts: - name: test mountPath: /mnt  kubectl -it test -- /bin/bash 进去看一下:</description>
+    </item>
     
     <item>
       <title>EKS 评测</title>

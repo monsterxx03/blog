@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://blog.monsterxx03.com/2018/09/21/eks-%E8%AF%84%E6%B5%8B-part-2/</loc>
+    <lastmod>2018-09-21T10:28:17+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.monsterxx03.com/2018/09/11/eks-%E8%AF%84%E6%B5%8B/</loc>
     <lastmod>2018-09-11T15:02:22+08:00</lastmod>
   </url>
@@ -247,7 +252,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/aws/</loc>
-    <lastmod>2018-09-11T15:02:22+08:00</lastmod>
+    <lastmod>2018-09-21T10:28:17+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -306,7 +311,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/eks/</loc>
-    <lastmod>2018-09-11T15:02:22+08:00</lastmod>
+    <lastmod>2018-09-21T10:28:17+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -347,7 +352,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/k8s/</loc>
-    <lastmod>2018-09-11T15:02:22+08:00</lastmod>
+    <lastmod>2018-09-21T10:28:17+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -383,7 +388,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/posts/</loc>
-    <lastmod>2018-09-11T15:02:22+08:00</lastmod>
+    <lastmod>2018-09-21T10:28:17+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -413,7 +418,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/</loc>
-    <lastmod>2018-09-11T15:02:22+08:00</lastmod>
+    <lastmod>2018-09-21T10:28:17+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -461,7 +466,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/categories/tech/</loc>
-    <lastmod>2018-09-11T15:02:22+08:00</lastmod>
+    <lastmod>2018-09-21T10:28:17+08:00</lastmod>
     <priority>0</priority>
   </url>
   

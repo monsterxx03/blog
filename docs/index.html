@@ -59,6 +59,29 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/09/21/eks-%E8%AF%84%E6%B5%8B-part-2/">eks 评测 part-2</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-09-21T10:28:17&#43;08:00">
+        Sep 21, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    上文测试了一下 EKS 和 cluster autoscaler, 本文记录对 persisten volume 的测试.
+PersistentVolume 创建 gp2 类型的 storageclass, 并用 annotations 设置为默认 sc, dynamic volume provision 会用到:
+kind: StorageClass apiVersion: storage.k8s.io/v1 metadata: name: gp2 annotations: storageclass.kubernetes.io/is-default-class: &quot;true&quot; provisioner: kubernetes.io/aws-ebs reclaimPolicy: Retain allowVolumeExpansion: true parameters: type: gp2 fsType: ext4 encrypted: &quot;true&quot;  创建 pod 的时候指定一个已存在的 ebs volume apiVersion: v1 kind: Pod metadata: name: test spec: volumes: - name: test awsElasticBlockStore: fsType: ext4 volumeID: vol-03670d6294ccf29fd containers: - image: nginx name: nginx volumeMounts: - name: test mountPath: /mnt  kubectl -it test -- /bin/bash 进去看一下:
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/09/21/eks-%E8%AF%84%E6%B5%8B-part-2/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/09/11/eks-%E8%AF%84%E6%B5%8B/">EKS 评测</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -274,30 +297,6 @@ Originally, we have an pub/sub system based on redis(use BLPOP to listen to a re
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/05/23/use-sns--sqs-to-build-pub/sub-system/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/">Migrate to Sqlalchemy</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-05-20T15:11:31&#43;08:00">
-        May 20, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些.
-原来的 db 层代码历史非常古老(10年以上&hellip;), 最早写代码的人早就不在了, 问题很多:
- 完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表结构，只能直接看数据库.  重写时候要考虑到的:
- 现有业务代码基于老 db 代码已经写了很多了, 重写不现实, 迁移到 sqlalchemy 需要封装一套完全兼容的 api, 没用到的混乱的老 api 趁机清理. db migration 需要重新实现, 只用 alembic 不能满足需求, 后详. 重写完的代码保证高测试覆盖率.  ORM or Core sqlalchemy 分成两部分, 底层的 sqlalchemy core 是一套 sql 语法生成器, 通过重载 python 的 magic function 实现用比较漂亮的 python 语法来构造 sql.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
