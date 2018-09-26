@@ -164,8 +164,8 @@ ingress-nginx 部署的时候可以选择以　daemonset 方式，也可以以 d
 
 ## internal loadbalancer
 
-默认 ingress-nginx 默认创建的 ELB 是一个 public ELB, 如果我想创建一个 internal ELB, 之后再通过 VPN 去访问 service 该怎么弄?
+ingress-nginx 默认创建的 ELB 是一个 public ELB, 如果我想创建一个 internal ELB, 之后再通过 VPN 去访问 service 该怎么弄?
 
 只要在 ingress-nginx 的 `service.annotations` 里加上 ` service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0` 就行. 但这里有个问题, 最早创建 eks cluster 的时候我同时勾选了 public subet 和 private subnet, 这样会导致创建 ELB 的时候随机挑选两个 subnet, 要强制 internal lb 在 private subnet 中创建的话,要给 private subnet 加上 tag `kubernetes.io/role/internal-elb=true`, 来告知 k8s 哪些 subnet 是 private 的.
 
-ELB 默认的 security group 开放允许所有地址访问 80/443, 可以通过 `loadBalancerSourceRanges` 来限制来源 ip.
+ELB 默认的 security group 开放允许所有地址访问 `80/443` 端口, 可以通过 `loadBalancerSourceRanges` 来限制来源 ip.
