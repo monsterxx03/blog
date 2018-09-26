@@ -58,6 +58,29 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/08/19/build-private-staticwebsite-on-s3/">Build private static website on S3</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2017-08-19T07:28:16Z">
+        Aug 19, 2017
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    Build static website on S3 is very easy, but by default, it can be accessed by open internet.It will be super helpful if we can build website only available in VPC. Then we can use it to host internal deb repo, doc site&#8230;
+Steps are very easy, you only need VPC endpoints and S3 bucket policy.
+AWS api is open to internet, if you need to access S3 in VPC, your requests will pass through VPC&#8217;s internet gateway or NAT gateway.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2017/08/19/build-private-staticwebsite-on-s3/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/">Use redshift spectrum to do query on s3</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -270,32 +293,6 @@ I&#8217;ve tried three ways to do it:
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/">MySQL partition table</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2017-04-05T16:23:32Z">
-        Apr 5, 2017
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    Overview MySQL has buildin partition table support, which can help split data accross multi tables,
-and provide a unified query interface as normal tables.
-Benefit:
- Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly. Speed up query based on partition key(partitoin pruning)  Limit:
- For partition table, every unique key must use every column in table&#8217;s partition expression(include primary key) For innodb engine, paritioned table can&#8217;t have foreign key,and can&#8217;t have columns referenced by foreign keys. For MyISAM engine, mysql version &lt;= 5.6.5, DML operation will lock all partition as a whole.  
-
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

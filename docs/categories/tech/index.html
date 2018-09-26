@@ -58,6 +58,34 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/09/26/eks-%E8%AF%84%E6%B5%8B-part-3/">EkS 评测 part-3</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-09-26T10:16:42&#43;08:00">
+        Sep 26, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    这篇记录对 ingress 的测试.
+ingress 用来将外部流量导入　k8s 内的　service. 将 service 的类型设置为 LoadBalancer / NodePort 也可以将单个 service 暴露到公网, 但用 ingress 可以只使用一个公网入口,根据　host name 或　url path 来将请求分发到不同的 service.
+一般　k8s 内的资源都会由一个 controller 来负责它的状态管理, 都由 kube-controller-manager 负责，　但 ingress controller 不是它的一部分，需要是视情况自己选择合适的 ingress controller.
+在 eks 上我主要需要 ingress-nginx 和 aws-alb-ingress-controller. 注意, nginx inc 还维护一个 kubernetes-ingress, 和官方那个不是一个东西， 没测试过.
+这里主要只测试了 ingress-nginx, 看了下内部实现, 数据的转发真扭曲&hellip;.
+ingress-nginx 用 helm 安装很简单: helm install nginx-ingress --namespace ingress
+看看安装后多了些什么:
+service: ingress service/mean-quetzal-nginx-ingress-controller LoadBalancer 172.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/09/26/eks-%E8%AF%84%E6%B5%8B-part-3/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/09/21/eks-%E8%AF%84%E6%B5%8B-part-2/">eks 评测 part-2</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -270,30 +298,6 @@ Originally, we have an pub/sub system based on redis(use BLPOP to listen to a re
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/">AWS 的 K8S CNI Plugin</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-04-09T15:28:38&#43;08:00">
-        Apr 9, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别.
-K8S 集群对网络有几个基本要求:
- container 之间网络必须可达，且不通过 NAT 所有 node 必须可以和所有 container 通信, 且不通过 NAT container 自己看到的 IP, 必须和其他 container 看到的它的 ip 相同.  Flannel in VPC flannel 是 K8S 的一个 CNI 插件, 在 VPC 里使用 flannel 的话, 有几个选择:
- 通过 VXLAN/UDP 进行封包, 封包影响网络性能, 而且不好 debug 用 aws vpc backend, 这种方式会把每台主机的 docker 网段添加进 vpc routing table, 但默认 routing table 里只能有50条规则, 所以只能 50 个 node, 可以发 ticket 提升, 但数量太多会影响 vpc 性能.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
