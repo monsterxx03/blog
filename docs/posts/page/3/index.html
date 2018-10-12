@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.47.1" /><link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet">
+  <meta name="generator" content="Hugo 0.49.2" /><link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet">
   <link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
   
@@ -54,6 +54,31 @@
   <main id="main" class="l-main">
 
 <h2 class="c-title p-tag-title">Posts</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/12/15/dynamodb/">DynamoDB</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2017-12-15T22:24:36&#43;08:00">
+        Dec 15, 2017
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    DynamoDB 是 AWS 的托管 NoSQL 数据库，可以当作简单的 KV 数据库使用，也可以作为文档数据库使用.
+Data model 组织数据的单位是 table, 每张 table 必须设置 primary key, 可以设置可选的 sort key 来做索引.
+每条数据记作一个 item, 每个 item 含有一个或多个 attribute, 其中必须包括 primary key.
+attribute 对应的 value 支持以下几种类型:
+ Number, 由于 DynamoDB 的传输协议是 http + json, 为了跨语言的兼容性, number 一律会被转成 string 传输. Binary, 用来表示任意的二进制数据，会用 base64 encode 后传输. Boolean, true or false Null Document 类型包含 List 和 Map, 可以互相嵌套.  List, 个数无限制, 总大小不超过 400KB Map, 属性个数无限制，总大小不超过 400 KB, 嵌套层级不超过 32 级.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2017/12/15/dynamodb/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">
@@ -270,30 +295,6 @@ fpm -s python -t deb -m xyj.asmy@gmail.com --verbose -v 0.10.1 --python-pip /usr
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/06/05/debug-python-performance-issue-with-pyflame/">Debug python performance issue with pyflame</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2017-06-05T09:50:44Z">
-        Jun 5, 2017
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    pyflame is an opensource tool developed by uber: https://github.com/uber/pyflame
-It can take snapshots of running python process, combined with flamegraph.pl, can output flamegraph picture of python call stacks. Help analyze bottleneck of python program, needn&#8217;t inject any perf code into your application, and overhead is very low.
-Basic Usage sudo pyflame -s 10 -x -r 0.001 $pid | ./flamegraph.pl &gt; perf.svg
- -s, how many seconds to run -r, sample rate (seconds)  Your output will be something like following:
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2017/06/05/debug-python-performance-issue-with-pyflame/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

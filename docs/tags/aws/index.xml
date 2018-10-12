@@ -6,10 +6,23 @@
     <description>Recent content in Aws on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Wed, 26 Sep 2018 10:16:42 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 12 Oct 2018 14:49:13 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/tags/aws/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>在 redshift 中计算 p95 latency</title>
+      <link>https://blog.monsterxx03.com/2018/10/12/%E5%9C%A8-redshift-%E4%B8%AD%E8%AE%A1%E7%AE%97-p95-latency/</link>
+      <pubDate>Fri, 12 Oct 2018 14:49:13 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/10/12/%E5%9C%A8-redshift-%E4%B8%AD%E8%AE%A1%E7%AE%97-p95-latency/</guid>
+      <description>p95 latency 的定义: 把一段时间的 latency 按照从小到大排序, 砍掉最高的 %5, 剩下最大的值就是 p95 latency. p99, p90 同理.
+p95 latency 表示该时间段内 95% 的 reqeust 都比这个值快.
+一般我直接看 CloudWatch, 和 datadog 算好的 p95 值. 这次看看怎么从 access log 里直接计算 p95 latency.
+假设在 redshift 中有一张表存储了应用的 access log, 结构如下:
+CREATE TABLE access_log ( url string, time string, resp_time real );     url time resp_time     /test1 2018-10-11T00:10:00.418480Z 0.123   /test2 2018-10-11T00:12:00.512340Z 0.321    要算 p95 很简单, 把 log 按分钟数分组, 用 percentile_cont 在组内按 resp_time 排序计算 就能得到:</description>
+    </item>
     
     <item>
       <title>EkS 评测 part-3</title>
