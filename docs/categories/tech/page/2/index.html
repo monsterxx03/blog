@@ -58,6 +58,28 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/05/23/use-sns--sqs-to-build-pub/sub-system/">Use SNS &amp; SQS to build Pub/Sub System</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-05-23T18:05:28&#43;08:00">
+        May 23, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, take some notes.
+Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/05/23/use-sns--sqs-to-build-pub/sub-system/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/">Migrate to Sqlalchemy</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -273,30 +295,6 @@ The outage I received alarms about live performance issue at 3am, first is serve
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/12/10/handle-outage/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/">AWS DMS notes</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2017-10-14T22:33:36&#43;08:00">
-        Oct 14, 2017
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    AWS&rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
-It works, but have some concerns. Take some notes when doing this project.
-Prerequisites Source RDS must:
- Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration('binlog retention hours', 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT, REPLICATION SLAVE, SELECT on replication target tables  DDL on source table Redshift has some limits on change columns:
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

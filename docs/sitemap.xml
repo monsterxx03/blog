@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://blog.monsterxx03.com/2018/10/15/%E4%B8%BA-service-%E5%88%B6%E5%AE%9A-slo/</loc>
+    <lastmod>2018-10-15T11:31:05+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.monsterxx03.com/2018/10/12/%E5%9C%A8-redshift-%E4%B8%AD%E8%AE%A1%E7%AE%97-p95-latency/</loc>
     <lastmod>2018-10-12T14:49:13+08:00</lastmod>
   </url>
@@ -398,7 +403,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/posts/</loc>
-    <lastmod>2018-10-12T14:49:13+08:00</lastmod>
+    <lastmod>2018-10-15T11:31:05+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -428,7 +433,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/</loc>
-    <lastmod>2018-10-12T14:49:13+08:00</lastmod>
+    <lastmod>2018-10-15T11:31:05+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -476,7 +481,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/categories/tech/</loc>
-    <lastmod>2018-10-12T14:49:13+08:00</lastmod>
+    <lastmod>2018-10-15T11:31:05+08:00</lastmod>
     <priority>0</priority>
   </url>
   

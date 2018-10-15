@@ -59,6 +59,32 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/">Get Real Client Ip on AWS</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-02-01T15:20:37&#43;08:00">
+        Feb 1, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    If you run a webserver on AWS, get real client ip will be tricky if you didn&rsquo;t configure server right and write code correctly.
+Things related to client real ip:
+ CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application).  Request sequence diagram will be like following:
+User&rsquo;s real client ip is forwarded by front proxies one by one in head X-Forwarded-For.
+For CloudFront:
+ If user&rsquo;s req header don&rsquo;t have X-Forwarded-For, it will set user&rsquo;s ip(from tcp connection) in X-Forwarded-For If user&rsquo;s req already have X-Forwarded-For, it will append user&rsquo;s ip(from tcp connection) to the end of X-Forwarded-For  For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront&rsquo;s ip.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/12/15/dynamodb/">DynamoDB</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -271,31 +297,6 @@ If your program is hosted by systemd, you need to edit your program&#8217;s serv
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/07/01/python-web-%E5%BA%94%E7%94%A8%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/">Build deb repository with fpm , aptly and s3</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2017-06-23T09:40:58Z">
-        Jun 23, 2017
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    I&#8217;m lazy, I don&#8217;t want to be deb/rpm expert, I don&#8217;t want to maintain repo server. I want as less maintenance effort as possible. 🙂
-Combine tools fpm, aptly with aws s3, we can do it.
-Use fpm to convert python package to deb fpm can transform python/gem/npm/dir/&#8230; to deb/rpm/solaris/&#8230; packages
-Example:
-fpm -s python -t deb -m xyj.asmy@gmail.com --verbose -v 0.10.1 --python-pip /usr/local/pip Flask  It will transform Flask 0.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
