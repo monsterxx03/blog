@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.49.2" /><link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet">
+  <meta name="generator" content="Hugo 0.50" /><link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet">
   <link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   <link href="https://blog.monsterxx03.com/index.xml" rel="alternate" type="application/rss+xml" title="Shining Moon" />
   
@@ -54,6 +54,29 @@
     
   </header>
   <main id="main" class="l-main">
+
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/">AWS Aurora DB</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-10-31T15:23:45&#43;08:00">
+        Oct 31, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比.
+Paper notes  存储计算分离 redo log 下推到存储层 副本: 6 副本 3 AZ(2 per az), 失去一个 AZ + 1 additoinal node 不会丢数据(可读不可写). 失去一个 AZ (或任意2 node) 不影响数据写入. 10GB 一个 segment, 每个 segment 6 副本一个 PG (protection group), 一 AZ　两副本. 在 10Gbps 的网络上, 修复一个 10GB 的segment 需要 10s.  MySQL 一个应用层的写会在底层产生很多额外的写操作，会带来写放大问题:
+redo log 用来 crash recovery, binlog 会上传 s3　用于 point in time restore.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
 
 
 
@@ -264,7 +287,7 @@ CELERY_RESULT_BACKEND 使用 redis 的坑 配置了 CELERY_RESULT_BACKEND 后, �
 
 <article class="c-article p-list-article">
   <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/">编写 python 2/3 兼容代码</a></h2>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2-3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/">编写 python 2/3 兼容代码</a></h2>
     <p class="c-article__meta">
       Posted on
       <time datetime="2018-06-16T14:38:26&#43;08:00">
@@ -280,33 +303,7 @@ __future__ python2 里自带的向后兼容模块，将 python3 的一些语法�
  from __future__ import print_function, 就是将 print 关键词变成函数啦, 导入后支持 python3 中 print 的完整参数，再用不带括号的 print 就会在文件被导入的时候报语法错误啦.
   </div>
   
-  <a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/10/%E6%9D%82%E8%B0%88%E6%9D%BE%E6%9C%AC%E6%B8%85%E5%BC%A0/">杂谈松本清张</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-06-10T17:15:29&#43;08:00">
-        Jun 10, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    去年在 kindle 上买了套松本清张的合集, 总共有10本, 断断续续看到现在终于看完了第 9 本&lt;隐花平原&gt;, 随便扯一点(喂，为什么不看完最后一本!
-松本清张 (1909 ~ 1992), 社会派推理开创人, 这套书里的作品各个年代都有, 最有名的&lt;砂之器&gt;(貌似仲间姐姐拍过剧?) 和 &lt;点与线&gt; 却没收录.
-本格派讲究逻辑的精巧， 整个故事就像在玩密室逃脱一样, 一环扣一环, 最后谜底揭开的时候让人惊呼&rdquo;卧槽&rdquo;, 写的就很棒了, 但如果被提前剧透了, 就丧失了大半乐趣.
-社会派就没那么多精巧的机关迷题了, 更多的把笔墨放在犯罪动机上, 案件本身和一些社会现象绑得比较近, 有印象看的第一本真正的社会派推理小说好像是东野圭吾的&lt;恶意&gt;, 开篇就把凶手告诉了你，全篇就是在讨论犯罪动机.
-回到松本清张的书, 精巧机关的成分是0, 故事大多围绕着核心人物的社会身份展开, &lt;死亡螺旋&gt; 里是建筑业的官商勾结, &lt;一个背叛日本的日本人&gt; 里是外交官, &lt;隐花平原&gt; 是银行. 大多数故事没看多久读者都能猜到是怎么一回事, &lt;十万分之一的偶然&gt; 这本书只看了序我就猜到了真相(汗). 推理的过程也并不严禁, 关键线索经常是主角&rdquo;无意中&rdquo;, &ldquo;碰巧&rdquo;&hellip;得到的, 甚至是随手看下报纸, 看到一则和案件风马牛不相及的案件, 却福尔摩斯附体, 费老大劲去查才把事件串了起来(&lt;交错的场景&gt;我说的就是你&hellip;). 本格推理爱好者读起来, 估计处处是槽点.
-又是什么东西吸引着我看了整整九本呢, 说来奇怪, 完全是和推理无关的东西, 是松本清张文字的触感, 说法不是很准确, 毕竟看的是译本. &lt;富士山禁恋&gt; (原名是&lt;波之塔&gt;, 谁改的鬼名字) 根本不算推理小说, 其实是个像昼颜那样的出轨故事, 一度看得我昏昏欲睡, 但对富士山树海的那段描写却特别有感觉, 一瞬间感觉自己被角色内心的那种虚无感给包围了, 有说法人站在高楼边上会产生跳下去的冲动, 读着那段景色描写, 好像也能理解望着树海的人想走进去的心理. &lt;箱根杀人&gt; 里清晨迷雾中的密谈场景也是如此.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/06/10/%E6%9D%82%E8%B0%88%E6%9D%BE%E6%9C%AC%E6%B8%85%E5%BC%A0/" class="c-article__btn p-list-article__btn">Read more</a>
+  <a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2-3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

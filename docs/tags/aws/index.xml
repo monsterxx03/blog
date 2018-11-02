@@ -6,10 +6,21 @@
     <description>Recent content in Aws on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 12 Oct 2018 14:49:13 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 31 Oct 2018 15:23:45 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/tags/aws/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>AWS Aurora DB</title>
+      <link>https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/</link>
+      <pubDate>Wed, 31 Oct 2018 15:23:45 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/</guid>
+      <description>最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比.
+Paper notes  存储计算分离 redo log 下推到存储层 副本: 6 副本 3 AZ(2 per az), 失去一个 AZ + 1 additoinal node 不会丢数据(可读不可写). 失去一个 AZ (或任意2 node) 不影响数据写入. 10GB 一个 segment, 每个 segment 6 副本一个 PG (protection group), 一 AZ　两副本. 在 10Gbps 的网络上, 修复一个 10GB 的segment 需要 10s.  MySQL 一个应用层的写会在底层产生很多额外的写操作，会带来写放大问题:
+redo log 用来 crash recovery, binlog 会上传 s3　用于 point in time restore.</description>
+    </item>
     
     <item>
       <title>在 redshift 中计算 p95 latency</title>
@@ -67,10 +78,10 @@ apiVersion: v1 kind: ConfigMap metadata: name: aws-auth namespace: kube-system d
     
     <item>
       <title>Use SNS &amp; SQS to build Pub/Sub System</title>
-      <link>https://blog.monsterxx03.com/2018/05/23/use-sns--sqs-to-build-pub/sub-system/</link>
+      <link>https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub-sub-system/</link>
       <pubDate>Wed, 23 May 2018 18:05:28 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/05/23/use-sns--sqs-to-build-pub/sub-system/</guid>
+      <guid>https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub-sub-system/</guid>
       <description>Recently, we build pub/sub system based on AWS&amp;rsquo;s SNS &amp;amp; SQS service, take some notes.
 Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&amp;rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&amp;rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.</description>
     </item>

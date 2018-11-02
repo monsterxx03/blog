@@ -26,10 +26,10 @@ CELERY_RESULT_BACKEND 使用 redis 的坑 配置了 CELERY_RESULT_BACKEND 后, �
     
     <item>
       <title>编写 python 2/3 兼容代码</title>
-      <link>https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/</link>
+      <link>https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2-3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/</link>
       <pubDate>Sat, 16 Jun 2018 14:38:26 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/</guid>
+      <guid>https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2-3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/</guid>
       <description>上一篇 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情.
 __future__ python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件.
 首先是几个在 python 2.7 里不用特意写，已经默认开启的特性:

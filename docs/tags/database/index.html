@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.49.2" /><link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet">
+  <meta name="generator" content="Hugo 0.50" /><link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet">
   <link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
   
@@ -54,6 +54,29 @@
   <main id="main" class="l-main">
 
 <h2 class="c-title p-tag-title">Database</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/">AWS Aurora DB</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-10-31T15:23:45&#43;08:00">
+        Oct 31, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比.
+Paper notes  存储计算分离 redo log 下推到存储层 副本: 6 副本 3 AZ(2 per az), 失去一个 AZ + 1 additoinal node 不会丢数据(可读不可写). 失去一个 AZ (或任意2 node) 不影响数据写入. 10GB 一个 segment, 每个 segment 6 副本一个 PG (protection group), 一 AZ　两副本. 在 10Gbps 的网络上, 修复一个 10GB 的segment 需要 10s.  MySQL 一个应用层的写会在底层产生很多额外的写操作，会带来写放大问题:
+redo log 用来 crash recovery, binlog 会上传 s3　用于 point in time restore.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">
