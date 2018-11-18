@@ -31,8 +31,9 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.48" /><link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet">
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.51" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  
+  
   <link href="https://blog.monsterxx03.com/index.xml" rel="alternate" type="application/rss+xml" title="Shining Moon" />
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -54,6 +55,31 @@
     
   </header>
   <main id="main" class="l-main">
+
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/">Use redshift spectrum to do query on s3</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2017-07-21T03:10:58Z">
+        Jul 21, 2017
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    使用 redshift spectrum 查询 S3 数据 通常使用 redshift 做数据仓库的时候要做大量的 ETL 工作，一般流程是把各种来源的数据捣鼓捣鼓丢到 S3 上去，再从 S3 倒腾进 redshift. 如果你有大量的历史数据要导进 redshift，这个过程就会很痛苦，redshift 对一次倒入大量数据并不友好，你要分批来做。
+今年4月的时候， redshift 发布了一个新功能 spectrum, 可以从 redshift 里直接查询 s3 上的结构化数据。最近把部分数据仓库直接迁移到了 spectrum, 正好来讲讲。
+动机 Glow 的数据仓库建在 redshift 上， 又分成了两个集群，一个 ssd 的集群存放最近 4 个月的数据，供产品分析，metrics report, debug 等等 adhoc 的查询。4个月之前的数据存放在一个 hdd 的集群里，便宜容量大，查询慢。
+但是时间长了 hdd 的集群也是有扩容需求的，而使用频率又实在是不高，其实很浪费, 这就是迁移到 spectrum 的动机。
+使用 Spectrum Redshift spectrum 底层其实是基于 AWS 的另一个服务 athena 的。athena 是个 Presto 和 Hive 杂交产物， DDL 用 Hive 语法， 查询用的 sql 由 Presto 支持, 感觉怪怪的，这里不多展开讲 athena, 知道 redshift spectrum 其实是通过 athena 对接的 s3 就行了。
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
 
 
 
@@ -193,7 +219,6 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
   <div class="c-article__summary">
     Notes when reading chapter 2 &#8220;Data models and query languages&#8221;, chapter 3 &#8220;Storage and retrieval&#8221;
 
-
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/" class="c-article__btn p-list-article__btn">Read more</a>
@@ -216,7 +241,6 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
   <div class="c-article__summary">
     月初的时候搬了家, 之后的周末一直在忙些琐琐碎碎的事情，嘛，仔细一想，除了去宜家搬了个电视柜回来都不记得干了啥&#8230;
 这周末心血来潮去听了两个讲座，一个人文的，一个技术的，还都碰到了点有意思的事情。
-
 
   </div>
   
@@ -244,7 +268,6 @@ You will come to:
 I&#8217;ve tried three ways to do it:
  ansible CloudFormation terraform  In this article, I&#8217;ll compare them, however, the conclusion is to use terraform 🙂
 
-
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/" class="c-article__btn p-list-article__btn">Read more</a>
@@ -266,36 +289,9 @@ I&#8217;ve tried three ways to do it:
   </header>
   <div class="c-article__summary">
     A few notes taken when reading 
-
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/">MySQL partition table</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2017-04-05T16:23:32Z">
-        Apr 5, 2017
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    Overview MySQL has buildin partition table support, which can help split data accross multi tables,
-and provide a unified query interface as normal tables.
-Benefit:
- Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly. Speed up query based on partition key(partitoin pruning)  Limit:
- For partition table, every unique key must use every column in table&#8217;s partition expression(include primary key) For innodb engine, paritioned table can&#8217;t have foreign key,and can&#8217;t have columns referenced by foreign keys. For MyISAM engine, mysql version &lt;= 5.6.5, DML operation will lock all partition as a whole.  
-
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
