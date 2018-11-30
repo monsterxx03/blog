@@ -6,10 +6,24 @@
     <description>Recent content in Life on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sun, 04 Nov 2018 23:31:07 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 30 Nov 2018 17:39:00 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/categories/life/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>杂谈</title>
+      <link>https://blog.monsterxx03.com/2018/11/30/%E6%9D%82%E8%B0%88/</link>
+      <pubDate>Fri, 30 Nov 2018 17:39:00 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/11/30/%E6%9D%82%E8%B0%88/</guid>
+      <description>屋里有两个钟，一个快 5 分钟，　一个慢 5 分钟,　一直懒得把它们调正, 有种莫名的时间撕裂感, 好像还挺喜欢.还有一个月 2018 就过去了, 我想想最近都干嘛了.
+最近看的书 读完了 &amp;lt;a philosophy of software design&amp;gt;, 书是好书, 就是好贵(花了我260&amp;hellip;). 本来想专门写一篇的,但开了个头发却发现没太多可写的. 书里提到的问题都碰到过, 解决方法和建议其实也一直在用, 没有什么银弹, 等再践行一段时间再说吧. PS: 收益最大的是讲注释的章节.
+昨晚看完了 &amp;lt;夜行&amp;gt;. 森见登美彦的书, 改编的动画倒是看过不少, 书以前只看过 &amp;lt;有顶天家族&amp;gt;. 这本风格差得挺远,　通篇五里雾中的感觉, 有点　&amp;lt;1Q84&amp;gt;　的意思. &amp;ldquo;世界是一场夜&amp;rdquo;, 后半部分看到这句话的时候, 起了鸡皮疙瘩,　夜行和曙光世界里的岸田过着完全不同的生活, 契机只是鞍马火祭上的偶遇. 是不是真的存在一个和现实完全对立的世界, 跨越的分界线只是那一点点契机?那个世界的自己又过得到好还是差呢?　定的 &amp;lt;企鹅公路&amp;gt; 还在路上, 为什么有人已经收到了?
+今敏的短篇漫画集 &amp;lt;梦的化石&amp;gt;, 只看了个开头几篇, 怎么说呢, 画的真烂啊&amp;hellip;故事莫名奇妙, 大师放弃漫画做动画是对的.
+最近的工作 干了几件事:
+ 迁了一部分数据库到 aurora 上, 效果不错, 但挺贵哦. 用 Bloomfilter 改写了部分业务逻辑, 顺便了解了下其他的 probabilistic data structure, 挺有趣的, 只恨高数都还给老师了, 证明过程看得一头雾水, 要不补一下?</description>
+    </item>
     
     <item>
       <title>濑户内海的风与阳</title>

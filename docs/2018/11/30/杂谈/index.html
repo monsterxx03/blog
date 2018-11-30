@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   
-  <title>Build private static website on S3</title>
-  <meta property="og:title" content="Build private static website on S3" />
-  <meta name="twitter:title" content="Build private static website on S3" />
+  <title>杂谈</title>
+  <meta property="og:title" content="杂谈" />
+  <meta name="twitter:title" content="杂谈" />
   
 
   
@@ -17,7 +17,7 @@
 
   <meta name="author" content="X"/>
   <meta property="og:site_name" content="Shining Moon" />
-  <meta property="og:url" content="https://blog.monsterxx03.com/2017/08/19/build-private-staticwebsite-on-s3/" />
+  <meta property="og:url" content="https://blog.monsterxx03.com/2018/11/30/%E6%9D%82%E8%B0%88/" />
 
   
   <meta name="twitter:card" content="summary" />
@@ -58,53 +58,59 @@
 
 <article class="p-article">
   <header>
-    <h1>Build private static website on S3</h1>
+    <h1>杂谈</h1>
     <div>
       <div class="c-time">
         Posted on
-        <time datetime="2017-08-19T07:28:16Z">
-          Aug 19, 2017
+        <time datetime="2018-11-30T17:39:00&#43;08:00">
+          Nov 30, 2018
         </time>
       </div>
-      
-      <a href="https://blog.monsterxx03.com/tags/aws" class="c-tag">AWS</a>
-      
-      <a href="https://blog.monsterxx03.com/tags/s3" class="c-tag">S3</a>
       
     </div>
   </header>
   
   <section id="js-article" class="p-article__body">
-    <p>Build static website on S3 is very easy, but by default, it can be accessed by open internet.It will be super helpful if we can build website only available in VPC. Then we can use it to host internal deb repo, doc site&#8230;</p>
+    
 
-<p>Steps are very easy, you only need VPC endpoints and S3 bucket policy.</p>
+<p>屋里有两个钟，一个快 5 分钟，　一个慢 5 分钟,　一直懒得把它们调正, 有种莫名的时间撕裂感, 好像还挺喜欢.还有一个月 2018 就过去了,
+ 我想想最近都干嘛了.</p>
 
-<p>AWS api is open to internet, if you need to access S3 in VPC, your requests will pass through VPC&#8217;s internet gateway or NAT gateway. With VPC endpoints(can be found in VPC console), your requests to S3 will go through AWS&#8217;s internal network. Currently, VPC endpoints only support S3, support for dynamodb is in test.</p>
+<h2 id="最近看的书">最近看的书</h2>
 
-<p>To restrict S3 bucket only available in your VPC, need to set bucket policy (to host static website, enable static website support first). At first, I didn&#8217;t check doc, try to restrict access by my VPC ip cidr, but it didn&#8217;t work, I need to restrict by VPC endpoint id:</p>
+<p>读完了 <code>&lt;a philosophy of software design&gt;</code>, 书是好书, 就是好贵(花了我260&hellip;). 本来想专门写一篇的,但开了个头发却发现没太多可写的. 书里提到的问题都碰到过, 解决方法和建议其实也一直在用,
+没有什么银弹, 等再践行一段时间再说吧. PS: 收益最大的是讲注释的章节.</p>
 
-<pre><code>{
-  &quot;Version&quot;: &quot;2012-10-17&quot;,
-  &quot;Id&quot;: &quot;Policy1415115909152&quot;,
-  &quot;Statement&quot;: [
-    {
-      &quot;Sid&quot;: &quot;Access-to-specific-VPCE-only&quot;,
-      &quot;Principal&quot;: &quot;*&quot;,
-      &quot;Action&quot;: &quot;s3:GetObject&quot;,
-      &quot;Effect&quot;: &quot;Allow&quot;,
-      &quot;Resource&quot;: [&quot;arn:aws:s3:::my_secure_bucket&quot;,
-                   &quot;arn:aws:s3:::my_secure_bucket/*&quot;],
-      &quot;Condition&quot;: {
-        &quot;StringEquals&quot;: {
-          &quot;aws:sourceVpce&quot;: &quot;vpce-1a2b3c4d&quot;
-        }
-      }
-    }
-  ]
-}
-</code></pre>
+<p>昨晚看完了 <code>&lt;夜行&gt;</code>. 森见登美彦的书, 改编的动画倒是看过不少, 书以前只看过 <code>&lt;有顶天家族&gt;</code>. 这本风格差得挺远,　通篇五里雾中的感觉, 有点　<code>&lt;1Q84&gt;</code>　的意思. &ldquo;世界是一场夜&rdquo;, 后半部分看到这句话的时候, 起了鸡皮疙瘩,　夜行和曙光世界里的岸田过着完全不同的生活, 契机只是鞍马火祭上的偶遇. 是不是真的存在一个和现实完全对立的世界, 跨越的分界线只是那一点点契机?那个世界的自己又过得到好还是差呢?　</p>
 
-<p>BTW, if you can config bucket policy restrict on VPC directly, with VPC endpoint you can limit to subnets. Details can be found in doc: <a href="http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-endpoints-s3.html">http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-endpoints-s3.html</a></p>
+<p>定的 <code>&lt;企鹅公路&gt;</code> 还在路上, 为什么有人已经收到了?</p>
+
+<p>今敏的短篇漫画集 <code>&lt;梦的化石&gt;</code>, 只看了个开头几篇, 怎么说呢, 画的真烂啊&hellip;故事莫名奇妙, 大师放弃漫画做动画是对的.</p>
+
+<h2 id="最近的工作">最近的工作</h2>
+
+<p>干了几件事:</p>
+
+<ul>
+<li>迁了一部分数据库到 aurora 上, 效果不错, 但挺贵哦.</li>
+<li>用 Bloomfilter 改写了部分业务逻辑, 顺便了解了下其他的 probabilistic data structure, 挺有趣的, 只恨高数都还给老师了, 证明过程看得一头雾水, 要不补一下?</li>
+<li>尝试用 ECS 来跑 jenkins, 问题挺多的:
+
+<ul>
+<li>fargate 无法挂载 host 的 docker.sock, 那我想做动态的 agent build 还要在 agent 容器里跑 docker daemon? 不想这么干哎.</li>
+<li>用 EFS 做 jenkins 的 home 目录, 性能很差.</li>
+<li>没搞明白怎么把一个预先创建 ebs volume 绑到 container 上去, 好像有好几个 docker 插件, 明明在 k8s 里很简单.</li>
+<li>pipeline 的 declarative 语法不支持 sidecar container, 只能用 script 的方式来写, 不喜欢.</li>
+<li>现有代码各个 repo 之间耦合度太高了, 把单元测试用容器来跑好复杂.</li>
+</ul></li>
+</ul>
+
+<p>最近收到的简历质量都不咋的, 差的连自己做过的工作都说不清楚, 相对好的也普普通通, 知识面太窄, 基本都是守着自己那一亩三分地.
+再看看 v 站上隔三差五的前后端之争, 他们是不是对这份工作有有什么误解?</p>
+
+<h2 id="唠叨">唠叨</h2>
+
+<p>一些事情嘛, 往者不可谏, 来者犹可追. 人不能踏进一个坑两次哦, 算是给自己的警示吧.</p>
 
   </section>
   <footer>
@@ -125,52 +131,16 @@
       <div class="c-pagination__ctrl">
         <div class="c-pagination__newer">
           
-          <a href="https://blog.monsterxx03.com/2017/09/29/get-all-invalid-ptr-record-on-route53/">Newer</a>
           
         </div>
         <div class="c-pagination__older">
           
-          <a href="https://blog.monsterxx03.com/2017/08/13/%E6%97%85%E8%A1%8C%E6%95%A3%E8%AE%B0/">Older</a>
+          <a href="https://blog.monsterxx03.com/2018/11/17/%E7%94%A8-bloom-filter-%E7%BB%99%E6%8E%A8%E8%8D%90%E5%88%97%E8%A1%A8%E5%8E%BB%E9%87%8D/">Older</a>
           
         </div>
       </div>
     </nav>
     
-
-<section class="p-related">
-  <h3>See Also</h3>
-  <ul id="slider" class="p-related__list">
-    
-    <li class="p-related__item js-related__item">
-      <a href="/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/"
-        >
-        <span>Use redshift spectrum to do query on s3</span>
-      </a>
-    </li>
-    
-    <li class="p-related__item js-related__item">
-      <a href="/2017/04/21/infrastructure-as-code/"
-        >
-        <span>Infrastructure as Code</span>
-      </a>
-    </li>
-    
-    <li class="p-related__item js-related__item">
-      <a href="/2016/10/28/migrate-to-encrypted-rds/"
-        >
-        <span>Migrate to encrypted RDS</span>
-      </a>
-    </li>
-    
-    <li class="p-related__item js-related__item">
-      <a href="/2016/07/16/redshift-as-data-warehouse/"
-        >
-        <span>Redshift as data warehouse</span>
-      </a>
-    </li>
-    
-  </ul>
-</section>
 
 
     
