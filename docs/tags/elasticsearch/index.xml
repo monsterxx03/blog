@@ -25,7 +25,9 @@
 
 &lt;p&gt;primary shards: Divide a index into multi parts(by default 5), shards of an index can be distributed over multi nodes. It enables scale index horizontally and make access to index parallelly(accross multi nodes).&lt;/p&gt;
 
-&lt;p&gt;replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.&lt;/p&gt;</description>
+&lt;p&gt;replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
   </channel>

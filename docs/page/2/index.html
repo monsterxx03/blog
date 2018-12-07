@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.52" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.48" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <link href="https://blog.monsterxx03.com/index.xml" rel="alternate" type="application/rss+xml" title="Shining Moon" />
@@ -55,6 +55,33 @@
     
   </header>
   <main id="main" class="l-main">
+
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/09/03/kubernetes-in-action-notes/">Kubernetes in Action Notes</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-09-03T18:20:46&#43;08:00">
+        Sep 3, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    Miscellaneous notes when reading &lt;Kubernetes in Action&gt;.
+api group and api version core api group need&rsquo;t specified in apiVersion field.
+For example, ReplicationController is on core api group, so only:
+apiVersion: v1 kind: ReplicationController ...  ReplicationSet is added later in app group, v1beta2 version (k8s v1.8):
+apiVersion: apps/v1beta2 1 kind: ReplicaSet  https://kubernetes.io/docs/concepts/overview/kubernetes-api/
+ReplicationController VS ReplicationSet ReplicationController is replaced by ReplicationSet, which has more expressive pod selectors.
+ReplicationController&rsquo;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/09/03/kubernetes-in-action-notes/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
 
 
 
@@ -110,7 +137,7 @@ CELERY_RESULT_BACKEND 使用 redis 的坑 配置了 CELERY_RESULT_BACKEND 后, �
 
 <article class="c-article p-list-article">
   <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2-3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/">编写 python 2/3 兼容代码</a></h2>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/">编写 python 2/3 兼容代码</a></h2>
     <p class="c-article__meta">
       Posted on
       <time datetime="2018-06-16T14:38:26&#43;08:00">
@@ -126,7 +153,7 @@ __future__ python2 里自带的向后兼容模块，将 python3 的一些语法�
  from __future__ import print_function, 就是将 print 关键词变成函数啦, 导入后支持 python3 中 print 的完整参数，再用不带括号的 print 就会在文件被导入的时候报语法错误啦.
   </div>
   
-  <a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2-3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/" class="c-article__btn p-list-article__btn">Read more</a>
+  <a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
@@ -209,7 +236,7 @@ hash = FNV_offset_basis for each byte_of_data to be hashed hash = hash × FNV_pr
 
 <article class="c-article p-list-article">
   <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub-sub-system/">Use SNS &amp; SQS to build Pub/Sub System</a></h2>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/05/23/use-sns--sqs-to-build-pub/sub-system/">Use SNS &amp; SQS to build Pub/Sub System</a></h2>
     <p class="c-article__meta">
       Posted on
       <time datetime="2018-05-23T18:05:28&#43;08:00">
@@ -222,7 +249,7 @@ hash = FNV_offset_basis for each byte_of_data to be hashed hash = hash × FNV_pr
 Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
   </div>
   
-  <a href="https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub-sub-system/" class="c-article__btn p-list-article__btn">Read more</a>
+  <a href="https://blog.monsterxx03.com/2018/05/23/use-sns--sqs-to-build-pub/sub-system/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
@@ -271,32 +298,6 @@ K8S 集群对网络有几个基本要求:
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/">AWS lambda 的一些应用场景</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-03-23T17:40:54&#43;08:00">
-        Mar 23, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    这几年吹 serverless 的比较多, 在公司内部也用 lambda , 记录一下, 这东西挺有用, 但远不到万能, 场景比较有限.
-lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平台, 我们就只在 aws lambda 上了.
-我基本上就把 lambda 当成 trigger 和 web hook 用.
-和 auto scaling group 一起用 线上所有分组的机器都是用 auto scaling group 管理的, 只不过 stateless 的 server 开了自动伸缩, 带状态的 (ElasticSearch cluster, redis cache cluster) 只用来维护固定 size.
-在往一个 group 里加 server 的时候, 要做的事情挺多的, 给新 server 添加组内编号 tag, 添加内网域名, provision, 部署最新代码.
-这些事都用 jenkins 来做, 但怎么触发 jenkins job 呢?
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

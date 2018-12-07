@@ -6,10 +6,20 @@
     <description>Recent content on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 30 Nov 2018 17:39:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 03 Dec 2018 22:47:51 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Debug Skills on Linux</title>
+      <link>https://blog.monsterxx03.com/2018/12/03/debug-skills-on-linux/</link>
+      <pubDate>Mon, 03 Dec 2018 22:47:51 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/12/03/debug-skills-on-linux/</guid>
+      <description>This post will show several command line debug skills on linux server, all examples are shown on ubuntu 18.04, some tools are not installed by default, you can installl by sudo apt install xxx. Some command must be used via sudo
+System resources can be classified in three main categories: compute, storage, and network. Usually, when you come to a performance issue, it&amp;rsquo;s always caused by exhaustion of those resources.</description>
+    </item>
     
     <item>
       <title>杂谈</title>
@@ -179,10 +189,10 @@ CELERY_RESULT_BACKEND 使用 redis 的坑 配置了 CELERY_RESULT_BACKEND 后, �
     
     <item>
       <title>编写 python 2/3 兼容代码</title>
-      <link>https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2-3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/</link>
+      <link>https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/</link>
       <pubDate>Sat, 16 Jun 2018 14:38:26 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2-3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/</guid>
+      <guid>https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/</guid>
       <description>上一篇 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情.
 __future__ python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件.
 首先是几个在 python 2.7 里不用特意写，已经默认开启的特性:
@@ -230,10 +240,10 @@ hash = FNV_offset_basis for each byte_of_data to be hashed hash = hash × FNV_pr
     
     <item>
       <title>Use SNS &amp; SQS to build Pub/Sub System</title>
-      <link>https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub-sub-system/</link>
+      <link>https://blog.monsterxx03.com/2018/05/23/use-sns--sqs-to-build-pub/sub-system/</link>
       <pubDate>Wed, 23 May 2018 18:05:28 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub-sub-system/</guid>
+      <guid>https://blog.monsterxx03.com/2018/05/23/use-sns--sqs-to-build-pub/sub-system/</guid>
       <description>Recently, we build pub/sub system based on AWS&amp;rsquo;s SNS &amp;amp; SQS service, take some notes.
 Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&amp;rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&amp;rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.</description>
     </item>
@@ -503,7 +513,9 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
       <pubDate>Thu, 04 May 2017 16:27:52 +0000</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/</guid>
-      <description>&lt;p&gt;Notes when reading chapter 2 &amp;#8220;Data models and query languages&amp;#8221;, chapter 3 &amp;#8220;Storage and retrieval&amp;#8221;&lt;/p&gt;</description>
+      <description>&lt;p&gt;Notes when reading chapter 2 &amp;#8220;Data models and query languages&amp;#8221;, chapter 3 &amp;#8220;Storage and retrieval&amp;#8221;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -514,7 +526,9 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
       <guid>https://blog.monsterxx03.com/2017/04/23/4%E6%9C%88%E5%91%A8%E6%9C%AB%E6%9D%82%E8%AE%B0/</guid>
       <description>&lt;p&gt;月初的时候搬了家, 之后的周末一直在忙些琐琐碎碎的事情，嘛，仔细一想，除了去宜家搬了个电视柜回来都不记得干了啥&amp;#8230;&lt;/p&gt;
 
-&lt;p&gt;这周末心血来潮去听了两个讲座，一个人文的，一个技术的，还都碰到了点有意思的事情。&lt;/p&gt;</description>
+&lt;p&gt;这周末心血来潮去听了两个讲座，一个人文的，一个技术的，还都碰到了点有意思的事情。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -542,7 +556,9 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
 &lt;li&gt;terraform&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;In this article, I&amp;#8217;ll compare them, however, the conclusion is to use terraform 🙂&lt;/p&gt;</description>
+&lt;p&gt;In this article, I&amp;#8217;ll compare them, however, the conclusion is to use terraform 🙂&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -551,7 +567,9 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
       <pubDate>Wed, 19 Apr 2017 16:26:58 +0000</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/</guid>
-      <description>&lt;p&gt;A few notes taken when reading &lt;Concurrency in Go&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;A few notes taken when reading &lt;Concurrency in Go&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -579,7 +597,9 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
 &lt;li&gt;For partition table, every unique key must use every column in table&amp;#8217;s partition expression(include primary key)&lt;/li&gt;
 &lt;li&gt;For innodb engine, paritioned table can&amp;#8217;t have foreign key,and can&amp;#8217;t have columns referenced by foreign keys.&lt;/li&gt;
 &lt;li&gt;For MyISAM engine, mysql version &amp;lt;= 5.6.5, DML operation will lock all partition as a whole.&lt;/li&gt;
-&lt;/ul&gt;</description>
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -596,7 +616,9 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
 
 &lt;p&gt;primary shards: Divide a index into multi parts(by default 5), shards of an index can be distributed over multi nodes. It enables scale index horizontally and make access to index parallelly(accross multi nodes).&lt;/p&gt;
 
-&lt;p&gt;replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.&lt;/p&gt;</description>
+&lt;p&gt;replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -607,7 +629,9 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
       <guid>https://blog.monsterxx03.com/2017/03/11/matrix-14-years-later/</guid>
       <description>&lt;p&gt;心血来潮, 又看了遍黑客帝国三部曲, 当年的沃卓斯基兄弟都变成沃卓斯基姐妹了, 唏嘘啊&amp;#8230;&lt;/p&gt;
 
-&lt;p&gt;第一次看的时候, 好像是初中吧, 记得看第三部还是姑父的盗版碟上看的, 那天还拉了个同学和我一起看,然后请他吃了泡面+冰淇淋,结果他回家就拉肚了,抱怨了我好久,所以印象特别深刻,哈哈.&lt;/p&gt;</description>
+&lt;p&gt;第一次看的时候, 好像是初中吧, 记得看第三部还是姑父的盗版碟上看的, 那天还拉了个同学和我一起看,然后请他吃了泡面+冰淇淋,结果他回家就拉肚了,抱怨了我好久,所以印象特别深刻,哈哈.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -616,7 +640,9 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
       <pubDate>Sun, 11 Dec 2016 16:20:24 +0000</pubDate>
       
       <guid>https://blog.monsterxx03.com/2016/12/11/bigtable-notes/</guid>
-      <description>&lt;p&gt;杂乱笔记，辅助读paper.&lt;/p&gt;</description>
+      <description>&lt;p&gt;杂乱笔记，辅助读paper.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -625,7 +651,9 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
       <pubDate>Sat, 19 Nov 2016 16:18:41 +0000</pubDate>
       
       <guid>https://blog.monsterxx03.com/2016/11/19/gfs-notes/</guid>
-      <description>&lt;p&gt;看了下很久前 google 的 GFS 论文， 做点笔记。&lt;/p&gt;</description>
+      <description>&lt;p&gt;看了下很久前 google 的 GFS 论文， 做点笔记。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -636,7 +664,9 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
       <guid>https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/</guid>
       <description>&lt;p&gt;最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.&lt;/p&gt;
 
-&lt;p&gt;比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.&lt;/p&gt;</description>
+&lt;p&gt;比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -645,7 +675,9 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
       <pubDate>Sat, 06 Aug 2016 16:16:23 +0000</pubDate>
       
       <guid>https://blog.monsterxx03.com/2016/08/06/witch-night/</guid>
-      <description>&lt;p&gt;最近心血来潮把&amp;lt;魔法使之夜&amp;gt;的游戏通关了, 都已经是5年?还是6年前发售的了, 因为当年汉化迟迟不发布, 就一直搁置了.&lt;/p&gt;</description>
+      <description>&lt;p&gt;最近心血来潮把&amp;lt;魔法使之夜&amp;gt;的游戏通关了, 都已经是5年?还是6年前发售的了, 因为当年汉化迟迟不发布, 就一直搁置了.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -660,7 +692,9 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
 &lt;li&gt;建立索引怎样选择合适的列.&lt;/li&gt;
 &lt;li&gt;怎样让 SQL 能有效利用索引.&lt;/li&gt;
 &lt;li&gt;如果对 SQL 效率进行评估(即设置索引前后是否真的有性能提升).&lt;/li&gt;
-&lt;/ul&gt;</description>
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -673,7 +707,9 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
 
 &lt;p&gt;数据仓库我们选择了 AWS 的 Redshift.&lt;/p&gt;
 
-&lt;p&gt;在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.&lt;/p&gt;</description>
+&lt;p&gt;在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -686,7 +722,9 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
 
 &lt;p&gt;在配置 MySQL 的时候, 一般都会需要设置 _innodb_buffer_pool&lt;em&gt;size&lt;/em&gt;, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.&lt;/p&gt;
 
-&lt;p&gt;之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?&lt;/p&gt;</description>
+&lt;p&gt;之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>

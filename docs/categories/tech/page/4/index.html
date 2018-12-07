@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.52" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.48" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -55,6 +55,30 @@
   <main id="main" class="l-main">
 
 <h2 class="c-title p-tag-title">Tech</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/06/05/debug-python-performance-issue-with-pyflame/">Debug python performance issue with pyflame</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2017-06-05T09:50:44Z">
+        Jun 5, 2017
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    pyflame is an opensource tool developed by uber: https://github.com/uber/pyflame
+It can take snapshots of running python process, combined with flamegraph.pl, can output flamegraph picture of python call stacks. Help analyze bottleneck of python program, needn&#8217;t inject any perf code into your application, and overhead is very low.
+Basic Usage sudo pyflame -s 10 -x -r 0.001 $pid | ./flamegraph.pl &gt; perf.svg
+ -s, how many seconds to run -r, sample rate (seconds)  Your output will be something like following:
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2017/06/05/debug-python-performance-issue-with-pyflame/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">
@@ -93,6 +117,7 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
   <div class="c-article__summary">
     Notes when reading chapter 2 &#8220;Data models and query languages&#8221;, chapter 3 &#8220;Storage and retrieval&#8221;
 
+
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/" class="c-article__btn p-list-article__btn">Read more</a>
@@ -119,6 +144,7 @@ You will come to:
 I&#8217;ve tried three ways to do it:
  ansible CloudFormation terraform  In this article, I&#8217;ll compare them, however, the conclusion is to use terraform 🙂
 
+
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/" class="c-article__btn p-list-article__btn">Read more</a>
@@ -140,6 +166,7 @@ I&#8217;ve tried three ways to do it:
   </header>
   <div class="c-article__summary">
     A few notes taken when reading 
+
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/" class="c-article__btn p-list-article__btn">Read more</a>
@@ -164,7 +191,8 @@ I&#8217;ve tried three ways to do it:
 and provide a unified query interface as normal tables.
 Benefit:
  Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly. Speed up query based on partition key(partitoin pruning)  Limit:
- For partition table, every unique key must use every column in table&#8217;s partition expression(include primary key) For innodb engine, paritioned table can&#8217;t have foreign key,and can&#8217;t have columns referenced by foreign keys. For MyISAM engine, mysql version &lt;= 5.6.5, DML operation will lock all partition as a whole. 
+ For partition table, every unique key must use every column in table&#8217;s partition expression(include primary key) For innodb engine, paritioned table can&#8217;t have foreign key,and can&#8217;t have columns referenced by foreign keys. For MyISAM engine, mysql version &lt;= 5.6.5, DML operation will lock all partition as a whole.  
+
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/" class="c-article__btn p-list-article__btn">Read more</a>
@@ -190,6 +218,7 @@ Basic concepts cluster: A collection of server nodes with same cluster.name sett
 primary shards: Divide a index into multi parts(by default 5), shards of an index can be distributed over multi nodes. It enables scale index horizontally and make access to index parallelly(accross multi nodes).
 replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.
 
+
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/03/22/elasticsearch-cluster/" class="c-article__btn p-list-article__btn">Read more</a>
@@ -212,6 +241,7 @@ replicas: backup for shards, also replicas can handle search requests, which mea
   <div class="c-article__summary">
     杂乱笔记，辅助读paper.
 
+
   </div>
   
   <a href="https://blog.monsterxx03.com/2016/12/11/bigtable-notes/" class="c-article__btn p-list-article__btn">Read more</a>
@@ -233,6 +263,7 @@ replicas: backup for shards, also replicas can handle search requests, which mea
   </header>
   <div class="c-article__summary">
     看了下很久前 google 的 GFS 论文， 做点笔记。
+
 
   </div>
   
@@ -257,31 +288,10 @@ replicas: backup for shards, also replicas can handle search requests, which mea
     最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.
 比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.
 
+
   </div>
   
   <a href="https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/">MySQL 索引优化</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2016-07-26T16:13:54Z">
-        Jul 26, 2016
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    什么是索引,索引怎么建这些基本的就跳过不谈了,整理一些前段时间优化线上 SQL 查询时碰到的一些问题. 主要解决下面几个问题:
- 建立索引怎样选择合适的列. 怎样让 SQL 能有效利用索引. 如果对 SQL 效率进行评估(即设置索引前后是否真的有性能提升). 
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
