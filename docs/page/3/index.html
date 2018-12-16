@@ -60,6 +60,30 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/">AWS 的 K8S CNI Plugin</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-04-09T15:28:38&#43;08:00">
+        Apr 9, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别.
+K8S 集群对网络有几个基本要求:
+ container 之间网络必须可达，且不通过 NAT 所有 node 必须可以和所有 container 通信, 且不通过 NAT container 自己看到的 IP, 必须和其他 container 看到的它的 ip 相同.  Flannel in VPC flannel 是 K8S 的一个 CNI 插件, 在 VPC 里使用 flannel 的话, 有几个选择:
+ 通过 VXLAN/UDP 进行封包, 封包影响网络性能, 而且不好 debug 用 aws vpc backend, 这种方式会把每台主机的 docker 网段添加进 vpc routing table, 但默认 routing table 里只能有50条规则, 所以只能 50 个 node, 可以发 ticket 提升, 但数量太多会影响 vpc 性能.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/">AWS lambda 的一些应用场景</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -280,29 +304,6 @@ Prerequisites Source RDS must:
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/09/29/get-all-invalid-ptr-record-on-route53/">Get all invalid PTR record on  Route53</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2017-09-29T08:55:18Z">
-        Sep 29, 2017
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    I use autoscaling group to manage stateless servers. Servers go up and down every day.
-Once server is up, I will add a PTR record for it&#8217;s internal ip. But when it&#8217;s down, I didn&#8217;t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.
-To cleanup those PTR records realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2017/09/29/get-all-invalid-ptr-record-on-route53/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

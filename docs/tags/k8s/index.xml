@@ -6,10 +6,24 @@
     <description>Recent content in K8s on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Wed, 26 Sep 2018 10:16:42 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 16 Dec 2018 13:09:20 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/tags/k8s/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kubernetes 中的 pod 调度</title>
+      <link>https://blog.monsterxx03.com/2018/12/16/kubernetes-%E4%B8%AD%E7%9A%84-pod-%E8%B0%83%E5%BA%A6/</link>
+      <pubDate>Sun, 16 Dec 2018 13:09:20 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/12/16/kubernetes-%E4%B8%AD%E7%9A%84-pod-%E8%B0%83%E5%BA%A6/</guid>
+      <description>定义 pod 的时候通过添加 node selector 可以让 pod 调度到有特定 label 的 node 上去, 这是最简单的调度方式. 其他还有更复杂的调度方式: node-taints/tolerations, node-affinity, pod-affinity, 来达到让某些类型的 pod 调度到一起, 让某些类型的 pod 不跑一起的效果.
+Taints and Tolerations 如果 node 有 taints, 那只有能 tolerate 这些 taints 的 pod 才能调度到上面.
+taint 的基本格式是: &amp;lt;key&amp;gt;&amp;lt;operator&amp;gt;&amp;lt;value&amp;gt;:&amp;lt;effect&amp;gt;
+kubectl describe node xxx 可以看到节点的 taints, 比如 master 节点上会有:
+Taints: node-role.kubernetes.io/master:NoSchedule  这里 key 是 node-role.kubernetes.io/master, 没有等号和 value, operator 就是 Exists , effect 是 NoSchedule.
+master 节点上的这条 taint 就定义了只有能 tolerate 它的 pod 能调度到上面, 一般都是些系统 pod.</description>
+    </item>
     
     <item>
       <title>EkS 评测 part-3</title>
