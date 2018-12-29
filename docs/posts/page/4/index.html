@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.48" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.53" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -55,6 +55,30 @@
   <main id="main" class="l-main">
 
 <h2 class="c-title p-tag-title">Posts</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/">AWS DMS notes</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2017-10-14T22:33:36&#43;08:00">
+        Oct 14, 2017
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    AWS&rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
+It works, but have some concerns. Take some notes when doing this project.
+Prerequisites Source RDS must:
+ Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration('binlog retention hours', 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT, REPLICATION SLAVE, SELECT on replication target tables  DDL on source table Redshift has some limits on change columns:
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">
@@ -272,29 +296,6 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/05/17/designing-data-intensive-application-reading-notes-part-2/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/">Designing data intensive application, reading notes, Part 1</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2017-05-04T16:27:52Z">
-        May 4, 2017
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    Notes when reading chapter 2 &#8220;Data models and query languages&#8221;, chapter 3 &#8220;Storage and retrieval&#8221;
-
-
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

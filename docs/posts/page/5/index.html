@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.48" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.53" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -59,6 +59,28 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/">Designing data intensive application, reading notes, Part 1</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2017-05-04T16:27:52Z">
+        May 4, 2017
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    Notes when reading chapter 2 &#8220;Data models and query languages&#8221;, chapter 3 &#8220;Storage and retrieval&#8221;
+
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/04/23/4%E6%9C%88%E5%91%A8%E6%9C%AB%E6%9D%82%E8%AE%B0/">4月周末杂记</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -70,7 +92,6 @@
   <div class="c-article__summary">
     月初的时候搬了家, 之后的周末一直在忙些琐琐碎碎的事情，嘛，仔细一想，除了去宜家搬了个电视柜回来都不记得干了啥&#8230;
 这周末心血来潮去听了两个讲座，一个人文的，一个技术的，还都碰到了点有意思的事情。
-
 
   </div>
   
@@ -98,7 +119,6 @@ You will come to:
 I&#8217;ve tried three ways to do it:
  ansible CloudFormation terraform  In this article, I&#8217;ll compare them, however, the conclusion is to use terraform 🙂
 
-
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/" class="c-article__btn p-list-article__btn">Read more</a>
@@ -120,7 +140,6 @@ I&#8217;ve tried three ways to do it:
   </header>
   <div class="c-article__summary">
     A few notes taken when reading 
-
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/" class="c-article__btn p-list-article__btn">Read more</a>
@@ -145,8 +164,7 @@ I&#8217;ve tried three ways to do it:
 and provide a unified query interface as normal tables.
 Benefit:
  Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly. Speed up query based on partition key(partitoin pruning)  Limit:
- For partition table, every unique key must use every column in table&#8217;s partition expression(include primary key) For innodb engine, paritioned table can&#8217;t have foreign key,and can&#8217;t have columns referenced by foreign keys. For MyISAM engine, mysql version &lt;= 5.6.5, DML operation will lock all partition as a whole.  
-
+ For partition table, every unique key must use every column in table&#8217;s partition expression(include primary key) For innodb engine, paritioned table can&#8217;t have foreign key,and can&#8217;t have columns referenced by foreign keys. For MyISAM engine, mysql version &lt;= 5.6.5, DML operation will lock all partition as a whole. 
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/" class="c-article__btn p-list-article__btn">Read more</a>
@@ -172,7 +190,6 @@ Basic concepts cluster: A collection of server nodes with same cluster.name sett
 primary shards: Divide a index into multi parts(by default 5), shards of an index can be distributed over multi nodes. It enables scale index horizontally and make access to index parallelly(accross multi nodes).
 replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.
 
-
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/03/22/elasticsearch-cluster/" class="c-article__btn p-list-article__btn">Read more</a>
@@ -196,7 +213,6 @@ replicas: backup for shards, also replicas can handle search requests, which mea
     心血来潮, 又看了遍黑客帝国三部曲, 当年的沃卓斯基兄弟都变成沃卓斯基姐妹了, 唏嘘啊&#8230;
 第一次看的时候, 好像是初中吧, 记得看第三部还是姑父的盗版碟上看的, 那天还拉了个同学和我一起看,然后请他吃了泡面+冰淇淋,结果他回家就拉肚了,抱怨了我好久,所以印象特别深刻,哈哈.
 
-
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/03/11/matrix-14-years-later/" class="c-article__btn p-list-article__btn">Read more</a>
@@ -219,7 +235,6 @@ replicas: backup for shards, also replicas can handle search requests, which mea
   <div class="c-article__summary">
     杂乱笔记，辅助读paper.
 
-
   </div>
   
   <a href="https://blog.monsterxx03.com/2016/12/11/bigtable-notes/" class="c-article__btn p-list-article__btn">Read more</a>
@@ -241,7 +256,6 @@ replicas: backup for shards, also replicas can handle search requests, which mea
   </header>
   <div class="c-article__summary">
     看了下很久前 google 的 GFS 论文， 做点笔记。
-
 
   </div>
   
@@ -266,33 +280,9 @@ replicas: backup for shards, also replicas can handle search requests, which mea
     最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.
 比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.
 
-
   </div>
   
   <a href="https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2016/08/06/witch-night/">魔法使</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2016-08-06T16:16:23Z">
-        Aug 6, 2016
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    最近心血来潮把&lt;魔法使之夜&gt;的游戏通关了, 都已经是5年?还是6年前发售的了, 因为当年汉化迟迟不发布, 就一直搁置了.
-
-
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2016/08/06/witch-night/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

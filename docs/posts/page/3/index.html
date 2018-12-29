@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.48" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.53" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -55,6 +55,30 @@
   <main id="main" class="l-main">
 
 <h2 class="c-title p-tag-title">Posts</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/">Migrate to Sqlalchemy</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-05-20T15:11:31&#43;08:00">
+        May 20, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些.
+原来的 db 层代码历史非常古老(10年以上&hellip;), 最早写代码的人早就不在了, 问题很多:
+ 完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表结构，只能直接看数据库.  重写时候要考虑到的:
+ 现有业务代码基于老 db 代码已经写了很多了, 重写不现实, 迁移到 sqlalchemy 需要封装一套完全兼容的 api, 没用到的混乱的老 api 趁机清理. db migration 需要重新实现, 只用 alembic 不能满足需求, 后详. 重写完的代码保证高测试覆盖率.  ORM or Core sqlalchemy 分成两部分, 底层的 sqlalchemy core 是一套 sql 语法生成器, 通过重载 python 的 magic function 实现用比较漂亮的 python 语法来构造 sql.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">
@@ -279,30 +303,6 @@ The outage I received alarms about live performance issue at 3am, first is serve
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/12/10/handle-outage/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/">AWS DMS notes</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2017-10-14T22:33:36&#43;08:00">
-        Oct 14, 2017
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    AWS&rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
-It works, but have some concerns. Take some notes when doing this project.
-Prerequisites Source RDS must:
- Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration('binlog retention hours', 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT, REPLICATION SLAVE, SELECT on replication target tables  DDL on source table Redshift has some limits on change columns:
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

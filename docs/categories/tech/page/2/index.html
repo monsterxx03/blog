@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.48" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.53" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -55,6 +55,33 @@
   <main id="main" class="l-main">
 
 <h2 class="c-title p-tag-title">Tech</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/09/03/kubernetes-in-action-notes/">Kubernetes in Action Notes</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-09-03T18:20:46&#43;08:00">
+        Sep 3, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    Miscellaneous notes when reading &lt;Kubernetes in Action&gt;.
+api group and api version core api group need&rsquo;t specified in apiVersion field.
+For example, ReplicationController is on core api group, so only:
+apiVersion: v1 kind: ReplicationController ...  ReplicationSet is added later in app group, v1beta2 version (k8s v1.8):
+apiVersion: apps/v1beta2 1 kind: ReplicaSet  https://kubernetes.io/docs/concepts/overview/kubernetes-api/
+ReplicationController VS ReplicationSet ReplicationController is replaced by ReplicationSet, which has more expressive pod selectors.
+ReplicationController&rsquo;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/09/03/kubernetes-in-action-notes/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">
@@ -84,7 +111,7 @@ CELERY_RESULT_BACKEND 使用 redis 的坑 配置了 CELERY_RESULT_BACKEND 后, �
 
 <article class="c-article p-list-article">
   <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/">编写 python 2/3 兼容代码</a></h2>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2-3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/">编写 python 2/3 兼容代码</a></h2>
     <p class="c-article__meta">
       Posted on
       <time datetime="2018-06-16T14:38:26&#43;08:00">
@@ -100,7 +127,7 @@ __future__ python2 里自带的向后兼容模块，将 python3 的一些语法�
  from __future__ import print_function, 就是将 print 关键词变成函数啦, 导入后支持 python3 中 print 的完整参数，再用不带括号的 print 就会在文件被导入的时候报语法错误啦.
   </div>
   
-  <a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/" class="c-article__btn p-list-article__btn">Read more</a>
+  <a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2-3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
@@ -157,7 +184,7 @@ hash = FNV_offset_basis for each byte_of_data to be hashed hash = hash × FNV_pr
 
 <article class="c-article p-list-article">
   <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/05/23/use-sns--sqs-to-build-pub/sub-system/">Use SNS &amp; SQS to build Pub/Sub System</a></h2>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub-sub-system/">Use SNS &amp; SQS to build Pub/Sub System</a></h2>
     <p class="c-article__meta">
       Posted on
       <time datetime="2018-05-23T18:05:28&#43;08:00">
@@ -170,7 +197,7 @@ hash = FNV_offset_basis for each byte_of_data to be hashed hash = hash × FNV_pr
 Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
   </div>
   
-  <a href="https://blog.monsterxx03.com/2018/05/23/use-sns--sqs-to-build-pub/sub-system/" class="c-article__btn p-list-article__btn">Read more</a>
+  <a href="https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub-sub-system/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
@@ -270,31 +297,6 @@ lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平�
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/03/17/%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/">Access sensitive variables on AWS lambda</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-02-28T21:45:23&#43;08:00">
-        Feb 28, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&hellip;
-Usually, we inject secrets as environment variables, but they&rsquo;re still visable on lambda console. I don&rsquo;t use it in aws lambda.
-The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
-Code example:
-client = boto3.client('ssm') resp = client.get_parameter( Name='/redshift/admin/password', WithDecryption=True ) resp: { &quot;Parameter&quot;: { &quot;Name&quot;: &quot;/redshift/admin/password&quot;, &quot;Type&quot;: &quot;SecureString&quot;, &quot;Value&quot;: &quot;password value&quot;, &quot;Version&quot;: 1 } }  Things you need to do to make it work:
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

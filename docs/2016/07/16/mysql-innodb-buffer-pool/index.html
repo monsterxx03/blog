@@ -32,7 +32,7 @@
   
   
   
-  <meta name="generator" content="Hugo 0.48" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.53" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -80,8 +80,6 @@
 <p>在配置 MySQL 的时候, 一般都会需要设置 _innodb_buffer_pool<em>size</em>, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.</p>
 
 <p>之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?</p>
-
-<p></p>
 
 <h2 id="buffer-pool-的-lru-机制">Buffer Pool 的 LRU 机制</h2>
 

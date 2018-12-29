@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.48" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.53" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -59,6 +59,28 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2016/08/06/witch-night/">魔法使</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2016-08-06T16:16:23Z">
+        Aug 6, 2016
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    最近心血来潮把&lt;魔法使之夜&gt;的游戏通关了, 都已经是5年?还是6年前发售的了, 因为当年汉化迟迟不发布, 就一直搁置了.
+
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2016/08/06/witch-night/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/">MySQL 索引优化</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -69,8 +91,7 @@
   </header>
   <div class="c-article__summary">
     什么是索引,索引怎么建这些基本的就跳过不谈了,整理一些前段时间优化线上 SQL 查询时碰到的一些问题. 主要解决下面几个问题:
- 建立索引怎样选择合适的列. 怎样让 SQL 能有效利用索引. 如果对 SQL 效率进行评估(即设置索引前后是否真的有性能提升).  
-
+ 建立索引怎样选择合适的列. 怎样让 SQL 能有效利用索引. 如果对 SQL 效率进行评估(即设置索引前后是否真的有性能提升). 
   </div>
   
   <a href="https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/" class="c-article__btn p-list-article__btn">Read more</a>
@@ -95,7 +116,6 @@
 数据仓库我们选择了 AWS 的 Redshift.
 在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.
 
-
   </div>
   
   <a href="https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/" class="c-article__btn p-list-article__btn">Read more</a>
@@ -119,7 +139,6 @@
     最近在对公司的 MySQL 服务器做性能优化, 一直对 innodb 的内存使用方式不是很清楚, 乘这机会做点总结.
 在配置 MySQL 的时候, 一般都会需要设置 _innodb_buffer_poolsize, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.
 之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?
-
 
   </div>
   

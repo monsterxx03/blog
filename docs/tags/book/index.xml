@@ -43,9 +43,7 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
       <pubDate>Thu, 04 May 2017 16:27:52 +0000</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/</guid>
-      <description>&lt;p&gt;Notes when reading chapter 2 &amp;#8220;Data models and query languages&amp;#8221;, chapter 3 &amp;#8220;Storage and retrieval&amp;#8221;&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;Notes when reading chapter 2 &amp;#8220;Data models and query languages&amp;#8221;, chapter 3 &amp;#8220;Storage and retrieval&amp;#8221;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -54,9 +52,7 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
       <pubDate>Wed, 19 Apr 2017 16:26:58 +0000</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/</guid>
-      <description>&lt;p&gt;A few notes taken when reading &lt;Concurrency in Go&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;A few notes taken when reading &lt;Concurrency in Go&gt;&lt;/p&gt;</description>
     </item>
     
   </channel>
