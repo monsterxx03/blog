@@ -6,9 +6,9 @@ tags:
 categories:
     - tech
 ---
-This post will show several commands for debug on on linux server, all examples are shown on ubuntu 18.04,
+This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04,
 some tools are not installed by default, you can installl by `sudo apt install xxx`.
-Some command must be used via `sudo`.
+Some commands must be used via `sudo`.
 
 System resources can be classified in three main categories: compute, storage, and network.
 Usually, when you come to a performance issue, it's always caused by exhaustion of those
