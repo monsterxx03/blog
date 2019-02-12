@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Gce on Shining Moon</title>
+    <link>https://blog.monsterxx03.com/tags/gce/</link>
+    <description>Recent content in Gce on Shining Moon</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>monsterxx03</copyright>
+    <lastBuildDate>Tue, 12 Feb 2019 13:08:29 +0800</lastBuildDate>
+    
+	<atom:link href="https://blog.monsterxx03.com/tags/gce/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>管理负载</title>
+      <link>https://blog.monsterxx03.com/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/</link>
+      <pubDate>Tue, 12 Feb 2019 13:08:29 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/</guid>
+      <description>最近在看 google 的 &amp;lt;The Site Reliablity Workbook&amp;gt;, 其中有一章是&amp;rdquo;Manage load&amp;rdquo;, 内容还挺详细的, 结合在 aws 上的经验做点笔记.
+Load Balancing 流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存.
+google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency.
+但只依赖 BGP 会带来两个问题:
+ 某个地区的用户过多会给最近的 frontend server 带来过高的负载 ISP 的 BGP 路由会重计算, 当 BGP routing 变化后, 进行中的 tcp connection 会被 reset(同一个 connection 上的后续数据包被发送到不同的 server, tcp session 不存在于新 server 上)  为了解决原生 BGP anycast 的问题, google 开发了 Maglev, 即使路由发生了变化(routing flap), connection 也不断开, 把这种方式叫做 stablized anycast.</description>
+    </item>
+    
+  </channel>
+</rss>

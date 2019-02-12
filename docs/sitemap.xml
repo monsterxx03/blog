@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://blog.monsterxx03.com/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/</loc>
+    <lastmod>2019-02-12T13:08:29+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.monsterxx03.com/2018/12/29/%E4%BB%8E%E5%8E%BB%E5%B9%B4%E7%9A%84%E4%B8%80%E4%B8%AApatch%E8%AF%B4%E8%B5%B7/</loc>
     <lastmod>2018-12-29T15:14:46+08:00</lastmod>
   </url>
@@ -78,7 +83,7 @@
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2-3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/</loc>
+    <loc>https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/</loc>
     <lastmod>2018-06-16T14:38:26+08:00</lastmod>
   </url>
   
@@ -98,7 +103,7 @@
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub-sub-system/</loc>
+    <loc>https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub/sub-system/</loc>
     <lastmod>2018-05-23T18:05:28+08:00</lastmod>
   </url>
   
@@ -308,7 +313,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/aws/</loc>
-    <lastmod>2018-10-31T15:23:45+08:00</lastmod>
+    <lastmod>2019-02-12T13:08:29+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -326,7 +331,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/book/</loc>
-    <lastmod>2018-09-03T18:20:46+08:00</lastmod>
+    <lastmod>2019-02-12T13:08:29+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -391,6 +396,12 @@
   <url>
     <loc>https://blog.monsterxx03.com/tags/fpm/</loc>
     <lastmod>2017-06-23T09:40:58+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/gce/</loc>
+    <lastmod>2019-02-12T13:08:29+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -462,7 +473,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/posts/</loc>
-    <lastmod>2018-12-29T15:14:46+08:00</lastmod>
+    <lastmod>2019-02-12T13:08:29+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -492,7 +503,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/</loc>
-    <lastmod>2018-12-29T15:14:46+08:00</lastmod>
+    <lastmod>2019-02-12T13:08:29+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -546,7 +557,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/categories/tech/</loc>
-    <lastmod>2018-12-29T15:14:46+08:00</lastmod>
+    <lastmod>2019-02-12T13:08:29+08:00</lastmod>
     <priority>0</priority>
   </url>
   

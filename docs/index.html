@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.53" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.54.0" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <link href="https://blog.monsterxx03.com/index.xml" rel="alternate" type="application/rss+xml" title="Shining Moon" />
@@ -55,6 +55,31 @@
     
   </header>
   <main id="main" class="l-main">
+
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/">管理负载</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2019-02-12T13:08:29&#43;08:00">
+        Feb 12, 2019
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    最近在看 google 的 &lt;The Site Reliablity Workbook&gt;, 其中有一章是&rdquo;Manage load&rdquo;, 内容还挺详细的, 结合在 aws 上的经验做点笔记.
+Load Balancing 流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存.
+google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency.
+但只依赖 BGP 会带来两个问题:
+ 某个地区的用户过多会给最近的 frontend server 带来过高的负载 ISP 的 BGP 路由会重计算, 当 BGP routing 变化后, 进行中的 tcp connection 会被 reset(同一个 connection 上的后续数据包被发送到不同的 server, tcp session 不存在于新 server 上)  为了解决原生 BGP anycast 的问题, google 开发了 Maglev, 即使路由发生了变化(routing flap), connection 也不断开, 把这种方式叫做 stablized anycast.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
 
 
 
@@ -278,34 +303,6 @@ CREATE TABLE access_log ( url string, time string, resp_time real );     url tim
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/10/12/%E5%9C%A8-redshift-%E4%B8%AD%E8%AE%A1%E7%AE%97-p95-latency/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/09/26/eks-%E8%AF%84%E6%B5%8B-part-3/">EkS 评测 part-3</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-09-26T10:16:42&#43;08:00">
-        Sep 26, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    这篇记录对 ingress 的测试.
-ingress 用来将外部流量导入　k8s 内的　service. 将 service 的类型设置为 LoadBalancer / NodePort 也可以将单个 service 暴露到公网, 但用 ingress 可以只使用一个公网入口,根据　host name 或　url path 来将请求分发到不同的 service.
-一般　k8s 内的资源都会由一个 controller 来负责它的状态管理, 都由 kube-controller-manager 负责，　但 ingress controller 不是它的一部分，需要是视情况自己选择合适的 ingress controller.
-在 eks 上我主要需要 ingress-nginx 和 aws-alb-ingress-controller. 注意, nginx inc 还维护一个 kubernetes-ingress, 和官方那个不是一个东西， 没测试过.
-这里主要只测试了 ingress-nginx, 看了下内部实现, 数据的转发真扭曲&hellip;.
-ingress-nginx 用 helm 安装很简单: helm install nginx-ingress --namespace ingress
-看看安装后多了些什么:
-service: ingress service/mean-quetzal-nginx-ingress-controller LoadBalancer 172.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/09/26/eks-%E8%AF%84%E6%B5%8B-part-3/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

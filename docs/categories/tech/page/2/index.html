@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.53" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.54.0" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -55,6 +55,31 @@
   <main id="main" class="l-main">
 
 <h2 class="c-title p-tag-title">Tech</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/09/11/eks-%E8%AF%84%E6%B5%8B/">EKS 评测</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-09-11T15:02:22&#43;08:00">
+        Sep 11, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    EKS 正式 launch 还没有正经用过, 最近总算试了一把, 记录一点.
+Setup AWS 官方的 Guide 只提供了一个 cloudformation template 来设置 worker node, 我喜欢用 terraform, 可以跟着这个文档尝试:https://www.terraform.io/docs/providers/aws/guides/eks-getting-started.html 来设置完整的 eks cluster 和管理 worker node 的 autoscaling group.
+设置完 EKS 后需要添加一条 ConfigMap:
+apiVersion: v1 kind: ConfigMap metadata: name: aws-auth namespace: kube-system data: mapRoles: | - rolearn: arn:aws:iam::&lt;account-id&gt;:role/eksNodeRole username: system:node:{{EC2PrivateDNSName}} groups: - system:bootstrappers - system:nodes  这样 worker node 节点才能加入集群.
+网络 之前一直没有在 AWS 上尝试构建 k8s 的一个原因, 就是不喜欢 overlay 网络, 给系统带来了额外的复杂度和管理开销, VPC flowlog 看不到 pod 之间流量, 封包后 tcpdump 不好 debug 应用层流量.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/09/11/eks-%E8%AF%84%E6%B5%8B/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">
@@ -111,7 +136,7 @@ CELERY_RESULT_BACKEND 使用 redis 的坑 配置了 CELERY_RESULT_BACKEND 后, �
 
 <article class="c-article p-list-article">
   <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2-3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/">编写 python 2/3 兼容代码</a></h2>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/">编写 python 2/3 兼容代码</a></h2>
     <p class="c-article__meta">
       Posted on
       <time datetime="2018-06-16T14:38:26&#43;08:00">
@@ -127,7 +152,7 @@ __future__ python2 里自带的向后兼容模块，将 python3 的一些语法�
  from __future__ import print_function, 就是将 print 关键词变成函数啦, 导入后支持 python3 中 print 的完整参数，再用不带括号的 print 就会在文件被导入的时候报语法错误啦.
   </div>
   
-  <a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2-3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/" class="c-article__btn p-list-article__btn">Read more</a>
+  <a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
@@ -184,7 +209,7 @@ hash = FNV_offset_basis for each byte_of_data to be hashed hash = hash × FNV_pr
 
 <article class="c-article p-list-article">
   <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub-sub-system/">Use SNS &amp; SQS to build Pub/Sub System</a></h2>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub/sub-system/">Use SNS &amp; SQS to build Pub/Sub System</a></h2>
     <p class="c-article__meta">
       Posted on
       <time datetime="2018-05-23T18:05:28&#43;08:00">
@@ -197,7 +222,7 @@ hash = FNV_offset_basis for each byte_of_data to be hashed hash = hash × FNV_pr
 Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
   </div>
   
-  <a href="https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub-sub-system/" class="c-article__btn p-list-article__btn">Read more</a>
+  <a href="https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub/sub-system/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
@@ -272,31 +297,6 @@ lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平�
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/03/17/%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/">一次失败的性能问题排查</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-03-17T14:24:33&#43;08:00">
-        Mar 17, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    一叶障目, 不见泰山. 前阵子一直在排查一个性能问题, 结果由于一些惯性思维, 费了好大劲才弄明白原因, 而且原因非常简单&hellip;.把这事记录下来,免得以后再掉坑里去.
-现象是到了晚上10点多, server lantency 突然一瞬间变高, 但持续时间很短，马上就会恢复, timeout 的请求也不多，影响不大.问题其实从蛮久前就出现了, 但一直也没很重视, 因为持续时间短,影响也不大,简单看了下也没看出明显的问题, 就一直搁置着. 直到最近，觉得问题变严重了, latency 变的更高了，而且在10～11点间多次变高, 开始认真看为什么.
-以下是 debug 过程:
- 时间段非常固定，每天的晚上10 ~ 11点之间, 每次持续时间很短, 触发时间不是很有规律. 查看那段时间每个 group 的 load 情况, 有变高,但不明显. 查看 qps, 并没显著变化. 查看 qps * avg_latency, 可以看到在一段时间内最耗时的接口, 只能看到几乎所有接口都变高了, 占比最高的还是那几个最慢的接口, 并不能解释突发的 latency 变化.  开始推测, 晚上的 10 点到 11 点,美国那边用户差不多起床,是每天第一次打开 app 的时候, 而我们有些接口里很慢的 code path 只有用户在一天内第一次使用 app 的时候才会触发, 那边的业务逻辑本来就很混乱, 开始着手优化业务代码.
- 看 datadog 的 apm tracing, 查看慢接口对各种 service 的调用情况 (Redis, MySQL, ElasticSearch,DynamoDB&hellip;) 通过 pyflame 抓取进程运行时的 stack trace.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/03/17/%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
