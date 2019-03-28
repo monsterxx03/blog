@@ -59,6 +59,31 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/">Use redshift spectrum to do query on s3</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2017-07-21T03:10:58Z">
+        Jul 21, 2017
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    使用 redshift spectrum 查询 S3 数据 通常使用 redshift 做数据仓库的时候要做大量的 ETL 工作，一般流程是把各种来源的数据捣鼓捣鼓丢到 S3 上去，再从 S3 倒腾进 redshift. 如果你有大量的历史数据要导进 redshift，这个过程就会很痛苦，redshift 对一次倒入大量数据并不友好，你要分批来做。
+今年4月的时候， redshift 发布了一个新功能 spectrum, 可以从 redshift 里直接查询 s3 上的结构化数据。最近把部分数据仓库直接迁移到了 spectrum, 正好来讲讲。
+动机 Glow 的数据仓库建在 redshift 上， 又分成了两个集群，一个 ssd 的集群存放最近 4 个月的数据，供产品分析，metrics report, debug 等等 adhoc 的查询。4个月之前的数据存放在一个 hdd 的集群里，便宜容量大，查询慢。
+但是时间长了 hdd 的集群也是有扩容需求的，而使用频率又实在是不高，其实很浪费, 这就是迁移到 spectrum 的动机。
+使用 Spectrum Redshift spectrum 底层其实是基于 AWS 的另一个服务 athena 的。athena 是个 Presto 和 Hive 杂交产物， DDL 用 Hive 语法， 查询用的 sql 由 Presto 支持, 感觉怪怪的，这里不多展开讲 athena, 知道 redshift spectrum 其实是通过 athena 对接的 s3 就行了。
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/07/15/enable-coredump-on-ubuntu-16.04/">Enable coredump on ubuntu 16.04</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -268,31 +293,6 @@ Benefit:
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/03/22/elasticsearch-cluster/">ElasticSearch cluster</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2017-03-22T16:22:32Z">
-        Mar 22, 2017
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    In this article, let&#8217;s talk about ElasticSearch&#8217;s cluster mode, which means multi nodes ElasticSearch.
-Basic concepts cluster: A collection of server nodes with same cluster.name settings in elasticsearch.yaml
-primary shards: Divide a index into multi parts(by default 5), shards of an index can be distributed over multi nodes. It enables scale index horizontally and make access to index parallelly(accross multi nodes).
-replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.
-
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2017/03/22/elasticsearch-cluster/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

@@ -59,6 +59,31 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/10/12/%E5%9C%A8-redshift-%E4%B8%AD%E8%AE%A1%E7%AE%97-p95-latency/">在 redshift 中计算 p95 latency</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-10-12T14:49:13&#43;08:00">
+        Oct 12, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    p95 latency 的定义: 把一段时间的 latency 按照从小到大排序, 砍掉最高的 %5, 剩下最大的值就是 p95 latency. p99, p90 同理.
+p95 latency 表示该时间段内 95% 的 reqeust 都比这个值快.
+一般我直接看 CloudWatch, 和 datadog 算好的 p95 值. 这次看看怎么从 access log 里直接计算 p95 latency.
+假设在 redshift 中有一张表存储了应用的 access log, 结构如下:
+CREATE TABLE access_log ( url string, time string, resp_time real );     url time resp_time     /test1 2018-10-11T00:10:00.418480Z 0.123   /test2 2018-10-11T00:12:00.512340Z 0.321    要算 p95 很简单, 把 log 按分钟数分组, 用 percentile_cont 在组内按 resp_time 排序计算 就能得到:
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/10/12/%E5%9C%A8-redshift-%E4%B8%AD%E8%AE%A1%E7%AE%97-p95-latency/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/09/26/eks-%E8%AF%84%E6%B5%8B-part-3/">EkS 评测 part-3</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -280,30 +305,6 @@ The codebase I&rsquo;m working on:
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/">在python3.7 中实现python2.7 的内置 hash 函数</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-06-01T17:03:24&#43;08:00">
-        Jun 1, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    最近着手准备从 python2.7 迁移到 python3.7, 还没开始就碰到一个问题. 老系统里有一部分竟然是将 python 内置 hash 函数的结果存进了数据库, 这个做法绝对是错的, hash 的结果本来就没有保证过在各个版本的 python 中保证一致. 而且 python3 中算法完全变了, 默认在进程初始化的时候会用随机种子加进 hash 过程, 所以python 进程 一重启结果就不一样了. 木已成舟， 目前看将数据库里的值全部改掉是不可能了, 只能在 python3 中重新实现一下这个算法.
-python2.7 中的hash 算法是 fnv (有修改), python3 中变成了 sip, pep-456.
-fnv 的实现很简单， 引用 wikipedia 上的伪代码:
-hash = FNV_offset_basis for each byte_of_data to be hashed hash = hash × FNV_prime hash = hash XOR byte_of_data return hash  FNV_prime 是 1000003, python 实现和标准 fnv 的不同在于, 在进入循环 hash 之前将数据左移了7位, 在最后又和长度做了次XOR, 生成的数据随机性更大一点.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
