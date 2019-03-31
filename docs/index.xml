@@ -6,10 +6,24 @@
     <description>Recent content on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Thu, 28 Mar 2019 17:37:29 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 31 Mar 2019 22:19:46 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>SNET: Transparent SS proxy on Linux</title>
+      <link>https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/</link>
+      <pubDate>Sun, 31 Mar 2019 22:19:46 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/</guid>
+      <description>日常使用 Linux 工作, Linux 下实现全局透明代理可以用 iptables + ss-redir, 要有比较好的上网体验还需要 ChinaDNS 配合 dnsmasq, 这一整套在路由器上搞一遍就算了, 在本地太麻烦了. 仔细想想这几个加起来的功能实现起来也并不复杂, 前阵子就写了个小东西, 用一个进程完成全局透明代理 + ChinaDNS + 国内外分流: https://github.com/monsterxx03/snet
+目前的限制:
+ 不支持 ipv6 只支持 tcp (因为我的测试服务器不支持 udp, 以后再加上吧) 上游 server 只支持 ss  目的是一个进程 + 一个配置文件完成所有事情. 需要的 iptable 规则也全部内置了(包括 CN ip 段), 缺少灵活但对我够用了, 以后有需要再加上选项不自动配吧.
+需要手工装下 ipset.
+配置文件示例:
+{ &amp;quot;listen-host&amp;quot;: &amp;quot;127.0.0.1&amp;quot;, &amp;quot;listen-port&amp;quot;: 1111, &amp;quot;ss-host&amp;quot;: &amp;quot;ss.example.com&amp;quot;, &amp;quot;ss-port&amp;quot;: 8080, &amp;quot;ss-chpier-method&amp;quot;: &amp;quot;aes-256-cfb&amp;quot;, &amp;quot;ss-passwd&amp;quot;: &amp;quot;passwd&amp;quot;, &amp;quot;cn-dns&amp;quot;: &amp;quot;114.114.114.114&amp;quot;, &amp;quot;fq-dns&amp;quot;: &amp;quot;8.8.8.8&amp;quot;, &amp;quot;enable-dns-cache&amp;quot;: true, &amp;quot;mode&amp;quot;: &amp;quot;local&amp;quot; }  ss 协议实现用的是 shadowsocks-go, 所以 cipher 就是 go 版支持的那些: https://github.</description>
+    </item>
     
     <item>
       <title>Celery Time Limit 的坑</title>

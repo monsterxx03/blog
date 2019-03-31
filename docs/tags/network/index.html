@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   
-  <title>Tech</title>
-  <meta property="og:title" content="Tech" />
-  <meta name="twitter:title" content="Tech" />
+  <title>Network</title>
+  <meta property="og:title" content="Network" />
+  <meta name="twitter:title" content="Network" />
   
 
   
@@ -17,7 +17,7 @@
 
   <meta name="author" content="X"/>
   <meta property="og:site_name" content="Shining Moon" />
-  <meta property="og:url" content="https://blog.monsterxx03.com/categories/tech/" />
+  <meta property="og:url" content="https://blog.monsterxx03.com/tags/network/" />
 
   
   <meta name="twitter:card" content="summary" />
@@ -54,190 +54,29 @@
   </header>
   <main id="main" class="l-main">
 
-<h2 class="c-title p-tag-title">Tech</h2>
+<h2 class="c-title p-tag-title">Network</h2>
 
 
 <article class="c-article p-list-article">
   <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/">MySQL partition table</a></h2>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/">SNET: Transparent SS proxy on Linux</a></h2>
     <p class="c-article__meta">
       Posted on
-      <time datetime="2017-04-05T16:23:32Z">
-        Apr 5, 2017
+      <time datetime="2019-03-31T22:19:46&#43;08:00">
+        Mar 31, 2019
       </time>
     </p>
   </header>
   <div class="c-article__summary">
-    Overview MySQL has buildin partition table support, which can help split data accross multi tables,
-and provide a unified query interface as normal tables.
-Benefit:
- Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly. Speed up query based on partition key(partitoin pruning)  Limit:
- For partition table, every unique key must use every column in table&#8217;s partition expression(include primary key) For innodb engine, paritioned table can&#8217;t have foreign key,and can&#8217;t have columns referenced by foreign keys. For MyISAM engine, mysql version &lt;= 5.6.5, DML operation will lock all partition as a whole. 
+    日常使用 Linux 工作, Linux 下实现全局透明代理可以用 iptables + ss-redir, 要有比较好的上网体验还需要 ChinaDNS 配合 dnsmasq, 这一整套在路由器上搞一遍就算了, 在本地太麻烦了. 仔细想想这几个加起来的功能实现起来也并不复杂, 前阵子就写了个小东西, 用一个进程完成全局透明代理 + ChinaDNS + 国内外分流: https://github.com/monsterxx03/snet
+目前的限制:
+ 不支持 ipv6 只支持 tcp (因为我的测试服务器不支持 udp, 以后再加上吧) 上游 server 只支持 ss  目的是一个进程 + 一个配置文件完成所有事情. 需要的 iptable 规则也全部内置了(包括 CN ip 段), 缺少灵活但对我够用了, 以后有需要再加上选项不自动配吧.
+需要手工装下 ipset.
+配置文件示例:
+{ &quot;listen-host&quot;: &quot;127.0.0.1&quot;, &quot;listen-port&quot;: 1111, &quot;ss-host&quot;: &quot;ss.example.com&quot;, &quot;ss-port&quot;: 8080, &quot;ss-chpier-method&quot;: &quot;aes-256-cfb&quot;, &quot;ss-passwd&quot;: &quot;passwd&quot;, &quot;cn-dns&quot;: &quot;114.114.114.114&quot;, &quot;fq-dns&quot;: &quot;8.8.8.8&quot;, &quot;enable-dns-cache&quot;: true, &quot;mode&quot;: &quot;local&quot; }  ss 协议实现用的是 shadowsocks-go, 所以 cipher 就是 go 版支持的那些: https://github.
   </div>
   
-  <a href="https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/03/22/elasticsearch-cluster/">ElasticSearch cluster</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2017-03-22T16:22:32Z">
-        Mar 22, 2017
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    In this article, let&#8217;s talk about ElasticSearch&#8217;s cluster mode, which means multi nodes ElasticSearch.
-Basic concepts cluster: A collection of server nodes with same cluster.name settings in elasticsearch.yaml
-primary shards: Divide a index into multi parts(by default 5), shards of an index can be distributed over multi nodes. It enables scale index horizontally and make access to index parallelly(accross multi nodes).
-replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.
-
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2017/03/22/elasticsearch-cluster/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2016/12/11/bigtable-notes/">Bigtable notes</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2016-12-11T16:20:24Z">
-        Dec 11, 2016
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    杂乱笔记，辅助读paper.
-
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2016/12/11/bigtable-notes/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2016/11/19/gfs-notes/">GFS notes</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2016-11-19T16:18:41Z">
-        Nov 19, 2016
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    看了下很久前 google 的 GFS 论文， 做点笔记。
-
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2016/11/19/gfs-notes/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/">Migrate to encrypted RDS</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2016-10-28T16:17:30Z">
-        Oct 28, 2016
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.
-比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.
-
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/">MySQL 索引优化</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2016-07-26T16:13:54Z">
-        Jul 26, 2016
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    什么是索引,索引怎么建这些基本的就跳过不谈了,整理一些前段时间优化线上 SQL 查询时碰到的一些问题. 主要解决下面几个问题:
- 建立索引怎样选择合适的列. 怎样让 SQL 能有效利用索引. 如果对 SQL 效率进行评估(即设置索引前后是否真的有性能提升). 
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/">Redshift as data warehouse</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2016-07-16T16:11:39Z">
-        Jul 16, 2016
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    Glow 的 server infrastructure 全部搭建在 AWS 上，一般要选择一些基础服务的时候，总是先看 AWS, 只要功能和成本符合要求，不会特意选择开源方案。
-数据仓库我们选择了 AWS 的 Redshift.
-在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.
-
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/">MySQL innodb buffer pool</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2016-07-16T16:07:14&#43;08:00">
-        Jul 16, 2016
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    最近在对公司的 MySQL 服务器做性能优化, 一直对 innodb 的内存使用方式不是很清楚, 乘这机会做点总结.
-在配置 MySQL 的时候, 一般都会需要设置 _innodb_buffer_poolsize, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.
-之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?
-
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/" class="c-article__btn p-list-article__btn">Read more</a>
+  <a href="https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
@@ -246,14 +85,12 @@ replicas: backup for shards, also replicas can handle search requests, which mea
   <div class="c-pagination__ctrl">
     <div class="c-pagination__newer">
       
-      <a href="/categories/tech/page/4/">Newer</a>
-      
     </div>
     <div class="c-pagination__older">
       
     </div>
   </div>
-  <span class="c-pagination__count p-pagination__count">Page 5 of 5</span>
+  <span class="c-pagination__count p-pagination__count">Page 1 of 1</span>
 </nav>
 
 
