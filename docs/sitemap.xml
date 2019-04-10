@@ -429,7 +429,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/golang/</loc>
-    <lastmod>2017-04-19T16:26:58+00:00</lastmod>
+    <lastmod>2019-03-31T22:19:46+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -519,6 +519,12 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/</loc>
+    <lastmod>2019-03-31T22:19:46+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/snet/</loc>
     <lastmod>2019-03-31T22:19:46+08:00</lastmod>
     <priority>0</priority>
   </url>

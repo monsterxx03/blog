@@ -5,6 +5,8 @@ categories:
   - tech
 tags:
   - network
+  - golang
+  - snet
 ---
 
 日常使用 Linux 工作, Linux 下实现全局透明代理可以用 iptables + ss-redir, 要有比较好的上网体验还需要 ChinaDNS 配合 dnsmasq,

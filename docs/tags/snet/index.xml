@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Golang on Shining Moon</title>
-    <link>https://blog.monsterxx03.com/tags/golang/</link>
-    <description>Recent content in Golang on Shining Moon</description>
+    <title>Snet on Shining Moon</title>
+    <link>https://blog.monsterxx03.com/tags/snet/</link>
+    <description>Recent content in Snet on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
     <lastBuildDate>Sun, 31 Mar 2019 22:19:46 +0800</lastBuildDate>
     
-	<atom:link href="https://blog.monsterxx03.com/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.monsterxx03.com/tags/snet/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -23,15 +23,6 @@
 需要手工装下 ipset.
 配置文件示例:
 { &amp;quot;listen-host&amp;quot;: &amp;quot;127.0.0.1&amp;quot;, &amp;quot;listen-port&amp;quot;: 1111, &amp;quot;ss-host&amp;quot;: &amp;quot;ss.example.com&amp;quot;, &amp;quot;ss-port&amp;quot;: 8080, &amp;quot;ss-chpier-method&amp;quot;: &amp;quot;aes-256-cfb&amp;quot;, &amp;quot;ss-passwd&amp;quot;: &amp;quot;passwd&amp;quot;, &amp;quot;cn-dns&amp;quot;: &amp;quot;114.114.114.114&amp;quot;, &amp;quot;fq-dns&amp;quot;: &amp;quot;8.8.8.8&amp;quot;, &amp;quot;enable-dns-cache&amp;quot;: true, &amp;quot;mode&amp;quot;: &amp;quot;local&amp;quot; }  ss 协议实现用的是 shadowsocks-go, 所以 cipher 就是 go 版支持的那些: https://github.</description>
-    </item>
-    
-    <item>
-      <title>Concurrency in Go, Reading Notes</title>
-      <link>https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/</link>
-      <pubDate>Wed, 19 Apr 2017 16:26:58 +0000</pubDate>
-      
-      <guid>https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/</guid>
-      <description>&lt;p&gt;A few notes taken when reading &lt;Concurrency in Go&gt;&lt;/p&gt;</description>
     </item>
     
   </channel>
