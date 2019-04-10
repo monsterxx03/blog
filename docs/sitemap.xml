@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://blog.monsterxx03.com/2019/04/10/snet-dev-note/</loc>
+    <lastmod>2019-04-10T22:33:49+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/</loc>
     <lastmod>2019-03-31T22:19:46+08:00</lastmod>
   </url>
@@ -429,7 +434,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/golang/</loc>
-    <lastmod>2019-03-31T22:19:46+08:00</lastmod>
+    <lastmod>2019-04-10T22:33:49+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -471,7 +476,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/network/</loc>
-    <lastmod>2019-03-31T22:19:46+08:00</lastmod>
+    <lastmod>2019-04-10T22:33:49+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -489,7 +494,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/posts/</loc>
-    <lastmod>2019-03-31T22:19:46+08:00</lastmod>
+    <lastmod>2019-04-10T22:33:49+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -519,13 +524,13 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/</loc>
-    <lastmod>2019-03-31T22:19:46+08:00</lastmod>
+    <lastmod>2019-04-10T22:33:49+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/snet/</loc>
-    <lastmod>2019-03-31T22:19:46+08:00</lastmod>
+    <lastmod>2019-04-10T22:33:49+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -579,7 +584,7 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/categories/tech/</loc>
-    <lastmod>2019-03-31T22:19:46+08:00</lastmod>
+    <lastmod>2019-04-10T22:33:49+08:00</lastmod>
     <priority>0</priority>
   </url>
   
