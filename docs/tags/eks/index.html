@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   
-  <title>Eks</title>
-  <meta property="og:title" content="Eks" />
-  <meta name="twitter:title" content="Eks" />
+  <title>eks</title>
+  <meta property="og:title" content="eks" />
+  <meta name="twitter:title" content="eks" />
   
 
   
@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.54.0" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.55.1" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -54,7 +54,31 @@
   </header>
   <main id="main" class="l-main">
 
-<h2 class="c-title p-tag-title">Eks</h2>
+<h2 class="c-title p-tag-title">eks</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/04/12/k8s-volume-resize-on-eks/">K8s Volume Resize on EKS</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2019-04-12T13:23:54&#43;08:00">
+        Apr 12, 2019
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    从 k8s 1.8 开始支持 PersistentVolumeClaimResize. 但 api 是 alpha 状态, 默认不开启, eks launch 的时候版本是 1.10, 因为没法改 control plane, 所以没法直接在 k8s 内做 ebs 扩容. 后来升级到了 1.11, 这个 feature 默认被打开了, 尝试了下直接在 EKS 内做 ebs 的扩容.
+注意:
+ 这个 feature 只能对通过 pvc 管理的 volume 做扩容, 如果直接挂的是 pv, 只能自己按传统的 ebs 扩容流程在 eks 之外做. 用来创建 pvc 的 storageclass 上必须设置 allowVolumeExpansion 为 true  在 eks 上使用 pv/pvc,　对于需要 retain 的 volume, 我一般的流程是:
+ 在 eks 之外手工创建 ebs volume.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2019/04/12/k8s-volume-resize-on-eks/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">

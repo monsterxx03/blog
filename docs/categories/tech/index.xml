@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tech on Shining Moon</title>
+    <title>tech on Shining Moon</title>
     <link>https://blog.monsterxx03.com/categories/tech/</link>
-    <description>Recent content in Tech on Shining Moon</description>
+    <description>Recent content in tech on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sun, 31 Mar 2019 22:19:46 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 12 Apr 2019 13:23:54 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/categories/tech/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>K8s Volume Resize on EKS</title>
+      <link>https://blog.monsterxx03.com/2019/04/12/k8s-volume-resize-on-eks/</link>
+      <pubDate>Fri, 12 Apr 2019 13:23:54 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2019/04/12/k8s-volume-resize-on-eks/</guid>
+      <description>从 k8s 1.8 开始支持 PersistentVolumeClaimResize. 但 api 是 alpha 状态, 默认不开启, eks launch 的时候版本是 1.10, 因为没法改 control plane, 所以没法直接在 k8s 内做 ebs 扩容. 后来升级到了 1.11, 这个 feature 默认被打开了, 尝试了下直接在 EKS 内做 ebs 的扩容.
+注意:
+ 这个 feature 只能对通过 pvc 管理的 volume 做扩容, 如果直接挂的是 pv, 只能自己按传统的 ebs 扩容流程在 eks 之外做. 用来创建 pvc 的 storageclass 上必须设置 allowVolumeExpansion 为 true  在 eks 上使用 pv/pvc,　对于需要 retain 的 volume, 我一般的流程是:
+ 在 eks 之外手工创建 ebs volume.</description>
+    </item>
     
     <item>
       <title>SNET: Transparent SS proxy on Linux</title>

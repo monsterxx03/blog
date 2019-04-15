@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   
-  <title>Aws</title>
-  <meta property="og:title" content="Aws" />
-  <meta name="twitter:title" content="Aws" />
+  <title>aws</title>
+  <meta property="og:title" content="aws" />
+  <meta name="twitter:title" content="aws" />
   
 
   
@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.54.0" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.55.1" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -54,7 +54,32 @@
   </header>
   <main id="main" class="l-main">
 
-<h2 class="c-title p-tag-title">Aws</h2>
+<h2 class="c-title p-tag-title">aws</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/">Access sensitive variables on AWS lambda</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-02-28T21:45:23&#43;08:00">
+        Feb 28, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&hellip;
+Usually, we inject secrets as environment variables, but they&rsquo;re still visable on lambda console. I don&rsquo;t use it in aws lambda.
+The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
+Code example:
+client = boto3.client('ssm') resp = client.get_parameter( Name='/redshift/admin/password', WithDecryption=True ) resp: { &quot;Parameter&quot;: { &quot;Name&quot;: &quot;/redshift/admin/password&quot;, &quot;Type&quot;: &quot;SecureString&quot;, &quot;Value&quot;: &quot;password value&quot;, &quot;Version&quot;: 1 } }  Things you need to do to make it work:
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">

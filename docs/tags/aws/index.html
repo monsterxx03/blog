@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   
-  <title>Aws</title>
-  <meta property="og:title" content="Aws" />
-  <meta name="twitter:title" content="Aws" />
+  <title>aws</title>
+  <meta property="og:title" content="aws" />
+  <meta name="twitter:title" content="aws" />
   
 
   
@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.54.0" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.55.1" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -54,7 +54,31 @@
   </header>
   <main id="main" class="l-main">
 
-<h2 class="c-title p-tag-title">Aws</h2>
+<h2 class="c-title p-tag-title">aws</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/04/12/k8s-volume-resize-on-eks/">K8s Volume Resize on EKS</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2019-04-12T13:23:54&#43;08:00">
+        Apr 12, 2019
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    从 k8s 1.8 开始支持 PersistentVolumeClaimResize. 但 api 是 alpha 状态, 默认不开启, eks launch 的时候版本是 1.10, 因为没法改 control plane, 所以没法直接在 k8s 内做 ebs 扩容. 后来升级到了 1.11, 这个 feature 默认被打开了, 尝试了下直接在 EKS 内做 ebs 的扩容.
+注意:
+ 这个 feature 只能对通过 pvc 管理的 volume 做扩容, 如果直接挂的是 pv, 只能自己按传统的 ebs 扩容流程在 eks 之外做. 用来创建 pvc 的 storageclass 上必须设置 allowVolumeExpansion 为 true  在 eks 上使用 pv/pvc,　对于需要 retain 的 volume, 我一般的流程是:
+ 在 eks 之外手工创建 ebs volume.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2019/04/12/k8s-volume-resize-on-eks/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">
@@ -273,31 +297,6 @@ lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平�
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/">Access sensitive variables on AWS lambda</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-02-28T21:45:23&#43;08:00">
-        Feb 28, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&hellip;
-Usually, we inject secrets as environment variables, but they&rsquo;re still visable on lambda console. I don&rsquo;t use it in aws lambda.
-The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
-Code example:
-client = boto3.client('ssm') resp = client.get_parameter( Name='/redshift/admin/password', WithDecryption=True ) resp: { &quot;Parameter&quot;: { &quot;Name&quot;: &quot;/redshift/admin/password&quot;, &quot;Type&quot;: &quot;SecureString&quot;, &quot;Value&quot;: &quot;password value&quot;, &quot;Version&quot;: 1 } }  Things you need to do to make it work:
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   
-  <title>Tech</title>
-  <meta property="og:title" content="Tech" />
-  <meta name="twitter:title" content="Tech" />
+  <title>tech</title>
+  <meta property="og:title" content="tech" />
+  <meta name="twitter:title" content="tech" />
   
 
   
@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.54.0" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.55.1" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -54,7 +54,32 @@
   </header>
   <main id="main" class="l-main">
 
-<h2 class="c-title p-tag-title">Tech</h2>
+<h2 class="c-title p-tag-title">tech</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/10/12/%E5%9C%A8-redshift-%E4%B8%AD%E8%AE%A1%E7%AE%97-p95-latency/">在 redshift 中计算 p95 latency</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-10-12T14:49:13&#43;08:00">
+        Oct 12, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    p95 latency 的定义: 把一段时间的 latency 按照从小到大排序, 砍掉最高的 %5, 剩下最大的值就是 p95 latency. p99, p90 同理.
+p95 latency 表示该时间段内 95% 的 reqeust 都比这个值快.
+一般我直接看 CloudWatch, 和 datadog 算好的 p95 值. 这次看看怎么从 access log 里直接计算 p95 latency.
+假设在 redshift 中有一张表存储了应用的 access log, 结构如下:
+CREATE TABLE access_log ( url string, time string, resp_time real );     url time resp_time     /test1 2018-10-11T00:10:00.418480Z 0.123   /test2 2018-10-11T00:12:00.512340Z 0.321    要算 p95 很简单, 把 log 按分钟数分组, 用 percentile_cont 在组内按 resp_time 排序计算 就能得到:
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/10/12/%E5%9C%A8-redshift-%E4%B8%AD%E8%AE%A1%E7%AE%97-p95-latency/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">
@@ -275,30 +300,6 @@ Originally, we have an pub/sub system based on redis(use BLPOP to listen to a re
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub/sub-system/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/">Migrate to Sqlalchemy</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-05-20T15:11:31&#43;08:00">
-        May 20, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些.
-原来的 db 层代码历史非常古老(10年以上&hellip;), 最早写代码的人早就不在了, 问题很多:
- 完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表结构，只能直接看数据库.  重写时候要考虑到的:
- 现有业务代码基于老 db 代码已经写了很多了, 重写不现实, 迁移到 sqlalchemy 需要封装一套完全兼容的 api, 没用到的混乱的老 api 趁机清理. db migration 需要重新实现, 只用 alembic 不能满足需求, 后详. 重写完的代码保证高测试覆盖率.  ORM or Core sqlalchemy 分成两部分, 底层的 sqlalchemy core 是一套 sql 语法生成器, 通过重载 python 的 magic function 实现用比较漂亮的 python 语法来构造 sql.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

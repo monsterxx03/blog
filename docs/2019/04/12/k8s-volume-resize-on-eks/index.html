@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   
-  <title>Debug Skills on Linux</title>
-  <meta property="og:title" content="Debug Skills on Linux" />
-  <meta name="twitter:title" content="Debug Skills on Linux" />
+  <title>K8s Volume Resize on EKS</title>
+  <meta property="og:title" content="K8s Volume Resize on EKS" />
+  <meta name="twitter:title" content="K8s Volume Resize on EKS" />
   
 
   
@@ -17,7 +17,7 @@
 
   <meta name="author" content="X"/>
   <meta property="og:site_name" content="Shining Moon" />
-  <meta property="og:url" content="https://blog.monsterxx03.com/2018/12/03/debug-skills-on-linux/" />
+  <meta property="og:url" content="https://blog.monsterxx03.com/2019/04/12/k8s-volume-resize-on-eks/" />
 
   
   <meta name="twitter:card" content="summary" />
@@ -58,339 +58,96 @@
 
 <article class="p-article">
   <header>
-    <h1>Debug Skills on Linux</h1>
+    <h1>K8s Volume Resize on EKS</h1>
     <div>
       <div class="c-time">
         Posted on
-        <time datetime="2018-12-03T22:47:51&#43;08:00">
-          Dec 3, 2018
+        <time datetime="2019-04-12T13:23:54&#43;08:00">
+          Apr 12, 2019
         </time>
       </div>
       
-      <a href="https://blog.monsterxx03.com/tags/linux" class="c-tag">linux</a>
+      <a href="https://blog.monsterxx03.com/tags/k8s" class="c-tag">k8s</a>
+      
+      <a href="https://blog.monsterxx03.com/tags/eks" class="c-tag">eks</a>
+      
+      <a href="https://blog.monsterxx03.com/tags/aws" class="c-tag">aws</a>
       
     </div>
   </header>
   
   <section id="js-article" class="p-article__body">
-    
+    <p>从 k8s 1.8 开始支持 <a href="https://kubernetes.io/blog/2018/07/12/resizing-persistent-volumes-using-kubernetes/">PersistentVolumeClaimResize</a>. 但 api 是 alpha 状态, 默认不开启, eks launch
+的时候版本是 1.10, 因为没法改 control plane, 所以没法直接在 k8s 内做 ebs 扩容. 后来升级到了
+1.11, 这个 feature 默认被打开了, 尝试了下直接在 EKS 内做 ebs 的扩容.</p>
 
-<p>This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04,
-some tools are not installed by default, you can installl by <code>sudo apt install xxx</code>.
-Some commands must be used via <code>sudo</code>.</p>
-
-<p>System resources can be classified in three main categories: compute, storage, and network.
-Usually, when you come to a performance issue, it&rsquo;s always caused by exhaustion of those
-resources.</p>
-
-<h2 id="universal-metric-system-load">Universal metric: System load</h2>
-
-<p>There&rsquo;re several ways to get system load, <code>w</code>, <code>uptime</code>, <code>top</code>, <code>cat /proc/loadavg</code></p>
-
-<p><code>uptime</code> example:</p>
-
-<pre><code>03:34:23 up 20:31,  1 user,  load average: 1.02, 0.65, 0.45
-</code></pre>
-
-<p>Top right corner three values named <code>load average</code> is system load.</p>
-
-<p>They means: average system load during last minute/last 5 minutes/last 15 minutes periods.</p>
-
-<p>If <code>load/(# of cpu core) &gt; 1</code>  means there&rsquo;re tasks pending in cpu queue. Usually, you will feel <strong>slow</strong>.</p>
-
-<p>It&rsquo;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.</p>
-
-<p>If system load is high, means tasks are pending in CPU queue, maybe a result of:
-- High cpu usage.
-- Poor disk performance(disk io).
-- Exhaustion of ram.
-- &hellip;</p>
-
-<h2 id="free">free</h2>
-
-<p><code>free -k/-m/-g</code> show memory usage in KB/MB/GB</p>
-
-<p><code>free -h</code>  humanize output (automatically show in KB/MB/GB&hellip;)</p>
-
-<p>eg:</p>
-
-<pre><code>            total        used        free      shared  buff/cache   available
-Mem:        3.9G         421M        3.2G      80K     291M         3.2G
-Swap:       4.0G         2.4G        1.6G
-</code></pre>
-
-<p><code>total</code> is available physical ram size.</p>
-
-<p><code>used</code> is ram consumed = total - free - buffers - cache</p>
-
-<p><code>free</code> is unused memory.</p>
-
-<p><code>shared</code>  memory is potentially shared by other processes.
- eg: tmpfs, shared library(.so file will only be loaded once in memory and shared by all processes).</p>
-
-<p><code>buff/cache</code> kernel buffer and disk cache, they will be reallocated to processes when needed.</p>
-
-<p>On some old systems, there&rsquo;s no <code>available</code> column, we think available physical memory = free + buff/cache.</p>
-
-<p><code>available</code> means estimation of how much memory is available if you start a new program without swapping.
- Since not all space in buffer/cache is reclaimable, it&rsquo;s more accuracy than <code>free + buff/cache</code></p>
-
-<h2 id="top">top</h2>
-
-<p>There&rsquo;re some light weight tools to debug overall system status, eg: vmstat, mpstat, pidstat, sar &hellip;</p>
-
-<p>If doing manually debug, <code>top</code> is enough for most case (If you&rsquo;re on a super busy server, be careful to run top, it&rsquo;s heavy).</p>
-
-<pre><code>    top - 04:23:27 up 21:20,  1 user,  load average: 0.22, 0.44, 0.47
-    Tasks: 156 total,   1 running, 111 sleeping,   0 stopped,   0 zombie
-    %Cpu(s):  6.6 us,  4.2 sy,  0.0 ni, 88.6 id,  0.0 wa,  0.0 hi,  0.5 si,  0.0 st
-    KiB Mem :  4039548 total,   192936 free,  3128636 used,   717976 buff/cache
-    KiB Swap:  3014116 total,  2407360 free,   606756 used.   290856 avail Mem 
-
-  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM  TIME+ COMMAND                                           
-     1672 dd-agent  20   0 1236988  51044   9864 S  11.3  1.3  12:31.44 /opt/datadog-agent/bin/agent/agent run -p /opt/d+ 
-    11698 root      20   0  948668 143180  28208 S   1.3  3.5  11:06.58 /usr/local/bin/uwsgi --ini /opt/uwsgi/app1.ini 
-     3883 root      20   0 1154656 190700  46340 S   1.0  4.7   0:11.11 /usr/local/bin/uwsgi --ini /opt/uwsgi/app2.ini
-</code></pre>
-
-<p>Explains:</p>
+<p>注意:</p>
 
 <ul>
-<li><code>zombie</code> means zombie processes, it&rsquo;s usually caused by parent process exited before waiting child processes <code>exit</code>, mainly caused by bug.<br /></li>
-<li><code>KiB mem</code> is same as output of command <code>free</code>.</li>
-<li><code>VIRT</code> means virtual memory: how much memory the process is able to <strong>access</strong>, ps: not means using. Including: code size, physical ram consumed, swap usage, files on disk <code>mmap</code> to process &hellip;</li>
-<li><code>RES</code> means physical ram consumed by this process.</li>
-<li><code>SHR</code> means shared memory, see section in <code>free</code> command.
-<br /></li>
+<li>这个 feature 只能对通过 pvc 管理的 volume 做扩容, 如果直接挂的是 pv, 只能自己按传统的 ebs 扩容流程在 eks 之外做.</li>
+<li>用来创建 pvc 的 storageclass 上必须设置 <code>allowVolumeExpansion</code> 为 true</li>
 </ul>
 
-<p>Several useful commands after launching top interface:</p>
+<p>在 eks 上使用 pv/pvc,　对于需要 retain 的 volume, 我一般的流程是:</p>
 
 <ul>
-<li>press <code>1</code>, show all cpu activities on all cores.</li>
-<li>press <code>c</code>, show full command name.</li>
-<li>press <code>M</code>,  sort by memory usage.</li>
-<li>press <code>P</code>, sort by cpu usage.</li>
+<li>在 eks 之外手工创建 ebs volume.</li>
+<li>在 eks 中创建 pv, 指向 ebs 的 volume id</li>
+<li>在 eks 中创建 pvc, 指向 pv</li>
 </ul>
 
-<h2 id="storage">Storage</h2>
+<p>示例 yaml:</p>
 
-<h3 id="disk-space-usage">disk space usage</h3>
-
-<p><code>lsblk</code> show all mounted disks and size</p>
-
-<pre><code>NAME   MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
-xvda    202:0    0    8G  0 disk 
-└─xvda1 202:1    0    8G  0 part /
-xvdb    202:16   0  200G  0 disk /mnt
+<pre><code>---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: test
+spec:
+  storageClassName: gp2
+  persistentVolumeReclaimPolicy: Retain
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 5Gi
+  awsElasticBlockStore:
+    fsType: ext4
+    volumeID: vol-xxxx   # create in aws manually
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: test-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  volumeName: test
 </code></pre>
 
-<p><code>df -h</code> show all disks usage:</p>
+<p>假如现在要扩容到 10Gi, 流程是:</p>
 
-<pre><code>Filesystem      Size  Used Avail Use% Mounted on
-udev            3.9G     0  3.9G   0% /dev
-tmpfs           799M   81M  718M  11% /run
-/dev/xvda1      7.8G  5.8G  1.6G  80% /
-tmpfs           3.9G     0  3.9G   0% /dev/shm
-tmpfs           5.0M     0  5.0M   0% /run/lock
-tmpfs           3.9G     0  3.9G   0% /sys/fs/cgroup
-/dev/xvdb       197G   64G  125G  34% /mnt
-tmpfs           799M     0  799M   0% /run/user/1003
-tmpfs           799M     0  799M   0% /run/user/1004
-</code></pre>
+<p><code>kubectl edit pvc test-claim</code>,　将 requests 的 storage 改成: <code>10Gi</code></p>
 
-<p><code>du -hd1</code>  show all directories size in current dir, <code>-d1</code> means depth 1:</p>
+<p><code>kubectl get pvc test-claim -o yaml</code>　会看到 condition type 是 <code>resizing</code>,
+此时看 ebs 的 console, 能看到 ebs status 那栏是黄色的: <code>available - optimizing (1%)</code>,
+这个过程会比较慢.</p>
 
-<pre><code>4.5M    ./mobile
-116M    ./.git
-16K ./script
-8.0K    ./node_modules
-1.4G    ./web
-11M ./server
-4.0K    ./docs
-1.5G    .
-</code></pre>
+<p>完成之后 pvc 的 condition type 会变成: <code>FileSystemResizePending</code>.</p>
 
-<p>Sometimes we still see free space left, but system reports disk full.
-Possible reason is inode is exhausted by many small files.</p>
+<p>但此时挂载该 volume 的 pod 看到的 size 还没更新, 需要删除 pod, 重新创建, pod 就会自动更新 volume size, <code>kubectl exec</code>　
+进去, <code>df -h</code> 看下, size 已经被更新了. 1.11 开始有个 alpha 的 feature <code>ExpandInUsePersistentVolumes</code> 可以不重新创建 pod
+的情况下更新 volume size.</p>
 
-<p>We can check with <code>df -hi</code>, to show inode usage per disk:</p>
+<p>完成后 <code>kubectl get pv test</code>, 看一下, 发现对应 pv 的 capacity 也被更新成 10Gi 了.</p>
 
-<pre><code>Filesystem     Inodes IUsed IFree IUse% Mounted on
-udev             997K   393  996K    1% /dev
-tmpfs            998K   568  998K    1% /run
-/dev/xvda1       512K  248K  265K   49% /
-tmpfs            998K     1  998K    1% /dev/shm
-tmpfs            998K     3  998K    1% /run/lock
-tmpfs            998K    16  998K    1% /sys/fs/cgroup
-/dev/xvdb         13M  1.3M   12M   10% /mnt
-tmpfs            998K     5  998K    1% /run/user/1003
-tmpfs            998K     5  998K    1% /run/user/1004
-</code></pre>
+<p>注意:</p>
 
-<p>with <code>du -hd1 --inode</code> show inode usage in current dir:</p>
-
-<pre><code>450 ./abc
-1.2K    ./eesx
-1.4K    ./xze
-1.3K    ./dsfdfs
-3.8K    ./dsfsf
-237 ./334
-166 ./3sfdf
-4.0K    ./3ssfsf
-1.3K    ./afsdfs
-1.1K    ./eee
-1.7K    ./sdfsfs
-17K .
-</code></pre>
-
-<p>With <code>ncdu</code> we can calculate dir size very fast</p>
-
-<h3 id="disk-performance">disk performance</h3>
-
-<p>If you want to test disk performance, you can use tools like <code>dd</code> (simple sequential-write test),
-<code>fio</code> (much powerful, support multi thread and random write).</p>
-
-<p><code>iostat -y 2</code>, report io usage every 2 second, by default iostat&rsquo;s first line is stats since system boot,
- it&rsquo;s not  useful, <code>-y</code> can discard first report.</p>
-
-<pre><code>avg-cpu:  %user   %nice %system %iowait  %steal   %idle
-          23.62    0.00    0.00    1.51    0.00   74.87
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-xvda             48.00      2300.00       268.00       2300        268
-</code></pre>
-
-<p><code>iowait</code> means percentage of time cpu was idle waiting for io.</p>
-
-<p><code>tps</code> means number of I/O requests per second.</p>
-
-<p><code>iotop -o</code> a top like program show io usage per process, <code>-o</code> means only show processes have io activity.</p>
-
-<pre><code>Total DISK READ :       0.00 B/s | Total DISK WRITE :     157.12 K/s                                             [0/0]
-Actual DISK READ:       0.00 B/s | Actual DISK WRITE:       0.00 B/s
-  TID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO&gt;    COMMAND                                                
-  387 be/3 root        0.00 B/s  141.79 K/s  0.00 %  0.00 % systemd-journald
-  841 be/4 syslog      0.00 B/s    7.66 K/s  0.00 %  0.00 % rsyslogd -n [rs:main Q:Reg]
- 1053 be/4 www-data    0.00 B/s    3.83 K/s  0.00 %  0.00 % nginx: worker process
- 1695 be/4 dd-agent    0.00 B/s    3.83 K/s  0.00 %  0.00 % agent run -p /opt/datadog-agent/run/agent.pid
-</code></pre>
-
-<h2 id="network">Network</h2>
-
-<p>Who is using port: <code>lsof -i:80</code>:</p>
-
-<pre><code>COMMAND  PID     USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
-nginx   1052     root   39u  IPv4  20514      0t0  TCP *:80 (LISTEN)
-nginx   1053 www-data   39u  IPv4  20514      0t0  TCP *:80 (LISTEN)
-nginx   1054 www-data   39u  IPv4  20514      0t0  TCP *:80 (LISTEN)
-</code></pre>
-
-<p>Show all ports listening by pid: <code>lsof -i -a -p 1052</code>:</p>
-
-<pre><code>COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
-nginx   1052 root   36u  IPv4  20511      0t0  TCP *:2345 (LISTEN)
-nginx   1052 root   37u  IPv4  20512      0t0  TCP *:1245 (LISTEN)
-nginx   1052 root   38u  IPv4  20513      0t0  TCP *:3244 (LISTEN)
-nginx   1052 root   39u  IPv4  20514      0t0  TCP *:8734 (LISTEN)
-nginx   1052 root   40u  IPv4  20515      0t0  TCP *:1334 (LISTEN)
-</code></pre>
-
-<p>traffic sniff with tcpdump:</p>
-
-<pre><code>sudo tcpdump -i any dst port 5010 -A  # sniff all traffic sent to port 5010, print in ascii, -i any means listen all network interfaces.
-sudo tcpdump -i any src port 5010 -A  # sniff all traffic sent from port 5010, print in ascii
-sudo tcpdump -i any dst host 10.0.0.1 -A # snifff all traffic sent to ip 10.0.0.1, print in ascii
-</code></pre>
-
-<p>Show all network interface:<code>ip a</code></p>
-
-<pre><code>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-       valid_lft forever preferred_lft forever
-    inet6 ::1/128 scope host 
-       valid_lft forever preferred_lft forever
-2: enp0s3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000
-    link/ether 02:79:13:0a:8c:39 brd ff:ff:ff:ff:ff:ff
-    inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic enp0s3
-       valid_lft 85354sec preferred_lft 85354sec
-    inet6 fe80::79:13ff:fe0a:8c39/64 scope link 
-       valid_lft forever preferred_lft forever
-3: enp0s8: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000
-    link/ether 08:00:27:8b:5a:14 brd ff:ff:ff:ff:ff:ff
-    inet 192.168.33.10/24 brd 192.168.33.255 scope global enp0s8
-       valid_lft forever preferred_lft forever
-    inet6 fe80::a00:27ff:fe8b:5a14/64 scope link 
-       valid_lft forever preferred_lft forever
-</code></pre>
-
-<p>Show route table: <code>ip r</code></p>
-
-<pre><code>default via 10.0.2.2 dev enp0s3 proto dhcp src 10.0.2.15 metric 100 
-10.0.2.0/24 dev enp0s3 proto kernel scope link src 10.0.2.15 
-10.0.2.2 dev enp0s3 proto dhcp scope link src 10.0.2.15 metric 100 
-192.168.33.0/24 dev enp0s8 proto kernel scope link src 192.168.33.10 
-</code></pre>
-
-<p>Traffic summarize with <code>iftop -n</code>, <code>-n</code> means not lookup hostname(by default it will find hostname based on ip with dns <code>PTR</code> record.)</p>
-
-<pre><code>                       191Mb                   381Mb                  572Mb                   763Mb              [0/0]
-+----------------------+-----------------------+----------------------+-----------------------+-----------------------
-10.0.44.20                                    =&gt; 10.0.46.192                                   1.46Mb  1.46Mb  1.46Mb
-                                              &lt;=                                               6.19Mb  6.19Mb  6.19Mb
-10.0.44.20                                    =&gt; 10.0.15.245                                    872Kb   872Kb   872Kb
-                                              &lt;=                                                332Kb   332Kb   332Kb
-10.0.44.20                                    =&gt; 10.0.1.150                                     810Kb   810Kb   810Kb
-</code></pre>
-
-<p>On right side, three number means  traffic rate in past <code>2s, 10s, 40s</code>. <code>=&gt; , &lt;=</code> is traffic direction.</p>
-
-<p>With <code>nethogs</code> you can see network traffic per process.</p>
-
-<p>Misc:</p>
-
-<ul>
-<li>Show socket state with <code>ss</code> or <code>netstat</code></li>
-<li>Show dns record: <code>dig baid.com</code></li>
-<li>Test whether a tcp port is open: <code>telnet 10.0.0.3 22</code></li>
-<li>everyone knows <code>ping</code>, it sends icmp packet to test whether host is available. with <code>hping3</code>, you can send tcp/udp/icmp/raw-ip packet.</li>
-</ul>
-
-<h2 id="debug-process">Debug process</h2>
-
-<p>find process pid via name: <code>ps aux | grep nginx</code></p>
-
-<p>find process&rsquo;s parent process: <code>pstree -aps 3460</code></p>
-
-<pre><code>systemd,1
-  └─supervisord,29264 /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
-      └─uwsgi,3460 --ini /opt/uwsgi/app.ini
-          └─uwsgi,3464 --ini /opt/uwsgi/app.ini
-              ├─{uwsgi},3465
-              └─{uwsgi},3469
-</code></pre>
-
-<p>show process summary with  top: <code>top -p 1054</code></p>
-
-<p>kill process:</p>
-
-<ul>
-<li><code>sudo kill 1233</code>, send <code>SIGTERM</code> to target process, but <code>SIGTERM</code> can by caught in program(mean to do some cleanup during shutdown), sometimes it doesn&rsquo;t work.</li>
-<li><code>sudo kill -9 1233</code>, send <code>SIGKILL</code> to force kill target process, <code>SIGKILL</code> can&rsquo;t be caught by program.</li>
-<li>sometimes even <code>kill -9</code> can&rsquo;t kill process, check process status by <code>ps aux</code>, maybe stuck in <code>D</code> status, means it&rsquo;s waiting for io finish.
-D status can&rsquo;t by interrupted by signal. Only thing you can do is wait io finish or reboot.</li>
-</ul>
-
-<p>If you feel a process seems no response, but not dead, you can use <code>sudo strace -p 1223</code> to see what it&rsquo;s doing, an example from idle nginx master process:</p>
-
-<pre><code>strace: Process 1052 attached
-rt_sigsuspend([], 8
-</code></pre>
-
-<p>It&rsquo;s calling <code>rt_sigsuspend</code>, from <code>main rt_sigsuspend</code>, you know it&rsquo;s waiting for signal.</p>
-
-<p>More advanced and complex debug tools including: perf, systemtap, dtrace&hellip;</p>
+<p>一定要更改 pvc 的大小, 而不是 pv 的大小, 如果改了 pv, pvc 就会检测不到 size 的变化, 底层 ebs 并没被扩容,
+但 k8s 里看 pv/pvc 大小已经被改了. 因为不能缩容, 如果改了 pv size, 只能把 pv/pvc 都删除, 重新创建(指向同一个 ebs volume id),
+再将 pvc resize.</p>
 
   </section>
   <footer>
@@ -411,17 +168,65 @@ rt_sigsuspend([], 8
       <div class="c-pagination__ctrl">
         <div class="c-pagination__newer">
           
-          <a href="https://blog.monsterxx03.com/2018/11/30/%E6%9D%82%E8%B0%88/">Newer</a>
+          <a href="https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/">Newer</a>
           
         </div>
         <div class="c-pagination__older">
           
-          <a href="https://blog.monsterxx03.com/2018/12/16/kubernetes-%E4%B8%AD%E7%9A%84-pod-%E8%B0%83%E5%BA%A6/">Older</a>
           
         </div>
       </div>
     </nav>
     
+
+<section class="p-related">
+  <h3>See Also</h3>
+  <ul id="slider" class="p-related__list">
+    
+    <li class="p-related__item js-related__item">
+      <a href="/2018/09/26/eks-%E8%AF%84%E6%B5%8B-part-3/"
+        >
+        <span>EkS 评测 part-3</span>
+      </a>
+    </li>
+    
+    <li class="p-related__item js-related__item">
+      <a href="/2018/09/21/eks-%E8%AF%84%E6%B5%8B-part-2/"
+        >
+        <span>eks 评测 part-2</span>
+      </a>
+    </li>
+    
+    <li class="p-related__item js-related__item">
+      <a href="/2018/09/11/eks-%E8%AF%84%E6%B5%8B/"
+        >
+        <span>EKS 评测</span>
+      </a>
+    </li>
+    
+    <li class="p-related__item js-related__item">
+      <a href="/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/"
+        >
+        <span>管理负载</span>
+      </a>
+    </li>
+    
+    <li class="p-related__item js-related__item">
+      <a href="/2018/12/16/kubernetes-%E4%B8%AD%E7%9A%84-pod-%E8%B0%83%E5%BA%A6/"
+        >
+        <span>Kubernetes 中的 pod 调度</span>
+      </a>
+    </li>
+    
+    <li class="p-related__item js-related__item">
+      <a href="/2018/10/31/aws-aurora-db/"
+        >
+        <span>AWS Aurora DB</span>
+      </a>
+    </li>
+    
+  </ul>
+</section>
 
 
     

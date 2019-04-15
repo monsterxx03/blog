@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.54.0" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.55.1" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <link href="https://blog.monsterxx03.com/index.xml" rel="alternate" type="application/rss+xml" title="Shining Moon" />
@@ -55,6 +55,34 @@
     
   </header>
   <main id="main" class="l-main">
+
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/07/01/python-web-%E5%BA%94%E7%94%A8%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/">Python Web 应用性能调优</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2017-07-01T23:38:24&#43;08:00">
+        Jul 1, 2017
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    Python web 应用性能调优 为了快速上线，早期很多代码基本是怎么方便怎么来，这样就留下了很多隐患，性能也不是很理想，python 因为 GIL 的原因，在性能上有天然劣势，即使用了 gevent/eventlet 这种协程方案，也很容易因为耗时的 CPU 操作阻塞住整个进程。前阵子对基础代码做了些重构，效果显著，记录一些。
+设定目标:
+ 性能提高了，最直接的效果当然是能用更少的机器处理相同流量，目标是关闭 20% 的 stateless webserver. 尽量在框架代码上做改动，不动业务逻辑代码。 低风险 (历史经验告诉我们，动态一时爽，重构火葬场&hellip;.)  治标 常见场景是大家开开心心做完一个 feature， sandbox 测试也没啥问题，上线了，结果 server load 飙升，各种 timeout 都来了，要么 rollback 代码，要么加机器。问题代码在哪?
+我们监控用的是 datadog (statsd协议)，对这种问题最有效的指标是看每个接口的 avg_latency * req_count 得到每个接口在一段时间内的总耗时，在柱状图上最长的那块就是对性能影响最大的接口。进一步的调试就靠 cProfile 和读代码了。
+但很多时候出问题的代码逻辑巨复杂，还很多人改动过，开发和 sandbox 环境数据的量和线上差距太大，无法复现问题，在线上用 cProfile 只能测只读接口(为了不写坏用户数据)。
+而且这种方式只能治标，调试个别慢的业务接口，目标里说了只想改框架，提高整体性能，怎么整?
+治本 我希望能对运行时进程状态打 snapshot，每次快照记录下当前的函数调用栈，叠合多次采样，出现次数多的函数必然就是瓶颈所在. 这思想在其他语言里用的也很多，其实就是 Brendan Gregg 的 flamegraph.
+以前内部做过类似的事情，不过代码是侵入式的，在运行时通过 signal, inspect, traceback 等模块，定期打调用栈的 snapshot, 输出到文件，转成 svg 的 flamegraph 来看，但是 overhead 太高，后来弃用了。
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2017/07/01/python-web-%E5%BA%94%E7%94%A8%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
 
 
 
@@ -266,29 +294,6 @@ replicas: backup for shards, also replicas can handle search requests, which mea
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/03/22/elasticsearch-cluster/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/03/11/matrix-14-years-later/">Matrix 14 years later</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2017-03-11T16:21:31Z">
-        Mar 11, 2017
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    心血来潮, 又看了遍黑客帝国三部曲, 当年的沃卓斯基兄弟都变成沃卓斯基姐妹了, 唏嘘啊&#8230;
-第一次看的时候, 好像是初中吧, 记得看第三部还是姑父的盗版碟上看的, 那天还拉了个同学和我一起看,然后请他吃了泡面+冰淇淋,结果他回家就拉肚了,抱怨了我好久,所以印象特别深刻,哈哈.
-
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2017/03/11/matrix-14-years-later/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
