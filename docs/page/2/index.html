@@ -60,6 +60,38 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/11/04/%E6%BF%91%E6%88%B7%E5%86%85%E6%B5%B7%E7%9A%84%E9%A3%8E%E4%B8%8E%E9%98%B3/">濑户内海的风与阳</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-11-04T23:31:07&#43;08:00">
+        Nov 4, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    上月休假去濑户内海溜达了一圈, 一个比想象中美太多的地方.
+对濑户内海的印象, 要追溯到高中时看的一部搞笑番 &lt;濑户花嫁&gt;, 挺有意思的片子, 爆笑之余, 对濑户内海这个地方有了模模糊糊的印象.
+去年去了青森和九州, 就想着再去个日本犄角旮旯的地吧, 四国就被提上了日程, 稍做攻略, 发现濑户内海就这里, 兴趣来了.
+明年三月的时候濑户内海有艺术祭, 那会估计就被世界各地的人给挤爆了, 不凑这热闹, 还是10月去吧.
+大致行程: 上海 -&gt; 高松 -&gt; 小豆岛 -&gt; 丰岛 -&gt; 直岛. 除了在小豆岛上呆了一晚上，其他时候都住在了高松.
+微笑的高松车站:
+小豆岛是个挺无趣的地方, 类似度假村, 当地酒店设施比较齐全, 还有个电影的拍摄基地. 岛上交通比较麻烦, 班次好少,本来想去寒霞溪看看, 结果在车站等了半钟头才发现去那边的巴士要20号才开始运作, 不得已坐车回码头. 嘛, 中间经历了一段好难描述的迷路之旅&hellip;.但是吃到了此行最棒的乌冬面!
+小豆岛的夜晚真的很黑, 很黑, 云好厚, 没有星光, 隔了好远才有一个路灯, 岛上环境太好, 导致有很多蜘蛛网，迎面撞上了好几个. 晚上去超市买了支洗面奶, 柑橘味的, 好闻得忍不住舔了一口, 是苦的! 哦，对了, 橄榄园的橄榄味冰淇淋很推荐.
+丰岛上去了两个地方, 心脏音博物馆和丰岛美术馆.
+心脏音博物馆建在偏僻的海滩边, 外面有个看起来很孤独的姑娘在本子上写着什么. 馆乍一看以为是个废屋:
+进去只有一间黑屋子, 中间有个白织灯, 音响会播放以前游客录下的心跳声, 白织灯随着心跳声忽闪忽灭, 在黑屋子里一个人坐了会, 明明音响声很大, 心情却不可思议得平静. 好像在和一群人的灵魂对话.
+丰岛美术馆, 是这一行最喜欢的地方, 路上被一个大姐带叉了路, 拎着箱子走了条山路上去, 走到山顶发现另一遍是靠海的大马路, 风景好路也好走, 简直了&hellip;.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/11/04/%E6%BF%91%E6%88%B7%E5%86%85%E6%B5%B7%E7%9A%84%E9%A3%8E%E4%B8%8E%E9%98%B3/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/">AWS Aurora DB</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -280,31 +312,6 @@ CELERY_RESULT_BACKEND 使用 redis 的坑 配置了 CELERY_RESULT_BACKEND 后, �
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/06/22/%E5%8D%87%E7%BA%A7celery-%E5%88%B0-4.2.0-%E7%A2%B0%E5%88%B0%E7%9A%84%E5%9D%91/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/">编写 python 2/3 兼容代码</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-06-16T14:38:26&#43;08:00">
-        Jun 16, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    上一篇 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情.
-__future__ python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件.
-首先是几个在 python 2.7 里不用特意写，已经默认开启的特性:
- from __future__ import nested_scopes 2.2 开始就默认开启了，用于修改嵌套函数内的变量搜索作用域, 在此之前, 全局模块的优先级比被嵌套函数的父函数要高, 现在都没这个问题了. from __future__ import generators, yield 关键词, 2.3 默认支持. from __future__ import with_statement, with 关键词, 2.6 默认支持.  我显示开启的两个特性:
- from __future__ import print_function, 就是将 print 关键词变成函数啦, 导入后支持 python3 中 print 的完整参数，再用不带括号的 print 就会在文件被导入的时候报语法错误啦.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

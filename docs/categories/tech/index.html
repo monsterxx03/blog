@@ -83,6 +83,31 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/04/10/snet-dev-note/">SNET Dev Note</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2019-04-10T22:33:49&#43;08:00">
+        Apr 10, 2019
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    完成 SNET 初版后又做了些后续更新,　记录一点.
+支持 http tunnel 配置文件里增加一个 proxy-type 选项, 默认为 ss, 可改成 http, 这样可以将 支持 http tunnel 的代理服务器作为 upstream(例如 squid). 填上 http-proxy- 开头 的选项就行.
+实现上 client 端要对接 http tunnel 非常简单:
+ client 发送请求: Connect tgt-host:tgt-port HTTP/1.1 server response: HTTP/1.1 200, 即表示 server 端支持 http tunnel client 后续向该 tcp connection 写入的数据都会被 server 转发到 tgt-host:tgt-port  改动的时候把 upstream proxy 的部分重构了一下, 抽了个 Proxy interface 出来, 后续想对接其他协议方便扩展.
+对 udp 支持的尝试 对 tcp 流量的转发能通过 iptables REDIRECT 实现的, 通过 getsockoption 可以知道 tcp connection 的原目标, 但这对 udp 行不通, REDIRECT 之后拿不到原 target.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2019/04/10/snet-dev-note/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/">SNET: Transparent SS proxy on Linux</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -268,32 +293,6 @@ redo log 用来 crash recovery, binlog 会上传 s3　用于 point in time resto
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/10/15/%E4%B8%BA-service-%E5%88%B6%E5%AE%9A-slo/">为 service 制定 SLO</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-10-15T11:31:05&#43;08:00">
-        Oct 15, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    通常我们使用云服务的时候, 服务提供商会提供 SLA(Service Level Aggrement),作为他们提供的服务质量的标准(常说的几个9),达不到会进行赔偿. 比如 AWS 的计算类服务: https://aws.amazon.com/compute/sla/ .
-对公司自己 host 的 service, 我们内部也需要一些技术指标来 track 我们为客户提供的服务质量如何, 这个叫做 SLO(Service Level Objective). 也可以把他当成一个对内的,没有赔偿协议的SLA.
-定义指标 我主要 track 两个指标:
- Availability (服务的可用性) Quality (服务质量)  Availability 的定义, 以前用简单的 service uptime 来定义, 在集群外部用一个 service check 定时 ping 我们 service　的 check endpoint, 失败就定义为 failure.
-但这样的做法很粗糙, 和实际用户体验到的 service quality 相差比较大, 比如部署了新的代码，bug 导致某个很常用的 api　持续性抛 500. 此时我们的 service check　还是 up, 但用户就觉得你服务器挂了.
-现在我用失败的 request 的个数来定义我们的 availability.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/10/15/%E4%B8%BA-service-%E5%88%B6%E5%AE%9A-slo/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

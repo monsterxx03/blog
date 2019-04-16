@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   
-  <title>Shining Moon</title>
-  <meta property="og:title" content="Shining Moon" />
-  <meta name="twitter:title" content="Shining Moon" />
+  <title>snet</title>
+  <meta property="og:title" content="snet" />
+  <meta name="twitter:title" content="snet" />
   
 
   
@@ -17,7 +17,7 @@
 
   <meta name="author" content="X"/>
   <meta property="og:site_name" content="Shining Moon" />
-  <meta property="og:url" content="https://blog.monsterxx03.com/" />
+  <meta property="og:url" content="https://blog.monsterxx03.com/tags/snet/" />
 
   
   <meta name="twitter:card" content="summary" />
@@ -33,8 +33,6 @@
   
   <meta name="generator" content="Hugo 0.55.1" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
-  
-  <link href="https://blog.monsterxx03.com/index.xml" rel="alternate" type="application/rss+xml" title="Shining Moon" />
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
   
@@ -56,30 +54,7 @@
   </header>
   <main id="main" class="l-main">
 
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/04/12/k8s-volume-resize-on-eks/">K8s Volume Resize on EKS</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2019-04-12T13:23:54&#43;08:00">
-        Apr 12, 2019
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    从 k8s 1.8 开始支持 PersistentVolumeClaimResize. 但 api 是 alpha 状态, 默认不开启, eks launch 的时候版本是 1.10, 因为没法改 control plane, 所以没法直接在 k8s 内做 ebs 扩容. 后来升级到了 1.11, 这个 feature 默认被打开了, 尝试了下直接在 EKS 内做 ebs 的扩容.
-注意:
- 这个 feature 只能对通过 pvc 管理的 volume 做扩容, 如果直接挂的是 pv, 只能自己按传统的 ebs 扩容流程在 eks 之外做. 用来创建 pvc 的 storageclass 上必须设置 allowVolumeExpansion 为 true  在 eks 上使用 pv/pvc,　对于需要 retain 的 volume, 我一般的流程是:
- 在 eks 之外手工创建 ebs volume.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2019/04/12/k8s-volume-resize-on-eks/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
+<h2 class="c-title p-tag-title">snet</h2>
 
 
 <article class="c-article p-list-article">
@@ -131,176 +106,6 @@
 </article>
 
 
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/03/28/celery-time-limit-%E7%9A%84%E5%9D%91/">Celery Time Limit 的坑</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2019-03-28T17:37:29&#43;08:00">
-        Mar 28, 2019
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    之前用 celery 做的 task 都是一些很简单轻量级的 task, 从来没触发过 timeout, 最近加入了一些复杂很耗时的 task, 碰到一些 time limit 的坑.
-celery 中 time limit 有两种, soft_time_limit 和 hard_time_limit, 区别是 soft_time_limit 会在内部抛一个 Exception, task 可以 catch 自行处理. hard time limit 没法被 catch.
-使用如下:
-from myapp import app from celery.exceptions import SoftTimeLimitExceeded @app.task def mytask(): try: do_work() except SoftTimeLimitExceeded: clean_up_in_a_hurry() 我 celery pool 用的是 gevent, 实际上在现在的实现里 gevent 做 worker pool 的时候会忽略 soft_time_limit, 只有 hard_time_limit 会被触发(通过 gevent.Timeout 实现).
-坑爹的是文档里写的是错的: http://docs.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2019/03/28/celery-time-limit-%E7%9A%84%E5%9D%91/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/">管理负载</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2019-02-12T13:08:29&#43;08:00">
-        Feb 12, 2019
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    最近在看 google 的 &lt;The Site Reliablity Workbook&gt;, 其中有一章是&rdquo;Manage load&rdquo;, 内容还挺详细的, 结合在 aws 上的经验做点笔记.
-Load Balancing 流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存.
-google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency.
-但只依赖 BGP 会带来两个问题:
- 某个地区的用户过多会给最近的 frontend server 带来过高的负载 ISP 的 BGP 路由会重计算, 当 BGP routing 变化后, 进行中的 tcp connection 会被 reset(同一个 connection 上的后续数据包被发送到不同的 server, tcp session 不存在于新 server 上)  为了解决原生 BGP anycast 的问题, google 开发了 Maglev, 即使路由发生了变化(routing flap), connection 也不断开, 把这种方式叫做 stablized anycast.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/12/29/%E4%BB%8E%E5%8E%BB%E5%B9%B4%E7%9A%84%E4%B8%80%E4%B8%AApatch%E8%AF%B4%E8%B5%B7/">从去年的一个patch说起</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-12-29T15:14:46&#43;08:00">
-        Dec 29, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    去年对线上业务做了一些性能优化, 当时把 http client 从 requests 换成了 geventhttpclient , 上线后发起 rpc 调用的 server 整体负载低了很多, 但 client 端 latency 却高了很多, 经过 debug 觉得问题是 geventhttpclient 把 header 和 body 通过两次 sock send 发出的额外开销造成的, 尝试 修改成一次 send 后 latency 就恢复了: https://github.com/gwik/geventhttpclient/pull/85
-最近在调试 gunicorn 的代码时候, 看到它建立 socket 的时候设置了 TCP_NODELAY, 在很多项目里看到过这个 tcp option, 但没细究过, man tcp 得知是用来关闭 tcp 里的 nagle 算法的. nagle 在 linux 的 默认 tcp 协议栈里是开启的, 当发送的数据包 size 小于 mss 的时候会在内存里 buffer 起来, 积累起来后再发送, 目的是提高带宽利用率, 毕竟 payload 只发一次字节也要带上 40 字节的 ip+tcp header.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/12/29/%E4%BB%8E%E5%8E%BB%E5%B9%B4%E7%9A%84%E4%B8%80%E4%B8%AApatch%E8%AF%B4%E8%B5%B7/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/12/16/kubernetes-%E4%B8%AD%E7%9A%84-pod-%E8%B0%83%E5%BA%A6/">Kubernetes 中的 pod 调度</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-12-16T13:09:20&#43;08:00">
-        Dec 16, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    定义 pod 的时候通过添加 node selector 可以让 pod 调度到有特定 label 的 node 上去, 这是最简单的调度方式. 其他还有更复杂的调度方式: node-taints/tolerations, node-affinity, pod-affinity, 来达到让某些类型的 pod 调度到一起, 让某些类型的 pod 不跑一起的效果.
-Taints and Tolerations 如果 node 有 taints, 那只有能 tolerate 这些 taints 的 pod 才能调度到上面.
-taint 的基本格式是: &lt;key&gt;&lt;operator&gt;&lt;value&gt;:&lt;effect&gt;
-kubectl describe node xxx 可以看到节点的 taints, 比如 master 节点上会有:
-Taints: node-role.kubernetes.io/master:NoSchedule  这里 key 是 node-role.kubernetes.io/master, 没有等号和 value, operator 就是 Exists , effect 是 NoSchedule.
-master 节点上的这条 taint 就定义了只有能 tolerate 它的 pod 能调度到上面, 一般都是些系统 pod.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/12/16/kubernetes-%E4%B8%AD%E7%9A%84-pod-%E8%B0%83%E5%BA%A6/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/12/03/debug-skills-on-linux/">Debug Skills on Linux</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-12-03T22:47:51&#43;08:00">
-        Dec 3, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04, some tools are not installed by default, you can installl by sudo apt install xxx. Some commands must be used via sudo.
-System resources can be classified in three main categories: compute, storage, and network. Usually, when you come to a performance issue, it&rsquo;s always caused by exhaustion of those resources.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/12/03/debug-skills-on-linux/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/11/30/%E6%9D%82%E8%B0%88/">杂谈</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-11-30T17:39:00&#43;08:00">
-        Nov 30, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    屋里有两个钟，一个快 5 分钟，　一个慢 5 分钟,　一直懒得把它们调正, 有种莫名的时间撕裂感, 好像还挺喜欢.还有一个月 2018 就过去了, 我想想最近都干嘛了.
-最近看的书 读完了 &lt;a philosophy of software design&gt;, 书是好书, 就是好贵(花了我260&hellip;). 本来想专门写一篇的,但开了个头发却发现没太多可写的. 书里提到的问题都碰到过, 解决方法和建议其实也一直在用, 没有什么银弹, 等再践行一段时间再说吧. PS: 收益最大的是讲注释的章节.
-昨晚看完了 &lt;夜行&gt;. 森见登美彦的书, 改编的动画倒是看过不少, 书以前只看过 &lt;有顶天家族&gt;. 这本风格差得挺远,　通篇五里雾中的感觉, 有点　&lt;1Q84&gt;　的意思. &ldquo;世界是一场夜&rdquo;, 后半部分看到这句话的时候, 起了鸡皮疙瘩,　夜行和曙光世界里的岸田过着完全不同的生活, 契机只是鞍马火祭上的偶遇. 是不是真的存在一个和现实完全对立的世界, 跨越的分界线只是那一点点契机?那个世界的自己又过得到好还是差呢?　定的 &lt;企鹅公路&gt; 还在路上, 为什么有人已经收到了?
-今敏的短篇漫画集 &lt;梦的化石&gt;, 只看了个开头几篇, 怎么说呢, 画的真烂啊&hellip;故事莫名奇妙, 大师放弃漫画做动画是对的.
-最近的工作 干了几件事:
- 迁了一部分数据库到 aurora 上, 效果不错, 但挺贵哦. 用 Bloomfilter 改写了部分业务逻辑, 顺便了解了下其他的 probabilistic data structure, 挺有趣的, 只恨高数都还给老师了, 证明过程看得一头雾水, 要不补一下?
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/11/30/%E6%9D%82%E8%B0%88/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/11/17/%E7%94%A8-bloom-filter-%E7%BB%99%E6%8E%A8%E8%8D%90%E5%88%97%E8%A1%A8%E5%8E%BB%E9%87%8D/">用 Bloom filter 给推荐列表去重</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-11-17T13:58:27&#43;08:00">
-        Nov 17, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    之前产品里有一个功能是每天给用户推荐一批文章,要保证最后推给用户的文章每天不重复. 原先的实现很直接, 每次推送时候记录下用户 id 和 topic id 的键值对, 拿到新 topic 列表后,取出曾经给该用户推送过的文章列表, 两个 set 去重.
-这个实现的问题很明显, 存储空间量太大(M * N), user id (int64) + topic id (int64) = 16 bytes, 1 million 的用户, 每天给用户推送10篇文章, 一年要存储: 16 * 10 * 365 * 1M = 54.4GB. 查询效率也很低,要么一次取所有已读 topic id, 要么把要推送的 topic id 都丢进数据库去重.
-Bloom filter 比较合适解决大集合去重的问题, 给定一个 key, bloom filter 返回不存在,则该 key 在集合中一定不存在, bloom filter 返回存在, 该元素仍旧可能存在集合中.
-可以看出当元素存在时, bloom filter 是有一定误判率的, 所以说 bloom filter 是一种 probabilistic 数据结构, 存在 false positive 的情况, 但当元素不存在时结果正确, 很适合上面那个去重的例子, 只要 error rate 足够低, 就会有小概率漏推, 但不会重推.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/11/17/%E7%94%A8-bloom-filter-%E7%BB%99%E6%8E%A8%E8%8D%90%E5%88%97%E8%A1%A8%E5%8E%BB%E9%87%8D/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
 <nav class="c-pagination p-pagination">
   <div class="c-pagination__ctrl">
     <div class="c-pagination__newer">
@@ -308,11 +113,9 @@ Bloom filter 比较合适解决大集合去重的问题, 给定一个 key, bloom
     </div>
     <div class="c-pagination__older">
       
-      <a href="/page/2/">Older</a>
-      
     </div>
   </div>
-  <span class="c-pagination__count p-pagination__count">Page 1 of 6</span>
+  <span class="c-pagination__count p-pagination__count">Page 1 of 1</span>
 </nav>
 
 

@@ -60,6 +60,31 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/">编写 python 2/3 兼容代码</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-06-16T14:38:26&#43;08:00">
+        Jun 16, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    上一篇 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情.
+__future__ python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件.
+首先是几个在 python 2.7 里不用特意写，已经默认开启的特性:
+ from __future__ import nested_scopes 2.2 开始就默认开启了，用于修改嵌套函数内的变量搜索作用域, 在此之前, 全局模块的优先级比被嵌套函数的父函数要高, 现在都没这个问题了. from __future__ import generators, yield 关键词, 2.3 默认支持. from __future__ import with_statement, with 关键词, 2.6 默认支持.  我显示开启的两个特性:
+ from __future__ import print_function, 就是将 print 关键词变成函数啦, 导入后支持 python3 中 print 的完整参数，再用不带括号的 print 就会在文件被导入的时候报语法错误啦.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/10/%E6%9D%82%E8%B0%88%E6%9D%BE%E6%9C%AC%E6%B8%85%E5%BC%A0/">杂谈松本清张</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -272,35 +297,6 @@ client = boto3.client('ssm') resp = client.get_parameter( Name='/redshift/admin/
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/02/25/%E7%94%A8-google-spreadsheet-%E8%AE%A1%E7%AE%97%E6%88%BF%E8%B4%B7%E7%AD%89%E9%A2%9D%E6%9C%AC%E6%81%AF%E8%BF%98%E6%AC%BE/">用 google spreadsheet 计算房贷等额本息还款</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-02-25T13:59:11&#43;08:00">
-        Feb 25, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    看房看的眼花缭乱, 网上有很多房贷计算器, 但都没什么方便的比价功能, 能直观得看到首付和月供就好啦, 但也不想注册，不想老收中介的广告,索性用 google spreadsheet 自己做个简单的吧.
-PMT 公式 可以用 PMT 公式来计算等额本息的月供金额: https://support.google.com/docs/answer/3093185?hl=zh-Hans
-PMT(rate, number_of_periods, present_value, [future_value, end_or_beginning])  rate 是每期的利率, 如果商贷基准利率是 0.049, 每月还款, rate 就是 0.049/12.
-number_of_periods 是贷款期数, 年数 * 12.
-present_value 是贷款数额.
-PMT 公式算出的值是负数，需要取反.
-实际例子:
-商贷基准利率=0.049 利率倍数=1 首付百分比=0.3 贷款年数=30 公积金贷款利率=0.0325 公积金贷款数额=300000 房产单价=14000 建筑面积=85  房屋总价=14000 * 85=1190000 首付= 1190000 * 0.3 = 357000 商贷=1190000-357000-300000=533000
-月供= -PMT(0.049/12 * 1, 30*12, 533000) - PMT(0.0325/12, 30 * 12, 300000) =4134
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/02/25/%E7%94%A8-google-spreadsheet-%E8%AE%A1%E7%AE%97%E6%88%BF%E8%B4%B7%E7%AD%89%E9%A2%9D%E6%9C%AC%E6%81%AF%E8%BF%98%E6%AC%BE/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

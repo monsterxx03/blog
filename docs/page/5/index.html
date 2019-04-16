@@ -60,6 +60,29 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/07/15/enable-coredump-on-ubuntu-16.04/">Enable coredump on ubuntu 16.04</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2017-07-15T02:35:52Z">
+        Jul 15, 2017
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    Coredump file is useful for debuging program crash. This post will show several settings related to coredump.
+Enable coredump If you run program from shell , enable coredump via unlimit -c unlimited， then check unlimit -a | grep core, if it shows unlimited, coredump is enabled for your current session.
+If your program is hosted by systemd, you need to edit your program&#8217;s service unit file&#8217;s [Service] section, add LimitCORE=infinity to enable coredump.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2017/07/15/enable-coredump-on-ubuntu-16.04/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/07/01/python-web-%E5%BA%94%E7%94%A8%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/">Python Web 应用性能调优</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -269,31 +292,6 @@ Benefit:
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/03/22/elasticsearch-cluster/">ElasticSearch cluster</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2017-03-22T16:22:32Z">
-        Mar 22, 2017
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    In this article, let&#8217;s talk about ElasticSearch&#8217;s cluster mode, which means multi nodes ElasticSearch.
-Basic concepts cluster: A collection of server nodes with same cluster.name settings in elasticsearch.yaml
-primary shards: Divide a index into multi parts(by default 5), shards of an index can be distributed over multi nodes. It enables scale index horizontally and make access to index parallelly(accross multi nodes).
-replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.
-
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2017/03/22/elasticsearch-cluster/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

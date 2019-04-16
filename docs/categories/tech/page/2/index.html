@@ -59,6 +59,32 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/10/15/%E4%B8%BA-service-%E5%88%B6%E5%AE%9A-slo/">为 service 制定 SLO</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-10-15T11:31:05&#43;08:00">
+        Oct 15, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    通常我们使用云服务的时候, 服务提供商会提供 SLA(Service Level Aggrement),作为他们提供的服务质量的标准(常说的几个9),达不到会进行赔偿. 比如 AWS 的计算类服务: https://aws.amazon.com/compute/sla/ .
+对公司自己 host 的 service, 我们内部也需要一些技术指标来 track 我们为客户提供的服务质量如何, 这个叫做 SLO(Service Level Objective). 也可以把他当成一个对内的,没有赔偿协议的SLA.
+定义指标 我主要 track 两个指标:
+ Availability (服务的可用性) Quality (服务质量)  Availability 的定义, 以前用简单的 service uptime 来定义, 在集群外部用一个 service check 定时 ping 我们 service　的 check endpoint, 失败就定义为 failure.
+但这样的做法很粗糙, 和实际用户体验到的 service quality 相差比较大, 比如部署了新的代码，bug 导致某个很常用的 api　持续性抛 500. 此时我们的 service check　还是 up, 但用户就觉得你服务器挂了.
+现在我用失败的 request 的个数来定义我们的 availability.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/10/15/%E4%B8%BA-service-%E5%88%B6%E5%AE%9A-slo/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/10/12/%E5%9C%A8-redshift-%E4%B8%AD%E8%AE%A1%E7%AE%97-p95-latency/">在 redshift 中计算 p95 latency</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -278,28 +304,6 @@ hash = FNV_offset_basis for each byte_of_data to be hashed hash = hash × FNV_pr
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub/sub-system/">Use SNS &amp; SQS to build Pub/Sub System</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-05-23T18:05:28&#43;08:00">
-        May 23, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, take some notes.
-Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub/sub-system/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

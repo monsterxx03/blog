@@ -83,6 +83,31 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/04/10/snet-dev-note/">SNET Dev Note</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2019-04-10T22:33:49&#43;08:00">
+        Apr 10, 2019
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    完成 SNET 初版后又做了些后续更新,　记录一点.
+支持 http tunnel 配置文件里增加一个 proxy-type 选项, 默认为 ss, 可改成 http, 这样可以将 支持 http tunnel 的代理服务器作为 upstream(例如 squid). 填上 http-proxy- 开头 的选项就行.
+实现上 client 端要对接 http tunnel 非常简单:
+ client 发送请求: Connect tgt-host:tgt-port HTTP/1.1 server response: HTTP/1.1 200, 即表示 server 端支持 http tunnel client 后续向该 tcp connection 写入的数据都会被 server 转发到 tgt-host:tgt-port  改动的时候把 upstream proxy 的部分重构了一下, 抽了个 Proxy interface 出来, 后续想对接其他协议方便扩展.
+对 udp 支持的尝试 对 tcp 流量的转发能通过 iptables REDIRECT 实现的, 通过 getsockoption 可以知道 tcp connection 的原目标, 但这对 udp 行不通, REDIRECT 之后拿不到原 target.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2019/04/10/snet-dev-note/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/">SNET: Transparent SS proxy on Linux</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -271,38 +296,6 @@ Bloom filter 比较合适解决大集合去重的问题, 给定一个 key, bloom
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/11/17/%E7%94%A8-bloom-filter-%E7%BB%99%E6%8E%A8%E8%8D%90%E5%88%97%E8%A1%A8%E5%8E%BB%E9%87%8D/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/11/04/%E6%BF%91%E6%88%B7%E5%86%85%E6%B5%B7%E7%9A%84%E9%A3%8E%E4%B8%8E%E9%98%B3/">濑户内海的风与阳</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-11-04T23:31:07&#43;08:00">
-        Nov 4, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    上月休假去濑户内海溜达了一圈, 一个比想象中美太多的地方.
-对濑户内海的印象, 要追溯到高中时看的一部搞笑番 &lt;濑户花嫁&gt;, 挺有意思的片子, 爆笑之余, 对濑户内海这个地方有了模模糊糊的印象.
-去年去了青森和九州, 就想着再去个日本犄角旮旯的地吧, 四国就被提上了日程, 稍做攻略, 发现濑户内海就这里, 兴趣来了.
-明年三月的时候濑户内海有艺术祭, 那会估计就被世界各地的人给挤爆了, 不凑这热闹, 还是10月去吧.
-大致行程: 上海 -&gt; 高松 -&gt; 小豆岛 -&gt; 丰岛 -&gt; 直岛. 除了在小豆岛上呆了一晚上，其他时候都住在了高松.
-微笑的高松车站:
-小豆岛是个挺无趣的地方, 类似度假村, 当地酒店设施比较齐全, 还有个电影的拍摄基地. 岛上交通比较麻烦, 班次好少,本来想去寒霞溪看看, 结果在车站等了半钟头才发现去那边的巴士要20号才开始运作, 不得已坐车回码头. 嘛, 中间经历了一段好难描述的迷路之旅&hellip;.但是吃到了此行最棒的乌冬面!
-小豆岛的夜晚真的很黑, 很黑, 云好厚, 没有星光, 隔了好远才有一个路灯, 岛上环境太好, 导致有很多蜘蛛网，迎面撞上了好几个. 晚上去超市买了支洗面奶, 柑橘味的, 好闻得忍不住舔了一口, 是苦的! 哦，对了, 橄榄园的橄榄味冰淇淋很推荐.
-丰岛上去了两个地方, 心脏音博物馆和丰岛美术馆.
-心脏音博物馆建在偏僻的海滩边, 外面有个看起来很孤独的姑娘在本子上写着什么. 馆乍一看以为是个废屋:
-进去只有一间黑屋子, 中间有个白织灯, 音响会播放以前游客录下的心跳声, 白织灯随着心跳声忽闪忽灭, 在黑屋子里一个人坐了会, 明明音响声很大, 心情却不可思议得平静. 好像在和一群人的灵魂对话.
-丰岛美术馆, 是这一行最喜欢的地方, 路上被一个大姐带叉了路, 拎着箱子走了条山路上去, 走到山顶发现另一遍是靠海的大马路, 风景好路也好走, 简直了&hellip;.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/11/04/%E6%BF%91%E6%88%B7%E5%86%85%E6%B5%B7%E7%9A%84%E9%A3%8E%E4%B8%8E%E9%98%B3/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
