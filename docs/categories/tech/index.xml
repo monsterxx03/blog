@@ -6,10 +6,23 @@
     <description>Recent content in tech on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 12 Apr 2019 13:23:54 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 29 Apr 2019 15:56:12 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/categories/tech/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Jenkins on K8S</title>
+      <link>https://blog.monsterxx03.com/2019/04/29/jenkins-on-k8s/</link>
+      <pubDate>Mon, 29 Apr 2019 15:56:12 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2019/04/29/jenkins-on-k8s/</guid>
+      <description>最近在把 jenkins 迁移到 k8s, 具体怎么 setup 的不赘述了(helm chart, jenkins home 目录挂pvc, jenkins kubernetes-plugin).
+jenkins 跑 k8s 好处是可以方便得做分布式 build, 每次 trigger 一个 job 的时候自动起一个 pod 作为 jenkins slave agent, 结束了自动删掉. 在 aws 上结合 cluster-autoscaler 可以极大得扩展 ci 的并行能力, 降低成本.
+记录一点过程中的坑.
+装上 kubernetes-plugin 后,要想让 jenkins 的 job 在 pod 中跑, 必须用 pipeline 的方式编写 job 定义. script 和 declarative 两种方式都支持启动 pod. 如果用 shell 的方式编写, 不会跑在 pod 里，会直接在　master 的　workspace 里 build.
+declarative 方式的例子:</description>
+    </item>
     
     <item>
       <title>K8s Volume Resize on EKS</title>

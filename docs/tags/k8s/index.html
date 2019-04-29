@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.55.1" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.55.4" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -55,6 +55,31 @@
   <main id="main" class="l-main">
 
 <h2 class="c-title p-tag-title">k8s</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/04/29/jenkins-on-k8s/">Jenkins on K8S</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2019-04-29T15:56:12&#43;08:00">
+        Apr 29, 2019
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    最近在把 jenkins 迁移到 k8s, 具体怎么 setup 的不赘述了(helm chart, jenkins home 目录挂pvc, jenkins kubernetes-plugin).
+jenkins 跑 k8s 好处是可以方便得做分布式 build, 每次 trigger 一个 job 的时候自动起一个 pod 作为 jenkins slave agent, 结束了自动删掉. 在 aws 上结合 cluster-autoscaler 可以极大得扩展 ci 的并行能力, 降低成本.
+记录一点过程中的坑.
+装上 kubernetes-plugin 后,要想让 jenkins 的 job 在 pod 中跑, 必须用 pipeline 的方式编写 job 定义. script 和 declarative 两种方式都支持启动 pod. 如果用 shell 的方式编写, 不会跑在 pod 里，会直接在　master 的　workspace 里 build.
+declarative 方式的例子:
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2019/04/29/jenkins-on-k8s/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">

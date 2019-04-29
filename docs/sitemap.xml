@@ -3,14 +3,49 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://blog.monsterxx03.com/tags/aws/</loc>
-    <lastmod>2019-04-12T13:23:54+08:00</lastmod>
+    <loc>https://blog.monsterxx03.com/categories/</loc>
+    <lastmod>2019-04-29T15:56:12+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/categories/</loc>
-    <lastmod>2019-04-12T13:23:54+08:00</lastmod>
+    <loc>https://blog.monsterxx03.com/2019/04/29/jenkins-on-k8s/</loc>
+    <lastmod>2019-04-29T15:56:12+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/posts/</loc>
+    <lastmod>2019-04-29T15:56:12+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/</loc>
+    <lastmod>2019-04-29T15:56:12+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/</loc>
+    <lastmod>2019-04-29T15:56:12+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/jenkins/</loc>
+    <lastmod>2019-04-29T15:56:12+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/k8s/</loc>
+    <lastmod>2019-04-29T15:56:12+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/categories/tech/</loc>
+    <lastmod>2019-04-29T15:56:12+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -20,37 +55,13 @@
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/posts/</loc>
-    <lastmod>2019-04-12T13:23:54+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/</loc>
-    <lastmod>2019-04-12T13:23:54+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/tags/</loc>
+    <loc>https://blog.monsterxx03.com/tags/aws/</loc>
     <lastmod>2019-04-12T13:23:54+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/eks/</loc>
-    <lastmod>2019-04-12T13:23:54+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/tags/k8s/</loc>
-    <lastmod>2019-04-12T13:23:54+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/categories/tech/</loc>
     <lastmod>2019-04-12T13:23:54+08:00</lastmod>
     <priority>0</priority>
   </url>

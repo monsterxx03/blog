@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.55.1" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.55.4" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -55,6 +55,29 @@
   <main id="main" class="l-main">
 
 <h2 class="c-title p-tag-title">tech</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/">AWS Aurora DB</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-10-31T15:23:45&#43;08:00">
+        Oct 31, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比.
+Paper notes  存储计算分离 redo log 下推到存储层 副本: 6 副本 3 AZ(2 per az), 失去一个 AZ + 1 additoinal node 不会丢数据(可读不可写). 失去一个 AZ (或任意2 node) 不影响数据写入. 10GB 一个 segment, 每个 segment 6 副本一个 PG (protection group), 一 AZ　两副本. 在 10Gbps 的网络上, 修复一个 10GB 的segment 需要 10s.  MySQL 一个应用层的写会在底层产生很多额外的写操作，会带来写放大问题:
+redo log 用来 crash recovery, binlog 会上传 s3　用于 point in time restore.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">
@@ -284,30 +307,6 @@ The codebase I&rsquo;m working on:
 </article>
 
 
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/">在python3.7 中实现python2.7 的内置 hash 函数</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-06-01T17:03:24&#43;08:00">
-        Jun 1, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    最近着手准备从 python2.7 迁移到 python3.7, 还没开始就碰到一个问题. 老系统里有一部分竟然是将 python 内置 hash 函数的结果存进了数据库, 这个做法绝对是错的, hash 的结果本来就没有保证过在各个版本的 python 中保证一致. 而且 python3 中算法完全变了, 默认在进程初始化的时候会用随机种子加进 hash 过程, 所以python 进程 一重启结果就不一样了. 木已成舟， 目前看将数据库里的值全部改掉是不可能了, 只能在 python3 中重新实现一下这个算法.
-python2.7 中的hash 算法是 fnv (有修改), python3 中变成了 sip, pep-456.
-fnv 的实现很简单， 引用 wikipedia 上的伪代码:
-hash = FNV_offset_basis for each byte_of_data to be hashed hash = hash × FNV_prime hash = hash XOR byte_of_data return hash  FNV_prime 是 1000003, python 实现和标准 fnv 的不同在于, 在进入循环 hash 之前将数据左移了7位, 在最后又和长度做了次XOR, 生成的数据随机性更大一点.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
 <nav class="c-pagination p-pagination">
   <div class="c-pagination__ctrl">
     <div class="c-pagination__newer">
@@ -321,7 +320,7 @@ hash = FNV_offset_basis for each byte_of_data to be hashed hash = hash × FNV_pr
       
     </div>
   </div>
-  <span class="c-pagination__count p-pagination__count">Page 2 of 5</span>
+  <span class="c-pagination__count p-pagination__count">Page 2 of 6</span>
 </nav>
 
 
