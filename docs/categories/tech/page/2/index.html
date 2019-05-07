@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.55.4" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.55.3" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -55,6 +55,30 @@
   <main id="main" class="l-main">
 
 <h2 class="c-title p-tag-title">tech</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/11/17/%E7%94%A8-bloom-filter-%E7%BB%99%E6%8E%A8%E8%8D%90%E5%88%97%E8%A1%A8%E5%8E%BB%E9%87%8D/">用 Bloom filter 给推荐列表去重</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-11-17T13:58:27&#43;08:00">
+        Nov 17, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    之前产品里有一个功能是每天给用户推荐一批文章,要保证最后推给用户的文章每天不重复. 原先的实现很直接, 每次推送时候记录下用户 id 和 topic id 的键值对, 拿到新 topic 列表后,取出曾经给该用户推送过的文章列表, 两个 set 去重.
+这个实现的问题很明显, 存储空间量太大(M * N), user id (int64) + topic id (int64) = 16 bytes, 1 million 的用户, 每天给用户推送10篇文章, 一年要存储: 16 * 10 * 365 * 1M = 54.4GB. 查询效率也很低,要么一次取所有已读 topic id, 要么把要推送的 topic id 都丢进数据库去重.
+Bloom filter 比较合适解决大集合去重的问题, 给定一个 key, bloom filter 返回不存在,则该 key 在集合中一定不存在, bloom filter 返回存在, 该元素仍旧可能存在集合中.
+可以看出当元素存在时, bloom filter 是有一定误判率的, 所以说 bloom filter 是一种 probabilistic 数据结构, 存在 false positive 的情况, 但当元素不存在时结果正确, 很适合上面那个去重的例子, 只要 error rate 足够低, 就会有小概率漏推, 但不会重推.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/11/17/%E7%94%A8-bloom-filter-%E7%BB%99%E6%8E%A8%E8%8D%90%E5%88%97%E8%A1%A8%E5%8E%BB%E9%87%8D/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">
@@ -279,30 +303,6 @@ __future__ python2 里自带的向后兼容模块，将 python3 的一些语法�
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/">From python2 to python3</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-06-07T16:41:57&#43;08:00">
-        Jun 7, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    This article won&rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&rsquo;t finished this project, also I haven&rsquo;t gave up so far :).
-Won&rsquo;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
-The codebase I&rsquo;m working on:
- Only support python2.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

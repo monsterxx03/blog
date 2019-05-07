@@ -6,10 +6,23 @@
     <description>Recent content in k8s on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Mon, 29 Apr 2019 15:56:12 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 07 May 2019 18:36:38 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/tags/k8s/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>kubeconfig 和 aws named profile 管理的 tips</title>
+      <link>https://blog.monsterxx03.com/2019/05/07/kubeconfig-%E5%92%8C-aws-named-profile-%E7%AE%A1%E7%90%86%E7%9A%84-tips/</link>
+      <pubDate>Tue, 07 May 2019 18:36:38 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2019/05/07/kubeconfig-%E5%92%8C-aws-named-profile-%E7%AE%A1%E7%90%86%E7%9A%84-tips/</guid>
+      <description>我有两个 EKS 集群 (sandbox + production), 这两个集群分处两个 aws 帐号中. 所以管理的时候也需要两套 aws credential.
+同时我用 helm-secrets 来管理 helm charts 中需要加密的一些配置. helm-secrets 只是 sops 的一个 shell wrapper, 实际加密是通过 sops 进行的.
+sops 支持 aws KMS, gcp KMS, azure key vault.. 等加密服务. 我用的是 aws KMS, 在 KMS 里创建一个 key, 授权允许我这个 iam 帐号能用它来进行加解密.
+这带来了一个问题, kubectl 和 helm-secrets 都需要 aws credential, 如果两边用的不一样就会执行失败.
+我统一使用 aws 的 named profiles 来管理 credential. 不在环境变量里设 aws 的 access key/secret key(如果设置了, 优先级比 named profile 高)</description>
+    </item>
     
     <item>
       <title>Jenkins on K8S</title>

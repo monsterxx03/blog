@@ -1,7 +1,6 @@
 ---
-title: "kubeconfig 和 aws profile 管理的一些 tips"
+title: "kubeconfig 和 aws named profile 管理的 tips"
 date: 2019-05-07T18:36:38+08:00
-draft: true
 categories:
   - tech
 tags:
