@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.55.3" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.55.5" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -55,6 +55,31 @@
   <main id="main" class="l-main">
 
 <h2 class="c-title p-tag-title">eks</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/05/14/prometheus-on-k8s/">Prometheus on K8S</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2019-05-14T13:52:02&#43;08:00">
+        May 14, 2019
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    Why move to prometheus? 把生产环境迁移到 k8s 的第一步是要搞定监控, 目前线上监控用的是商业的 datadog, 在 container 环境下 datadog 监控还要按 container 数目收费, 单 host 只有 10 个的额度, 超过要加钱, 高密度部署下很不划算. 一个 server 跑 20 个以上 container 是很正常的事情, 单台 server 的监控费用立马翻倍.
+tracing 这块之前用的也是 datadog, 但太贵了,一直也想换开源实现, 索性监控报警也换了, 踩一把坑吧.
+vendor lock 总是不爽的&hellip;
+Metrics in k8s 先不提 prometheus, k8s 中 metrics 来源有那么几个:
+metrics-serever metrics-server (取代 heapster), 从 node 上 kubelet 的 summary api 抓取数据(node/pod 的 cpu/memory 信息), kubectl top 和 kube-dashboard 的 metrics 数据来源就是它, horizontal pod autoscaler 做 scale up/down 决策的数据来源也是它, metrics-server 只在内存里保留 node 和 pod 的最新值.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2019/05/14/prometheus-on-k8s/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">

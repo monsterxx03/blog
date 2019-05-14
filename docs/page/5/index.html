@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.55.3" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.55.5" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <link href="https://blog.monsterxx03.com/index.xml" rel="alternate" type="application/rss+xml" title="Shining Moon" />
@@ -55,6 +55,29 @@
     
   </header>
   <main id="main" class="l-main">
+
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/08/19/build-private-staticwebsite-on-s3/">Build private static website on S3</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2017-08-19T07:28:16Z">
+        Aug 19, 2017
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    Build static website on S3 is very easy, but by default, it can be accessed by open internet.It will be super helpful if we can build website only available in VPC. Then we can use it to host internal deb repo, doc site&#8230;
+Steps are very easy, you only need VPC endpoints and S3 bucket policy.
+AWS api is open to internet, if you need to access S3 in VPC, your requests will pass through VPC&#8217;s internet gateway or NAT gateway.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2017/08/19/build-private-staticwebsite-on-s3/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
 
 
 
@@ -272,32 +295,6 @@ thrift, protobuf are binary format, can take binary bytes, only carry data, the 
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/04/23/4%E6%9C%88%E5%91%A8%E6%9C%AB%E6%9D%82%E8%AE%B0/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/">Infrastructure as Code</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2017-04-21T16:25:07Z">
-        Apr 21, 2017
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.
-You will come to:
- How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what&#8217;s the DHCP option set?), navigate around AWS console is okay, but not convenient. Who did what to which resource at when? AWS have a service called Config, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do.  Ideally, we should manage AWS resources like code, all changes kept in VCS, so called Infrastructure as Code.
-I&#8217;ve tried three ways to do it:
- ansible CloudFormation terraform  In this article, I&#8217;ll compare them, however, the conclusion is to use terraform 🙂
-
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

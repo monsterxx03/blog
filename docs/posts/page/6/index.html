@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.55.3" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.55.5" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -55,6 +55,32 @@
   <main id="main" class="l-main">
 
 <h2 class="c-title p-tag-title">Posts</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/">Infrastructure as Code</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2017-04-21T16:25:07Z">
+        Apr 21, 2017
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.
+You will come to:
+ How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what&#8217;s the DHCP option set?), navigate around AWS console is okay, but not convenient. Who did what to which resource at when? AWS have a service called Config, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do.  Ideally, we should manage AWS resources like code, all changes kept in VCS, so called Infrastructure as Code.
+I&#8217;ve tried three ways to do it:
+ ansible CloudFormation terraform  In this article, I&#8217;ll compare them, however, the conclusion is to use terraform 🙂
+
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">
@@ -256,30 +282,6 @@ replicas: backup for shards, also replicas can handle search requests, which mea
   </div>
   
   <a href="https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/">Redshift as data warehouse</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2016-07-16T16:11:39Z">
-        Jul 16, 2016
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    Glow 的 server infrastructure 全部搭建在 AWS 上，一般要选择一些基础服务的时候，总是先看 AWS, 只要功能和成本符合要求，不会特意选择开源方案。
-数据仓库我们选择了 AWS 的 Redshift.
-在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.
-
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

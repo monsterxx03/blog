@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.55.3" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.55.5" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -55,6 +55,32 @@
   <main id="main" class="l-main">
 
 <h2 class="c-title p-tag-title">tech</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/">Get Real Client Ip on AWS</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-02-01T15:20:37&#43;08:00">
+        Feb 1, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    If you run a webserver on AWS, get real client ip will be tricky if you didn&rsquo;t configure server right and write code correctly.
+Things related to client real ip:
+ CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application).  Request sequence diagram will be like following:
+User&rsquo;s real client ip is forwarded by front proxies one by one in head X-Forwarded-For.
+For CloudFront:
+ If user&rsquo;s req header don&rsquo;t have X-Forwarded-For, it will set user&rsquo;s ip(from tcp connection) in X-Forwarded-For If user&rsquo;s req already have X-Forwarded-For, it will append user&rsquo;s ip(from tcp connection) to the end of X-Forwarded-For  For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront&rsquo;s ip.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">
@@ -269,30 +295,6 @@ fpm -s python -t deb -m xyj.asmy@gmail.com --verbose -v 0.10.1 --python-pip /usr
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/06/05/debug-python-performance-issue-with-pyflame/">Debug python performance issue with pyflame</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2017-06-05T09:50:44Z">
-        Jun 5, 2017
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    pyflame is an opensource tool developed by uber: https://github.com/uber/pyflame
-It can take snapshots of running python process, combined with flamegraph.pl, can output flamegraph picture of python call stacks. Help analyze bottleneck of python program, needn&#8217;t inject any perf code into your application, and overhead is very low.
-Basic Usage sudo pyflame -s 10 -x -r 0.001 $pid | ./flamegraph.pl &gt; perf.svg
- -s, how many seconds to run -r, sample rate (seconds)  Your output will be something like following:
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2017/06/05/debug-python-performance-issue-with-pyflame/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
