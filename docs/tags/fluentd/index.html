@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   
-  <title>eks</title>
-  <meta property="og:title" content="eks" />
-  <meta name="twitter:title" content="eks" />
+  <title>fluentd</title>
+  <meta property="og:title" content="fluentd" />
+  <meta name="twitter:title" content="fluentd" />
   
 
   
@@ -17,7 +17,7 @@
 
   <meta name="author" content="X"/>
   <meta property="og:site_name" content="Shining Moon" />
-  <meta property="og:url" content="https://blog.monsterxx03.com/tags/eks/" />
+  <meta property="og:url" content="https://blog.monsterxx03.com/tags/fluentd/" />
 
   
   <meta name="twitter:card" content="summary" />
@@ -54,7 +54,7 @@
   </header>
   <main id="main" class="l-main">
 
-<h2 class="c-title p-tag-title">eks</h2>
+<h2 class="c-title p-tag-title">fluentd</h2>
 
 
 <article class="c-article p-list-article">
@@ -75,132 +75,6 @@ fluent-bit 和 fluentd 比, 主要好处是纯 C 写的(fluentd 是 C+ruby), 性
   </div>
   
   <a href="https://blog.monsterxx03.com/2019/05/26/centralized-logging-on-k8s/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/05/14/prometheus-on-k8s/">Prometheus on K8S</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2019-05-14T13:52:02&#43;08:00">
-        May 14, 2019
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    Why move to prometheus? 把生产环境迁移到 k8s 的第一步是要搞定监控, 目前线上监控用的是商业的 datadog, 在 container 环境下 datadog 监控还要按 container 数目收费, 单 host 只有 10 个的额度, 超过要加钱, 高密度部署下很不划算. 一个 server 跑 20 个以上 container 是很正常的事情, 单台 server 的监控费用立马翻倍.
-tracing 这块之前用的也是 datadog, 但太贵了,一直也想换开源实现, 索性监控报警也换了, 踩一把坑吧.
-vendor lock 总是不爽的&hellip;
-Metrics in k8s 先不提 prometheus, k8s 中 metrics 来源有那么几个:
-metrics-serever metrics-server (取代 heapster), 从 node 上 kubelet 的 summary api 抓取数据(node/pod 的 cpu/memory 信息), kubectl top 和 kube-dashboard 的 metrics 数据来源就是它, horizontal pod autoscaler 做 scale up/down 决策的数据来源也是它, metrics-server 只在内存里保留 node 和 pod 的最新值.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2019/05/14/prometheus-on-k8s/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/04/12/k8s-volume-resize-on-eks/">K8s Volume Resize on EKS</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2019-04-12T13:23:54&#43;08:00">
-        Apr 12, 2019
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    从 k8s 1.8 开始支持 PersistentVolumeClaimResize. 但 api 是 alpha 状态, 默认不开启, eks launch 的时候版本是 1.10, 因为没法改 control plane, 所以没法直接在 k8s 内做 ebs 扩容. 后来升级到了 1.11, 这个 feature 默认被打开了, 尝试了下直接在 EKS 内做 ebs 的扩容.
-注意:
- 这个 feature 只能对通过 pvc 管理的 volume 做扩容, 如果直接挂的是 pv, 只能自己按传统的 ebs 扩容流程在 eks 之外做. 用来创建 pvc 的 storageclass 上必须设置 allowVolumeExpansion 为 true  在 eks 上使用 pv/pvc,　对于需要 retain 的 volume, 我一般的流程是:
- 在 eks 之外手工创建 ebs volume.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2019/04/12/k8s-volume-resize-on-eks/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/09/26/eks-%E8%AF%84%E6%B5%8B-part-3/">EkS 评测 part-3</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-09-26T10:16:42&#43;08:00">
-        Sep 26, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    这篇记录对 ingress 的测试.
-ingress 用来将外部流量导入　k8s 内的　service. 将 service 的类型设置为 LoadBalancer / NodePort 也可以将单个 service 暴露到公网, 但用 ingress 可以只使用一个公网入口,根据　host name 或　url path 来将请求分发到不同的 service.
-一般　k8s 内的资源都会由一个 controller 来负责它的状态管理, 都由 kube-controller-manager 负责，　但 ingress controller 不是它的一部分，需要是视情况自己选择合适的 ingress controller.
-在 eks 上我主要需要 ingress-nginx 和 aws-alb-ingress-controller. 注意, nginx inc 还维护一个 kubernetes-ingress, 和官方那个不是一个东西， 没测试过.
-这里主要只测试了 ingress-nginx, 看了下内部实现, 数据的转发真扭曲&hellip;.
-ingress-nginx 用 helm 安装很简单: helm install nginx-ingress --namespace ingress
-看看安装后多了些什么:
-service: ingress service/mean-quetzal-nginx-ingress-controller LoadBalancer 172.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/09/26/eks-%E8%AF%84%E6%B5%8B-part-3/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/09/21/eks-%E8%AF%84%E6%B5%8B-part-2/">eks 评测 part-2</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-09-21T10:28:17&#43;08:00">
-        Sep 21, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    上文测试了一下 EKS 和 cluster autoscaler, 本文记录对 persisten volume 的测试.
-PersistentVolume 创建 gp2 类型的 storageclass, 并用 annotations 设置为默认 sc, dynamic volume provision 会用到:
-kind: StorageClass apiVersion: storage.k8s.io/v1 metadata: name: gp2 annotations: storageclass.kubernetes.io/is-default-class: &quot;true&quot; provisioner: kubernetes.io/aws-ebs reclaimPolicy: Retain parameters: type: gp2 fsType: ext4 encrypted: &quot;true&quot;  因为 eks 是基于 1.10.3 的, volume expansion 还是 alpha 状态, 没法自动开启(没法改 api server 配置), 所以 storageclass 的 allowVolumeExpansion, 设置了也没用. 这里 encrypted 的值必须是字符串, 否则会创建失败, 而且报错莫名其妙.
-创建 pod 的时候指定一个已存在的 ebs volume apiVersion: v1 kind: Pod metadata: name: test spec: volumes: - name: test awsElasticBlockStore: fsType: ext4 volumeID: vol-03670d6294ccf29fd containers: - image: nginx name: nginx volumeMounts: - name: test mountPath: /mnt  kubectl -it test -- /bin/bash 进去看一下:
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/09/21/eks-%E8%AF%84%E6%B5%8B-part-2/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/09/11/eks-%E8%AF%84%E6%B5%8B/">EKS 评测</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-09-11T15:02:22&#43;08:00">
-        Sep 11, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    EKS 正式 launch 还没有正经用过, 最近总算试了一把, 记录一点.
-Setup AWS 官方的 Guide 只提供了一个 cloudformation template 来设置 worker node, 我喜欢用 terraform, 可以跟着这个文档尝试:https://www.terraform.io/docs/providers/aws/guides/eks-getting-started.html 来设置完整的 eks cluster 和管理 worker node 的 autoscaling group.
-设置完 EKS 后需要添加一条 ConfigMap:
-apiVersion: v1 kind: ConfigMap metadata: name: aws-auth namespace: kube-system data: mapRoles: | - rolearn: arn:aws:iam::&lt;account-id&gt;:role/eksNodeRole username: system:node:{{EC2PrivateDNSName}} groups: - system:bootstrappers - system:nodes  这样 worker node 节点才能加入集群.
-网络 之前一直没有在 AWS 上尝试构建 k8s 的一个原因, 就是不喜欢 overlay 网络, 给系统带来了额外的复杂度和管理开销, VPC flowlog 看不到 pod 之间流量, 封包后 tcpdump 不好 debug 应用层流量.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/09/11/eks-%E8%AF%84%E6%B5%8B/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

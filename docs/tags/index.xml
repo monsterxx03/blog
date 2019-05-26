@@ -6,7 +6,7 @@
     <description>Recent content in Tags on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Tue, 14 May 2019 13:52:02 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 26 May 2019 14:27:38 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,16 +14,25 @@
     <item>
       <title>eks</title>
       <link>https://blog.monsterxx03.com/tags/eks/</link>
-      <pubDate>Tue, 14 May 2019 13:52:02 +0800</pubDate>
+      <pubDate>Sun, 26 May 2019 14:27:38 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/tags/eks/</guid>
       <description></description>
     </item>
     
     <item>
+      <title>fluentd</title>
+      <link>https://blog.monsterxx03.com/tags/fluentd/</link>
+      <pubDate>Sun, 26 May 2019 14:27:38 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/fluentd/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>k8s</title>
       <link>https://blog.monsterxx03.com/tags/k8s/</link>
-      <pubDate>Tue, 14 May 2019 13:52:02 +0800</pubDate>
+      <pubDate>Sun, 26 May 2019 14:27:38 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/tags/k8s/</guid>
       <description></description>

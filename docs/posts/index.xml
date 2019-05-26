@@ -6,10 +6,22 @@
     <description>Recent content in Posts on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Tue, 14 May 2019 13:52:02 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 26 May 2019 14:27:38 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Centralized Logging on K8S</title>
+      <link>https://blog.monsterxx03.com/2019/05/26/centralized-logging-on-k8s/</link>
+      <pubDate>Sun, 26 May 2019 14:27:38 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2019/05/26/centralized-logging-on-k8s/</guid>
+      <description>搞定了监控, 下一步在 k8s 上要做的是中心化日志, 大体看了下, 感兴趣的有两个选择: ELK 套件, 或fluent-bit + fluentd.
+ELK 那套好处是, 可以把监控和日志一体化, filebeat 收集日志, metricbeat 收集 metrics, 统一存储在 ElasticSearch 里, 通过第三方项目elastalert 可以做报警，也能在 kibana 里集成界面. 坏处是 ElasticSearch 存储成本高, 吃资源. 我们对存储的日志使用需求基本就是 debug, 没有特别复杂的BI需求, 上一整套 ELK 还是太重了.
+选择 fluent-bit + fluentd 还有个好处是, 之前内部有套收集 metrics(用于统计 DAU, retention 之类指标) 的系统本来就是基于 fluentd 的, 用这套就不用改 metrics 那边的 ETL 了.
+fluent-bit 和 fluentd 比, 主要好处是纯 C 写的(fluentd 是 C+ruby), 性能很好, 资源消耗低, 支持 fluentd 的 forward 协议, input/output 的种类支持没有 fluentd 那么多.</description>
+    </item>
     
     <item>
       <title>Prometheus on K8S</title>

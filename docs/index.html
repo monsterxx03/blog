@@ -60,6 +60,30 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/05/26/centralized-logging-on-k8s/">Centralized Logging on K8S</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2019-05-26T14:27:38&#43;08:00">
+        May 26, 2019
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    搞定了监控, 下一步在 k8s 上要做的是中心化日志, 大体看了下, 感兴趣的有两个选择: ELK 套件, 或fluent-bit + fluentd.
+ELK 那套好处是, 可以把监控和日志一体化, filebeat 收集日志, metricbeat 收集 metrics, 统一存储在 ElasticSearch 里, 通过第三方项目elastalert 可以做报警，也能在 kibana 里集成界面. 坏处是 ElasticSearch 存储成本高, 吃资源. 我们对存储的日志使用需求基本就是 debug, 没有特别复杂的BI需求, 上一整套 ELK 还是太重了.
+选择 fluent-bit + fluentd 还有个好处是, 之前内部有套收集 metrics(用于统计 DAU, retention 之类指标) 的系统本来就是基于 fluentd 的, 用这套就不用改 metrics 那边的 ETL 了.
+fluent-bit 和 fluentd 比, 主要好处是纯 C 写的(fluentd 是 C+ruby), 性能很好, 资源消耗低, 支持 fluentd 的 forward 协议, input/output 的种类支持没有 fluentd 那么多.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2019/05/26/centralized-logging-on-k8s/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/05/14/prometheus-on-k8s/">Prometheus on K8S</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -274,32 +298,6 @@ google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布�
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/12/29/%E4%BB%8E%E5%8E%BB%E5%B9%B4%E7%9A%84%E4%B8%80%E4%B8%AApatch%E8%AF%B4%E8%B5%B7/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/12/16/kubernetes-%E4%B8%AD%E7%9A%84-pod-%E8%B0%83%E5%BA%A6/">Kubernetes 中的 pod 调度</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-12-16T13:09:20&#43;08:00">
-        Dec 16, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    定义 pod 的时候通过添加 node selector 可以让 pod 调度到有特定 label 的 node 上去, 这是最简单的调度方式. 其他还有更复杂的调度方式: node-taints/tolerations, node-affinity, pod-affinity, 来达到让某些类型的 pod 调度到一起, 让某些类型的 pod 不跑一起的效果.
-Taints and Tolerations 如果 node 有 taints, 那只有能 tolerate 这些 taints 的 pod 才能调度到上面.
-taint 的基本格式是: &lt;key&gt;&lt;operator&gt;&lt;value&gt;:&lt;effect&gt;
-kubectl describe node xxx 可以看到节点的 taints, 比如 master 节点上会有:
-Taints: node-role.kubernetes.io/master:NoSchedule  这里 key 是 node-role.kubernetes.io/master, 没有等号和 value, operator 就是 Exists , effect 是 NoSchedule.
-master 节点上的这条 taint 就定义了只有能 tolerate 它的 pod 能调度到上面, 一般都是些系统 pod.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/12/16/kubernetes-%E4%B8%AD%E7%9A%84-pod-%E8%B0%83%E5%BA%A6/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

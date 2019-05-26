@@ -59,6 +59,32 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/02/23/glow-infra-evolution/">Glow Infra Evolution</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-02-23T23:25:13&#43;08:00">
+        Feb 23, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    Glow data infrastructure 的演化 Glow 一向是一个 data driven 做决策的公司，稳定高效的平台是必不可少的支撑, 本文总结几年里公司 data infrastructure 的演进过程.
+结合业务特点做技术选型和实现时候的几个原则:
+ real time 分析的需求不高，时间 delta 控制在1 小时以内可接受 . 支持快速的交互式查询. 底层平台尽量选择 AWS 托管服务, 减少维护成本. 遇到故障, 数据可以 delay 但不能丢. 可回溯历史数据. 成本可控.  用到的 AWS 服务:
+ 数据存储和查询: S3, Redshift (spectrum), Athena ETL: DMS, EMR, Kinesis, Firehose, Lambda  开源软件: td-agent, maxwell
+数据来源:
+ 线上业务数据库 用户活动产生的 metrics log 从各种第三方服务 api 拉下来的数据 (email之类)  最早期 刚开始的时候业务单纯，数据量也少, 所有数据都用 MySQL 存储，搭了台 slave, 分析查询都在 slave 上进行.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/02/23/glow-infra-evolution/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/">Get Real Client Ip on AWS</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -270,31 +296,6 @@ If your program is hosted by systemd, you need to edit your program&#8217;s serv
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/07/01/python-web-%E5%BA%94%E7%94%A8%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/">Build deb repository with fpm , aptly and s3</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2017-06-23T09:40:58Z">
-        Jun 23, 2017
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    I&#8217;m lazy, I don&#8217;t want to be deb/rpm expert, I don&#8217;t want to maintain repo server. I want as less maintenance effort as possible. 🙂
-Combine tools fpm, aptly with aws s3, we can do it.
-Use fpm to convert python package to deb fpm can transform python/gem/npm/dir/&#8230; to deb/rpm/solaris/&#8230; packages
-Example:
-fpm -s python -t deb -m xyj.asmy@gmail.com --verbose -v 0.10.1 --python-pip /usr/local/pip Flask  It will transform Flask 0.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

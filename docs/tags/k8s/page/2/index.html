@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   
-  <title>tech</title>
-  <meta property="og:title" content="tech" />
-  <meta name="twitter:title" content="tech" />
+  <title>k8s</title>
+  <meta property="og:title" content="k8s" />
+  <meta name="twitter:title" content="k8s" />
   
 
   
@@ -17,7 +17,7 @@
 
   <meta name="author" content="X"/>
   <meta property="og:site_name" content="Shining Moon" />
-  <meta property="og:url" content="https://blog.monsterxx03.com/categories/tech/" />
+  <meta property="og:url" content="https://blog.monsterxx03.com/tags/k8s/" />
 
   
   <meta name="twitter:card" content="summary" />
@@ -54,151 +54,7 @@
   </header>
   <main id="main" class="l-main">
 
-<h2 class="c-title p-tag-title">tech</h2>
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/22/%E5%8D%87%E7%BA%A7celery-%E5%88%B0-4.2.0-%E7%A2%B0%E5%88%B0%E7%9A%84%E5%9D%91/">升级celery 到 4.2.0 碰到的坑</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-06-22T16:10:41&#43;08:00">
-        Jun 22, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    在把代码往 python3 迁移的过程中需要升级一些第三方库, 升级了 gevent 后发现 celery 有问题, 于是尝试把 celery 从3.1.25 升级到 4.2.0, 中间碰到了很多问题, 记录一点.
-配置的变化 CELERY_ACCEPT_CONENT 之前默认是都允许的, 4.0 开始默认值只允许 json, 因为我用的是msgpack, 所以需要修改这个配置让它接受 msgpack.
-CELERY_RESULT_SERIALIZER 之前默认是pickle, 现在默认也变成了json, 如果task 的返回结果是 binary 的话, json 无法处理,要么把结果 base64 编码, 要么把CELERY_RESULT_SERIALIZER 配置成 msgpack, pickle 明显 py2 / 3 不兼容, 没用.
-CELERY_RESULT_BACKEND 使用 redis 的坑 配置了 CELERY_RESULT_BACKEND 后, 会把 task 执行结果存起来, 用redis 做backend 支持 expire, 默认 1 天.
-我的 worker pool 是 gevent, 升级 4.2.0 上线之后, 报了很多奇怪的错, 全是把 task 插入 redis 时候报的错, 错误原因大致是因为redis client 的 socket 在不同的 greenlet 中被使用造成的, 所以有时候会尝试使用一个已经被关闭的 socket, 有时有 socket 还没有被建立, 而且全是在调用 redis subscribe channel 的时候出的错, channel list 还很长.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/06/22/%E5%8D%87%E7%BA%A7celery-%E5%88%B0-4.2.0-%E7%A2%B0%E5%88%B0%E7%9A%84%E5%9D%91/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/">编写 python 2/3 兼容代码</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-06-16T14:38:26&#43;08:00">
-        Jun 16, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    上一篇 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情.
-__future__ python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件.
-首先是几个在 python 2.7 里不用特意写，已经默认开启的特性:
- from __future__ import nested_scopes 2.2 开始就默认开启了，用于修改嵌套函数内的变量搜索作用域, 在此之前, 全局模块的优先级比被嵌套函数的父函数要高, 现在都没这个问题了. from __future__ import generators, yield 关键词, 2.3 默认支持. from __future__ import with_statement, with 关键词, 2.6 默认支持.  我显示开启的两个特性:
- from __future__ import print_function, 就是将 print 关键词变成函数啦, 导入后支持 python3 中 print 的完整参数，再用不带括号的 print 就会在文件被导入的时候报语法错误啦.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/">From python2 to python3</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-06-07T16:41:57&#43;08:00">
-        Jun 7, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    This article won&rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&rsquo;t finished this project, also I haven&rsquo;t gave up so far :).
-Won&rsquo;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
-The codebase I&rsquo;m working on:
- Only support python2.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/">在python3.7 中实现python2.7 的内置 hash 函数</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-06-01T17:03:24&#43;08:00">
-        Jun 1, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    最近着手准备从 python2.7 迁移到 python3.7, 还没开始就碰到一个问题. 老系统里有一部分竟然是将 python 内置 hash 函数的结果存进了数据库, 这个做法绝对是错的, hash 的结果本来就没有保证过在各个版本的 python 中保证一致. 而且 python3 中算法完全变了, 默认在进程初始化的时候会用随机种子加进 hash 过程, 所以python 进程 一重启结果就不一样了. 木已成舟， 目前看将数据库里的值全部改掉是不可能了, 只能在 python3 中重新实现一下这个算法.
-python2.7 中的hash 算法是 fnv (有修改), python3 中变成了 sip, pep-456.
-fnv 的实现很简单， 引用 wikipedia 上的伪代码:
-hash = FNV_offset_basis for each byte_of_data to be hashed hash = hash × FNV_prime hash = hash XOR byte_of_data return hash  FNV_prime 是 1000003, python 实现和标准 fnv 的不同在于, 在进入循环 hash 之前将数据左移了7位, 在最后又和长度做了次XOR, 生成的数据随机性更大一点.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub/sub-system/">Use SNS &amp; SQS to build Pub/Sub System</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-05-23T18:05:28&#43;08:00">
-        May 23, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, take some notes.
-Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub/sub-system/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/">Migrate to Sqlalchemy</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-05-20T15:11:31&#43;08:00">
-        May 20, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些.
-原来的 db 层代码历史非常古老(10年以上&hellip;), 最早写代码的人早就不在了, 问题很多:
- 完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表结构，只能直接看数据库.  重写时候要考虑到的:
- 现有业务代码基于老 db 代码已经写了很多了, 重写不现实, 迁移到 sqlalchemy 需要封装一套完全兼容的 api, 没用到的混乱的老 api 趁机清理. db migration 需要重新实现, 只用 alembic 不能满足需求, 后详. 重写完的代码保证高测试覆盖率.  ORM or Core sqlalchemy 分成两部分, 底层的 sqlalchemy core 是一套 sql 语法生成器, 通过重载 python 的 magic function 实现用比较漂亮的 python 语法来构造 sql.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
+<h2 class="c-title p-tag-title">k8s</h2>
 
 
 <article class="c-article p-list-article">
@@ -223,96 +79,18 @@ K8S 集群对网络有几个基本要求:
 </article>
 
 
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/">AWS lambda 的一些应用场景</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-03-23T17:40:54&#43;08:00">
-        Mar 23, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    这几年吹 serverless 的比较多, 在公司内部也用 lambda , 记录一下, 这东西挺有用, 但远不到万能, 场景比较有限.
-lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平台, 我们就只在 aws lambda 上了.
-我基本上就把 lambda 当成 trigger 和 web hook 用.
-和 auto scaling group 一起用 线上所有分组的机器都是用 auto scaling group 管理的, 只不过 stateless 的 server 开了自动伸缩, 带状态的 (ElasticSearch cluster, redis cache cluster) 只用来维护固定 size.
-在往一个 group 里加 server 的时候, 要做的事情挺多的, 给新 server 添加组内编号 tag, 添加内网域名, provision, 部署最新代码.
-这些事都用 jenkins 来做, 但怎么触发 jenkins job 呢?
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/03/17/%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/">一次失败的性能问题排查</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-03-17T14:24:33&#43;08:00">
-        Mar 17, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    一叶障目, 不见泰山. 前阵子一直在排查一个性能问题, 结果由于一些惯性思维, 费了好大劲才弄明白原因, 而且原因非常简单&hellip;.把这事记录下来,免得以后再掉坑里去.
-现象是到了晚上10点多, server lantency 突然一瞬间变高, 但持续时间很短，马上就会恢复, timeout 的请求也不多，影响不大.问题其实从蛮久前就出现了, 但一直也没很重视, 因为持续时间短,影响也不大,简单看了下也没看出明显的问题, 就一直搁置着. 直到最近，觉得问题变严重了, latency 变的更高了，而且在10～11点间多次变高, 开始认真看为什么.
-以下是 debug 过程:
- 时间段非常固定，每天的晚上10 ~ 11点之间, 每次持续时间很短, 触发时间不是很有规律. 查看那段时间每个 group 的 load 情况, 有变高,但不明显. 查看 qps, 并没显著变化. 查看 qps * avg_latency, 可以看到在一段时间内最耗时的接口, 只能看到几乎所有接口都变高了, 占比最高的还是那几个最慢的接口, 并不能解释突发的 latency 变化.  开始推测, 晚上的 10 点到 11 点,美国那边用户差不多起床,是每天第一次打开 app 的时候, 而我们有些接口里很慢的 code path 只有用户在一天内第一次使用 app 的时候才会触发, 那边的业务逻辑本来就很混乱, 开始着手优化业务代码.
- 看 datadog 的 apm tracing, 查看慢接口对各种 service 的调用情况 (Redis, MySQL, ElasticSearch,DynamoDB&hellip;) 通过 pyflame 抓取进程运行时的 stack trace.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/03/17/%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/">Access sensitive variables on AWS lambda</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-02-28T21:45:23&#43;08:00">
-        Feb 28, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&hellip;
-Usually, we inject secrets as environment variables, but they&rsquo;re still visable on lambda console. I don&rsquo;t use it in aws lambda.
-The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
-Code example:
-client = boto3.client('ssm') resp = client.get_parameter( Name='/redshift/admin/password', WithDecryption=True ) resp: { &quot;Parameter&quot;: { &quot;Name&quot;: &quot;/redshift/admin/password&quot;, &quot;Type&quot;: &quot;SecureString&quot;, &quot;Value&quot;: &quot;password value&quot;, &quot;Version&quot;: 1 } }  Things you need to do to make it work:
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
 <nav class="c-pagination p-pagination">
   <div class="c-pagination__ctrl">
     <div class="c-pagination__newer">
       
-      <a href="/categories/tech/page/2/">Newer</a>
+      <a href="/tags/k8s/">Newer</a>
       
     </div>
     <div class="c-pagination__older">
       
-      <a href="/categories/tech/page/4/">Older</a>
-      
     </div>
   </div>
-  <span class="c-pagination__count p-pagination__count">Page 3 of 6</span>
+  <span class="c-pagination__count p-pagination__count">Page 2 of 2</span>
 </nav>
 
 
