@@ -9,6 +9,7 @@ tags:
     - eks
 ---
 
+# requests/limits and QoS class
 
 查看节点资源分配情况:
 
@@ -53,3 +54,13 @@ OOM score 由两部分组成:
 - 由 QoS class 决定的一个固定值.
 
 所以同 QoS class 时候, 消耗了 80% requests memory 的 pod 会先比消耗 70% requests memory 的 pod 先被踢走,即使它实际使用的内存比较少.
+
+
+# allocatable resources
+
+
+allocatable = capacity - kube-revresed - system-reserved - eviction-threshold
+
+https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources/#feature-availability
+
+https://kubedex.com/90-days-of-aws-eks-in-production/
