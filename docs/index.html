@@ -60,6 +60,30 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/05/30/random-talk/">Random Talk</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2019-05-30T18:48:23&#43;08:00">
+        May 30, 2019
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    Just some random complains and notes about server infra management. I think those are my motivations to move to kubernetes.
+Won&rsquo;t explain k8s or docker in detail, and how they solve those problems in this post.
+Infrastructure level(on AWS) We use following services provided by AWS.
+ Compute:  EC2 AutoScaling Group Lambda  network:  VPC (SDN network) DNS (route53) CDN (CloudFront)  Loadbalancer:  ELB (L4) NLB (L4, ELB successor, support static IP) ALB (L7)  Storage:  EBS (block storage) EFS (hosted NFS) RDS(MySQl/PostgreSQL &hellip;) Redshift (data warehouse) DynamoDB (KV) S3 (object storage) Glacier (cheap archive storage)  Web Firewall (WAF) Monitor (CloudWatch) DMS (ETL) &hellip;  For infra management, in early days, we just click, click, click&hellip; or write some simple scripts to call AWS api.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2019/05/30/random-talk/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/05/26/centralized-logging-on-k8s/">Centralized Logging on K8S</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -276,28 +300,6 @@ google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布�
   </div>
   
   <a href="https://blog.monsterxx03.com/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/12/29/%E4%BB%8E%E5%8E%BB%E5%B9%B4%E7%9A%84%E4%B8%80%E4%B8%AApatch%E8%AF%B4%E8%B5%B7/">从去年的一个patch说起</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-12-29T15:14:46&#43;08:00">
-        Dec 29, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    去年对线上业务做了一些性能优化, 当时把 http client 从 requests 换成了 geventhttpclient , 上线后发起 rpc 调用的 server 整体负载低了很多, 但 client 端 latency 却高了很多, 经过 debug 觉得问题是 geventhttpclient 把 header 和 body 通过两次 sock send 发出的额外开销造成的, 尝试 修改成一次 send 后 latency 就恢复了: https://github.com/gwik/geventhttpclient/pull/85
-最近在调试 gunicorn 的代码时候, 看到它建立 socket 的时候设置了 TCP_NODELAY, 在很多项目里看到过这个 tcp option, 但没细究过, man tcp 得知是用来关闭 tcp 里的 nagle 算法的. nagle 在 linux 的 默认 tcp 协议栈里是开启的, 当发送的数据包 size 小于 mss 的时候会在内存里 buffer 起来, 积累起来后再发送, 目的是提高带宽利用率, 毕竟 payload 只发一次字节也要带上 40 字节的 ip+tcp header.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/12/29/%E4%BB%8E%E5%8E%BB%E5%B9%B4%E7%9A%84%E4%B8%80%E4%B8%AApatch%E8%AF%B4%E8%B5%B7/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

@@ -59,6 +59,28 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/12/29/%E4%BB%8E%E5%8E%BB%E5%B9%B4%E7%9A%84%E4%B8%80%E4%B8%AApatch%E8%AF%B4%E8%B5%B7/">从去年的一个patch说起</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-12-29T15:14:46&#43;08:00">
+        Dec 29, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    去年对线上业务做了一些性能优化, 当时把 http client 从 requests 换成了 geventhttpclient , 上线后发起 rpc 调用的 server 整体负载低了很多, 但 client 端 latency 却高了很多, 经过 debug 觉得问题是 geventhttpclient 把 header 和 body 通过两次 sock send 发出的额外开销造成的, 尝试 修改成一次 send 后 latency 就恢复了: https://github.com/gwik/geventhttpclient/pull/85
+最近在调试 gunicorn 的代码时候, 看到它建立 socket 的时候设置了 TCP_NODELAY, 在很多项目里看到过这个 tcp option, 但没细究过, man tcp 得知是用来关闭 tcp 里的 nagle 算法的. nagle 在 linux 的 默认 tcp 协议栈里是开启的, 当发送的数据包 size 小于 mss 的时候会在内存里 buffer 起来, 积累起来后再发送, 目的是提高带宽利用率, 毕竟 payload 只发一次字节也要带上 40 字节的 ip+tcp header.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/12/29/%E4%BB%8E%E5%8E%BB%E5%B9%B4%E7%9A%84%E4%B8%80%E4%B8%AApatch%E8%AF%B4%E8%B5%B7/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/12/16/kubernetes-%E4%B8%AD%E7%9A%84-pod-%E8%B0%83%E5%BA%A6/">Kubernetes 中的 pod 调度</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -283,30 +305,6 @@ service: ingress service/mean-quetzal-nginx-ingress-controller LoadBalancer 172.
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/09/26/eks-%E8%AF%84%E6%B5%8B-part-3/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/09/21/eks-%E8%AF%84%E6%B5%8B-part-2/">eks 评测 part-2</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-09-21T10:28:17&#43;08:00">
-        Sep 21, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    上文测试了一下 EKS 和 cluster autoscaler, 本文记录对 persisten volume 的测试.
-PersistentVolume 创建 gp2 类型的 storageclass, 并用 annotations 设置为默认 sc, dynamic volume provision 会用到:
-kind: StorageClass apiVersion: storage.k8s.io/v1 metadata: name: gp2 annotations: storageclass.kubernetes.io/is-default-class: &quot;true&quot; provisioner: kubernetes.io/aws-ebs reclaimPolicy: Retain parameters: type: gp2 fsType: ext4 encrypted: &quot;true&quot;  因为 eks 是基于 1.10.3 的, volume expansion 还是 alpha 状态, 没法自动开启(没法改 api server 配置), 所以 storageclass 的 allowVolumeExpansion, 设置了也没用. 这里 encrypted 的值必须是字符串, 否则会创建失败, 而且报错莫名其妙.
-创建 pod 的时候指定一个已存在的 ebs volume apiVersion: v1 kind: Pod metadata: name: test spec: volumes: - name: test awsElasticBlockStore: fsType: ext4 volumeID: vol-03670d6294ccf29fd containers: - image: nginx name: nginx volumeMounts: - name: test mountPath: /mnt  kubectl -it test -- /bin/bash 进去看一下:
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/09/21/eks-%E8%AF%84%E6%B5%8B-part-2/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

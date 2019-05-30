@@ -4,25 +4,36 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/categories/</loc>
-    <lastmod>2019-05-26T14:27:38+08:00</lastmod>
+    <lastmod>2019-05-30T18:48:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/posts/</loc>
+    <lastmod>2019-05-30T18:48:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/2019/05/30/random-talk/</loc>
+    <lastmod>2019-05-30T18:48:23+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/</loc>
+    <lastmod>2019-05-30T18:48:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/categories/tech/</loc>
+    <lastmod>2019-05-30T18:48:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://blog.monsterxx03.com/2019/05/26/centralized-logging-on-k8s/</loc>
     <lastmod>2019-05-26T14:27:38+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/posts/</loc>
-    <lastmod>2019-05-26T14:27:38+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/</loc>
-    <lastmod>2019-05-26T14:27:38+08:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -45,12 +56,6 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/k8s/</loc>
-    <lastmod>2019-05-26T14:27:38+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/categories/tech/</loc>
     <lastmod>2019-05-26T14:27:38+08:00</lastmod>
     <priority>0</priority>
   </url>
