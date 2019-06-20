@@ -6,10 +6,37 @@
     <description>Recent content in Tags on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sun, 26 May 2019 14:27:38 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 20 Jun 2019 16:03:56 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>golang</title>
+      <link>https://blog.monsterxx03.com/tags/golang/</link>
+      <pubDate>Thu, 20 Jun 2019 16:03:56 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/golang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>network</title>
+      <link>https://blog.monsterxx03.com/tags/network/</link>
+      <pubDate>Thu, 20 Jun 2019 16:03:56 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/network/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>snet</title>
+      <link>https://blog.monsterxx03.com/tags/snet/</link>
+      <pubDate>Thu, 20 Jun 2019 16:03:56 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/snet/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>eks</title>
@@ -57,38 +84,11 @@
     </item>
     
     <item>
-      <title>aws</title>
+      <title>AWS</title>
       <link>https://blog.monsterxx03.com/tags/aws/</link>
       <pubDate>Fri, 12 Apr 2019 13:23:54 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/tags/aws/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>golang</title>
-      <link>https://blog.monsterxx03.com/tags/golang/</link>
-      <pubDate>Wed, 10 Apr 2019 22:33:49 +0800</pubDate>
-      
-      <guid>https://blog.monsterxx03.com/tags/golang/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>network</title>
-      <link>https://blog.monsterxx03.com/tags/network/</link>
-      <pubDate>Wed, 10 Apr 2019 22:33:49 +0800</pubDate>
-      
-      <guid>https://blog.monsterxx03.com/tags/network/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>snet</title>
-      <link>https://blog.monsterxx03.com/tags/snet/</link>
-      <pubDate>Wed, 10 Apr 2019 22:33:49 +0800</pubDate>
-      
-      <guid>https://blog.monsterxx03.com/tags/snet/</guid>
       <description></description>
     </item>
     

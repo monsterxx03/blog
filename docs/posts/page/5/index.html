@@ -59,6 +59,28 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/12/10/handle-outage/">Handle outage</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2017-12-10T11:13:53&#43;08:00">
+        Dec 10, 2017
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&rsquo;m working on a long term solution. I learned some important things from this accident.
+The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&rsquo;s health check failed due to high load.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2017/12/10/handle-outage/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/">AWS DMS notes</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -273,29 +295,6 @@ Basic Usage sudo pyflame -s 10 -x -r 0.001 $pid | ./flamegraph.pl &gt; perf.svg
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/06/05/debug-python-performance-issue-with-pyflame/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/05/17/designing-data-intensive-application-reading-notes-part-2/">Designing data intensive application, reading notes, Part 2</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2017-05-17T09:12:44Z">
-        May 17, 2017
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    Chapter 4, 5, 6
-Encoding formats xml, json, msgpack are text based encoding format, they can&#8217;t carry binary bytes (useless you encode them in base64, size grows 33%). And they cary schema definition with data, wast a lot of space.
-thrift, protobuf are binary format, can take binary bytes, only carry data, the schema is defined with IDL(interface definition language). They have code generation tool to generate code to encode and decode data, along with check.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2017/05/17/designing-data-intensive-application-reading-notes-part-2/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

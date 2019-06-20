@@ -59,6 +59,34 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/06/20/snet-dev-note-support-macos/">SNET dev note: Support MacOS</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2019-06-20T16:03:56&#43;08:00">
+        Jun 20, 2019
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    这两天得了空, 让 snet 支持了下 MacOS.
+snet 的大致原理是通过系统防火墙的流量重定向功能,将所有去往国外的流量导到 snet 监听的端口, 在程序内部 将流量传递给上游的 proxy server(ss, http), 拿到响应后再回给客户端.
+实现关键是要在 snet 内部获取到流量的原目标地址, 因为重定向之后 tcp connnection 的目标地址变成了 snet 监听 的地址.
+Linux 上的实现，以前讲过: https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/ 是通过 SO_ORIGINAL_DST 这个 socket option 实现的.
+MacOS 上没有 iptables, 类似的工具是系统自带的 pfctl, 捣鼓了一下也能实现一样的功能.
+用 pfctl 做流量重定向 pfctl 的文档可以通过 man pfctl, man pf.conf 查看. 我也只是看了个大概, 细节并不清楚.
+流量重定向需要用到 pf 的 rdr 规则, 但是 rdr 只能处理 incoming 的流量，对 outgoing 的流量无效.
+tricky 的地方是要把流量先重路由到 lo0, 再对 lo0 上的流量实行 rdr, 例子(顺序很重要):
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2019/06/20/snet-dev-note-support-macos/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/04/10/snet-dev-note/">SNET Dev Note</a></h2>
     <p class="c-article__meta">
       Posted on

@@ -60,6 +60,28 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub/sub-system/">Use SNS &amp; SQS to build Pub/Sub System</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-05-23T18:05:28&#43;08:00">
+        May 23, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, take some notes.
+Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub/sub-system/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/">Migrate to Sqlalchemy</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -282,28 +304,6 @@ attribute 对应的 value 支持以下几种类型:
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/12/15/dynamodb/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/12/10/handle-outage/">Handle outage</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2017-12-10T11:13:53&#43;08:00">
-        Dec 10, 2017
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&rsquo;m working on a long term solution. I learned some important things from this accident.
-The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&rsquo;s health check failed due to high load.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2017/12/10/handle-outage/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

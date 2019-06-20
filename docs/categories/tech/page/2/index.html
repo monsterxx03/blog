@@ -59,6 +59,31 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/">管理负载</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2019-02-12T13:08:29&#43;08:00">
+        Feb 12, 2019
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    最近在看 google 的 &lt;The Site Reliablity Workbook&gt;, 其中有一章是&rdquo;Manage load&rdquo;, 内容还挺详细的, 结合在 aws 上的经验做点笔记.
+Load Balancing 流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存.
+google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency.
+但只依赖 BGP 会带来两个问题:
+ 某个地区的用户过多会给最近的 frontend server 带来过高的负载 ISP 的 BGP 路由会重计算, 当 BGP routing 变化后, 进行中的 tcp connection 会被 reset(同一个 connection 上的后续数据包被发送到不同的 server, tcp session 不存在于新 server 上)  为了解决原生 BGP anycast 的问题, google 开发了 Maglev, 即使路由发生了变化(routing flap), connection 也不断开, 把这种方式叫做 stablized anycast.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/12/29/%E4%BB%8E%E5%8E%BB%E5%B9%B4%E7%9A%84%E4%B8%80%E4%B8%AApatch%E8%AF%B4%E8%B5%B7/">从去年的一个patch说起</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -271,31 +296,6 @@ kind: StorageClass apiVersion: storage.k8s.io/v1 metadata: name: gp2 annotations
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/09/21/eks-%E8%AF%84%E6%B5%8B-part-2/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/09/11/eks-%E8%AF%84%E6%B5%8B/">EKS 评测</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-09-11T15:02:22&#43;08:00">
-        Sep 11, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    EKS 正式 launch 还没有正经用过, 最近总算试了一把, 记录一点.
-Setup AWS 官方的 Guide 只提供了一个 cloudformation template 来设置 worker node, 我喜欢用 terraform, 可以跟着这个文档尝试:https://www.terraform.io/docs/providers/aws/guides/eks-getting-started.html 来设置完整的 eks cluster 和管理 worker node 的 autoscaling group.
-设置完 EKS 后需要添加一条 ConfigMap:
-apiVersion: v1 kind: ConfigMap metadata: name: aws-auth namespace: kube-system data: mapRoles: | - rolearn: arn:aws:iam::&lt;account-id&gt;:role/eksNodeRole username: system:node:{{EC2PrivateDNSName}} groups: - system:bootstrappers - system:nodes  这样 worker node 节点才能加入集群.
-网络 之前一直没有在 AWS 上尝试构建 k8s 的一个原因, 就是不喜欢 overlay 网络, 给系统带来了额外的复杂度和管理开销, VPC flowlog 看不到 pod 之间流量, 封包后 tcpdump 不好 debug 应用层流量.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/09/11/eks-%E8%AF%84%E6%B5%8B/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
