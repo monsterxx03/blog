@@ -60,6 +60,32 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/06/30/k8s-%E5%89%A9%E4%B8%8B%E7%9A%84%E9%97%AE%E9%A2%98/">K8S: 剩下的问题</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2019-06-30T16:11:06&#43;08:00">
+        Jun 30, 2019
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    准备工作都差不多了, 没意外下周就该开始把线上的服务往 k8s 上迁移了. 记录几个问题，暂时不 block 我的迁移进程, 但需要持续关注.
+DNS timeout and conntrack 看到有个关于 DNS 的issue: #56903
+现象是 k8s cluster 内部 dns 查询间歇性会 5s 超时, 大致原因是 coredns 作为中心 dns 的时候, 要通过 iptables 把　coredns 的 cluster ip, 转化到它真实的可路由 ip, 中间需要 SNAT, DNAT, 并在 conntrack 内记录映射关系.
+这可能会带来两个问题:
+conntrack table 被 udp 的 dns 查询填满 udp 是无连接的, tcp 关闭链接就会清理 conntrack 内记录, udp 不会，只能等超时, 默认 30s(net.netfilter.nf_conntrack_udp_timeout) 短时间内大量 udp 查询可能填满 conntrack, 导致丢包.
+怀疑是这个原因的话, 首先看系统允许的最大 conntrack 是多少(默认值由内存大小决定,不同发行版和内核版本上好像参数名不太一样, 我在 amazon linux 2,kernel 4.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2019/06/30/k8s-%E5%89%A9%E4%B8%8B%E7%9A%84%E9%97%AE%E9%A2%98/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/06/20/snet-dev-note-support-macos/">SNET dev note: Support MacOS</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -278,31 +304,6 @@ declarative 方式的例子:
   </div>
   
   <a href="https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/03/28/celery-time-limit-%E7%9A%84%E5%9D%91/">Celery Time Limit 的坑</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2019-03-28T17:37:29&#43;08:00">
-        Mar 28, 2019
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    之前用 celery 做的 task 都是一些很简单轻量级的 task, 从来没触发过 timeout, 最近加入了一些复杂很耗时的 task, 碰到一些 time limit 的坑.
-celery 中 time limit 有两种, soft_time_limit 和 hard_time_limit, 区别是 soft_time_limit 会在内部抛一个 Exception, task 可以 catch 自行处理. hard time limit 没法被 catch.
-使用如下:
-from myapp import app from celery.exceptions import SoftTimeLimitExceeded @app.task def mytask(): try: do_work() except SoftTimeLimitExceeded: clean_up_in_a_hurry() 我 celery pool 用的是 gevent, 实际上在现在的实现里 gevent 做 worker pool 的时候会忽略 soft_time_limit, 只有 hard_time_limit 会被触发(通过 gevent.Timeout 实现).
-坑爹的是文档里写的是错的: http://docs.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2019/03/28/celery-time-limit-%E7%9A%84%E5%9D%91/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

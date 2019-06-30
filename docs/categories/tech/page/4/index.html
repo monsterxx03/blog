@@ -59,6 +59,32 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/">AWS lambda 的一些应用场景</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-03-23T17:40:54&#43;08:00">
+        Mar 23, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    这几年吹 serverless 的比较多, 在公司内部也用 lambda , 记录一下, 这东西挺有用, 但远不到万能, 场景比较有限.
+lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平台, 我们就只在 aws lambda 上了.
+我基本上就把 lambda 当成 trigger 和 web hook 用.
+和 auto scaling group 一起用 线上所有分组的机器都是用 auto scaling group 管理的, 只不过 stateless 的 server 开了自动伸缩, 带状态的 (ElasticSearch cluster, redis cache cluster) 只用来维护固定 size.
+在往一个 group 里加 server 的时候, 要做的事情挺多的, 给新 server 添加组内编号 tag, 添加内网域名, provision, 部署最新代码.
+这些事都用 jenkins 来做, 但怎么触发 jenkins job 呢?
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/03/17/%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/">一次失败的性能问题排查</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -270,31 +296,6 @@ AWS api is open to internet, if you need to access S3 in VPC, your requests will
   </div>
   
   <a href="https://blog.monsterxx03.com/2017/08/19/build-private-staticwebsite-on-s3/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/">Use redshift spectrum to do query on s3</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2017-07-21T03:10:58Z">
-        Jul 21, 2017
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    使用 redshift spectrum 查询 S3 数据 通常使用 redshift 做数据仓库的时候要做大量的 ETL 工作，一般流程是把各种来源的数据捣鼓捣鼓丢到 S3 上去，再从 S3 倒腾进 redshift. 如果你有大量的历史数据要导进 redshift，这个过程就会很痛苦，redshift 对一次倒入大量数据并不友好，你要分批来做。
-今年4月的时候， redshift 发布了一个新功能 spectrum, 可以从 redshift 里直接查询 s3 上的结构化数据。最近把部分数据仓库直接迁移到了 spectrum, 正好来讲讲。
-动机 Glow 的数据仓库建在 redshift 上， 又分成了两个集群，一个 ssd 的集群存放最近 4 个月的数据，供产品分析，metrics report, debug 等等 adhoc 的查询。4个月之前的数据存放在一个 hdd 的集群里，便宜容量大，查询慢。
-但是时间长了 hdd 的集群也是有扩容需求的，而使用频率又实在是不高，其实很浪费, 这就是迁移到 spectrum 的动机。
-使用 Spectrum Redshift spectrum 底层其实是基于 AWS 的另一个服务 athena 的。athena 是个 Presto 和 Hive 杂交产物， DDL 用 Hive 语法， 查询用的 sql 由 Presto 支持, 感觉怪怪的，这里不多展开讲 athena, 知道 redshift spectrum 其实是通过 athena 对接的 s3 就行了。
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

@@ -60,6 +60,31 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/03/28/celery-time-limit-%E7%9A%84%E5%9D%91/">Celery Time Limit 的坑</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2019-03-28T17:37:29&#43;08:00">
+        Mar 28, 2019
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    之前用 celery 做的 task 都是一些很简单轻量级的 task, 从来没触发过 timeout, 最近加入了一些复杂很耗时的 task, 碰到一些 time limit 的坑.
+celery 中 time limit 有两种, soft_time_limit 和 hard_time_limit, 区别是 soft_time_limit 会在内部抛一个 Exception, task 可以 catch 自行处理. hard time limit 没法被 catch.
+使用如下:
+from myapp import app from celery.exceptions import SoftTimeLimitExceeded @app.task def mytask(): try: do_work() except SoftTimeLimitExceeded: clean_up_in_a_hurry() 我 celery pool 用的是 gevent, 实际上在现在的实现里 gevent 做 worker pool 的时候会忽略 soft_time_limit, 只有 hard_time_limit 会被触发(通过 gevent.Timeout 实现).
+坑爹的是文档里写的是错的: http://docs.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2019/03/28/celery-time-limit-%E7%9A%84%E5%9D%91/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/">管理负载</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -278,31 +303,6 @@ redo log 用来 crash recovery, binlog 会上传 s3　用于 point in time resto
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/10/15/%E4%B8%BA-service-%E5%88%B6%E5%AE%9A-slo/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/10/12/%E5%9C%A8-redshift-%E4%B8%AD%E8%AE%A1%E7%AE%97-p95-latency/">在 redshift 中计算 p95 latency</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-10-12T14:49:13&#43;08:00">
-        Oct 12, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    p95 latency 的定义: 把一段时间的 latency 按照从小到大排序, 砍掉最高的 %5, 剩下最大的值就是 p95 latency. p99, p90 同理.
-p95 latency 表示该时间段内 95% 的 reqeust 都比这个值快.
-一般我直接看 CloudWatch, 和 datadog 算好的 p95 值. 这次看看怎么从 access log 里直接计算 p95 latency.
-假设在 redshift 中有一张表存储了应用的 access log, 结构如下:
-CREATE TABLE access_log ( url string, time string, resp_time real );     url time resp_time     /test1 2018-10-11T00:10:00.418480Z 0.123   /test2 2018-10-11T00:12:00.512340Z 0.321    要算 p95 很简单, 把 log 按分钟数分组, 用 percentile_cont 在组内按 resp_time 排序计算 就能得到:
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/10/12/%E5%9C%A8-redshift-%E4%B8%AD%E8%AE%A1%E7%AE%97-p95-latency/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
