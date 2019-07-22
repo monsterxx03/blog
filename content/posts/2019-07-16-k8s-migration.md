@@ -59,27 +59,26 @@ fluent-bit 作为 daemonset 运行, 一边收集本地 container log, 一边作�
 
 ## uwsgi 的问题
 
-原先在 vm 上的结构是, backend 是几组 uwsgi 做容器的 rpc server(http), 前端的 web 项目调用它们(不用 grpc 纯粹是因为改不动了...), rpc server 前面套了层 nginx.
+原先在 vm 上的结构是, backend 是几组 uwsgi 做容器的 rpc server(http), 前端的 web 项目调用它们(不用 grpc 纯粹是因为改不动了...), rpc server 前面套了层 nginx, 通过 `uwsgi_pass` 走 unix domain socket 和 uwsgi 进程通讯.
 
 流量切换的时候, 在 k8s 内的 service 用 nginx ingress controller 暴露一个 load balancer, 在 route53 上配置权重 dns, 让 vm 和 k8s 同时 handle rpc 请求, 所以 k8s 内 service
-前面也走了 nginx. 等测试稳定后, 把 k8s 内部分 service 的 base url 换成 k8s 内域名, 跳过 nginx, 直接走 iptables 负载均衡.
+前面也走了 nginx. 等测试稳定后, 把 k8s 内部分 service 的 base url 换成 k8s 内域名, 跳过 elb 和 nginx, 直接走 iptables 负载均衡.
 
-结果一切换, 很快报了大量 502. 看了下 k8s 内 service 的 response, 哦, 没有设置 http keepalive, 大意了.
+结果一切换, 很快报了大量 502. 看了下 k8s 内 service 的 response header, 没有 Content-Length, 也没有 `Transfer-Encoding: chunked`, 原因是 uwsgi 配置错误, 我用了 `http-socket`, 这种模式需要前面加 nginx, 改成 `http`, 这才是 native 的 http 支持.
 
-加上配置:
+正确配置:
     
     http = :8080
-    http-keepalive = true
+    http-keepalive = 75
     http-auto-chunked = true
     add-header = Connection: Keep-Alive
 
-注意要用 `http` 而不是 `http-socket`.  可我配置之后还是不起作用, 测试:
+测试 http keepalive:
 
     curl -v http://localhost:8080 > /dev/null http://localhost:8080 > /dev/null
 
-输出: `* Closing connection #0`,  keepalive 起作用的话，会看到 `* Re-using existing connection! (#0) with host localhost`
+看到 `* Re-using existing connection! (#0) with host localhost` 就对了.
 
-崩溃, 又是个 bug, uwsgi 配置中的 boolean 值可以用 0/1, 也能用 true/false, 偏偏 http-keepalive 这个参数处理有 bug, 必须用 `1`,  https://github.com/unbit/uwsgi/issues/2018,
-修改之后 keepalive 生效. 干, 怎么每一步都能碰到 bug.
+修改配置再次上线, 502 倒是没了, latency 却比之前套 nginx 的时候更高了, 明明网络少了 2 跳(elb + nginx).
 
-修改配置再次上线, 502 倒是没了, latency 却比之前套 nginx 的时候更高了, 明明网络少了 2 跳. 
+经过大量 benchmark 测试, 应该是 uwsgi 的 http router 性能不行, 模拟原先 vm 上的结构, 在 rpc 的 pod 里放一个 nginx container 来解 http request, 再 `uwsgi_pass` 给 python, latency 立马恢复了正常.
