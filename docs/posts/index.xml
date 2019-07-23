@@ -6,10 +6,21 @@
     <description>Recent content in Posts on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sun, 30 Jun 2019 16:11:06 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 23 Jul 2019 12:32:08 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title> 迁移到 k8s 过程中碰到的问题</title>
+      <link>https://blog.monsterxx03.com/2019/07/23/%E8%BF%81%E7%A7%BB%E5%88%B0-k8s-%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%A2%B0%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Tue, 23 Jul 2019 12:32:08 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2019/07/23/%E8%BF%81%E7%A7%BB%E5%88%B0-k8s-%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%A2%B0%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/</guid>
+      <description>开始把线上流量往 k8s 集群里面导了, 中间碰到了茫茫多的问题 &amp;hellip;&amp;hellip; 记录一下(大多都不是 k8s 的问题).
+nginx ingress controller 的问题 zero-downtime pods upgrade 默认配置下, nginx ingress controller 的 upstream 是 service 的 endpoints, 在 eks 里, 就是 vpc cni plugin 分配给 pod 的 vpc ip(不是 cluster ip), 和直接使用 service cluster ip 比, 好处是:
+ 可以支持 sticky session 可以用 round robin 之外的负载均衡算法  具体实现是, 当 service 的 endpoint 列表发生变化时, nginx ingress controller 收到通知, 对它管理的 nginx 进程发起一个 http request, 更新 endpoint ip list(nginx 内置的 lua 来修改内存中的 ip list)</description>
+    </item>
     
     <item>
       <title>K8S: 剩下的问题</title>

@@ -1,7 +1,6 @@
 ---
-title: " K8s Migration issue"
-date: 2019-07-16T12:32:08+08:00
-draft: true
+title: " 迁移到 k8s 过程中碰到的问题"
+date: 2019-07-23T12:32:08+08:00
 tags:
     - k8s
     - eks
@@ -59,7 +58,7 @@ fluent-bit 作为 daemonset 运行, 一边收集本地 container log, 一边作�
 
 ## uwsgi 的问题
 
-原先在 vm 上的结构是, backend 是几组 uwsgi 做容器的 rpc server(http), 前端的 web 项目调用它们(不用 grpc 纯粹是因为改不动了...), rpc server 前面套了层 nginx, 通过 `uwsgi_pass` 走 unix domain socket 和 uwsgi 进程通讯.
+原先在 vm 上的结构是, backend 是几组 uwsgi 做容器的 rpc server(http), 前端的 web 项目调用它们, rpc server 前面套了层 nginx, 通过 `uwsgi_pass` 走 unix domain socket 和 uwsgi 进程通讯.
 
 流量切换的时候, 在 k8s 内的 service 用 nginx ingress controller 暴露一个 load balancer, 在 route53 上配置权重 dns, 让 vm 和 k8s 同时 handle rpc 请求, 所以 k8s 内 service
 前面也走了 nginx. 等测试稳定后, 把 k8s 内部分 service 的 base url 换成 k8s 内域名, 跳过 elb 和 nginx, 直接走 iptables 负载均衡.
@@ -79,6 +78,8 @@ fluent-bit 作为 daemonset 运行, 一边收集本地 container log, 一边作�
 
 看到 `* Re-using existing connection! (#0) with host localhost` 就对了.
 
-修改配置再次上线, 502 倒是没了, latency 却比之前套 nginx 的时候更高了, 明明网络少了 2 跳(elb + nginx).
+修改配置再次上线, 502 倒是没了, latency 却比之前套 nginx 的时候更高了, 明明网络少了 1 跳(elb).
 
-经过大量 benchmark 测试, 应该是 uwsgi 的 http router 性能不行, 模拟原先 vm 上的结构, 在 rpc 的 pod 里放一个 nginx container 来解 http request, 再 `uwsgi_pass` 给 python, latency 立马恢复了正常.
+benchmark 下 uwsgi 的 http router, latency 就是比 `nginx + uwsgi_pass` 高. 中间用 tcpdump 抓了下 uwsgi 的回包, 相同 request 数下,比 nginx 数目要多不少, 可能和某些 socket option 有关, 暂时没精力细究.
+尝试把 wsgi 的容器 server 换成 gunicorn, latency 恢复了正常. 唉, 真想换 grpc 啊.....
+

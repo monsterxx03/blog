@@ -60,6 +60,29 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/07/23/%E8%BF%81%E7%A7%BB%E5%88%B0-k8s-%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%A2%B0%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/"> 迁移到 k8s 过程中碰到的问题</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2019-07-23T12:32:08&#43;08:00">
+        Jul 23, 2019
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    开始把线上流量往 k8s 集群里面导了, 中间碰到了茫茫多的问题 &hellip;&hellip; 记录一下(大多都不是 k8s 的问题).
+nginx ingress controller 的问题 zero-downtime pods upgrade 默认配置下, nginx ingress controller 的 upstream 是 service 的 endpoints, 在 eks 里, 就是 vpc cni plugin 分配给 pod 的 vpc ip(不是 cluster ip), 和直接使用 service cluster ip 比, 好处是:
+ 可以支持 sticky session 可以用 round robin 之外的负载均衡算法  具体实现是, 当 service 的 endpoint 列表发生变化时, nginx ingress controller 收到通知, 对它管理的 nginx 进程发起一个 http request, 更新 endpoint ip list(nginx 内置的 lua 来修改内存中的 ip list)
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2019/07/23/%E8%BF%81%E7%A7%BB%E5%88%B0-k8s-%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%A2%B0%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/06/30/k8s-%E5%89%A9%E4%B8%8B%E7%9A%84%E9%97%AE%E9%A2%98/">K8S: 剩下的问题</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -278,32 +301,6 @@ declarative 方式的例子:
   </div>
   
   <a href="https://blog.monsterxx03.com/2019/04/10/snet-dev-note/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/">SNET: Transparent SS proxy on Linux</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2019-03-31T22:19:46&#43;08:00">
-        Mar 31, 2019
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    日常使用 Linux 工作, Linux 下实现全局透明代理可以用 iptables + ss-redir, 要有比较好的上网体验还需要 ChinaDNS 配合 dnsmasq, 这一整套在路由器上搞一遍就算了, 在本地太麻烦了. 仔细想想这几个加起来的功能实现起来也并不复杂, 前阵子就写了个小东西, 用一个进程完成全局透明代理 + ChinaDNS + 国内外分流: https://github.com/monsterxx03/snet
-目前的限制:
- 不支持 ipv6 只支持 tcp (因为我的测试服务器不支持 udp, 以后再加上吧) 上游 server 只支持 ss  目的是一个进程 + 一个配置文件完成所有事情. 需要的 iptable 规则也全部内置了(包括 CN ip 段), 缺少灵活但对我够用了, 以后有需要再加上选项不自动配吧.
-需要手工装下 ipset.
-配置文件示例:
-{ &quot;listen-host&quot;: &quot;127.0.0.1&quot;, &quot;listen-port&quot;: 1111, &quot;ss-host&quot;: &quot;ss.example.com&quot;, &quot;ss-port&quot;: 8080, &quot;ss-chpier-method&quot;: &quot;aes-256-cfb&quot;, &quot;ss-passwd&quot;: &quot;passwd&quot;, &quot;cn-dns&quot;: &quot;114.114.114.114&quot;, &quot;fq-dns&quot;: &quot;8.8.8.8&quot;, &quot;enable-dns-cache&quot;: true, &quot;mode&quot;: &quot;local&quot; }  ss 协议实现用的是 shadowsocks-go, 所以 cipher 就是 go 版支持的那些: https://github.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

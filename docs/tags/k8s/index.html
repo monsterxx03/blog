@@ -59,6 +59,29 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/07/23/%E8%BF%81%E7%A7%BB%E5%88%B0-k8s-%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%A2%B0%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/"> 迁移到 k8s 过程中碰到的问题</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2019-07-23T12:32:08&#43;08:00">
+        Jul 23, 2019
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    开始把线上流量往 k8s 集群里面导了, 中间碰到了茫茫多的问题 &hellip;&hellip; 记录一下(大多都不是 k8s 的问题).
+nginx ingress controller 的问题 zero-downtime pods upgrade 默认配置下, nginx ingress controller 的 upstream 是 service 的 endpoints, 在 eks 里, 就是 vpc cni plugin 分配给 pod 的 vpc ip(不是 cluster ip), 和直接使用 service cluster ip 比, 好处是:
+ 可以支持 sticky session 可以用 round robin 之外的负载均衡算法  具体实现是, 当 service 的 endpoint 列表发生变化时, nginx ingress controller 收到通知, 对它管理的 nginx 进程发起一个 http request, 更新 endpoint ip list(nginx 内置的 lua 来修改内存中的 ip list)
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2019/07/23/%E8%BF%81%E7%A7%BB%E5%88%B0-k8s-%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%A2%B0%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/06/30/k8s-%E5%89%A9%E4%B8%8B%E7%9A%84%E9%97%AE%E9%A2%98/">K8S: 剩下的问题</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -278,31 +301,6 @@ kind: StorageClass apiVersion: storage.k8s.io/v1 metadata: name: gp2 annotations
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/09/21/eks-%E8%AF%84%E6%B5%8B-part-2/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/09/11/eks-%E8%AF%84%E6%B5%8B/">EKS 评测</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-09-11T15:02:22&#43;08:00">
-        Sep 11, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    EKS 正式 launch 还没有正经用过, 最近总算试了一把, 记录一点.
-Setup AWS 官方的 Guide 只提供了一个 cloudformation template 来设置 worker node, 我喜欢用 terraform, 可以跟着这个文档尝试:https://www.terraform.io/docs/providers/aws/guides/eks-getting-started.html 来设置完整的 eks cluster 和管理 worker node 的 autoscaling group.
-设置完 EKS 后需要添加一条 ConfigMap:
-apiVersion: v1 kind: ConfigMap metadata: name: aws-auth namespace: kube-system data: mapRoles: | - rolearn: arn:aws:iam::&lt;account-id&gt;:role/eksNodeRole username: system:node:{{EC2PrivateDNSName}} groups: - system:bootstrappers - system:nodes  这样 worker node 节点才能加入集群.
-网络 之前一直没有在 AWS 上尝试构建 k8s 的一个原因, 就是不喜欢 overlay 网络, 给系统带来了额外的复杂度和管理开销, VPC flowlog 看不到 pod 之间流量, 封包后 tcpdump 不好 debug 应用层流量.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/09/11/eks-%E8%AF%84%E6%B5%8B/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

@@ -60,6 +60,30 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/">From python2 to python3</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-06-07T16:41:57&#43;08:00">
+        Jun 7, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    This article won&rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&rsquo;t finished this project, also I haven&rsquo;t gave up so far :).
+Won&rsquo;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
+The codebase I&rsquo;m working on:
+ Only support python2.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/">在python3.7 中实现python2.7 的内置 hash 函数</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -277,32 +301,6 @@ PMT 公式算出的值是负数，需要取反.
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/02/23/glow-infra-evolution/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/">Get Real Client Ip on AWS</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-02-01T15:20:37&#43;08:00">
-        Feb 1, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    If you run a webserver on AWS, get real client ip will be tricky if you didn&rsquo;t configure server right and write code correctly.
-Things related to client real ip:
- CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application).  Request sequence diagram will be like following:
-User&rsquo;s real client ip is forwarded by front proxies one by one in head X-Forwarded-For.
-For CloudFront:
- If user&rsquo;s req header don&rsquo;t have X-Forwarded-For, it will set user&rsquo;s ip(from tcp connection) in X-Forwarded-For If user&rsquo;s req already have X-Forwarded-For, it will append user&rsquo;s ip(from tcp connection) to the end of X-Forwarded-For  For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront&rsquo;s ip.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
