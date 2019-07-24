@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.55.6" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.54.0" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -55,6 +55,31 @@
   <main id="main" class="l-main">
 
 <h2 class="c-title p-tag-title">Posts</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/04/10/snet-dev-note/">SNET Dev Note</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2019-04-10T22:33:49&#43;08:00">
+        Apr 10, 2019
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    完成 SNET 初版后又做了些后续更新,　记录一点.
+支持 http tunnel 配置文件里增加一个 proxy-type 选项, 默认为 ss, 可改成 http, 这样可以将 支持 http tunnel 的代理服务器作为 upstream(例如 squid). 填上 http-proxy- 开头 的选项就行.
+实现上 client 端要对接 http tunnel 非常简单:
+ client 发送请求: Connect tgt-host:tgt-port HTTP/1.1 server response: HTTP/1.1 200, 即表示 server 端支持 http tunnel client 后续向该 tcp connection 写入的数据都会被 server 转发到 tgt-host:tgt-port  改动的时候把 upstream proxy 的部分重构了一下, 抽了个 Proxy interface 出来, 后续想对接其他协议方便扩展.
+对 udp 支持的尝试 对 tcp 流量的转发能通过 iptables REDIRECT 实现的, 通过 getsockoption 可以知道 tcp connection 的原目标, 但这对 udp 行不通, REDIRECT 之后拿不到原 target.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2019/04/10/snet-dev-note/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">
@@ -279,29 +304,6 @@ Bloom filter 比较合适解决大集合去重的问题, 给定一个 key, bloom
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/11/04/%E6%BF%91%E6%88%B7%E5%86%85%E6%B5%B7%E7%9A%84%E9%A3%8E%E4%B8%8E%E9%98%B3/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/">AWS Aurora DB</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-10-31T15:23:45&#43;08:00">
-        Oct 31, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比.
-Paper notes  存储计算分离 redo log 下推到存储层 副本: 6 副本 3 AZ(2 per az), 失去一个 AZ + 1 additoinal node 不会丢数据(可读不可写). 失去一个 AZ (或任意2 node) 不影响数据写入. 10GB 一个 segment, 每个 segment 6 副本一个 PG (protection group), 一 AZ　两副本. 在 10Gbps 的网络上, 修复一个 10GB 的segment 需要 10s.  MySQL 一个应用层的写会在底层产生很多额外的写操作，会带来写放大问题:
-redo log 用来 crash recovery, binlog 会上传 s3　用于 point in time restore.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
