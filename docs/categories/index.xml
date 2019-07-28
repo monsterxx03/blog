@@ -6,25 +6,26 @@
     <description>Recent content in Categories on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
+    <lastBuildDate>Sun, 28 Jul 2019 12:47:23 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Life</title>
-      <link>https://blog.monsterxx03.com/categories/life/</link>
-      <pubDate>Wed, 24 Jul 2019 21:58:09 +0800</pubDate>
+      <title>tech</title>
+      <link>https://blog.monsterxx03.com/categories/tech/</link>
+      <pubDate>Sun, 28 Jul 2019 12:47:23 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/categories/life/</guid>
+      <guid>https://blog.monsterxx03.com/categories/tech/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Tech</title>
-      <link>https://blog.monsterxx03.com/categories/tech/</link>
-      <pubDate>Tue, 23 Jul 2019 12:32:08 +0800</pubDate>
+      <title>life</title>
+      <link>https://blog.monsterxx03.com/categories/life/</link>
+      <pubDate>Wed, 24 Jul 2019 21:58:09 +0800</pubDate>
       
-      <guid>https://blog.monsterxx03.com/categories/tech/</guid>
+      <guid>https://blog.monsterxx03.com/categories/life/</guid>
       <description></description>
     </item>
     

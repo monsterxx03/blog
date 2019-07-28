@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Mysql on Shining Moon</title>
+    <title>mysql on Shining Moon</title>
     <link>https://blog.monsterxx03.com/tags/mysql/</link>
-    <description>Recent content in Mysql on Shining Moon</description>
+    <description>Recent content in mysql on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>monsterxx03</copyright>
     <lastBuildDate>Wed, 31 Oct 2018 15:23:45 +0800</lastBuildDate>

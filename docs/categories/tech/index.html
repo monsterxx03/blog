@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   
-  <title>Tech</title>
-  <meta property="og:title" content="Tech" />
-  <meta name="twitter:title" content="Tech" />
+  <title>tech</title>
+  <meta property="og:title" content="tech" />
+  <meta name="twitter:title" content="tech" />
   
 
   
@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.54.0" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.55.6" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -54,7 +54,30 @@
   </header>
   <main id="main" class="l-main">
 
-<h2 class="c-title p-tag-title">Tech</h2>
+<h2 class="c-title p-tag-title">tech</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/07/28/pyflame-%E7%9A%84-kubectl-plugin/">Pyflame 的 kubectl plugin</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2019-07-28T12:47:23&#43;08:00">
+        Jul 28, 2019
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    pyflame 可以比较方便得生成 python 进程的调用函数栈火焰图, 来 debug 一些性能瓶颈, 做了个 kubectl 的小插件, 来方便得对 k8s pod 中的 python 进程进行 debug: https://github.com/monsterxx03/kube-pyflame 直接把 svg 文件下载到本地.
+要对 pod 中的 python 进程进行 profiling, 大致思路有两种:
+ 直接在 container 内使用 pyflame, 但这样要把 pyflame 做到所有的 base 镜像里去, 而且目标 container要在 SecurityContext 加上 SYS_PTRACE 在 host 上用 pyflame debug 对应进程, pyflame 自身是能识别跑在 container 里的进程, 自动执行 setns 的.  我希望保持线上环境干净, 最后的做法是, 把 pyflame 单独做一个镜像, 先用 kubectl 找到目标 pod 所在节点, 然后用 nodeSelector 在对应节点上起一个 pyflame 的 pod, 因为要能看到其他 namespace 的进程, 需要设置 hostPID: true, pyflame 要能执行 setns, 这个 debug pod 要设置 privileged: true.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2019/07/28/pyflame-%E7%9A%84-kubectl-plugin/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">
@@ -275,31 +298,6 @@ declarative 方式的例子:
   </div>
   
   <a href="https://blog.monsterxx03.com/2019/04/12/k8s-volume-resize-on-eks/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/04/10/snet-dev-note/">SNET Dev Note</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2019-04-10T22:33:49&#43;08:00">
-        Apr 10, 2019
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    完成 SNET 初版后又做了些后续更新,　记录一点.
-支持 http tunnel 配置文件里增加一个 proxy-type 选项, 默认为 ss, 可改成 http, 这样可以将 支持 http tunnel 的代理服务器作为 upstream(例如 squid). 填上 http-proxy- 开头 的选项就行.
-实现上 client 端要对接 http tunnel 非常简单:
- client 发送请求: Connect tgt-host:tgt-port HTTP/1.1 server response: HTTP/1.1 200, 即表示 server 端支持 http tunnel client 后续向该 tcp connection 写入的数据都会被 server 转发到 tgt-host:tgt-port  改动的时候把 upstream proxy 的部分重构了一下, 抽了个 Proxy interface 出来, 后续想对接其他协议方便扩展.
-对 udp 支持的尝试 对 tcp 流量的转发能通过 iptables REDIRECT 实现的, 通过 getsockoption 可以知道 tcp connection 的原目标, 但这对 udp 行不通, REDIRECT 之后拿不到原 target.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2019/04/10/snet-dev-note/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

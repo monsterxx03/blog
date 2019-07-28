@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   
-  <title>Tech</title>
-  <meta property="og:title" content="Tech" />
-  <meta name="twitter:title" content="Tech" />
+  <title>tech</title>
+  <meta property="og:title" content="tech" />
+  <meta name="twitter:title" content="tech" />
   
 
   
@@ -31,7 +31,7 @@
   <meta property="og:type" content="website" />
   
   
-  <meta name="generator" content="Hugo 0.54.0" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
+  <meta name="generator" content="Hugo 0.55.6" /><link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css" />
   
   
   <script type="text/javascript" src="https://blog.monsterxx03.com/js/bundle.js"></script>
@@ -54,7 +54,32 @@
   </header>
   <main id="main" class="l-main">
 
-<h2 class="c-title p-tag-title">Tech</h2>
+<h2 class="c-title p-tag-title">tech</h2>
+
+
+<article class="c-article p-list-article">
+  <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/04/10/snet-dev-note/">SNET Dev Note</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2019-04-10T22:33:49&#43;08:00">
+        Apr 10, 2019
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    完成 SNET 初版后又做了些后续更新,　记录一点.
+支持 http tunnel 配置文件里增加一个 proxy-type 选项, 默认为 ss, 可改成 http, 这样可以将 支持 http tunnel 的代理服务器作为 upstream(例如 squid). 填上 http-proxy- 开头 的选项就行.
+实现上 client 端要对接 http tunnel 非常简单:
+ client 发送请求: Connect tgt-host:tgt-port HTTP/1.1 server response: HTTP/1.1 200, 即表示 server 端支持 http tunnel client 后续向该 tcp connection 写入的数据都会被 server 转发到 tgt-host:tgt-port  改动的时候把 upstream proxy 的部分重构了一下, 抽了个 Proxy interface 出来, 后续想对接其他协议方便扩展.
+对 udp 支持的尝试 对 tcp 流量的转发能通过 iptables REDIRECT 实现的, 通过 getsockoption 可以知道 tcp connection 的原目标, 但这对 udp 行不通, REDIRECT 之后拿不到原 target.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2019/04/10/snet-dev-note/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
 
 
 <article class="c-article p-list-article">
@@ -270,31 +295,6 @@ redo log 用来 crash recovery, binlog 会上传 s3　用于 point in time resto
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/10/15/%E4%B8%BA-service-%E5%88%B6%E5%AE%9A-slo/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/10/12/%E5%9C%A8-redshift-%E4%B8%AD%E8%AE%A1%E7%AE%97-p95-latency/">在 redshift 中计算 p95 latency</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-10-12T14:49:13&#43;08:00">
-        Oct 12, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    p95 latency 的定义: 把一段时间的 latency 按照从小到大排序, 砍掉最高的 %5, 剩下最大的值就是 p95 latency. p99, p90 同理.
-p95 latency 表示该时间段内 95% 的 reqeust 都比这个值快.
-一般我直接看 CloudWatch, 和 datadog 算好的 p95 值. 这次看看怎么从 access log 里直接计算 p95 latency.
-假设在 redshift 中有一张表存储了应用的 access log, 结构如下:
-CREATE TABLE access_log ( url string, time string, resp_time real );     url time resp_time     /test1 2018-10-11T00:10:00.418480Z 0.123   /test2 2018-10-11T00:12:00.512340Z 0.321    要算 p95 很简单, 把 log 按分钟数分组, 用 percentile_cont 在组内按 resp_time 排序计算 就能得到:
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/10/12/%E5%9C%A8-redshift-%E4%B8%AD%E8%AE%A1%E7%AE%97-p95-latency/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
