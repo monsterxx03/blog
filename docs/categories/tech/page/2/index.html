@@ -59,6 +59,30 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/04/12/k8s-volume-resize-on-eks/">K8s Volume Resize on EKS</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2019-04-12T13:23:54&#43;08:00">
+        Apr 12, 2019
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    从 k8s 1.8 开始支持 PersistentVolumeClaimResize. 但 api 是 alpha 状态, 默认不开启, eks launch 的时候版本是 1.10, 因为没法改 control plane, 所以没法直接在 k8s 内做 ebs 扩容. 后来升级到了 1.11, 这个 feature 默认被打开了, 尝试了下直接在 EKS 内做 ebs 的扩容.
+注意:
+ 这个 feature 只能对通过 pvc 管理的 volume 做扩容, 如果直接挂的是 pv, 只能自己按传统的 ebs 扩容流程在 eks 之外做. 用来创建 pvc 的 storageclass 上必须设置 allowVolumeExpansion 为 true  在 eks 上使用 pv/pvc,　对于需要 retain 的 volume, 我一般的流程是:
+ 在 eks 之外手工创建 ebs volume.
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2019/04/12/k8s-volume-resize-on-eks/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2019/04/10/snet-dev-note/">SNET Dev Note</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -269,32 +293,6 @@ redo log 用来 crash recovery, binlog 会上传 s3　用于 point in time resto
   </div>
   
   <a href="https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/" class="c-article__btn p-list-article__btn">Read more</a>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/10/15/%E4%B8%BA-service-%E5%88%B6%E5%AE%9A-slo/">为 service 制定 SLO</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2018-10-15T11:31:05&#43;08:00">
-        Oct 15, 2018
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    通常我们使用云服务的时候, 服务提供商会提供 SLA(Service Level Aggrement),作为他们提供的服务质量的标准(常说的几个9),达不到会进行赔偿. 比如 AWS 的计算类服务: https://aws.amazon.com/compute/sla/ .
-对公司自己 host 的 service, 我们内部也需要一些技术指标来 track 我们为客户提供的服务质量如何, 这个叫做 SLO(Service Level Objective). 也可以把他当成一个对内的,没有赔偿协议的SLA.
-定义指标 我主要 track 两个指标:
- Availability (服务的可用性) Quality (服务质量)  Availability 的定义, 以前用简单的 service uptime 来定义, 在集群外部用一个 service check 定时 ping 我们 service　的 check endpoint, 失败就定义为 failure.
-但这样的做法很粗糙, 和实际用户体验到的 service quality 相差比较大, 比如部署了新的代码，bug 导致某个很常用的 api　持续性抛 500. 此时我们的 service check　还是 up, 但用户就觉得你服务器挂了.
-现在我用失败的 request 的个数来定义我们的 availability.
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2018/10/15/%E4%B8%BA-service-%E5%88%B6%E5%AE%9A-slo/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 

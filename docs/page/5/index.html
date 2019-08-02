@@ -60,6 +60,31 @@
 
 <article class="c-article p-list-article">
   <header>
+    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/">Access sensitive variables on AWS lambda</a></h2>
+    <p class="c-article__meta">
+      Posted on
+      <time datetime="2018-02-28T21:45:23&#43;08:00">
+        Feb 28, 2018
+      </time>
+    </p>
+  </header>
+  <div class="c-article__summary">
+    AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&hellip;
+Usually, we inject secrets as environment variables, but they&rsquo;re still visable on lambda console. I don&rsquo;t use it in aws lambda.
+The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
+Code example:
+client = boto3.client('ssm') resp = client.get_parameter( Name='/redshift/admin/password', WithDecryption=True ) resp: { &quot;Parameter&quot;: { &quot;Name&quot;: &quot;/redshift/admin/password&quot;, &quot;Type&quot;: &quot;SecureString&quot;, &quot;Value&quot;: &quot;password value&quot;, &quot;Version&quot;: 1 } }  Things you need to do to make it work:
+  </div>
+  
+  <a href="https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/" class="c-article__btn p-list-article__btn">Read more</a>
+  
+</article>
+
+
+
+
+<article class="c-article p-list-article">
+  <header>
     <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2018/02/25/%E7%94%A8-google-spreadsheet-%E8%AE%A1%E7%AE%97%E6%88%BF%E8%B4%B7%E7%AD%89%E9%A2%9D%E6%9C%AC%E6%81%AF%E8%BF%98%E6%AC%BE/">用 google spreadsheet 计算房贷等额本息还款</a></h2>
     <p class="c-article__meta">
       Posted on
@@ -277,31 +302,6 @@ AWS api is open to internet, if you need to access S3 in VPC, your requests will
 在青森没定到酒店，住在了弘前一家有200年历史的旅馆里，很传统的日式旅馆，房子很老，但体验很不错，唯一纠结的就是泡澡的话我是应该把水放掉还是留着给下个人呢，实在吃不准，结果就洗了个淋浴。弘前和青森都有睡魔祭，也是花车，不过是带灯的，所以是晚上开始。弘前人的热情更有感染力，青森的花车赞助比较多，所以更壮观一点:).弘前有个吉祥物鹰丸君，本来头上戴的是弘前城的天守阁，因为天守现在在翻修，变成了头上戴安全帽，也是有意思。青森车站旁边有个A factory, 里面有很多苹果制特产，值得一逛，要不是只有一个背包，真的想塞好多东西回来。
 都说东北经济不行，年轻人都往东京跑啦，在那边几天，确实感觉白天没有东京的那种商业氛围。但他们的祭典感染力真的超强，就我这么一个瞎跑过去凑热闹的家伙也能看得情绪高涨，一年一次的祭典，真的变成了凝聚当地居民的一种仪式，一家人坐在路边，撸串喝啤酒，看游行，真的好羡慕，这样的场景，在国内怎样都不会有哎。
   </div>
-  
-</article>
-
-
-
-
-<article class="c-article p-list-article">
-  <header>
-    <h2 class="c-title c-article__title"><a href="https://blog.monsterxx03.com/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/">Use redshift spectrum to do query on s3</a></h2>
-    <p class="c-article__meta">
-      Posted on
-      <time datetime="2017-07-21T03:10:58Z">
-        Jul 21, 2017
-      </time>
-    </p>
-  </header>
-  <div class="c-article__summary">
-    使用 redshift spectrum 查询 S3 数据 通常使用 redshift 做数据仓库的时候要做大量的 ETL 工作，一般流程是把各种来源的数据捣鼓捣鼓丢到 S3 上去，再从 S3 倒腾进 redshift. 如果你有大量的历史数据要导进 redshift，这个过程就会很痛苦，redshift 对一次倒入大量数据并不友好，你要分批来做。
-今年4月的时候， redshift 发布了一个新功能 spectrum, 可以从 redshift 里直接查询 s3 上的结构化数据。最近把部分数据仓库直接迁移到了 spectrum, 正好来讲讲。
-动机 Glow 的数据仓库建在 redshift 上， 又分成了两个集群，一个 ssd 的集群存放最近 4 个月的数据，供产品分析，metrics report, debug 等等 adhoc 的查询。4个月之前的数据存放在一个 hdd 的集群里，便宜容量大，查询慢。
-但是时间长了 hdd 的集群也是有扩容需求的，而使用频率又实在是不高，其实很浪费, 这就是迁移到 spectrum 的动机。
-使用 Spectrum Redshift spectrum 底层其实是基于 AWS 的另一个服务 athena 的。athena 是个 Presto 和 Hive 杂交产物， DDL 用 Hive 语法， 查询用的 sql 由 Presto 支持, 感觉怪怪的，这里不多展开讲 athena, 知道 redshift spectrum 其实是通过 athena 对接的 s3 就行了。
-  </div>
-  
-  <a href="https://blog.monsterxx03.com/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/" class="c-article__btn p-list-article__btn">Read more</a>
   
 </article>
 
