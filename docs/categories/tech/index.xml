@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 02 Aug 2019 16:30:10 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 16 Aug 2019 15:00:02 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/categories/tech/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>杂</title>
+      <link>https://blog.monsterxx03.com/2019/08/16/%E6%9D%82/</link>
+      <pubDate>Fri, 16 Aug 2019 15:00:02 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2019/08/16/%E6%9D%82/</guid>
+      <description>随记. Life &amp;lt;火焰文章-风花雪月&amp;gt; 流程过半, 这一作难度确实低, 怂如我玩的又是不死人模式, 即使是困难难度, 到后面也是切菜. 流程里学生们 seisei 得喊, 想到后面要把他们一个个干掉, 心情挺复杂得... 风花雪月这个副标题, 玩着玩着也有点明白意思了, 美版竟然叫 &amp;lt;Three houses&amp;gt;, 老外神经果然傻大粗啊... 西泽保彦的高千和千晓系列看完了好几本, 还剩下&amp;lt;依存&amp;gt; 和 &amp;lt;啤酒之家的冒险&amp;gt;. 昨晚读完了 &amp;lt;苏格</description>
+    </item>
     
     <item>
       <title>kube-scheduler internal</title>
