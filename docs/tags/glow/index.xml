@@ -5,6 +5,7 @@
     <link>https://blog.monsterxx03.com/tags/glow/</link>
     <description>Recent content in glow on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
     <lastBuildDate>Fri, 23 Feb 2018 23:25:13 +0800</lastBuildDate>
     
@@ -17,12 +18,7 @@
       <pubDate>Fri, 23 Feb 2018 23:25:13 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2018/02/23/glow-infra-evolution/</guid>
-      <description>Glow data infrastructure 的演化 Glow 一向是一个 data driven 做决策的公司，稳定高效的平台是必不可少的支撑, 本文总结几年里公司 data infrastructure 的演进过程.
-结合业务特点做技术选型和实现时候的几个原则:
- real time 分析的需求不高，时间 delta 控制在1 小时以内可接受 . 支持快速的交互式查询. 底层平台尽量选择 AWS 托管服务, 减少维护成本. 遇到故障, 数据可以 delay 但不能丢. 可回溯历史数据. 成本可控.  用到的 AWS 服务:
- 数据存储和查询: S3, Redshift (spectrum), Athena ETL: DMS, EMR, Kinesis, Firehose, Lambda  开源软件: td-agent, maxwell
-数据来源:
- 线上业务数据库 用户活动产生的 metrics log 从各种第三方服务 api 拉下来的数据 (email之类)  最早期 刚开始的时候业务单纯，数据量也少, 所有数据都用 MySQL 存储，搭了台 slave, 分析查询都在 slave 上进行.</description>
+      <description>Glow data infrastructure 的演化 Glow 一向是一个 data driven 做决策的公司，稳定高效的平台是必不可少的支撑, 本文总结几年里公司 data infrastructure 的演进过程. 结合业务特点做技术选型和实现时候的几个原则: real time 分析的需求不高，时间 delta 控制在1 小时以内可接受 . 支持快速的交互式查询. 底层平台尽量选择 AWS 托管服务, 减少维护成本. 遇到故障, 数据可以 delay 但不能丢. 可回溯历史数据. 成本可控. 用到的 AWS 服务: 数据存储和查询: S3, Redshift (spectrum), Athena ETL: DMS, EMR, Kinesis, Firehose, Lambda 开源软件: td-agent, maxwell 数据来源: 线上</description>
     </item>
     
     <item>
@@ -31,14 +27,7 @@
       <pubDate>Sat, 01 Jul 2017 23:38:24 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/07/01/python-web-%E5%BA%94%E7%94%A8%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</guid>
-      <description>Python web 应用性能调优 为了快速上线，早期很多代码基本是怎么方便怎么来，这样就留下了很多隐患，性能也不是很理想，python 因为 GIL 的原因，在性能上有天然劣势，即使用了 gevent/eventlet 这种协程方案，也很容易因为耗时的 CPU 操作阻塞住整个进程。前阵子对基础代码做了些重构，效果显著，记录一些。
-设定目标:
- 性能提高了，最直接的效果当然是能用更少的机器处理相同流量，目标是关闭 20% 的 stateless webserver. 尽量在框架代码上做改动，不动业务逻辑代码。 低风险 (历史经验告诉我们，动态一时爽，重构火葬场&amp;hellip;.)  治标 常见场景是大家开开心心做完一个 feature， sandbox 测试也没啥问题，上线了，结果 server load 飙升，各种 timeout 都来了，要么 rollback 代码，要么加机器。问题代码在哪?
-我们监控用的是 datadog (statsd协议)，对这种问题最有效的指标是看每个接口的 avg_latency * req_count 得到每个接口在一段时间内的总耗时，在柱状图上最长的那块就是对性能影响最大的接口。进一步的调试就靠 cProfile 和读代码了。
-但很多时候出问题的代码逻辑巨复杂，还很多人改动过，开发和 sandbox 环境数据的量和线上差距太大，无法复现问题，在线上用 cProfile 只能测只读接口(为了不写坏用户数据)。
-而且这种方式只能治标，调试个别慢的业务接口，目标里说了只想改框架，提高整体性能，怎么整?
-治本 我希望能对运行时进程状态打 snapshot，每次快照记录下当前的函数调用栈，叠合多次采样，出现次数多的函数必然就是瓶颈所在. 这思想在其他语言里用的也很多，其实就是 Brendan Gregg 的 flamegraph.
-以前内部做过类似的事情，不过代码是侵入式的，在运行时通过 signal, inspect, traceback 等模块，定期打调用栈的 snapshot, 输出到文件，转成 svg 的 flamegraph 来看，但是 overhead 太高，后来弃用了。</description>
+      <description>Python web 应用性能调优 为了快速上线，早期很多代码基本是怎么方便怎么来，这样就留下了很多隐患，性能也不是很理想，python 因为 GIL 的原因，在性能上有天然劣势，即使用了 gevent/eventlet 这种协程方案，也很容易因为耗时的 CPU 操作阻塞住整个进程。前阵子对基础代码做了些重构，效果显著，记录一些。 设定目标: 性能提高了，最直接的效果当然是能用更少的机器处理相同流量，目标是关闭 20% 的 stateless webserver. 尽量在框架代码上做改动，不动业务逻辑代码。 低风险 (历</description>
     </item>
     
     <item>

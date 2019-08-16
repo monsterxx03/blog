@@ -5,6 +5,7 @@
     <link>https://blog.monsterxx03.com/tags/network/</link>
     <description>Recent content in network on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
     <lastBuildDate>Thu, 20 Jun 2019 16:03:56 +0800</lastBuildDate>
     
@@ -17,14 +18,7 @@
       <pubDate>Thu, 20 Jun 2019 16:03:56 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2019/06/20/snet-dev-note-support-macos/</guid>
-      <description>这两天得了空, 让 snet 支持了下 MacOS.
-snet 的大致原理是通过系统防火墙的流量重定向功能,将所有去往国外的流量导到 snet 监听的端口, 在程序内部 将流量传递给上游的 proxy server(ss, http), 拿到响应后再回给客户端.
-实现关键是要在 snet 内部获取到流量的原目标地址, 因为重定向之后 tcp connnection 的目标地址变成了 snet 监听 的地址.
-Linux 上的实现，以前讲过: https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/ 是通过 SO_ORIGINAL_DST 这个 socket option 实现的.
-MacOS 上没有 iptables, 类似的工具是系统自带的 pfctl, 捣鼓了一下也能实现一样的功能.
-用 pfctl 做流量重定向 pfctl 的文档可以通过 man pfctl, man pf.conf 查看. 我也只是看了个大概, 细节并不清楚.
-流量重定向需要用到 pf 的 rdr 规则, 但是 rdr 只能处理 incoming 的流量，对 outgoing 的流量无效.
-tricky 的地方是要把流量先重路由到 lo0, 再对 lo0 上的流量实行 rdr, 例子(顺序很重要):</description>
+      <description>这两天得了空, 让 snet 支持了下 MacOS. snet 的大致原理是通过系统防火墙的流量重定向功能,将所有去往国外的流量导到 snet 监听的端口, 在程序内部 将流量传递给上游的 proxy server(ss, http), 拿到响应后再回给客户端. 实现关键是要在 snet 内部获取到流量的原目标地址, 因为重定向之后 tcp connnection 的目标地址变成了 snet 监听 的地址. Linux 上的实现，以前讲过: https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/ 是通过 SO_ORIGINAL_DST 这个 socket option 实现的. MacOS 上没有 iptables, 类似的工具是系统自带的 pfctl, 捣鼓了一下也能实现一样的功能. 用 pfctl 做流量重定向 pfctl 的文档可</description>
     </item>
     
     <item>
@@ -33,11 +27,7 @@ tricky 的地方是要把流量先重路由到 lo0, 再对 lo0 上的流量实�
       <pubDate>Wed, 10 Apr 2019 22:33:49 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2019/04/10/snet-dev-note/</guid>
-      <description>完成 SNET 初版后又做了些后续更新,　记录一点.
-支持 http tunnel 配置文件里增加一个 proxy-type 选项, 默认为 ss, 可改成 http, 这样可以将 支持 http tunnel 的代理服务器作为 upstream(例如 squid). 填上 http-proxy- 开头 的选项就行.
-实现上 client 端要对接 http tunnel 非常简单:
- client 发送请求: Connect tgt-host:tgt-port HTTP/1.1 server response: HTTP/1.1 200, 即表示 server 端支持 http tunnel client 后续向该 tcp connection 写入的数据都会被 server 转发到 tgt-host:tgt-port  改动的时候把 upstream proxy 的部分重构了一下, 抽了个 Proxy interface 出来, 后续想对接其他协议方便扩展.
-对 udp 支持的尝试 对 tcp 流量的转发能通过 iptables REDIRECT 实现的, 通过 getsockoption 可以知道 tcp connection 的原目标, 但这对 udp 行不通, REDIRECT 之后拿不到原 target.</description>
+      <description>完成 SNET 初版后又做了些后续更新, 记录一点. 支持 http tunnel 配置文件里增加一个 proxy-type 选项, 默认为 ss, 可改成 http, 这样可以将 支持 http tunnel 的代理服务器作为 upstream(例如 squid). 填上 http-proxy- 开头 的选项就行. 实现上 client 端要对接 http tunnel 非常简单: client 发送请求: Connect tgt-host:tgt-port HTTP/1.1 server response: HTTP/1.1 200, 即表示 server 端支持 http tunnel client 后续向该 tcp connection 写入的数据都会被 server 转发到 tgt-host:tgt-port 改动的时候把 upstream proxy 的部分重构了一下, 抽了个 Proxy interface 出来, 后续想对接其他协议方便扩展. 对 udp 支持的尝试 对 tcp 流量的转发能通过 iptables REDIRECT</description>
     </item>
     
     <item>
@@ -46,12 +36,7 @@ tricky 的地方是要把流量先重路由到 lo0, 再对 lo0 上的流量实�
       <pubDate>Sun, 31 Mar 2019 22:19:46 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/</guid>
-      <description>日常使用 Linux 工作, Linux 下实现全局透明代理可以用 iptables + ss-redir, 要有比较好的上网体验还需要 ChinaDNS 配合 dnsmasq, 这一整套在路由器上搞一遍就算了, 在本地太麻烦了. 仔细想想这几个加起来的功能实现起来也并不复杂, 前阵子就写了个小东西, 用一个进程完成全局透明代理 + ChinaDNS + 国内外分流: https://github.com/monsterxx03/snet
-目前的限制:
- 不支持 ipv6 只支持 tcp (因为我的测试服务器不支持 udp, 以后再加上吧) 上游 server 只支持 ss  目的是一个进程 + 一个配置文件完成所有事情. 需要的 iptable 规则也全部内置了(包括 CN ip 段), 缺少灵活但对我够用了, 以后有需要再加上选项不自动配吧.
-需要手工装下 ipset.
-配置文件示例:
-{ &amp;quot;listen-host&amp;quot;: &amp;quot;127.0.0.1&amp;quot;, &amp;quot;listen-port&amp;quot;: 1111, &amp;quot;ss-host&amp;quot;: &amp;quot;ss.example.com&amp;quot;, &amp;quot;ss-port&amp;quot;: 8080, &amp;quot;ss-chpier-method&amp;quot;: &amp;quot;aes-256-cfb&amp;quot;, &amp;quot;ss-passwd&amp;quot;: &amp;quot;passwd&amp;quot;, &amp;quot;cn-dns&amp;quot;: &amp;quot;114.114.114.114&amp;quot;, &amp;quot;fq-dns&amp;quot;: &amp;quot;8.8.8.8&amp;quot;, &amp;quot;enable-dns-cache&amp;quot;: true, &amp;quot;mode&amp;quot;: &amp;quot;local&amp;quot; }  ss 协议实现用的是 shadowsocks-go, 所以 cipher 就是 go 版支持的那些: https://github.</description>
+      <description>日常使用 Linux 工作, Linux 下实现全局透明代理可以用 iptables + ss-redir, 要有比较好的上网体验还需要 ChinaDNS 配合 dnsmasq, 这一整套在路由器上搞一遍就算了, 在本地太麻烦了. 仔细想想这几个加起来的功能实现起来也并不复杂, 前阵子就写了个小东西, 用一个进程完成全局透明代理 + ChinaDNS + 国内外分流: https://github.com/monsterxx03/snet 目前的限制: 不支持 ipv6 只支持 tcp (因为我的测试服务器不支持 udp, 以后再加上吧) 上游 server 只支持 ss 目的是一个进程 + 一个配置文件完成所有事情. 需要的 iptable 规则也全部内置了(包括</description>
     </item>
     
   </channel>

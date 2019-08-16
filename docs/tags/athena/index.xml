@@ -5,6 +5,7 @@
     <link>https://blog.monsterxx03.com/tags/athena/</link>
     <description>Recent content in athena on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
     <lastBuildDate>Fri, 23 Feb 2018 23:25:13 +0800</lastBuildDate>
     
@@ -17,12 +18,7 @@
       <pubDate>Fri, 23 Feb 2018 23:25:13 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2018/02/23/glow-infra-evolution/</guid>
-      <description>Glow data infrastructure 的演化 Glow 一向是一个 data driven 做决策的公司，稳定高效的平台是必不可少的支撑, 本文总结几年里公司 data infrastructure 的演进过程.
-结合业务特点做技术选型和实现时候的几个原则:
- real time 分析的需求不高，时间 delta 控制在1 小时以内可接受 . 支持快速的交互式查询. 底层平台尽量选择 AWS 托管服务, 减少维护成本. 遇到故障, 数据可以 delay 但不能丢. 可回溯历史数据. 成本可控.  用到的 AWS 服务:
- 数据存储和查询: S3, Redshift (spectrum), Athena ETL: DMS, EMR, Kinesis, Firehose, Lambda  开源软件: td-agent, maxwell
-数据来源:
- 线上业务数据库 用户活动产生的 metrics log 从各种第三方服务 api 拉下来的数据 (email之类)  最早期 刚开始的时候业务单纯，数据量也少, 所有数据都用 MySQL 存储，搭了台 slave, 分析查询都在 slave 上进行.</description>
+      <description>Glow data infrastructure 的演化 Glow 一向是一个 data driven 做决策的公司，稳定高效的平台是必不可少的支撑, 本文总结几年里公司 data infrastructure 的演进过程. 结合业务特点做技术选型和实现时候的几个原则: real time 分析的需求不高，时间 delta 控制在1 小时以内可接受 . 支持快速的交互式查询. 底层平台尽量选择 AWS 托管服务, 减少维护成本. 遇到故障, 数据可以 delay 但不能丢. 可回溯历史数据. 成本可控. 用到的 AWS 服务: 数据存储和查询: S3, Redshift (spectrum), Athena ETL: DMS, EMR, Kinesis, Firehose, Lambda 开源软件: td-agent, maxwell 数据来源: 线上</description>
     </item>
     
   </channel>

@@ -1,60 +1,51 @@
-baseURL = "https://blog.monsterxx03.com/"
-Title = "Shining Moon"
-publishDir="docs"
-# for smart copyright line, leave this blank and check [params.copyright]
-copyright = "monsterxx03"
-
-theme = "pickles"
-
-enableRobotsTXT = true # generate robots.txt
+baseURL = "https://blog.monsterxx03.com"
+languageCode = "zh-cn"
+defaultContentLanguage = "zh-cn"
+title = "Shining Moon"
+theme = "zozo"
+hasCJKLanguage = true
+summaryLength = 200
 paginate = 10
+copyright = "monsterxx03"
+enableRobotsTXT = true # generate robots.txt
+enableEmoji = true
+googleAnalytics = "UA-98667627-1"
+disqusShortname = "mx03"
 
-# Syntax Highlighting ( https://gohugo.io/content-management/syntax-highlighting/ )
-pygmentsCodefences = true
+publishDir="docs"
 
-# Language Configuration
-defaultContentLanguage = "en"
+[author]
+    name = "monsterxx03"
 
-[params.copyright]
-prefix = ""
-holder = "monsterxx03"
-startYear = "2017"
-suffix = ""
+[blackfriday]
+  smartypants = false
+
+[[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 10
+[[menu.main]]
+    name = "Archive"
+    url = "/posts/"
+    weight = 20
+[[menu.main]]
+    name = "About"
+    url = "/about/"
+    weight = 30
+[[menu.main]]
+    name = "Tags"
+    url = "/tags"
+    weight = 40
 
 [params]
-subtitle = "百种弊病,皆从懒生"
-email = "xyj.asmy@gmail.com"
-github = "monsterxx03"
-linkedin = ""
-twitter = "monsterxx03"
-ga_api_key = "UA-98667627-1"
-disqus = "mx03"
-author = "X"
-avatar = "/avatar.png"
-bio = "Infrastructure Engineer@Glow"
-contact = "mailto:xyj.asmy@gmail.com"
+    subtitle = "百种弊病,皆从懒生"
+    enableMathJax = true
+    enableSummary = true
 
-[taxonomies]
-author = "authors"
-category = "categories"
-tag = "tags"
-preserveTaxonomyNames = false
+[social]
+    github = "monsterxx03"
 
 [permalinks]
 page = "/:slug/"
 posts = "/:year/:month/:day/:title/"
 
-[[menu.main]]
-name = "Blog"
-url = "/"
-weight = 1
-
-[[menu.main]]
-name = "About"
-url = "/aboutme"
-weight = 2
-
-[[menu.main]]
-name = "Tags"
-url = "/tags"
-weight = 3

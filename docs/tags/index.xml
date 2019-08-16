@@ -5,6 +5,7 @@
     <link>https://blog.monsterxx03.com/tags/</link>
     <description>Recent content in Tags on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
     <lastBuildDate>Fri, 02 Aug 2019 16:30:10 +0800</lastBuildDate>
     
@@ -93,7 +94,7 @@
     </item>
     
     <item>
-      <title>aws</title>
+      <title>AWS</title>
       <link>https://blog.monsterxx03.com/tags/aws/</link>
       <pubDate>Fri, 12 Apr 2019 13:23:54 +0800</pubDate>
       
@@ -192,7 +193,7 @@
     </item>
     
     <item>
-      <title>redshift</title>
+      <title>Redshift</title>
       <link>https://blog.monsterxx03.com/tags/redshift/</link>
       <pubDate>Fri, 12 Oct 2018 14:49:13 +0800</pubDate>
       

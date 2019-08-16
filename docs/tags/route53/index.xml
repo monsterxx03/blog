@@ -5,6 +5,7 @@
     <link>https://blog.monsterxx03.com/tags/route53/</link>
     <description>Recent content in route53 on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
     <lastBuildDate>Fri, 29 Sep 2017 08:55:18 +0000</lastBuildDate>
     
@@ -19,7 +20,12 @@
       <guid>https://blog.monsterxx03.com/2017/09/29/get-all-invalid-ptr-record-on-route53/</guid>
       <description>I use autoscaling group to manage stateless servers. Servers go up and down every day.
 Once server is up, I will add a PTR record for it&amp;#8217;s internal ip. But when it&amp;#8217;s down, I didn&amp;#8217;t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.
-To cleanup those PTR records realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?</description>
+To cleanup those PTR records realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?
+Straightforward way is write a script to call AWS API to get a PTR list, get ip from record, test whether the ip is live, if not, delete it.
+Since use awscli to delete a Route53 record is very troublesome (involve json format), you&amp;#8217;d better write a python script to delete them. I just demo some ideas to collect those records via shell.
+You can do it in a single line, but make things clear and easy to debug, I split it into several steps.
+Get PTR record list aws route53 list-resource-record-sets --hosted-zone-id xxxxx --query &amp;quot;ResourceRecordSets[?Type==&#39;PTR&#39;].Name&amp;quot; | grep -Po &#39;&amp;quot;(.+?)&amp;quot;&#39; | tr -d \&amp;quot; &amp;gt; ptr.txt  ptr.txt will contain lines like:
+1.0.0.10.in-addr.arpa. 2.0.0.10.in-addr.arpa.  Get ip list from PTR records cat ptr.</description>
     </item>
     
   </channel>

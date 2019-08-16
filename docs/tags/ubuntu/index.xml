@@ -5,6 +5,7 @@
     <link>https://blog.monsterxx03.com/tags/ubuntu/</link>
     <description>Recent content in ubuntu on Shining Moon</description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
     <lastBuildDate>Sat, 15 Jul 2017 02:35:52 +0000</lastBuildDate>
     
@@ -19,7 +20,13 @@
       <guid>https://blog.monsterxx03.com/2017/07/15/enable-coredump-on-ubuntu-16.04/</guid>
       <description>Coredump file is useful for debuging program crash. This post will show several settings related to coredump.
 Enable coredump If you run program from shell , enable coredump via unlimit -c unlimited， then check unlimit -a | grep core, if it shows unlimited, coredump is enabled for your current session.
-If your program is hosted by systemd, you need to edit your program&amp;#8217;s service unit file&amp;#8217;s [Service] section, add LimitCORE=infinity to enable coredump.</description>
+If your program is hosted by systemd, you need to edit your program&amp;#8217;s service unit file&amp;#8217;s [Service] section, add LimitCORE=infinity to enable coredump.
+coredump location Coredump file&amp;#8217;s location is determined by kernerl parameter kernel.core_pattern.
+On ubuntu 16.04 kernel.core_pattern default value is |/usr/share/apport/apport %p %s %c %P. Leading | means pass coredump file to following program. %p %c %P is used to create dump filename, their meaning can check via man core. apport will save dump file in /var/crash
+If your default disk partition don&amp;#8217;t have enough space to hold dump file, you can change kernel.core_pattern to another location, eg: /mnt/core/%e-%t.%P. If redis-server crashes, the dump file will be something like /mnt/core/redis-server-1500000000.1452. Also ensure crash process&amp;#8217;s running user have write privilege on target location.
+systemd-coredump You can install systemd-coredump to control dump file deeply, like: size, compression&amp;#8230;.
+Its config file is /etc/systemd/coredump.conf.
+After install, it will change kernel.core_pattern to |/lib/systemd/systemd-coredump %P %u %g %s %t 9223372036854775808 %e.</description>
     </item>
     
   </channel>
