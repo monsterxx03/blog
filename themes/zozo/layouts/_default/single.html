@@ -26,6 +26,7 @@
           {{ end }}
         </div>
       </div>
+    {{ template "_internal/disqus.html" . }}
       <!-- Valine 评论系统 -->
       {{ if .Site.Params.valine.enable }}
       {{ partial "comments.html" . }}
