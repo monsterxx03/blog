@@ -14,15 +14,15 @@ lambda 的代码的部署用的 [serverless](https://serverless.com) 框架, 本
 
 我基本上就把 lambda 当成 trigger 和 web hook 用.
 
-## 和  auto scaling group 一起用
+## 和  auto scaling group 一起用
 
-线上所有分组的机器都是用 auto scaling group 管理的, 只不过 stateless 的 server 开了自动伸缩, 带状态的 (ElasticSearch cluster, redis cache cluster) 只用来维护固定 size. 
+线上所有分组的机器都是用 auto scaling group 管理的, 只不过 stateless 的 server 开了自动伸缩, 带状态的 (ElasticSearch cluster, redis cache cluster) 只用来维护固定 size. 
 
-在往一个 group 里加 server 的时候, 要做的事情挺多的, 给新 server 添加组内编号 tag, 添加内网域名, provision, 部署最新代码.
+在往一个 group 里加 server 的时候, 要做的事情挺多的, 给新 server 添加组内编号 tag, 添加内网域名, provision, 部署最新代码.
 
 这些事都用 jenkins 来做, 但怎么触发 jenkins job 呢?
 
-让 auto scaling group 在 scale out 的时候发一个 notification 到 SNS topic, lambda function 订阅这个 topic, lambda function 从 SNS message 中解析出 新 server 的 instance id, 调用 jenkins 的 api 触发 provision.
+让 auto scaling group 在 scale out 的时候发一个 notification 到 SNS topic, lambda function 订阅这个 topic, lambda function 从 SNS message 中解析出 新 server 的 instance id, 调用 jenkins 的 api 触发 provision.
 
 provision 完成后，等 service 起来了, ALB 的 health check 就能过了, 用户的流量就过来了, 目前 provision 的过程大概要 2 mins.
 
@@ -30,7 +30,7 @@ provision 完成后，等 service 起来了, ALB 的 health check 就能过了, 
 
 Notes:
 
-- 如果把一台 auto scaling group 内的机器设置成 sandby 状态， 在把它放回去的时候, SNS topic 里的 Action 字段和新起 server 时候是一样的 LAUNCH, 如果不想有重复的 provision, 需要自己判断下 description 字段.
+- 如果把一台 auto scaling group 内的机器设置成 sandby 状态， 在把它放回去的时候, SNS topic 里的 Action 字段和新起 server 时候是一样的 LAUNCH, 如果不想有重复的 provision, 需要自己判断下 description 字段.
 - 因为 jenkins 部署在内网, lambda function 需要设置好相应的 vpc 和安全组 才能访问.
 - auto scaling group scale in 时候的关闭策略, 我选的是 newest server, 虽然 provision 的代码每次改动都很小心, 但万一有问题, 需要把新加的 server 销毁, 这样的策略比较方便.
 

@@ -43,7 +43,7 @@ publishDir="docs"
     enableSummary = true
 
 [social]
-    github = "monsterxx03"
+    github = "https://github.com/monsterxx03"
 
 [permalinks]
 page = "/:slug/"
