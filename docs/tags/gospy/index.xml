@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>gospy on Shining Moon</title>
+    <link>https://blog.monsterxx03.com/tags/gospy/</link>
+    <description>Recent content in gospy on Shining Moon</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>monsterxx03</copyright>
+    <lastBuildDate>Fri, 20 Sep 2019 14:07:12 +0800</lastBuildDate>
+    
+	<atom:link href="https://blog.monsterxx03.com/tags/gospy/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>gospy: Non-invasive goroutine inspector</title>
+      <link>https://blog.monsterxx03.com/2019/09/20/gospy-non-invasive-goroutine-inspector/</link>
+      <pubDate>Fri, 20 Sep 2019 14:07:12 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2019/09/20/gospy-non-invasive-goroutine-inspector/</guid>
+      <description>go 自带的 profiling 工具很强大(pprof, trace, GODEBUG ...), 但有时我还是想不修改目标进程的源码获取它的一些 runtime 信息, 最近研究了一下 py-spy 和 delve, 发现还是可实现的, 就做了个小东西gospy. 用法 目前就两个命令: gospy summary 和 gospy top sudo ./gospy summary --pid 1234, 可以 dump 目标进程的一些信息和当前活动 goroutine 正在执行的函数信息, 比如对一个 prometheus 进程做一次 snapshot: bin: /home/will/Downloads/prometheus-2.12.0.linux-amd64/prometheus, goVer: 1.12.8, gomaxprocs: 6 P0 idle, schedtick: 642, syscalltick: 81 P1 idle, schedtick: 959, syscalltick: 67 P2 idle, schedtick: 992, syscalltick: 32 P3 idle, schedtick: 581, syscalltick: 17 P4 idle, schedtick: 89, syscalltick: 8 P5 idle, schedtick: 231, syscalltick: 5 Threads: 14 total, 0 running, 14 sleeping, 0 stopped, 0 zombie Goroutines: 44 total, 0 idle, 0 running, 5</description>
+    </item>
+    
+  </channel>
+</rss>

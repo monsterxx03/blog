@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-cn" >
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  
+  <meta name="author"
+        content="monsterxx03"/>
+
+  
+  <meta name="description" content="go 自带的 profiling 工具很强大(pprof, trace, GODEBUG ...), 但有时我还是想不修改目标进程的源码获取它的一些 runtime 信息, 最近研究了一下 py-spy 和 delve, 发现还是可实现的, 就做了个小东西gospy. 用法 目前就两个命令: gospy summary 和 gospy top sudo ./gospy summary --pid 1234, 可以 dump 目标进程的一些信息和当前活动 goroutine 正在执行的函数信息, 比如对一个 prometheus 进程做一次 snapshot: bin: /home/will/Downloads/prometheus-2.12.0.linux-amd64/prometheus, goVer: 1.12.8, gomaxprocs: 6 P0 idle, schedtick: 642, syscalltick: 81 P1 idle, schedtick: 959, syscalltick: 67 P2 idle, schedtick: 992, syscalltick: 32 P3 idle, schedtick: 581, syscalltick: 17 P4 idle, schedtick: 89, syscalltick: 8 P5 idle, schedtick: 231, syscalltick: 5 Threads: 14 total, 0 running, 14 sleeping, 0 stopped, 0 zombie Goroutines: 44 total, 0 idle, 0 running, 5"/>
+  
+
+  
+
+  
+  <link rel="canonical" href="https://blog.monsterxx03.com/2019/09/20/gospy-non-invasive-goroutine-inspector/"/>
+
+  
+
+  <title>gospy: Non-invasive goroutine inspector &middot; Shining Moon</title>
+
+  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
+
+  
+  
+</head>
+
+<body>
+<div class="main animated">
+  <div class="nav_container animated fadeInDown">
+  <div class="site_nav" id="site_nav">
+    <ul>
+      
+      <li>
+        <a href="/">Home</a>
+      </li>
+      
+      <li>
+        <a href="/posts/">Archive</a>
+      </li>
+      
+      <li>
+        <a href="/about/">About</a>
+      </li>
+      
+      <li>
+        <a href="/tags">Tags</a>
+      </li>
+      
+    </ul>
+  </div>
+  <div class="menu_icon">
+    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
+  </div>
+</div>
+
+  <div class="header animated fadeInDown">
+  <div class="site_title_container">
+    <div class="site_title">
+      <h1>
+        <a href="https://blog.monsterxx03.com">
+          <span>Shining Moon</span>
+          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
+        </a>
+      </h1>
+    </div>
+    <div class="description">
+      <p class="sub_title">百种弊病,皆从懒生</p>
+      <div class="my_socials">
+        
+        
+        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
+        
+        
+        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    <div class="post_page">
+      <div class="post animated fadeInDown">
+        <div class="post_title post_detail_title">
+          <h2><a href='/2019/09/20/gospy-non-invasive-goroutine-inspector/'>gospy: Non-invasive goroutine inspector</a></h2>
+          <span class="date">2019.09.20</span>
+        </div>
+        <div class="post_content markdown">
+
+<p>go 自带的 profiling 工具很强大(pprof, trace, GODEBUG ...), 但有时我还是想不修改目标进程的源码获取它的一些
+runtime 信息, 最近研究了一下 py-spy 和 delve, 发现还是可实现的, 就做了个小东西<a href="https://github.com/monsterxx03/gospy">gospy</a>.</p>
+
+<h2 id="用法">用法</h2>
+
+<p>目前就两个命令: <code>gospy summary</code> 和 <code>gospy top</code></p>
+
+<p><code>sudo ./gospy summary --pid 1234</code>, 可以 dump 目标进程的一些信息和当前活动 goroutine 正在执行的函数信息,
+比如对一个 prometheus 进程做一次 snapshot:</p>
+
+<pre><code>bin: /home/will/Downloads/prometheus-2.12.0.linux-amd64/prometheus, goVer: 1.12.8, gomaxprocs: 6
+P0 idle, schedtick: 642, syscalltick: 81
+P1 idle, schedtick: 959, syscalltick: 67
+P2 idle, schedtick: 992, syscalltick: 32
+P3 idle, schedtick: 581, syscalltick: 17
+P4 idle, schedtick: 89, syscalltick: 8
+P5 idle, schedtick: 231, syscalltick: 5
+Threads: 14 total, 0 running, 14 sleeping, 0 stopped, 0 zombie
+Goroutines: 44 total, 0 idle, 0 running, 5 syscall, 39 waiting
+
+goroutines:
+
+1 - waiting for chan receive: rt0_go (/usr/local/go/src/runtime/asm_amd64.s:202) 
+2 - waiting for force gc (idle): 5 (/usr/local/go/src/runtime/proc.go:240) 
+3 - waiting for GC sweep wait: gcenable (/usr/local/go/src/runtime/mgc.go:209) 
+8 - syscall: addtimerLocked (/usr/local/go/src/runtime/time.go:169) 
+9 - waiting for select: 0 (/app/vendor/go.opencensus.io/stats/view/worker.go:33) 
+16 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) 
+17 - waiting for finalizer wait: createfing (/usr/local/go/src/runtime/mfinal.go:156) 
+19 - syscall: 0 (/usr/local/go/src/os/signal/signal_unix.go:30) 
+22 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) 
+23 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) 
+38 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) 
+49 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) 
+50 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) 
+74 - waiting for select: sync (/app/scrape/scrape.go:408) 
+75 - syscall: addtimerLocked (/usr/local/go/src/runtime/time.go:169) 
+84 - syscall: addtimerLocked (/usr/local/go/src/runtime/time.go:169) 
+85 - waiting for select: Run (/app/vendor/github.com/oklog/run/group.go:36) 
+...
+</code></pre>
+
+<p>P0, P1 ..., 是 go 的 GMP schedule 模型里的 P, 可以简单理解成对一个物理核心的逻辑抽象. 个数可由环境变量 GOMAXPROCS 控制,
+默认是机器核心数.</p>
+
+<p><code>sudo ./gospy top --pid 1234</code>, 显示一个类似 top 命令的界面, 把 goroutine 按照正在执行的函数做了个 group by, 可以用来观察下有没有 goroutine 泄漏.</p>
+
+<p><img src="https://raw.githubusercontent.com/monsterxx03/gospy/master/images/top.png" alt="top" /></p>
+
+<p>目前实现的性能不是很好, 如果目标进程有上百万的 goroutine, 不要轻易尝试, 但优化空间还挺大的, 后续整一下.</p>
+
+<h2 id="一些限制">一些限制</h2>
+
+<ul>
+<li>只支持 x86_64 的 linux</li>
+<li>目标进程的 binary 需要保留 debug 信息, link 的时候传了 <code>-w -s</code> 就没办法了.</li>
+<li>build 时候如果用了 <code>-buildmod=pie</code>, 也不支持, pie 模式下, 二进制文件在进程虚拟内存里的基地址会随机化, 怎么算出这个基地址我倒是知道, 但 go build 出的 pie 格式里, 有 debug 信息, 却没有 <code>.gopclntab</code> 这个 section(用来根据 pc 查找到对应函数的行号), 目前没弄懂怎么搞... docker 官方 release 的 binary 就是 pie 模式的, 所以对 dockerd 无效.</li>
+</ul>
+
+<h2 id="其他参数">其他参数</h2>
+
+<p><code>--bin</code>, 如果目标进程是 strip 过的, 可以用相同源码再编译一个带 debug 信息的 binary, 用这个参数指定位置.</p>
+
+<p><code>--non-blocking</code>, 默认 gospy 会用 ptrace 把目标进程暂停(进程会进入 t 状态), 做完 snapshot 之手再 detach. 对目标进程是有一定性能影响的(goroutine 越多, 暂停时间越长),这个参数就是
+不暂停进程直接读取内存, 如果目标进程很活跃, 可能读不到一致的内存视图, 会失败.</p>
+
+<p><code>--pc</code>, pc 指 program counter, 就是 rip 寄存器里存储的下一条要执行的指令, 根据 pc 值可以从 debug info 中查找到对应的函数名. 这个参数指定使用哪种类型的 pc 值, 默认是 <code>start</code>,　是 goroutine 当前执行的函数, <code>caller</code> 是 trigger 这个 goroutine 的函数, <code>current</code> 是从 schedule 的视角看正在执行的函数.</p>
+</div>
+        <div class="post_footer">
+          
+          <div class="meta">
+            <div class="info">
+              <span class="field tags">
+                <i class="remixicon-stack-line"></i>
+                
+                <a href="https://blog.monsterxx03.com/tags/gospy/">gospy</a>
+                
+                <a href="https://blog.monsterxx03.com/tags/golang/">golang</a>
+                
+              </span>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mx03" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      
+      
+    </div>
+  </div>
+  <a id="back_to_top" href="#" class="back_to_top"><span>△</span></a>
+</div>
+<footer class="footer">
+  <div class="powered_by">
+    <a href="https://zeuk.me">Designed by Zeuk,</a>
+    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
+  </div>
+
+  <div class="footer_slogan">
+    <span></span>
+  </div>
+</footer>
+
+
+
+<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
+<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
+<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
+<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
+<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-98667627-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</body>
+</html>
