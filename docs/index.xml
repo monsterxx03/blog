@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 20 Sep 2019 14:07:12 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 26 Sep 2019 16:05:05 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>割裂感</title>
+      <link>https://blog.monsterxx03.com/2019/09/26/%E5%89%B2%E8%A3%82%E6%84%9F/</link>
+      <pubDate>Thu, 26 Sep 2019 16:05:05 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2019/09/26/%E5%89%B2%E8%A3%82%E6%84%9F/</guid>
+      <description>题文无关. 楼下阿姨 三楼住了一对老夫妻, 丈夫身体不好, 不怎么出门, 阿姨倒是很精神, 天天溜达, 偶尔会上来问我些用手机的事情. 阿姨人挺好, 就是总想着捡些小便宜, 那个年代过来的人都这样, 无可厚非. 某日, 拿着手机给我看某基金的公众号, 说是可以领红包, 意兴阑珊得帮她看了下, 大致意思是在公众号下留言, 记录自己在这个基金的投资故事, 抽取写得好的发红包&amp;hellip;我就告诉她, 这个基本是没啥可能被抽中的(我也不可</description>
+    </item>
     
     <item>
       <title>gospy: Non-invasive goroutine inspector</title>

@@ -92,6 +92,41 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2018/09/11/eks-%E8%AF%84%E6%B5%8B/'>EKS 评测</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>EKS 正式 launch 还没有正经用过, 最近总算试了一把, 记录一点. Setup AWS 官方的 Guide 只提供了一个 cloudformation template 来设置 worker node, 我喜欢用 terraform, 可以跟着这个文档尝试:https://www.terraform.io/docs/providers/aws/guides/eks-getting-started.html 来设置完整的 eks cluster 和管理 worker node 的 autoscaling group. 设置完 EKS 后需要添加一条 ConfigMap: apiVersion: v1 kind: ConfigMap metadata: name: aws-auth namespace: kube-system data: mapRoles: | - rolearn: arn:aws:iam::&lt;account-id&gt;:role/eksNodeRole username: system:node:{{EC2PrivateDNSName}} groups: - system:bootstrappers - system:nodes 这样 worker node 节点才能加入集群. 网......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2018.09.11</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2018/09/03/kubernetes-in-action-notes/'>Kubernetes in Action Notes</a></h2>
   </div>
   
@@ -379,41 +414,6 @@ I choose SNS + SQS, main concerns are from operation side:
           <a href="https://blog.monsterxx03.com/tags/python/">python</a>
           
           <a href="https://blog.monsterxx03.com/tags/sqlalchemy/">sqlalchemy</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/'>AWS 的 K8S CNI Plugin</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别. K8S 集群对网络有几个基本要求: container 之间网络必须可达，且不通过 NAT 所有 node 必须可以和所有 container 通信, 且不通过 NAT container 自己看到的 IP, 必须和其他 container 看到的它的 ip 相同. Flannel in VPC flannel 是 K8S 的一个 CNI 插件, 在 VPC 里使用 flannel 的话, 有几个选择: 通过 VXLAN/UDP 进行封包, 封包影响网络性能, 而且不好 debug 用 aws vpc backend, 这种方式会把每台主机的 docker 网段添加进 vpc routing table, 但默认 routing table 里只能有50条规则......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.04.09</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/vpc/">vpc</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
           
         </span>
         
