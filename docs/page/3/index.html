@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.58.2" />
+	<meta name="generator" content="Hugo 0.58.3" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -98,16 +98,16 @@
   <div class="list">
     <div class="post_content markdown">
       <p>This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04, some tools are not installed by default, you can installl by sudo apt install xxx. Some commands must be used via sudo.
-System resources can be classified in three main categories: compute, storage, and network. Usually, when you come to a performance issue, it's always caused by exhaustion of those resources.
-Universal metric: System load There're several ways to get system load, w, uptime, top, cat /proc/loadavg
+System resources can be classified in three main categories: compute, storage, and network. Usually, when you come to a performance issue, it&rsquo;s always caused by exhaustion of those resources.
+Universal metric: System load There&rsquo;re several ways to get system load, w, uptime, top, cat /proc/loadavg
 uptime example:
 03:34:23 up 20:31, 1 user, load average: 1.02, 0.65, 0.45  Top right corner three values named load average is system load.
 They means: average system load during last minute/last 5 minutes/last 15 minutes periods.
-If load/(# of cpu core) &gt; 1 means there're tasks pending in cpu queue. Usually, you will feel slow.
-It's different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.
-If system load is high, means tasks are pending in CPU queue, maybe a result of: - High cpu usage. - Poor disk performance(disk io). - Exhaustion of ram. - ...
+If load/(# of cpu core) &gt; 1 means there&rsquo;re tasks pending in cpu queue. Usually, you will feel slow.
+It&rsquo;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.
+If system load is high, means tasks are pending in CPU queue, maybe a result of: - High cpu usage. - Poor disk performance(disk io). - Exhaustion of ram. - &hellip;
 free free -k/-m/-g show memory usage in KB/MB/GB
-free -h humanize output (automatically show in KB/MB/GB.......</p>
+free -h humanize output (automatically show in KB/MB/GB&hellip;)......</p>
     </div>
   </div>
   
@@ -138,7 +138,7 @@ free -h humanize output (automatically show in KB/MB/GB.......</p>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>屋里有两个钟，一个快 5 分钟， 一个慢 5 分钟, 一直懒得把它们调正, 有种莫名的时间撕裂感, 好像还挺喜欢.还有一个月 2018 就过去了, 我想想最近都干嘛了. 最近看的书 读完了 &lt;a philosophy of software design&gt;, 书是好书, 就是好贵(花了我260...). 本来想专门写一篇的,但开了个头发却发现没太多可写的. 书里提到的问题都碰到过, 解决方法和建议其实也一直在用, 没有什么银弹, 等再践行一段时间再说吧. PS: 收益最大的是讲注释的章节. 昨晚看完了 &lt;夜......</p>
+      <p>屋里有两个钟，一个快 5 分钟， 一个慢 5 分钟, 一直懒得把它们调正, 有种莫名的时间撕裂感, 好像还挺喜欢.还有一个月 2018 就过去了, 我想想最近都干嘛了. 最近看的书 读完了 &lt;a philosophy of software design&gt;, 书是好书, 就是好贵(花了我260&hellip;). 本来想专门写一篇的,但开了个头发却发现没太多可写的. 书里提到的问题都碰到过, 解决方法和建议其实也一直在用, 没有什么银弹, 等再践行一段时间再说吧. PS: 收益最大的是讲注释的章节. 昨晚看完了......</p>
     </div>
   </div>
   

@@ -11,13 +11,13 @@
 
   
   <meta name="description" content="Just some random complains and notes about server infra management. I think those are my motivations to move to kubernetes.
-Won&#39;t explain k8s or docker in detail, and how they solve those problems in this post.
+Won&amp;rsquo;t explain k8s or docker in detail, and how they solve those problems in this post.
 Infrastructure level(on AWS) We use following services provided by AWS.
- Compute:  EC2 AutoScaling Group Lambda  network:  VPC (SDN network) DNS (route53) CDN (CloudFront)  Loadbalancer:  ELB (L4) NLB (L4, ELB successor, support static IP) ALB (L7)  Storage:  EBS (block storage) EFS (hosted NFS) RDS(MySQl/PostgreSQL ...) Redshift (data warehouse) DynamoDB (KV) S3 (object storage) Glacier (cheap archive storage)  Web Firewall (WAF) Monitor (CloudWatch) DMS (ETL) ...  For infra management, in early days, we just click, click, click... or write some simple scripts to call AWS api.
+ Compute:  EC2 AutoScaling Group Lambda  network:  VPC (SDN network) DNS (route53) CDN (CloudFront)  Loadbalancer:  ELB (L4) NLB (L4, ELB successor, support static IP) ALB (L7)  Storage:  EBS (block storage) EFS (hosted NFS) RDS(MySQl/PostgreSQL &amp;hellip;) Redshift (data warehouse) DynamoDB (KV) S3 (object storage) Glacier (cheap archive storage)  Web Firewall (WAF) Monitor (CloudWatch) DMS (ETL) &amp;hellip;  For infra management, in early days, we just click, click, click&amp;hellip; or write some simple scripts to call AWS api.
 With infra resources growing, management became complex, a concept called Infrastructure as Code rising.
 AWS provides CloudFormation as orchestration tool, but we use terraform (for short: CloudFormation sucks, for long: Infrastructure as Code)
-So far, not bad.(tweak those services internally is another story... never belive work out of box)
-Application level  configuration management (setup nginx, jenkins, redis, twemproxy, ElasticSearch or WTF..) CI/CD dependency management  They&#39;re complicated, people developped bunch of tools to handle: puppet, chef, ansible, saltstack ."/>
+So far, not bad.(tweak those services internally is another story&amp;hellip; never belive work out of box)
+Application level  configuration management (setup nginx, jenkins, redis, twemproxy, ElasticSearch or WTF..) CI/CD dependency management  They&amp;rsquo;re complicated, people developped bunch of tools to handle: puppet, chef, ansible, saltstack &amp;hellip;"/>
   
 
   
@@ -103,7 +103,7 @@ Application level  configuration management (setup nginx, jenkins, redis, twempr
 
 <p>Just some random complains and notes about server infra management. I think those are my motivations to move to kubernetes.</p>
 
-<p>Won't explain k8s or docker in detail, and how they solve those problems in this post.</p>
+<p>Won&rsquo;t explain k8s or docker in detail, and how they solve those problems in this post.</p>
 
 <h2 id="infrastructure-level-on-aws">Infrastructure level(on AWS)</h2>
 
@@ -136,7 +136,7 @@ Application level  configuration management (setup nginx, jenkins, redis, twempr
 <ul>
 <li>EBS (block storage)</li>
 <li>EFS (hosted NFS)</li>
-<li>RDS(MySQl/PostgreSQL ...)</li>
+<li>RDS(MySQl/PostgreSQL &hellip;)</li>
 <li>Redshift (data warehouse)</li>
 <li>DynamoDB (KV)</li>
 <li>S3 (object storage)</li>
@@ -145,16 +145,16 @@ Application level  configuration management (setup nginx, jenkins, redis, twempr
 <li>Web Firewall (WAF)</li>
 <li>Monitor (CloudWatch)</li>
 <li>DMS (ETL)
-...</li>
+&hellip;</li>
 </ul>
 
-<p>For infra management, in early days, we just click, click, click... or write some simple scripts to call AWS api.</p>
+<p>For infra management, in early days, we just click, click, click&hellip; or write some simple scripts to call AWS api.</p>
 
 <p>With infra resources growing, management became complex, a concept called <code>Infrastructure as Code</code> rising.</p>
 
 <p>AWS provides CloudFormation as orchestration tool, but we use <a href="https://www.terraform.io/">terraform</a> (for short: CloudFormation sucks, for long: <a href="https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/">Infrastructure as Code</a>)</p>
 
-<p>So far, not bad.(tweak those services internally is another story... never belive <code>work out of box</code>)</p>
+<p>So far, not bad.(tweak those services internally is another story&hellip; never belive <code>work out of box</code>)</p>
 
 <h2 id="application-level">Application level</h2>
 
@@ -164,15 +164,15 @@ Application level  configuration management (setup nginx, jenkins, redis, twempr
 <li>dependency management</li>
 </ul>
 
-<p>They're complicated, people developped bunch of tools to handle: puppet, chef, ansible, saltstack ...</p>
+<p>They&rsquo;re complicated, people developped bunch of tools to handle: puppet, chef, ansible, saltstack &hellip;</p>
 
-<p>They're great and working, but writing correct code still a challenge when changes involves:</p>
+<p>They&rsquo;re great and working, but writing correct code still a challenge when changes involves:</p>
 
 <ul>
 <li>Upgrade server os from ubuntu12.04 to 18.04?  Change OS from ubuntu to CentOS?
 
 <ul>
-<li>upgrade dependency, and configurations (it's a hell!)</li>
+<li>upgrade dependency, and configurations (it&rsquo;s a hell!)</li>
 <li>Deploy an upgraded new server into cluster, do AB testing with old server: if boom!! ok,lets rollback else rollout to all.</li>
 </ul></li>
 <li>Previously, we use single nginx to do request dispatch, now we need setup 2 in every available zone for HA purpose, and do DNS round robin for them?
@@ -183,9 +183,9 @@ Application level  configuration management (setup nginx, jenkins, redis, twempr
 <li>Service A &amp; B have low traffic before, setup dedicated servers for them is wastefully, so they share servers, but we need split them for now?
 
 <ul>
-<li>Setup new group for B, configure loadbalacer rule to redirect service B traffic to it. (okay, resuing existing lb or setup new one? depends...)</li>
+<li>Setup new group for B, configure loadbalacer rule to redirect service B traffic to it. (okay, resuing existing lb or setup new one? depends&hellip;)</li>
 <li>Change deployment flow, since B is on different servers.</li>
-<li>Clean up B's legacy configure on A, or setup a new group for A, and migrate A? really depends...</li>
+<li>Clean up B&rsquo;s legacy configure on A, or setup a new group for A, and migrate A? really depends&hellip;</li>
 </ul></li>
 <li>ElasticSearch have 3 nodes before, we have bunch of new features rely on it, scale to 5 nodes?
 
@@ -205,36 +205,36 @@ Application level  configuration management (setup nginx, jenkins, redis, twempr
 
 <ul>
 <li>legacy service without maintenance, but still needs.</li>
-<li>I installed this software from a ubuntu PPA two years ago(wrote in ansible playbook), Now need to migrate to another server, but provision failed! because PPA's gpg key expired...Okay, I should maintain my own deb repo.</li>
-<li>High available is great, but this function is not so important now, for budget reason ... Or we need make it on live tomorrow, do a simple setup! 6 months later, WTF...</li>
-<li>I'm not familiar with it before, so ... made some stupid configuration, now migration is a problem.</li>
+<li>I installed this software from a ubuntu PPA two years ago(wrote in ansible playbook), Now need to migrate to another server, but provision failed! because PPA&rsquo;s gpg key expired&hellip;Okay, I should maintain my own deb repo.</li>
+<li>High available is great, but this function is not so important now, for budget reason &hellip; Or we need make it on live tomorrow, do a simple setup! 6 months later, WTF&hellip;</li>
+<li>I&rsquo;m not familiar with it before, so &hellip; made some stupid configuration, now migration is a problem.</li>
 <li>Need to upgrade ansible version.</li>
 </ul>
 
-<p>Hmm, python(2 or 3?), ruby, nodejs, java... different language, different runtime, want different versions for a lib installed on same machine.</p>
+<p>Hmm, python(2 or 3?), ruby, nodejs, java&hellip; different language, different runtime, want different versions for a lib installed on same machine.</p>
 
-<p>Okay, it's python, we have GIL problem, we use gevent to do concurrency, but want to take use of multi cores on single server? Prefork by uwsgi/gunicorn, or deploy multi single process behind loadbalancer.</p>
+<p>Okay, it&rsquo;s python, we have GIL problem, we use gevent to do concurrency, but want to take use of multi cores on single server? Prefork by uwsgi/gunicorn, or deploy multi single process behind loadbalancer.</p>
 
-<p>How to do gracefully cycle(or called hot code reload)? It's a prefork application, and have supports for it, do <code>kill -HUP {pid}</code> is simple. No builin support? take down from loadbalancer , restart, and attach again, batch by batch.</p>
+<p>How to do gracefully cycle(or called hot code reload)? It&rsquo;s a prefork application, and have supports for it, do <code>kill -HUP {pid}</code> is simple. No builin support? take down from loadbalancer , restart, and attach again, batch by batch.</p>
 
-<p>Making change is complicated, and involves a lot of efforts, but it's not the hardest part. How to apply changes and not affect other systems is a problem.</p>
+<p>Making change is complicated, and involves a lot of efforts, but it&rsquo;s not the hardest part. How to apply changes and not affect other systems is a problem.</p>
 
 <h2 id="k8s-advantage-resource-allocation-and-self-healing">K8S advantage: Resource allocation and self-healing</h2>
 
 <p>Application configuration or possible migration tasks are complex but still controllable if you take enough time.</p>
 
-<p>If you have written great chef recipes or ansible playbooks, it won't be your first reason to migrate to k8s. Actually, I'm not a big fan of docker, even I know it solves problems.</p>
+<p>If you have written great chef recipes or ansible playbooks, it won&rsquo;t be your first reason to migrate to k8s. Actually, I&rsquo;m not a big fan of docker, even I know it solves problems.</p>
 
-<p>For me, the biggest point is resource management, with container and k8s, we can binpack multi applications on single server to take advantage of resource, simple to scale when needs (with k8s deployment &amp; HPA). Won't affect each other (if configured right).</p>
+<p>For me, the biggest point is resource management, with container and k8s, we can binpack multi applications on single server to take advantage of resource, simple to scale when needs (with k8s deployment &amp; HPA). Won&rsquo;t affect each other (if configured right).</p>
 
-<p>When people saying <code>server down</code>, there're bunch of reasons:</p>
+<p>When people saying <code>server down</code>, there&rsquo;re bunch of reasons:</p>
 
 <ul>
-<li>applications overcommits resource(OOM, out of disk, 100% CPU usage ...)</li>
+<li>applications overcommits resource(OOM, out of disk, 100% CPU usage &hellip;)</li>
 <li>Network issue(dns, network partition)</li>
 <li>aws <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-retirement.html">instance reirement</a> without notice.</li>
 <li>underlying hardware issues make vm dead.</li>
-<li>...</li>
+<li>&hellip;</li>
 </ul>
 
 <p>Some of them we can do nothing(eg: network related), just post a ticket, wait for AWS to solve.</p>
@@ -245,13 +245,13 @@ Application level  configuration management (setup nginx, jenkins, redis, twempr
 
 <p>With k8s, we can limit application using reasonable cpu and ram, not affecting other processes.</p>
 
-<p>For those unexpected instance level problems, k8s can reschedule pods to health nodes automatically. It's so called self-healthing.</p>
+<p>For those unexpected instance level problems, k8s can reschedule pods to health nodes automatically. It&rsquo;s so called self-healthing.</p>
 
 <h2 id="control-complex">Control complex</h2>
 
-<p>k8s solves some problems, but it's complex, and need understand a lot of concepts to make applications run on it, no magic.</p>
+<p>k8s solves some problems, but it&rsquo;s complex, and need understand a lot of concepts to make applications run on it, no magic.</p>
 
-<p>If you're still confusing whether use k8s or not, think twice, list your current pain points, are they worth the efforts?</p>
+<p>If you&rsquo;re still confusing whether use k8s or not, think twice, list your current pain points, are they worth the efforts?</p>
 </div>
         <div class="post_footer">
           

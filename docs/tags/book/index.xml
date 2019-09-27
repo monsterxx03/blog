@@ -18,7 +18,7 @@
       <pubDate>Tue, 12 Feb 2019 13:08:29 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/</guid>
-      <description>最近在看 google 的 &amp;lt;The Site Reliablity Workbook&amp;gt;, 其中有一章是&amp;quot;Manage load&amp;quot;, 内容还挺详细的, 结合在 aws 上的经验做点笔记. Load Balancing 流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存. google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency. 但只依赖 BGP 会带来两个问题: 某个地区的用户过多会给最近的 frontend server 带来过高的负</description>
+      <description>最近在看 google 的 &amp;lt;The Site Reliablity Workbook&amp;gt;, 其中有一章是&amp;rdquo;Manage load&amp;rdquo;, 内容还挺详细的, 结合在 aws 上的经验做点笔记. Load Balancing 流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存. google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency. 但只依赖 BGP 会带来两个问题: 某个地区的用户过多会给最近的 frontend server 带来过高的</description>
     </item>
     
     <item>
@@ -28,16 +28,16 @@
       
       <guid>https://blog.monsterxx03.com/2018/09/03/kubernetes-in-action-notes/</guid>
       <description>Miscellaneous notes when reading &amp;lt;Kubernetes in Action&amp;gt;.
-api group and api version core api group need&#39;t specified in apiVersion field.
+api group and api version core api group need&amp;rsquo;t specified in apiVersion field.
 For example, ReplicationController is on core api group, so only:
 apiVersion: v1 kind: ReplicationController ...  ReplicationSet is added later in app group, v1beta2 version (k8s v1.8):
 apiVersion: apps/v1beta2 1 kind: ReplicaSet  https://kubernetes.io/docs/concepts/overview/kubernetes-api/
 ReplicationController VS ReplicationSet ReplicationController is replaced by ReplicationSet, which has more expressive pod selectors.
-ReplicationController&#39;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
+ReplicationController&amp;rsquo;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
 rs also support operator on key value: In, NotIn, Exists, DoesNotExist
 If migrate from rc to rs, can delete rc with --cascade=false option, it will delete rc only, but left pods running, then we can create a rs with same selector to make pods under management.
 DaemonSet DaemonSet ensures pod run exact one copy on one node, useful for processes like monitor agent and log collector. Use node-selector to make ds only run on specific nodes.
-If node is made unschedulable, normal pods won&#39;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass scheduler.
+If node is made unschedulable, normal pods won&amp;rsquo;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass scheduler.
 Job Job is used to run a single completable task.</description>
     </item>
     

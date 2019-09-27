@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.58.2" />
+	<meta name="generator" content="Hugo 0.58.3" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -98,16 +98,16 @@
   <div class="list">
     <div class="post_content markdown">
       <p>Miscellaneous notes when reading &lt;Kubernetes in Action&gt;.
-api group and api version core api group need't specified in apiVersion field.
+api group and api version core api group need&rsquo;t specified in apiVersion field.
 For example, ReplicationController is on core api group, so only:
 apiVersion: v1 kind: ReplicationController ...  ReplicationSet is added later in app group, v1beta2 version (k8s v1.8):
 apiVersion: apps/v1beta2 1 kind: ReplicaSet  https://kubernetes.io/docs/concepts/overview/kubernetes-api/
 ReplicationController VS ReplicationSet ReplicationController is replaced by ReplicationSet, which has more expressive pod selectors.
-ReplicationController's label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
+ReplicationController&rsquo;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
 rs also support operator on key value: In, NotIn, Exists, DoesNotExist
 If migrate from rc to rs, can delete rc with --cascade=false option, it will delete rc only, but left pods running, then we can create a rs with same selector to make pods under management.
 DaemonSet DaemonSet ensures pod run exact one copy on one node, useful for processes like monitor agent and log collector. Use node-selector to make ds only run on specific nodes.
-If node is made unschedulable, normal pods won't be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass scheduler.
+If node is made unschedulable, normal pods won&rsquo;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass scheduler.
 Job Job is used to run a single completable task.......</p>
     </div>
   </div>
@@ -229,7 +229,7 @@ Job Job is used to run a single completable task.......</p>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>去年在 kindle 上买了套松本清张的合集, 总共有10本, 断断续续看到现在终于看完了第 9 本&lt;隐花平原&gt;, 随便扯一点(喂，为什么不看完最后一本! 松本清张 (1909 ~ 1992), 社会派推理开创人, 这套书里的作品各个年代都有, 最有名的&lt;砂之器&gt;(貌似仲间姐姐拍过剧?) 和 &lt;点与线&gt; 却没收录. 本格派讲究逻辑的精巧， 整个故事就像在玩密室逃脱一样, 一环扣一环, 最后谜底揭开的时候让人惊呼&quot;卧槽&q......</p>
+      <p>去年在 kindle 上买了套松本清张的合集, 总共有10本, 断断续续看到现在终于看完了第 9 本&lt;隐花平原&gt;, 随便扯一点(喂，为什么不看完最后一本! 松本清张 (1909 ~ 1992), 社会派推理开创人, 这套书里的作品各个年代都有, 最有名的&lt;砂之器&gt;(貌似仲间姐姐拍过剧?) 和 &lt;点与线&gt; 却没收录. 本格派讲究逻辑的精巧， 整个故事就像在玩密室逃脱一样, 一环扣一环, 最后谜底揭开的时候让人惊呼&rdquo;卧槽&......</p>
     </div>
   </div>
   
@@ -253,10 +253,10 @@ Job Job is used to run a single completable task.......</p>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>This article won't provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven't finished this project, also I haven't gave up so far :).
-Won't explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
-The codebase I'm working on:
- Only support python2.7, don't consider python2.6 1X repos, about half a million lines of code in total (calculated by cloc). These repos will import each other, bad design from early days, not easy to resolve, which means I can't switch to py3 one by one, I need write py2/3 compatiblility code for them, and switch together(I'm also considering solve the import problem first). Test coverage is not good, best is around 80%, lowest is 30%.  Tools 2to3, a command line tools packaged with py2, it's a oneway porting to convert your code to py3, new code won't work under py2, since I need be compatible with py2 and py3 for long time, didn't try it.
+      <p>This article won&rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&rsquo;t finished this project, also I haven&rsquo;t gave up so far :).
+Won&rsquo;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
+The codebase I&rsquo;m working on:
+ Only support python2.7, don&rsquo;t consider python2.6 1X repos, about half a million lines of code in total (calculated by cloc). These repos will import each other, bad design from early days, not easy to resolve, which means I can&rsquo;t switch to py3 one by one, I need write py2/3 compatiblility code for them, and switch together(I&rsquo;m also considering solve the import problem first). Test coverage is not good, best is around 80%, lowest is 30%.  Tools 2to3, a command line tools packaged with py2, it&rsquo;s a oneway porting to convert your code to py3, new code won&rsquo;t work under py2, since I need be compatible with py2 and py3 for long time, didn&rsquo;t try it.
 future, it tries to make you write single clean python3.x code without ugly hack with six. I used it it first, but come to many problems, will explain later.......</p>
     </div>
   </div>
@@ -319,11 +319,11 @@ future, it tries to make you write single clean python3.x code without ugly hack
   
   <div class="list">
     <div class="post_content markdown">
-      <p>Recently, we build pub/sub system based on AWS's SNS &amp; SQS service, take some notes.
-Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It's really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don't support redelivery as well, if subscribers failed to process the message, message will be dropped.
-There're three obvious choices in my mind:
- kafka AMQP based system (rabbitmq,activemq ...) SNS + SQS  My demands for this system are:
- Support message persistence. Support topic based message distribution. Easy to manage.  The data volume won't be very large, so performance and throughput won't be critical concerns.
+      <p>Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, take some notes.
+Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
+There&rsquo;re three obvious choices in my mind:
+ kafka AMQP based system (rabbitmq,activemq &hellip;) SNS + SQS  My demands for this system are:
+ Support message persistence. Support topic based message distribution. Easy to manage.  The data volume won&rsquo;t be very large, so performance and throughput won&rsquo;t be critical concerns.
 I choose SNS + SQS, main concerns are from operation side:
  kafka need zookeeper to support cluster. rabbitmq need extra configuration for HA, and AMQP model is relatively complex for programming.  So my decision is:
  application publish message to SNS topic Setup multi SQS queues to subscribe SNS topic Let different application processes to subscribe to different queues to finish its logic.  SQS and SNS is very simple, not too much to say, just some notes:......</p>
@@ -361,7 +361,7 @@ I choose SNS + SQS, main concerns are from operation side:
   
   <div class="list">
     <div class="post_content markdown">
-      <p>最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些. 原来的 db 层代码历史非常古老(10年以上...), 最早写代码的人早就不在了, 问题很多: 完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表结构，只能......</p>
+      <p>最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些. 原来的 db 层代码历史非常古老(10年以上&hellip;), 最早写代码的人早就不在了, 问题很多: 完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表......</p>
     </div>
   </div>
   

@@ -112,7 +112,7 @@
 
 <p>redo log 用来 crash recovery, binlog 会上传 s3　用于 point in time restore.</p>
 
-<p>在 aurora 里，只有 redo log 会通过网络复制到各个 replica, master 会等待 4/6 replicas 完成 redo log 的写入就认为写入成功 (所以失去3副本就无法写入数据了). 其他副本会根据 redo log 重建数据(单独的 redo log applicator 进程).</p>
+<p>在 aurora 里，只有 redo log 会通过网络复制到各个 replica, master 会等待 <sup>4</sup>&frasl;<sub>6</sub> replicas 完成 redo log 的写入就认为写入成功 (所以失去3副本就无法写入数据了). 其他副本会根据 redo log 重建数据(单独的 redo log applicator 进程).</p>
 
 <p>只同步 redo log 可以大大提高 MySQL 的写能力, 论文中给的数据是,和直接的基于 EBS mirror 的 MySQL 相比, aurora 的TPS 是35 倍, 每个事务产生的 IO 减少了7.7 倍.</p>
 

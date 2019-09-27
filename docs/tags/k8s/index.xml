@@ -36,7 +36,7 @@
       <pubDate>Tue, 23 Jul 2019 12:32:08 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2019/07/23/%E8%BF%81%E7%A7%BB%E5%88%B0-k8s-%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%A2%B0%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/</guid>
-      <description>开始把线上流量往 k8s 集群里面导了, 中间碰到了茫茫多的问题 ...... 记录一下(大多都不是 k8s 的问题). nginx ingress controller 的问题 zero-downtime pods upgrade 默认配置下, nginx ingress controller 的 upstream 是 service 的 endpoints, 在 eks 里, 就是 vpc cni plugin 分配给 pod 的 vpc ip(不是 cluster ip), 和直接使用 service cluster ip 比, 好处是: 可以支持 sticky session 可以用 round robin 之外的负载均衡算法 具体实现是, 当 service 的 endpoint 列表发生变化时, nginx ingress controller 收到通知, 对它管理的 nginx 进程发起一个 http request, 更新 endpoint ip list(nginx 内置的 lua 来修改内存中的 ip list) 这样的问题是, 从 pod 被干掉到 nginx 更新之间</description>
+      <description>开始把线上流量往 k8s 集群里面导了, 中间碰到了茫茫多的问题 &amp;hellip;&amp;hellip; 记录一下(大多都不是 k8s 的问题). nginx ingress controller 的问题 zero-downtime pods upgrade 默认配置下, nginx ingress controller 的 upstream 是 service 的 endpoints, 在 eks 里, 就是 vpc cni plugin 分配给 pod 的 vpc ip(不是 cluster ip), 和直接使用 service cluster ip 比, 好处是: 可以支持 sticky session 可以用 round robin 之外的负载均衡算法 具体实现是, 当 service 的 endpoint 列表发生变化时, nginx ingress controller 收到通知, 对它管理的 nginx 进程发起一个 http request, 更新 endpoint ip list(nginx 内置的 lua 来修改内存中的 ip list) 这样的问题是, 从 pod 被干掉到 nginx 更新之间</description>
     </item>
     
     <item>
@@ -63,7 +63,7 @@
       <pubDate>Tue, 14 May 2019 13:52:02 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2019/05/14/prometheus-on-k8s/</guid>
-      <description>Why move to prometheus? 把生产环境迁移到 k8s 的第一步是要搞定监控, 目前线上监控用的是商业的 datadog, 在 container 环境下 datadog 监控还要按 container 数目收费, 单 host 只有 10 个的额度, 超过要加钱, 高密度部署下很不划算. 一个 server 跑 20 个以上 container 是很正常的事情, 单台 server 的监控费用立马翻倍. tracing 这块之前用的也是 datadog, 但太贵了,一直也想换开源实现, 索性监控报警也换了, 踩一把坑吧. vendor lock 总是不爽的... Metrics in k8s 先不提 prometheus, k8s 中 metrics 来源有那么几个: metrics-serever metrics-server (取代 heapster), 从 node 上 kubelet 的 summary api 抓取数据(no</description>
+      <description>Why move to prometheus? 把生产环境迁移到 k8s 的第一步是要搞定监控, 目前线上监控用的是商业的 datadog, 在 container 环境下 datadog 监控还要按 container 数目收费, 单 host 只有 10 个的额度, 超过要加钱, 高密度部署下很不划算. 一个 server 跑 20 个以上 container 是很正常的事情, 单台 server 的监控费用立马翻倍. tracing 这块之前用的也是 datadog, 但太贵了,一直也想换开源实现, 索性监控报警也换了, 踩一把坑吧. vendor lock 总是不爽的&amp;hellip; Metrics in k8s 先不提 prometheus, k8s 中 metrics 来源有那么几个: metrics-serever metrics-server (取代 heapster), 从 node 上 kubelet 的 summary api 抓取</description>
     </item>
     
     <item>
@@ -136,16 +136,16 @@
       
       <guid>https://blog.monsterxx03.com/2018/09/03/kubernetes-in-action-notes/</guid>
       <description>Miscellaneous notes when reading &amp;lt;Kubernetes in Action&amp;gt;.
-api group and api version core api group need&#39;t specified in apiVersion field.
+api group and api version core api group need&amp;rsquo;t specified in apiVersion field.
 For example, ReplicationController is on core api group, so only:
 apiVersion: v1 kind: ReplicationController ...  ReplicationSet is added later in app group, v1beta2 version (k8s v1.8):
 apiVersion: apps/v1beta2 1 kind: ReplicaSet  https://kubernetes.io/docs/concepts/overview/kubernetes-api/
 ReplicationController VS ReplicationSet ReplicationController is replaced by ReplicationSet, which has more expressive pod selectors.
-ReplicationController&#39;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
+ReplicationController&amp;rsquo;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
 rs also support operator on key value: In, NotIn, Exists, DoesNotExist
 If migrate from rc to rs, can delete rc with --cascade=false option, it will delete rc only, but left pods running, then we can create a rs with same selector to make pods under management.
 DaemonSet DaemonSet ensures pod run exact one copy on one node, useful for processes like monitor agent and log collector. Use node-selector to make ds only run on specific nodes.
-If node is made unschedulable, normal pods won&#39;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass scheduler.
+If node is made unschedulable, normal pods won&amp;rsquo;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass scheduler.
 Job Job is used to run a single completable task.</description>
     </item>
     

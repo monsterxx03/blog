@@ -175,7 +175,7 @@
 
 <p><code>isinstance(v, (int, long))</code>, 需要改成 <code>isinstance(v, six.integer_types)</code>,</p>
 
-<p><code>isinstance(v, (int, long, float))</code> --&gt; <code>isinstance(v,(six.integer_types, float))</code></p>
+<p><code>isinstance(v, (int, long, float))</code> &ndash;&gt; <code>isinstance(v,(six.integer_types, float))</code></p>
 
 <h2 id="reload">reload</h2>
 
@@ -230,11 +230,11 @@ raise ValueError(&quot;yahaha&quot;)
 
 <p><code>ConfigParser</code> 变成了 <code>configparser</code>, 在 py2 下有 backport的版本,装一个就行.</p>
 
-<p><code>from HTMLParser import HTMLParser</code> --&gt; <code>from html.parser import HTMLParser</code>, 如果你装过 <code>future</code> 的话,后一种导入在 py2 里是能用的, future 在安装时候会安装一个假的 html 包, 里面判断了python 版本决定真正的导入方式.</p>
+<p><code>from HTMLParser import HTMLParser</code> &ndash;&gt; <code>from html.parser import HTMLParser</code>, 如果你装过 <code>future</code> 的话,后一种导入在 py2 里是能用的, future 在安装时候会安装一个假的 html 包, 里面判断了python 版本决定真正的导入方式.</p>
 
-<p><code>Queue</code> --&gt; <code>queue</code>, 装过 <code>future</code>, 后一种也能用.</p>
+<p><code>Queue</code> &ndash;&gt; <code>queue</code>, 装过 <code>future</code>, 后一种也能用.</p>
 
-<p><code>urlparse</code> --&gt; <code>from six.moves.urllib import parse as urlparse</code>,  future 有个 backport的版本, 但需要调用它的 <code>install_alias</code> 来修改全局 sys.modules, 这个有坑,前篇讲过,所以我用 six.</p>
+<p><code>urlparse</code> &ndash;&gt; <code>from six.moves.urllib import parse as urlparse</code>,  future 有个 backport的版本, 但需要调用它的 <code>install_alias</code> 来修改全局 sys.modules, 这个有坑,前篇讲过,所以我用 six.</p>
 
 <p>一些 urllib 里的 url encode 函数也移到了 <code>urllib.parse</code> 里去, 所以需要 <code>from six.moves.urllib.parse import quote, unquote, unquote_plus, quote_plus, urlencode</code>.</p>
 

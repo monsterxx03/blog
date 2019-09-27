@@ -10,7 +10,7 @@
         content="monsterxx03"/>
 
   
-  <meta name="description" content="开始把线上流量往 k8s 集群里面导了, 中间碰到了茫茫多的问题 ...... 记录一下(大多都不是 k8s 的问题). nginx ingress controller 的问题 zero-downtime pods upgrade 默认配置下, nginx ingress controller 的 upstream 是 service 的 endpoints, 在 eks 里, 就是 vpc cni plugin 分配给 pod 的 vpc ip(不是 cluster ip), 和直接使用 service cluster ip 比, 好处是: 可以支持 sticky session 可以用 round robin 之外的负载均衡算法 具体实现是, 当 service 的 endpoint 列表发生变化时, nginx ingress controller 收到通知, 对它管理的 nginx 进程发起一个 http request, 更新 endpoint ip list(nginx 内置的 lua 来修改内存中的 ip list) 这样的问题是, 从 pod 被干掉到 nginx 更新之间"/>
+  <meta name="description" content="开始把线上流量往 k8s 集群里面导了, 中间碰到了茫茫多的问题 &amp;hellip;&amp;hellip; 记录一下(大多都不是 k8s 的问题). nginx ingress controller 的问题 zero-downtime pods upgrade 默认配置下, nginx ingress controller 的 upstream 是 service 的 endpoints, 在 eks 里, 就是 vpc cni plugin 分配给 pod 的 vpc ip(不是 cluster ip), 和直接使用 service cluster ip 比, 好处是: 可以支持 sticky session 可以用 round robin 之外的负载均衡算法 具体实现是, 当 service 的 endpoint 列表发生变化时, nginx ingress controller 收到通知, 对它管理的 nginx 进程发起一个 http request, 更新 endpoint ip list(nginx 内置的 lua 来修改内存中的 ip list) 这样的问题是, 从 pod 被干掉到 nginx 更新之间"/>
   
 
   
@@ -94,7 +94,7 @@
         </div>
         <div class="post_content markdown">
 
-<p>开始把线上流量往 k8s 集群里面导了, 中间碰到了茫茫多的问题 ...... 记录一下(大多都不是 k8s 的问题).</p>
+<p>开始把线上流量往 k8s 集群里面导了, 中间碰到了茫茫多的问题 &hellip;&hellip; 记录一下(大多都不是 k8s 的问题).</p>
 
 <h2 id="nginx-ingress-controller-的问题">nginx ingress controller 的问题</h2>
 
@@ -172,7 +172,7 @@ add-header = Connection: Keep-Alive
 <p>修改配置再次上线, 502 倒是没了, latency 却比之前套 nginx 的时候更高了, 明明网络少了 1 跳(elb).</p>
 
 <p>benchmark 下 uwsgi 的 http router, latency 就是比 <code>nginx + uwsgi_pass</code> 高. 中间用 tcpdump 抓了下 uwsgi 的回包, 相同 request 数下,比 nginx 数目要多不少, 可能和某些 socket option 有关, 暂时没精力细究.
-尝试把 wsgi 的容器 server 换成 gunicorn, latency 恢复了正常. 唉, 真想换 grpc 啊.....</p>
+尝试把 wsgi 的容器 server 换成 gunicorn, latency 恢复了正常. 唉, 真想换 grpc 啊&hellip;..</p>
 </div>
         <div class="post_footer">
           

@@ -213,7 +213,7 @@ spec:
       ...
 </code></pre>
 
-<p>规则类型和 nodeAffinity 是一样的, 这里是强制要求(required), <code>topologyKey</code> 表明要让 pod 调度到 <code>kubernetes.io/hostname</code> 一样的节点上(就是同一个节点), 当然也可以选择一样的 region, available zone...</p>
+<p>规则类型和 nodeAffinity 是一样的, 这里是强制要求(required), <code>topologyKey</code> 表明要让 pod 调度到 <code>kubernetes.io/hostname</code> 一样的节点上(就是同一个节点), 当然也可以选择一样的 region, available zone&hellip;</p>
 
 <p>由该 podAffinity 规则可知, 当调度 frontend pod 的时候, 必须和带 label: app=backend 的 pod 调度到同一节点上.</p>
 

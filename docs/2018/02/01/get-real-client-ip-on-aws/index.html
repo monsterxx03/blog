@@ -10,16 +10,16 @@
         content="monsterxx03"/>
 
   
-  <meta name="description" content="If you run a webserver on AWS, get real client ip will be tricky if you didn&#39;t configure server right and write code correctly.
+  <meta name="description" content="If you run a webserver on AWS, get real client ip will be tricky if you didn&amp;rsquo;t configure server right and write code correctly.
 Things related to client real ip:
  CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application).  Request sequence diagram will be like following:
-User&#39;s real client ip is forwarded by front proxies one by one in head X-Forwarded-For.
+User&amp;rsquo;s real client ip is forwarded by front proxies one by one in head X-Forwarded-For.
 For CloudFront:
- If user&#39;s req header don&#39;t have X-Forwarded-For, it will set user&#39;s ip(from tcp connection) in X-Forwarded-For If user&#39;s req already have X-Forwarded-For, it will append user&#39;s ip(from tcp connection) to the end of X-Forwarded-For  For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront &#43; CloudFront&#39;s ip.
+ If user&amp;rsquo;s req header don&amp;rsquo;t have X-Forwarded-For, it will set user&amp;rsquo;s ip(from tcp connection) in X-Forwarded-For If user&amp;rsquo;s req already have X-Forwarded-For, it will append user&amp;rsquo;s ip(from tcp connection) to the end of X-Forwarded-For  For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront &#43; CloudFront&amp;rsquo;s ip.
 For nginx, things will be tricky depends on your config.
 Things maybe involved in nginx:
- real ip module proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;  If you didn&#39;t use real ip module, you need to pass X-Forwarded-For head explictly.
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; will append ALB&#39;s ip to the end of X-Forwarded-For header received from ALB.
+ real ip module proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;  If you didn&amp;rsquo;t use real ip module, you need to pass X-Forwarded-For head explictly.
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; will append ALB&amp;rsquo;s ip to the end of X-Forwarded-For header received from ALB.
 So X-Forwarded-For header your webserver received will be user ip,cloudfront ip, alb ip
 Or you can use real ip module to trust the value passed from ALB."/>
   
@@ -103,7 +103,7 @@ Or you can use real ip module to trust the value passed from ALB."/>
           <h2><a href='/2018/02/01/get-real-client-ip-on-aws/'>Get Real Client Ip on AWS</a></h2>
           <span class="date">2018.02.01</span>
         </div>
-        <div class="post_content markdown"><p>If you run a webserver on AWS, get real client ip will be tricky if you didn't configure server right and write code correctly.</p>
+        <div class="post_content markdown"><p>If you run a webserver on AWS, get real client ip will be tricky if you didn&rsquo;t configure server right and write code correctly.</p>
 
 <p>Things related to client real ip:</p>
 
@@ -118,16 +118,16 @@ Or you can use real ip module to trust the value passed from ALB."/>
 
 <p><img src="/posts/images/cf-alb-nginx.png" alt="req" /></p>
 
-<p>User's real client ip is forwarded by front proxies one by one in head <code>X-Forwarded-For</code>.</p>
+<p>User&rsquo;s real client ip is forwarded by front proxies one by one in head <code>X-Forwarded-For</code>.</p>
 
 <p>For CloudFront:</p>
 
 <ul>
-<li>If user's req header don't  have <code>X-Forwarded-For</code>, it will set user's ip(from tcp connection) in <code>X-Forwarded-For</code></li>
-<li>If user's req already have <code>X-Forwarded-For</code>, it will append user's ip(from tcp connection) to the end of <code>X-Forwarded-For</code></li>
+<li>If user&rsquo;s req header don&rsquo;t  have <code>X-Forwarded-For</code>, it will set user&rsquo;s ip(from tcp connection) in <code>X-Forwarded-For</code></li>
+<li>If user&rsquo;s req already have <code>X-Forwarded-For</code>, it will append user&rsquo;s ip(from tcp connection) to the end of <code>X-Forwarded-For</code></li>
 </ul>
 
-<p>For ALB, rule is same as CloudFront, so the <code>X-Forwarded-For</code> header pass to nginx will be the value received from CloudFront + CloudFront's ip.</p>
+<p>For ALB, rule is same as CloudFront, so the <code>X-Forwarded-For</code> header pass to nginx will be the value received from CloudFront + CloudFront&rsquo;s ip.</p>
 
 <p>For nginx, things will be tricky depends on your config.</p>
 
@@ -138,9 +138,9 @@ Or you can use real ip module to trust the value passed from ALB."/>
 <li>proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</li>
 </ul>
 
-<p>If you didn't use real ip module, you need to pass X-Forwarded-For head explictly.</p>
+<p>If you didn&rsquo;t use real ip module, you need to pass X-Forwarded-For head explictly.</p>
 
-<p><code>proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</code> will append ALB's ip to the end of <code>X-Forwarded-For</code> header received from ALB.</p>
+<p><code>proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</code> will append ALB&rsquo;s ip to the end of <code>X-Forwarded-For</code> header received from ALB.</p>
 
 <p>So <code>X-Forwarded-For</code> header your webserver received will be <code>user ip,cloudfront ip, alb ip</code></p>
 
@@ -153,11 +153,11 @@ Or you can use real ip module to trust the value passed from ALB."/>
     real_ip_recursive on;
 </code></pre>
 
-<p>Assume your vpc cidr range is <code>10.50.0.0/16</code>, so trust header passed from this range, it will including ALB's ip addresses (lanuched in same vpc). It will use <code>X-Forwarded-For</code> header received from ALB as real client ip.Don't use $proxy_add_x_forwarded_for in this case, otherwise the <code>X-Forwarded-For</code> webserver see will be <code>user ip, cloudfront ip, user ip</code>.</p>
+<p>Assume your vpc cidr range is <code>10.50.0.0/16</code>, so trust header passed from this range, it will including ALB&rsquo;s ip addresses (lanuched in same vpc). It will use <code>X-Forwarded-For</code> header received from ALB as real client ip.Don&rsquo;t use $proxy_add_x_forwarded_for in this case, otherwise the <code>X-Forwarded-For</code> webserver see will be <code>user ip, cloudfront ip, user ip</code>.</p>
 
-<p>To make things clear, I use real ip module, and didn't set $proxy_add_x_forwarded_for, then my webserver will see <code>user ip, cloudfront ip</code></p>
+<p>To make things clear, I use real ip module, and didn&rsquo;t set $proxy_add_x_forwarded_for, then my webserver will see <code>user ip, cloudfront ip</code></p>
 
-<p>If your application is flask app, there is an easy way to retrive use's ip.</p>
+<p>If your application is flask app, there is an easy way to retrive use&rsquo;s ip.</p>
 
 <pre><code>    from flask import Flask, request
     from werkzeug.contrib.fixers import ProxyFix
@@ -170,7 +170,7 @@ Or you can use real ip module to trust the value passed from ALB."/>
         return request.remote_addr
 </code></pre>
 
-<p>Use <code>ProxyFix</code> middleware to tell webserver how many proxies are on front of your application, since I use real ip module, <code>X-Forwarded-For</code> don't contain ALB ip (nginx work like a real transparent proxy), so on the view of my webserver, there are two proxies on front, cloudfront and alb. Then <code>request.remote_addr</code> will get the right client ip.</p>
+<p>Use <code>ProxyFix</code> middleware to tell webserver how many proxies are on front of your application, since I use real ip module, <code>X-Forwarded-For</code> don&rsquo;t contain ALB ip (nginx work like a real transparent proxy), so on the view of my webserver, there are two proxies on front, cloudfront and alb. Then <code>request.remote_addr</code> will get the right client ip.</p>
 </div>
         <div class="post_footer">
           

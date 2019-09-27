@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.58.2" />
+	<meta name="generator" content="Hugo 0.58.3" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -97,7 +97,7 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>go 自带的 profiling 工具很强大(pprof, trace, GODEBUG ...), 但有时我还是想不修改目标进程的源码获取它的一些 runtime 信息, 最近研究了一下 py-spy 和 delve, 发现还是可实现的, 就做了个小东西gospy. 用法 目前就两个命令: gospy summary 和 gospy top sudo ./gospy summary --pid 1234, 可以 dump 目标进程的一些信息和当前活动 goroutine 正在执行的函数信息, 比如对一个 prometheus 进程做一次 snapshot: bin: /home/will/Downloads/prometheus-2.12.0.linux-amd64/prometheus, goVer: 1.12.8, gomaxprocs: 6 P0 idle, schedtick: 642, syscalltick: 81 P1 idle, schedtick: 959, syscalltick: 67 P2 idle, schedtick: 992, syscalltick: 32 P3 idle, schedtick: 581, syscalltick: 17 P4 idle, schedtick: 89, syscalltick: 8 P5 idle, schedtick: 231, syscalltick: 5 Threads: 14 total, 0 running, 14 sleeping, 0 stopped, 0 zombie Goroutines: 44 total, 0 idle, 0 running, 5......</p>
+      <p>go 自带的 profiling 工具很强大(pprof, trace, GODEBUG &hellip;), 但有时我还是想不修改目标进程的源码获取它的一些 runtime 信息, 最近研究了一下 py-spy 和 delve, 发现还是可实现的, 就做了个小东西gospy. 用法 目前就两个命令: gospy summary 和 gospy top sudo ./gospy summary --pid 1234, 可以 dump 目标进程的一些信息和当前活动 goroutine 正在执行的函数信息, 比如对一个 prometheus 进程做一次 snapshot: bin: /home/will/Downloads/prometheus-2.12.0.linux-amd64/prometheus, goVer: 1.12.8, gomaxprocs: 6 P0 idle, schedtick: 642, syscalltick: 81 P1 idle, schedtick: 959, syscalltick: 67 P2 idle, schedtick: 992, syscalltick: 32 P3 idle, schedtick: 581, syscalltick: 17 P4 idle, schedtick: 89, syscalltick: 8 P5 idle, schedtick: 231, syscalltick: 5 Threads: 14 total, 0 running, 14 sleeping, 0 stopped, 0 zombie Goroutines: 44 total, 0 idle, 0 running, 5......</p>
     </div>
   </div>
   
@@ -130,7 +130,7 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>随记. Life &lt;火焰文章-风花雪月&gt; 流程过半, 这一作难度确实低, 怂如我玩的又是不死人模式, 即使是困难难度, 到后面也是切菜. 流程里学生们 seisei 得喊, 想到后面要把他们一个个干掉, 心情挺复杂得... 风花雪月这个副标题, 玩着玩着也有点明白意思了, 美版竟然叫 &lt;Three houses&gt;, 老外神经果然傻大粗啊... 西泽保彦的高千和千晓系列看完了好几本, 还剩下&lt;依存&gt; 和 &lt;啤酒之家的冒险&gt;. 昨晚读完了 &lt;苏格......</p>
+      <p>随记. Life &lt;火焰文章-风花雪月&gt; 流程过半, 这一作难度确实低, 怂如我玩的又是不死人模式, 即使是困难难度, 到后面也是切菜. 流程里学生们 seisei 得喊, 想到后面要把他们一个个干掉, 心情挺复杂得&hellip; 风花雪月这个副标题, 玩着玩着也有点明白意思了, 美版竟然叫 &lt;Three houses&gt;, 老外神经果然傻大粗啊&hellip; 西泽保彦的高千和千晓系列看完了好几本, 还剩下&lt;依存&gt; 和 &lt;啤酒之家的冒险&gt;. 昨......</p>
     </div>
   </div>
   
@@ -242,7 +242,7 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>开始把线上流量往 k8s 集群里面导了, 中间碰到了茫茫多的问题 ...... 记录一下(大多都不是 k8s 的问题). nginx ingress controller 的问题 zero-downtime pods upgrade 默认配置下, nginx ingress controller 的 upstream 是 service 的 endpoints, 在 eks 里, 就是 vpc cni plugin 分配给 pod 的 vpc ip(不是 cluster ip), 和直接使用 service cluster ip 比, 好处是: 可以支持 sticky session 可以用 round robin 之外的负载均衡算法 具体实现是, 当 service 的 endpoint 列表发生变化时, nginx ingress controller 收到通知, 对它管理的 nginx 进程发起一个 http request, 更新 endpoint ip list(nginx 内置的 lua 来修改内存中的 ip list) 这样的问题是, 从 pod 被干掉到 nginx 更新之间......</p>
+      <p>开始把线上流量往 k8s 集群里面导了, 中间碰到了茫茫多的问题 &hellip;&hellip; 记录一下(大多都不是 k8s 的问题). nginx ingress controller 的问题 zero-downtime pods upgrade 默认配置下, nginx ingress controller 的 upstream 是 service 的 endpoints, 在 eks 里, 就是 vpc cni plugin 分配给 pod 的 vpc ip(不是 cluster ip), 和直接使用 service cluster ip 比, 好处是: 可以支持 sticky session 可以用 round robin 之外的负载均衡算法 具体实现是, 当 service 的 endpoint 列表发生变化时, nginx ingress controller 收到通知, 对它管理的 nginx 进程发起一个 http request, 更新 endpoint ip list(nginx 内置的 lua 来修改内存中的 ip list) 这样的问题是, 从 pod 被干掉到 nginx 更新之间......</p>
     </div>
   </div>
   
@@ -344,13 +344,13 @@
   <div class="list">
     <div class="post_content markdown">
       <p>Just some random complains and notes about server infra management. I think those are my motivations to move to kubernetes.
-Won't explain k8s or docker in detail, and how they solve those problems in this post.
+Won&rsquo;t explain k8s or docker in detail, and how they solve those problems in this post.
 Infrastructure level(on AWS) We use following services provided by AWS.
- Compute:  EC2 AutoScaling Group Lambda  network:  VPC (SDN network) DNS (route53) CDN (CloudFront)  Loadbalancer:  ELB (L4) NLB (L4, ELB successor, support static IP) ALB (L7)  Storage:  EBS (block storage) EFS (hosted NFS) RDS(MySQl/PostgreSQL ...) Redshift (data warehouse) DynamoDB (KV) S3 (object storage) Glacier (cheap archive storage)  Web Firewall (WAF) Monitor (CloudWatch) DMS (ETL) ...  For infra management, in early days, we just click, click, click... or write some simple scripts to call AWS api.
+ Compute:  EC2 AutoScaling Group Lambda  network:  VPC (SDN network) DNS (route53) CDN (CloudFront)  Loadbalancer:  ELB (L4) NLB (L4, ELB successor, support static IP) ALB (L7)  Storage:  EBS (block storage) EFS (hosted NFS) RDS(MySQl/PostgreSQL &hellip;) Redshift (data warehouse) DynamoDB (KV) S3 (object storage) Glacier (cheap archive storage)  Web Firewall (WAF) Monitor (CloudWatch) DMS (ETL) &hellip;  For infra management, in early days, we just click, click, click&hellip; or write some simple scripts to call AWS api.
 With infra resources growing, management became complex, a concept called Infrastructure as Code rising.
 AWS provides CloudFormation as orchestration tool, but we use terraform (for short: CloudFormation sucks, for long: Infrastructure as Code)
-So far, not bad.(tweak those services internally is another story... never belive work out of box)
-Application level  configuration management (setup nginx, jenkins, redis, twemproxy, ElasticSearch or WTF..) CI/CD dependency management  They're complicated, people developped bunch of tools to handle: puppet, chef, ansible, saltstack .......</p>
+So far, not bad.(tweak those services internally is another story&hellip; never belive work out of box)
+Application level  configuration management (setup nginx, jenkins, redis, twemproxy, ElasticSearch or WTF..) CI/CD dependency management  They&rsquo;re complicated, people developped bunch of tools to handle: puppet, chef, ansible, saltstack &hellip;......</p>
     </div>
   </div>
   

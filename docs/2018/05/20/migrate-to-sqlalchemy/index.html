@@ -10,7 +10,7 @@
         content="monsterxx03"/>
 
   
-  <meta name="description" content="最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些. 原来的 db 层代码历史非常古老(10年以上...), 最早写代码的人早就不在了, 问题很多: 完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表结构，只能"/>
+  <meta name="description" content="最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些. 原来的 db 层代码历史非常古老(10年以上&amp;hellip;), 最早写代码的人早就不在了, 问题很多: 完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表"/>
   
 
   
@@ -96,7 +96,7 @@
 
 <p>最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些.</p>
 
-<p>原来的 db 层代码历史非常古老(10年以上...), 最早写代码的人早就不在了, 问题很多:</p>
+<p>原来的 db 层代码历史非常古老(10年以上&hellip;), 最早写代码的人早就不在了, 问题很多:</p>
 
 <ul>
 <li>完全没有单元测试.</li>
@@ -136,7 +136,7 @@ class User(Base):
 <li>原先的业务代码相当过程式, 就算底层用了 orm 封装, 向上传递的对象也得转成 dict, 没啥用</li>
 <li>ORM 默认在 query 的时候会加载所有 column, 虽然可以通过 defer 实现懒加载, 但这个只能定义在 model 上, 而需求是要能让上层代码控制加载哪些 column</li>
 <li>core 的性能比 orm style 要好不少</li>
-<li>需要用到一些 MySQL 独有的语法, core 可以, orm 就不行, 比如 <code>insert ...on duplicate update</code>, <code>SQL_CALC_FOUND_ROWS</code>, <code>insert ignore</code> ...</li>
+<li>需要用到一些 MySQL 独有的语法, core 可以, orm 就不行, 比如 <code>insert ...on duplicate update</code>, <code>SQL_CALC_FOUND_ROWS</code>, <code>insert ignore</code> &hellip;</li>
 <li>core 语法生成的 query statement 可以很方便的转成 raw sql, orm 的一些操作会转成什么样的 sql 很不直观.</li>
 </ul>
 
@@ -160,7 +160,7 @@ class User(Base):
 <li>select(where, cols=None, offset=0, limit=None, order_by=None)</li>
 <li>update_many(where, update_dict)</li>
 <li>insert_one(row)</li>
-<li>...</li>
+<li>&hellip;</li>
 </ul>
 
 <p>select 里的 where 是个 dict, 会被转成 sql 的 where 部分:</p>

@@ -18,7 +18,7 @@
       <pubDate>Sun, 20 May 2018 15:11:31 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/</guid>
-      <description>最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些. 原来的 db 层代码历史非常古老(10年以上...), 最早写代码的人早就不在了, 问题很多: 完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表结构，只能</description>
+      <description>最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些. 原来的 db 层代码历史非常古老(10年以上&amp;hellip;), 最早写代码的人早就不在了, 问题很多: 完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表</description>
     </item>
     
   </channel>

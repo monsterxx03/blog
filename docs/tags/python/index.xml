@@ -54,10 +54,10 @@
       <pubDate>Thu, 07 Jun 2018 16:41:57 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/</guid>
-      <description>This article won&#39;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&#39;t finished this project, also I haven&#39;t gave up so far :).
-Won&#39;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
-The codebase I&#39;m working on:
- Only support python2.7, don&#39;t consider python2.6 1X repos, about half a million lines of code in total (calculated by cloc). These repos will import each other, bad design from early days, not easy to resolve, which means I can&#39;t switch to py3 one by one, I need write py2/3 compatiblility code for them, and switch together(I&#39;m also considering solve the import problem first). Test coverage is not good, best is around 80%, lowest is 30%.  Tools 2to3, a command line tools packaged with py2, it&#39;s a oneway porting to convert your code to py3, new code won&#39;t work under py2, since I need be compatible with py2 and py3 for long time, didn&#39;t try it.
+      <description>This article won&amp;rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&amp;rsquo;t finished this project, also I haven&amp;rsquo;t gave up so far :).
+Won&amp;rsquo;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
+The codebase I&amp;rsquo;m working on:
+ Only support python2.7, don&amp;rsquo;t consider python2.6 1X repos, about half a million lines of code in total (calculated by cloc). These repos will import each other, bad design from early days, not easy to resolve, which means I can&amp;rsquo;t switch to py3 one by one, I need write py2/3 compatiblility code for them, and switch together(I&amp;rsquo;m also considering solve the import problem first). Test coverage is not good, best is around 80%, lowest is 30%.  Tools 2to3, a command line tools packaged with py2, it&amp;rsquo;s a oneway porting to convert your code to py3, new code won&amp;rsquo;t work under py2, since I need be compatible with py2 and py3 for long time, didn&amp;rsquo;t try it.
 future, it tries to make you write single clean python3.x code without ugly hack with six. I used it it first, but come to many problems, will explain later.</description>
     </item>
     
@@ -76,7 +76,7 @@ future, it tries to make you write single clean python3.x code without ugly hack
       <pubDate>Sun, 20 May 2018 15:11:31 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/</guid>
-      <description>最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些. 原来的 db 层代码历史非常古老(10年以上...), 最早写代码的人早就不在了, 问题很多: 完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表结构，只能</description>
+      <description>最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些. 原来的 db 层代码历史非常古老(10年以上&amp;hellip;), 最早写代码的人早就不在了, 问题很多: 完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表</description>
     </item>
     
     <item>

@@ -115,7 +115,7 @@ SLO(Service Level Objective). 也可以把他当成一个对内的,没有赔偿�
 <p>但这样的做法很粗糙, 和实际用户体验到的 service quality 相差比较大, 比如部署了新的代码，bug 导致某个很常用的 api　持续性抛 500. 此时我们的
 service check　还是 up, 但用户就觉得你服务器挂了.</p>
 
-<p>现在我用失败的 request 的个数来定义我们的 availability.　公式:  <code>100 * ((total_reqs - failed_reqs) / total_reqs)</code>,　得到一个数值 eg: 99.9%, 99.99% ...</p>
+<p>现在我用失败的 request 的个数来定义我们的 availability.　公式:  <code>100 * ((total_reqs - failed_reqs) / total_reqs)</code>,　得到一个数值 eg: 99.9%, 99.99% &hellip;</p>
 
 <p>access　log 里 status code &gt;= 500　的请求就当成失败, 并不完全准确(比如改了参数校验逻辑, 对正常的请求也抛了400), 但一般也够用了.</p>
 

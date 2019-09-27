@@ -161,7 +161,7 @@ tiller-deploy-78ddf4757c-ljs7p                          1/1       Running   0   
 
 <h2 id="metrics-server-的问题">Metrics server 的问题</h2>
 
-<p>为了测试　auto scaling, 需要在 EKS 中部署 metrics server.  EKS 最早发布的时候不支持　metrics server(因此 HPA 也不支持), EKS　的　PlantformVersion 需要是 'eks.2'.</p>
+<p>为了测试　auto scaling, 需要在 EKS 中部署 metrics server.  EKS 最早发布的时候不支持　metrics server(因此 HPA 也不支持), EKS　的　PlantformVersion 需要是 &lsquo;eks.2&rsquo;.</p>
 
 <p>之前不支持的原因是 metrics server 基于　<code>api aggregation</code> , core api server 只能用 client 证书认证, EKS 为了和 IAM 交互用的是 webhook. 后来　EKS　的人修了下: <a href="https://github.com/kubernetes/kubernetes/pull/66394/files#diff-59f09be65a7ae1feb263f6bce1d856b1">https://github.com/kubernetes/kubernetes/pull/66394/files#diff-59f09be65a7ae1feb263f6bce1d856b1</a></p>
 
@@ -279,7 +279,7 @@ rbac:
 
 <p><code>helm install stable/cloud-autoscaler --namespace kube-system</code></p>
 
-<p>简单测试一下　<code>cluster-autoscaler</code>, 现在的测试节点里只有一台 m4.large, 总共可以放 20 个 pod, 已经预先跑了一些系统 pod(aws-node, kube-proxy, tiller, metrics-server, cluster-autoscaler...), 尝试部署一个 20  replica 的 nginx, 同时用 <code>kubectl get pods -w -o wide</code> 观察 pod 的分配情况, <code>kubectl get nodes -w</code> 观察新 node:</p>
+<p>简单测试一下　<code>cluster-autoscaler</code>, 现在的测试节点里只有一台 m4.large, 总共可以放 20 个 pod, 已经预先跑了一些系统 pod(aws-node, kube-proxy, tiller, metrics-server, cluster-autoscaler&hellip;), 尝试部署一个 20  replica 的 nginx, 同时用 <code>kubectl get pods -w -o wide</code> 观察 pod 的分配情况, <code>kubectl get nodes -w</code> 观察新 node:</p>
 
 <pre><code>kubectl run nginx --image=nginx -r 20
 </code></pre>

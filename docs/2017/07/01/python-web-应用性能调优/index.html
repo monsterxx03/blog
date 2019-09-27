@@ -103,7 +103,7 @@
 <ul>
 <li>性能提高了，最直接的效果当然是能用更少的机器处理相同流量，目标是关闭 20% 的 stateless webserver.</li>
 <li>尽量在框架代码上做改动，不动业务逻辑代码。</li>
-<li>低风险 (历史经验告诉我们，动态一时爽，重构火葬场....)</li>
+<li>低风险 (历史经验告诉我们，动态一时爽，重构火葬场&hellip;.)</li>
 </ul>
 
 <h2 id="治标">治标</h2>
@@ -165,7 +165,7 @@
 
 <p>改完 rpc server 层，负载已经有了显著降低(20% 左右)，还有个性价比很高的优化是替换 rpc client. 之前用的是 requests, 说实话，个人对这种接口漂亮，使用方便的库一直是持保留态度的，尤其是在这种性能敏感的场景，在 pyflame 的采样图上也能看到 requests 代码里的耗时很长.</p>
 
-<p>尝试用 <a href="https://github.com/gwik/geventhttpclient">https://github.com/gwik/geventhttpclient</a> 替换掉 requests. 简单的 benchmark 脚本测试下来，完成相同的请求数， geventhttpclient 只用了 requests 1/4 的时间 (gevent patch 过的情况下).</p>
+<p>尝试用 <a href="https://github.com/gwik/geventhttpclient">https://github.com/gwik/geventhttpclient</a> 替换掉 requests. 简单的 benchmark 脚本测试下来，完成相同的请求数， geventhttpclient 只用了 requests <sup>1</sup>&frasl;<sub>4</sub> 的时间 (gevent patch 过的情况下).</p>
 
 <p>修改完 RPC client 的代码，上线后却傻眼了, server load 降得很明显，可是latency 却直接上升了 30% 多???</p>
 

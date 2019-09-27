@@ -10,7 +10,7 @@
         content="monsterxx03"/>
 
   
-  <meta name="description" content="Why move to prometheus? 把生产环境迁移到 k8s 的第一步是要搞定监控, 目前线上监控用的是商业的 datadog, 在 container 环境下 datadog 监控还要按 container 数目收费, 单 host 只有 10 个的额度, 超过要加钱, 高密度部署下很不划算. 一个 server 跑 20 个以上 container 是很正常的事情, 单台 server 的监控费用立马翻倍. tracing 这块之前用的也是 datadog, 但太贵了,一直也想换开源实现, 索性监控报警也换了, 踩一把坑吧. vendor lock 总是不爽的... Metrics in k8s 先不提 prometheus, k8s 中 metrics 来源有那么几个: metrics-serever metrics-server (取代 heapster), 从 node 上 kubelet 的 summary api 抓取数据(no"/>
+  <meta name="description" content="Why move to prometheus? 把生产环境迁移到 k8s 的第一步是要搞定监控, 目前线上监控用的是商业的 datadog, 在 container 环境下 datadog 监控还要按 container 数目收费, 单 host 只有 10 个的额度, 超过要加钱, 高密度部署下很不划算. 一个 server 跑 20 个以上 container 是很正常的事情, 单台 server 的监控费用立马翻倍. tracing 这块之前用的也是 datadog, 但太贵了,一直也想换开源实现, 索性监控报警也换了, 踩一把坑吧. vendor lock 总是不爽的&amp;hellip; Metrics in k8s 先不提 prometheus, k8s 中 metrics 来源有那么几个: metrics-serever metrics-server (取代 heapster), 从 node 上 kubelet 的 summary api 抓取"/>
   
 
   
@@ -102,7 +102,7 @@ datadog 监控还要按 container 数目收费, 单 host 只有 10 个的额度,
 
 <p>tracing 这块之前用的也是 datadog, 但太贵了,一直也想换开源实现, 索性监控报警也换了, 踩一把坑吧.</p>
 
-<p>vendor lock 总是不爽的...</p>
+<p>vendor lock 总是不爽的&hellip;</p>
 
 <h1 id="metrics-in-k8s">Metrics in k8s</h1>
 
@@ -122,7 +122,7 @@ autoscaler 做 scale up/down 决策的数据来源也是它, metrics-server 只�
 
 <h2 id="kube-state-metrics">kube-state-metrics</h2>
 
-<p><a href="https://github.com/kubernetes/kube-state-metrics">kube-state-metrics</a> 会监听 k8s apiserver, 获取 cluster 中 object的状态变化(deployment, node, endpoint, pod...), 完整的列表: <a href="https://github.com/kubernetes/kube-state-metrics/tree/master/docs">https://github.com/kubernetes/kube-state-metrics/tree/master/docs</a>, 在内存中保存这些 object 的最新状态.</p>
+<p><a href="https://github.com/kubernetes/kube-state-metrics">kube-state-metrics</a> 会监听 k8s apiserver, 获取 cluster 中 object的状态变化(deployment, node, endpoint, pod&hellip;), 完整的列表: <a href="https://github.com/kubernetes/kube-state-metrics/tree/master/docs">https://github.com/kubernetes/kube-state-metrics/tree/master/docs</a>, 在内存中保存这些 object 的最新状态.</p>
 
 <p>prometheus 可以通过 kube-state-metrics 来获取 k8s 集群信息.</p>
 
@@ -179,7 +179,7 @@ default     prom-op-prometheus-operato-prometheus           4d
 
 <p>prometheus 和 alertmanager 的 pod 中都有 监控 configmap/secrets 的 container, 如果挂载的 配置文件发生了修改(k8s 同步 configmap 需要1分钟左右), 会让 server 进程 reload 配置文件.</p>
 
-<p>grafana 我是单独部署的, 没有用 prometheus-operator chart弄, 因为需要修改一些细节参数(resources, pvc...), kube-prometheus 中的 dashboard: <a href="https://github.com/coreos/kube-prometheus/blob/master/manifests/grafana-dashboardDefinitions.yaml">https://github.com/coreos/kube-prometheus/blob/master/manifests/grafana-dashboardDefinitions.yaml</a> 可以拿来直接用.</p>
+<p>grafana 我是单独部署的, 没有用 prometheus-operator chart弄, 因为需要修改一些细节参数(resources, pvc&hellip;), kube-prometheus 中的 dashboard: <a href="https://github.com/coreos/kube-prometheus/blob/master/manifests/grafana-dashboardDefinitions.yaml">https://github.com/coreos/kube-prometheus/blob/master/manifests/grafana-dashboardDefinitions.yaml</a> 可以拿来直接用.</p>
 
 <h2 id="监控-etcd-kubelet-kube-controller-kube-scheduler-coredns">监控 etcd, kubelet, kube-controller, kube-scheduler, coredns</h2>
 

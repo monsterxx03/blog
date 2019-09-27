@@ -232,7 +232,7 @@ ALB 就能直接把 pod ip 加到 target group 里去.</p>
 
 <p>KUBE-SVC 是 service 的 chain, KUBE-SEP 是 service 对应 endpoint 的 chain.</p>
 
-<p>在 service chain 里用 iptables 的 statistic 模块实现了个简单的 round robin 算法, 相关代码在这里: <a href="https://github.com/kubernetes/kubernetes/blob/v1.15.0/pkg/proxy/iptables/proxier.go#L1193">https://github.com/kubernetes/kubernetes/blob/v1.15.0/pkg/proxy/iptables/proxier.go#L1193</a> (syncProxyRules 这段代码真是茫茫长...)</p>
+<p>在 service chain 里用 iptables 的 statistic 模块实现了个简单的 round robin 算法, 相关代码在这里: <a href="https://github.com/kubernetes/kubernetes/blob/v1.15.0/pkg/proxy/iptables/proxier.go#L1193">https://github.com/kubernetes/kubernetes/blob/v1.15.0/pkg/proxy/iptables/proxier.go#L1193</a> (syncProxyRules 这段代码真是茫茫长&hellip;)</p>
 
 <p>这么做太简陋了, 实际业务中一个 service 的 pods 往往分布在不同的 node, available zone, 甚至跨 region 也可能.</p>
 
@@ -252,7 +252,7 @@ spec:
 
 <p>优先找同 host 的 pod, 找不到就找同一 zone 的, 还没有就让 connection 失败(hard topology).</p>
 
-<p>如果 topologyKeys 设置为 [&quot;host&quot;, &quot;&quot;], 就优先找同 host pod, 找不到就找其他节点的， 不让 connection 失败(soft topology).</p>
+<p>如果 topologyKeys 设置为 [&ldquo;host&rdquo;, &ldquo;&rdquo;], 就优先找同 host pod, 找不到就找其他节点的， 不让 connection 失败(soft topology).</p>
 </div>
         <div class="post_footer">
           

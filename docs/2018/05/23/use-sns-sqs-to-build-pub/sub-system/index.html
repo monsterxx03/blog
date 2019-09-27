@@ -10,11 +10,11 @@
         content="monsterxx03"/>
 
   
-  <meta name="description" content="Recently, we build pub/sub system based on AWS&#39;s SNS &amp;amp; SQS service, take some notes.
-Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&#39;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&#39;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
-There&#39;re three obvious choices in my mind:
- kafka AMQP based system (rabbitmq,activemq ...) SNS &#43; SQS  My demands for this system are:
- Support message persistence. Support topic based message distribution. Easy to manage.  The data volume won&#39;t be very large, so performance and throughput won&#39;t be critical concerns.
+  <meta name="description" content="Recently, we build pub/sub system based on AWS&amp;rsquo;s SNS &amp;amp; SQS service, take some notes.
+Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&amp;rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&amp;rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
+There&amp;rsquo;re three obvious choices in my mind:
+ kafka AMQP based system (rabbitmq,activemq &amp;hellip;) SNS &#43; SQS  My demands for this system are:
+ Support message persistence. Support topic based message distribution. Easy to manage.  The data volume won&amp;rsquo;t be very large, so performance and throughput won&amp;rsquo;t be critical concerns.
 I choose SNS &#43; SQS, main concerns are from operation side:
  kafka need zookeeper to support cluster. rabbitmq need extra configuration for HA, and AMQP model is relatively complex for programming.  So my decision is:
  application publish message to SNS topic Setup multi SQS queues to subscribe SNS topic Let different application processes to subscribe to different queues to finish its logic.  SQS and SNS is very simple, not too much to say, just some notes:"/>
@@ -99,18 +99,18 @@ I choose SNS &#43; SQS, main concerns are from operation side:
           <h2><a href='/2018/05/23/use-sns-sqs-to-build-pub/sub-system/'>Use SNS &amp; SQS to build Pub/Sub System</a></h2>
           <span class="date">2018.05.23</span>
         </div>
-        <div class="post_content markdown"><p>Recently, we build pub/sub system based on AWS's SNS &amp; SQS service, take some notes.</p>
+        <div class="post_content markdown"><p>Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, take some notes.</p>
 
-<p>Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It's
+<p>Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s
 really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex
-pubsub logic, eg: topic based distribution. It don't support redelivery as well, if subscribers failed to process
+pubsub logic, eg: topic based distribution. It don&rsquo;t support redelivery as well, if subscribers failed to process
 the message, message will be dropped.</p>
 
-<p>There're three obvious choices in my mind:</p>
+<p>There&rsquo;re three obvious choices in my mind:</p>
 
 <ol>
 <li>kafka</li>
-<li>AMQP based system (rabbitmq,activemq ...)</li>
+<li>AMQP based system (rabbitmq,activemq &hellip;)</li>
 <li>SNS + SQS</li>
 </ol>
 
@@ -122,7 +122,7 @@ the message, message will be dropped.</p>
 <li>Easy to manage.</li>
 </ul>
 
-<p>The data volume won't be very large, so performance and throughput won't be critical concerns.</p>
+<p>The data volume won&rsquo;t be very large, so performance and throughput won&rsquo;t be critical concerns.</p>
 
 <p>I choose SNS + SQS, main concerns are from operation side:</p>
 
@@ -147,7 +147,7 @@ standard queue is at least once delivery, message order is not ensured, tps is u
 <li>SQS message size limit is 256KB.</li>
 <li>Use <a href="https://github.com/p4tin/goaws">goaws</a> for local development, it has problem on processing message attributes, but I just use message body. messages only store in ram,
 will be cleared after restarted.</li>
-<li>If you failed to deliver message to sqs from sns, can setup topic's <code>sqs failure feedback role</code> to log to cloudwatch, in most case it's caused by iam permission.</li>
+<li>If you failed to deliver message to sqs from sns, can setup topic&rsquo;s <code>sqs failure feedback role</code> to log to cloudwatch, in most case it&rsquo;s caused by iam permission.</li>
 <li>Message in sqs can retain at most 14 days.</li>
 <li>Once a message is received by a client, it will be invisible to other clients in <code>visibility_timeout_seconds</code>(default 30s). It means if your client failed to process
 the message, it will be redelivered after 30s.</li>

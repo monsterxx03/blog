@@ -17,9 +17,6 @@ publishDir="docs"
 [author]
     name = "monsterxx03"
 
-[blackfriday]
-  smartypants = false
-
 [[menu.main]]
     name = "Home"
     url = "/"
@@ -48,4 +45,3 @@ publishDir="docs"
 [permalinks]
 page = "/:slug/"
 posts = "/:year/:month/:day/:title/"
-

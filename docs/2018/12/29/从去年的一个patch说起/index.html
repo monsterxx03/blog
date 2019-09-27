@@ -106,7 +106,7 @@ tcp option, 但没细究过, <code>man tcp</code> 得知是用来关闭 tcp 里�
 发现 nagle 这个问题后, 搜了一下, 应该算是 socket 编程里一个很普遍的问题, google <code>tcp 40ms</code> 有很多文章.
 尝试用自己的语言把这个问题说清楚吧.</p>
 
-<p>40ms delay = Nagle's algorithm + TCP delayed ACK + write-write-read</p>
+<p>40ms delay = Nagle&rsquo;s algorithm + TCP delayed ACK + write-write-read</p>
 
 <p>在 40ms 这个问题里, nagle 算法作用在发送方, delayed ACK 作用在接收方.</p>
 

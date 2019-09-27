@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.58.2" />
+	<meta name="generator" content="Hugo 0.58.3" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -97,7 +97,7 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>Why move to prometheus? 把生产环境迁移到 k8s 的第一步是要搞定监控, 目前线上监控用的是商业的 datadog, 在 container 环境下 datadog 监控还要按 container 数目收费, 单 host 只有 10 个的额度, 超过要加钱, 高密度部署下很不划算. 一个 server 跑 20 个以上 container 是很正常的事情, 单台 server 的监控费用立马翻倍. tracing 这块之前用的也是 datadog, 但太贵了,一直也想换开源实现, 索性监控报警也换了, 踩一把坑吧. vendor lock 总是不爽的... Metrics in k8s 先不提 prometheus, k8s 中 metrics 来源有那么几个: metrics-serever metrics-server (取代 heapster), 从 node 上 kubelet 的 summary api 抓取数据(no......</p>
+      <p>Why move to prometheus? 把生产环境迁移到 k8s 的第一步是要搞定监控, 目前线上监控用的是商业的 datadog, 在 container 环境下 datadog 监控还要按 container 数目收费, 单 host 只有 10 个的额度, 超过要加钱, 高密度部署下很不划算. 一个 server 跑 20 个以上 container 是很正常的事情, 单台 server 的监控费用立马翻倍. tracing 这块之前用的也是 datadog, 但太贵了,一直也想换开源实现, 索性监控报警也换了, 踩一把坑吧. vendor lock 总是不爽的&hellip; Metrics in k8s 先不提 prometheus, k8s 中 metrics 来源有那么几个: metrics-serever metrics-server (取代 heapster), 从 node 上 kubelet 的 summary api 抓取......</p>
     </div>
   </div>
   
@@ -334,7 +334,7 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>最近在看 google 的 &lt;The Site Reliablity Workbook&gt;, 其中有一章是&quot;Manage load&quot;, 内容还挺详细的, 结合在 aws 上的经验做点笔记. Load Balancing 流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存. google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency. 但只依赖 BGP 会带来两个问题: 某个地区的用户过多会给最近的 frontend server 带来过高的负......</p>
+      <p>最近在看 google 的 &lt;The Site Reliablity Workbook&gt;, 其中有一章是&rdquo;Manage load&rdquo;, 内容还挺详细的, 结合在 aws 上的经验做点笔记. Load Balancing 流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存. google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency. 但只依赖 BGP 会带来两个问题: 某个地区的用户过多会给最近的 frontend server 带来过高的......</p>
     </div>
   </div>
   

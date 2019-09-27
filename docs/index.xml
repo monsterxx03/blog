@@ -18,7 +18,7 @@
       <pubDate>Fri, 20 Sep 2019 14:07:12 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2019/09/20/gospy-non-invasive-goroutine-inspector/</guid>
-      <description>go 自带的 profiling 工具很强大(pprof, trace, GODEBUG ...), 但有时我还是想不修改目标进程的源码获取它的一些 runtime 信息, 最近研究了一下 py-spy 和 delve, 发现还是可实现的, 就做了个小东西gospy. 用法 目前就两个命令: gospy summary 和 gospy top sudo ./gospy summary --pid 1234, 可以 dump 目标进程的一些信息和当前活动 goroutine 正在执行的函数信息, 比如对一个 prometheus 进程做一次 snapshot: bin: /home/will/Downloads/prometheus-2.12.0.linux-amd64/prometheus, goVer: 1.12.8, gomaxprocs: 6 P0 idle, schedtick: 642, syscalltick: 81 P1 idle, schedtick: 959, syscalltick: 67 P2 idle, schedtick: 992, syscalltick: 32 P3 idle, schedtick: 581, syscalltick: 17 P4 idle, schedtick: 89, syscalltick: 8 P5 idle, schedtick: 231, syscalltick: 5 Threads: 14 total, 0 running, 14 sleeping, 0 stopped, 0 zombie Goroutines: 44 total, 0 idle, 0 running, 5</description>
+      <description>go 自带的 profiling 工具很强大(pprof, trace, GODEBUG &amp;hellip;), 但有时我还是想不修改目标进程的源码获取它的一些 runtime 信息, 最近研究了一下 py-spy 和 delve, 发现还是可实现的, 就做了个小东西gospy. 用法 目前就两个命令: gospy summary 和 gospy top sudo ./gospy summary --pid 1234, 可以 dump 目标进程的一些信息和当前活动 goroutine 正在执行的函数信息, 比如对一个 prometheus 进程做一次 snapshot: bin: /home/will/Downloads/prometheus-2.12.0.linux-amd64/prometheus, goVer: 1.12.8, gomaxprocs: 6 P0 idle, schedtick: 642, syscalltick: 81 P1 idle, schedtick: 959, syscalltick: 67 P2 idle, schedtick: 992, syscalltick: 32 P3 idle, schedtick: 581, syscalltick: 17 P4 idle, schedtick: 89, syscalltick: 8 P5 idle, schedtick: 231, syscalltick: 5 Threads: 14 total, 0 running, 14 sleeping, 0 stopped, 0 zombie Goroutines: 44 total, 0 idle, 0 running, 5</description>
     </item>
     
     <item>
@@ -27,7 +27,7 @@
       <pubDate>Fri, 16 Aug 2019 15:00:02 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2019/08/16/%E6%9D%82/</guid>
-      <description>随记. Life &amp;lt;火焰文章-风花雪月&amp;gt; 流程过半, 这一作难度确实低, 怂如我玩的又是不死人模式, 即使是困难难度, 到后面也是切菜. 流程里学生们 seisei 得喊, 想到后面要把他们一个个干掉, 心情挺复杂得... 风花雪月这个副标题, 玩着玩着也有点明白意思了, 美版竟然叫 &amp;lt;Three houses&amp;gt;, 老外神经果然傻大粗啊... 西泽保彦的高千和千晓系列看完了好几本, 还剩下&amp;lt;依存&amp;gt; 和 &amp;lt;啤酒之家的冒险&amp;gt;. 昨晚读完了 &amp;lt;苏格</description>
+      <description>随记. Life &amp;lt;火焰文章-风花雪月&amp;gt; 流程过半, 这一作难度确实低, 怂如我玩的又是不死人模式, 即使是困难难度, 到后面也是切菜. 流程里学生们 seisei 得喊, 想到后面要把他们一个个干掉, 心情挺复杂得&amp;hellip; 风花雪月这个副标题, 玩着玩着也有点明白意思了, 美版竟然叫 &amp;lt;Three houses&amp;gt;, 老外神经果然傻大粗啊&amp;hellip; 西泽保彦的高千和千晓系列看完了好几本, 还剩下&amp;lt;依存&amp;gt; 和 &amp;lt;啤酒之家的冒险&amp;gt;. 昨</description>
     </item>
     
     <item>
@@ -63,7 +63,7 @@
       <pubDate>Tue, 23 Jul 2019 12:32:08 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2019/07/23/%E8%BF%81%E7%A7%BB%E5%88%B0-k8s-%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%A2%B0%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/</guid>
-      <description>开始把线上流量往 k8s 集群里面导了, 中间碰到了茫茫多的问题 ...... 记录一下(大多都不是 k8s 的问题). nginx ingress controller 的问题 zero-downtime pods upgrade 默认配置下, nginx ingress controller 的 upstream 是 service 的 endpoints, 在 eks 里, 就是 vpc cni plugin 分配给 pod 的 vpc ip(不是 cluster ip), 和直接使用 service cluster ip 比, 好处是: 可以支持 sticky session 可以用 round robin 之外的负载均衡算法 具体实现是, 当 service 的 endpoint 列表发生变化时, nginx ingress controller 收到通知, 对它管理的 nginx 进程发起一个 http request, 更新 endpoint ip list(nginx 内置的 lua 来修改内存中的 ip list) 这样的问题是, 从 pod 被干掉到 nginx 更新之间</description>
+      <description>开始把线上流量往 k8s 集群里面导了, 中间碰到了茫茫多的问题 &amp;hellip;&amp;hellip; 记录一下(大多都不是 k8s 的问题). nginx ingress controller 的问题 zero-downtime pods upgrade 默认配置下, nginx ingress controller 的 upstream 是 service 的 endpoints, 在 eks 里, 就是 vpc cni plugin 分配给 pod 的 vpc ip(不是 cluster ip), 和直接使用 service cluster ip 比, 好处是: 可以支持 sticky session 可以用 round robin 之外的负载均衡算法 具体实现是, 当 service 的 endpoint 列表发生变化时, nginx ingress controller 收到通知, 对它管理的 nginx 进程发起一个 http request, 更新 endpoint ip list(nginx 内置的 lua 来修改内存中的 ip list) 这样的问题是, 从 pod 被干掉到 nginx 更新之间</description>
     </item>
     
     <item>
@@ -91,13 +91,13 @@
       
       <guid>https://blog.monsterxx03.com/2019/05/30/random-talk/</guid>
       <description>Just some random complains and notes about server infra management. I think those are my motivations to move to kubernetes.
-Won&#39;t explain k8s or docker in detail, and how they solve those problems in this post.
+Won&amp;rsquo;t explain k8s or docker in detail, and how they solve those problems in this post.
 Infrastructure level(on AWS) We use following services provided by AWS.
- Compute:  EC2 AutoScaling Group Lambda  network:  VPC (SDN network) DNS (route53) CDN (CloudFront)  Loadbalancer:  ELB (L4) NLB (L4, ELB successor, support static IP) ALB (L7)  Storage:  EBS (block storage) EFS (hosted NFS) RDS(MySQl/PostgreSQL ...) Redshift (data warehouse) DynamoDB (KV) S3 (object storage) Glacier (cheap archive storage)  Web Firewall (WAF) Monitor (CloudWatch) DMS (ETL) ...  For infra management, in early days, we just click, click, click... or write some simple scripts to call AWS api.
+ Compute:  EC2 AutoScaling Group Lambda  network:  VPC (SDN network) DNS (route53) CDN (CloudFront)  Loadbalancer:  ELB (L4) NLB (L4, ELB successor, support static IP) ALB (L7)  Storage:  EBS (block storage) EFS (hosted NFS) RDS(MySQl/PostgreSQL &amp;hellip;) Redshift (data warehouse) DynamoDB (KV) S3 (object storage) Glacier (cheap archive storage)  Web Firewall (WAF) Monitor (CloudWatch) DMS (ETL) &amp;hellip;  For infra management, in early days, we just click, click, click&amp;hellip; or write some simple scripts to call AWS api.
 With infra resources growing, management became complex, a concept called Infrastructure as Code rising.
 AWS provides CloudFormation as orchestration tool, but we use terraform (for short: CloudFormation sucks, for long: Infrastructure as Code)
-So far, not bad.(tweak those services internally is another story... never belive work out of box)
-Application level  configuration management (setup nginx, jenkins, redis, twemproxy, ElasticSearch or WTF..) CI/CD dependency management  They&#39;re complicated, people developped bunch of tools to handle: puppet, chef, ansible, saltstack .</description>
+So far, not bad.(tweak those services internally is another story&amp;hellip; never belive work out of box)
+Application level  configuration management (setup nginx, jenkins, redis, twemproxy, ElasticSearch or WTF..) CI/CD dependency management  They&amp;rsquo;re complicated, people developped bunch of tools to handle: puppet, chef, ansible, saltstack &amp;hellip;</description>
     </item>
     
     <item>
@@ -115,7 +115,7 @@ Application level  configuration management (setup nginx, jenkins, redis, twempr
       <pubDate>Tue, 14 May 2019 13:52:02 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2019/05/14/prometheus-on-k8s/</guid>
-      <description>Why move to prometheus? 把生产环境迁移到 k8s 的第一步是要搞定监控, 目前线上监控用的是商业的 datadog, 在 container 环境下 datadog 监控还要按 container 数目收费, 单 host 只有 10 个的额度, 超过要加钱, 高密度部署下很不划算. 一个 server 跑 20 个以上 container 是很正常的事情, 单台 server 的监控费用立马翻倍. tracing 这块之前用的也是 datadog, 但太贵了,一直也想换开源实现, 索性监控报警也换了, 踩一把坑吧. vendor lock 总是不爽的... Metrics in k8s 先不提 prometheus, k8s 中 metrics 来源有那么几个: metrics-serever metrics-server (取代 heapster), 从 node 上 kubelet 的 summary api 抓取数据(no</description>
+      <description>Why move to prometheus? 把生产环境迁移到 k8s 的第一步是要搞定监控, 目前线上监控用的是商业的 datadog, 在 container 环境下 datadog 监控还要按 container 数目收费, 单 host 只有 10 个的额度, 超过要加钱, 高密度部署下很不划算. 一个 server 跑 20 个以上 container 是很正常的事情, 单台 server 的监控费用立马翻倍. tracing 这块之前用的也是 datadog, 但太贵了,一直也想换开源实现, 索性监控报警也换了, 踩一把坑吧. vendor lock 总是不爽的&amp;hellip; Metrics in k8s 先不提 prometheus, k8s 中 metrics 来源有那么几个: metrics-serever metrics-server (取代 heapster), 从 node 上 kubelet 的 summary api 抓取</description>
     </item>
     
     <item>
@@ -178,7 +178,7 @@ Application level  configuration management (setup nginx, jenkins, redis, twempr
       <pubDate>Tue, 12 Feb 2019 13:08:29 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/</guid>
-      <description>最近在看 google 的 &amp;lt;The Site Reliablity Workbook&amp;gt;, 其中有一章是&amp;quot;Manage load&amp;quot;, 内容还挺详细的, 结合在 aws 上的经验做点笔记. Load Balancing 流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存. google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency. 但只依赖 BGP 会带来两个问题: 某个地区的用户过多会给最近的 frontend server 带来过高的负</description>
+      <description>最近在看 google 的 &amp;lt;The Site Reliablity Workbook&amp;gt;, 其中有一章是&amp;rdquo;Manage load&amp;rdquo;, 内容还挺详细的, 结合在 aws 上的经验做点笔记. Load Balancing 流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存. google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency. 但只依赖 BGP 会带来两个问题: 某个地区的用户过多会给最近的 frontend server 带来过高的</description>
     </item>
     
     <item>
@@ -206,16 +206,16 @@ Application level  configuration management (setup nginx, jenkins, redis, twempr
       
       <guid>https://blog.monsterxx03.com/2018/12/03/debug-skills-on-linux/</guid>
       <description>This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04, some tools are not installed by default, you can installl by sudo apt install xxx. Some commands must be used via sudo.
-System resources can be classified in three main categories: compute, storage, and network. Usually, when you come to a performance issue, it&#39;s always caused by exhaustion of those resources.
-Universal metric: System load There&#39;re several ways to get system load, w, uptime, top, cat /proc/loadavg
+System resources can be classified in three main categories: compute, storage, and network. Usually, when you come to a performance issue, it&amp;rsquo;s always caused by exhaustion of those resources.
+Universal metric: System load There&amp;rsquo;re several ways to get system load, w, uptime, top, cat /proc/loadavg
 uptime example:
 03:34:23 up 20:31, 1 user, load average: 1.02, 0.65, 0.45  Top right corner three values named load average is system load.
 They means: average system load during last minute/last 5 minutes/last 15 minutes periods.
-If load/(# of cpu core) &amp;gt; 1 means there&#39;re tasks pending in cpu queue. Usually, you will feel slow.
-It&#39;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.
-If system load is high, means tasks are pending in CPU queue, maybe a result of: - High cpu usage. - Poor disk performance(disk io). - Exhaustion of ram. - ...
+If load/(# of cpu core) &amp;gt; 1 means there&amp;rsquo;re tasks pending in cpu queue. Usually, you will feel slow.
+It&amp;rsquo;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.
+If system load is high, means tasks are pending in CPU queue, maybe a result of: - High cpu usage. - Poor disk performance(disk io). - Exhaustion of ram. - &amp;hellip;
 free free -k/-m/-g show memory usage in KB/MB/GB
-free -h humanize output (automatically show in KB/MB/GB.</description>
+free -h humanize output (automatically show in KB/MB/GB&amp;hellip;)</description>
     </item>
     
     <item>
@@ -224,7 +224,7 @@ free -h humanize output (automatically show in KB/MB/GB.</description>
       <pubDate>Fri, 30 Nov 2018 17:39:00 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2018/11/30/%E6%9D%82%E8%B0%88/</guid>
-      <description>屋里有两个钟，一个快 5 分钟， 一个慢 5 分钟, 一直懒得把它们调正, 有种莫名的时间撕裂感, 好像还挺喜欢.还有一个月 2018 就过去了, 我想想最近都干嘛了. 最近看的书 读完了 &amp;lt;a philosophy of software design&amp;gt;, 书是好书, 就是好贵(花了我260...). 本来想专门写一篇的,但开了个头发却发现没太多可写的. 书里提到的问题都碰到过, 解决方法和建议其实也一直在用, 没有什么银弹, 等再践行一段时间再说吧. PS: 收益最大的是讲注释的章节. 昨晚看完了 &amp;lt;夜</description>
+      <description>屋里有两个钟，一个快 5 分钟， 一个慢 5 分钟, 一直懒得把它们调正, 有种莫名的时间撕裂感, 好像还挺喜欢.还有一个月 2018 就过去了, 我想想最近都干嘛了. 最近看的书 读完了 &amp;lt;a philosophy of software design&amp;gt;, 书是好书, 就是好贵(花了我260&amp;hellip;). 本来想专门写一篇的,但开了个头发却发现没太多可写的. 书里提到的问题都碰到过, 解决方法和建议其实也一直在用, 没有什么银弹, 等再践行一段时间再说吧. PS: 收益最大的是讲注释的章节. 昨晚看完了</description>
     </item>
     
     <item>
@@ -306,16 +306,16 @@ free -h humanize output (automatically show in KB/MB/GB.</description>
       
       <guid>https://blog.monsterxx03.com/2018/09/03/kubernetes-in-action-notes/</guid>
       <description>Miscellaneous notes when reading &amp;lt;Kubernetes in Action&amp;gt;.
-api group and api version core api group need&#39;t specified in apiVersion field.
+api group and api version core api group need&amp;rsquo;t specified in apiVersion field.
 For example, ReplicationController is on core api group, so only:
 apiVersion: v1 kind: ReplicationController ...  ReplicationSet is added later in app group, v1beta2 version (k8s v1.8):
 apiVersion: apps/v1beta2 1 kind: ReplicaSet  https://kubernetes.io/docs/concepts/overview/kubernetes-api/
 ReplicationController VS ReplicationSet ReplicationController is replaced by ReplicationSet, which has more expressive pod selectors.
-ReplicationController&#39;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
+ReplicationController&amp;rsquo;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
 rs also support operator on key value: In, NotIn, Exists, DoesNotExist
 If migrate from rc to rs, can delete rc with --cascade=false option, it will delete rc only, but left pods running, then we can create a rs with same selector to make pods under management.
 DaemonSet DaemonSet ensures pod run exact one copy on one node, useful for processes like monitor agent and log collector. Use node-selector to make ds only run on specific nodes.
-If node is made unschedulable, normal pods won&#39;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass scheduler.
+If node is made unschedulable, normal pods won&amp;rsquo;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass scheduler.
 Job Job is used to run a single completable task.</description>
     </item>
     
@@ -352,7 +352,7 @@ Job Job is used to run a single completable task.</description>
       <pubDate>Sun, 10 Jun 2018 17:15:29 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2018/06/10/%E6%9D%82%E8%B0%88%E6%9D%BE%E6%9C%AC%E6%B8%85%E5%BC%A0/</guid>
-      <description>去年在 kindle 上买了套松本清张的合集, 总共有10本, 断断续续看到现在终于看完了第 9 本&amp;lt;隐花平原&amp;gt;, 随便扯一点(喂，为什么不看完最后一本! 松本清张 (1909 ~ 1992), 社会派推理开创人, 这套书里的作品各个年代都有, 最有名的&amp;lt;砂之器&amp;gt;(貌似仲间姐姐拍过剧?) 和 &amp;lt;点与线&amp;gt; 却没收录. 本格派讲究逻辑的精巧， 整个故事就像在玩密室逃脱一样, 一环扣一环, 最后谜底揭开的时候让人惊呼&amp;quot;卧槽&amp;q</description>
+      <description>去年在 kindle 上买了套松本清张的合集, 总共有10本, 断断续续看到现在终于看完了第 9 本&amp;lt;隐花平原&amp;gt;, 随便扯一点(喂，为什么不看完最后一本! 松本清张 (1909 ~ 1992), 社会派推理开创人, 这套书里的作品各个年代都有, 最有名的&amp;lt;砂之器&amp;gt;(貌似仲间姐姐拍过剧?) 和 &amp;lt;点与线&amp;gt; 却没收录. 本格派讲究逻辑的精巧， 整个故事就像在玩密室逃脱一样, 一环扣一环, 最后谜底揭开的时候让人惊呼&amp;rdquo;卧槽&amp;</description>
     </item>
     
     <item>
@@ -361,10 +361,10 @@ Job Job is used to run a single completable task.</description>
       <pubDate>Thu, 07 Jun 2018 16:41:57 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/</guid>
-      <description>This article won&#39;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&#39;t finished this project, also I haven&#39;t gave up so far :).
-Won&#39;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
-The codebase I&#39;m working on:
- Only support python2.7, don&#39;t consider python2.6 1X repos, about half a million lines of code in total (calculated by cloc). These repos will import each other, bad design from early days, not easy to resolve, which means I can&#39;t switch to py3 one by one, I need write py2/3 compatiblility code for them, and switch together(I&#39;m also considering solve the import problem first). Test coverage is not good, best is around 80%, lowest is 30%.  Tools 2to3, a command line tools packaged with py2, it&#39;s a oneway porting to convert your code to py3, new code won&#39;t work under py2, since I need be compatible with py2 and py3 for long time, didn&#39;t try it.
+      <description>This article won&amp;rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&amp;rsquo;t finished this project, also I haven&amp;rsquo;t gave up so far :).
+Won&amp;rsquo;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
+The codebase I&amp;rsquo;m working on:
+ Only support python2.7, don&amp;rsquo;t consider python2.6 1X repos, about half a million lines of code in total (calculated by cloc). These repos will import each other, bad design from early days, not easy to resolve, which means I can&amp;rsquo;t switch to py3 one by one, I need write py2/3 compatiblility code for them, and switch together(I&amp;rsquo;m also considering solve the import problem first). Test coverage is not good, best is around 80%, lowest is 30%.  Tools 2to3, a command line tools packaged with py2, it&amp;rsquo;s a oneway porting to convert your code to py3, new code won&amp;rsquo;t work under py2, since I need be compatible with py2 and py3 for long time, didn&amp;rsquo;t try it.
 future, it tries to make you write single clean python3.x code without ugly hack with six. I used it it first, but come to many problems, will explain later.</description>
     </item>
     
@@ -383,11 +383,11 @@ future, it tries to make you write single clean python3.x code without ugly hack
       <pubDate>Wed, 23 May 2018 18:05:28 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub/sub-system/</guid>
-      <description>Recently, we build pub/sub system based on AWS&#39;s SNS &amp;amp; SQS service, take some notes.
-Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&#39;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&#39;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
-There&#39;re three obvious choices in my mind:
- kafka AMQP based system (rabbitmq,activemq ...) SNS + SQS  My demands for this system are:
- Support message persistence. Support topic based message distribution. Easy to manage.  The data volume won&#39;t be very large, so performance and throughput won&#39;t be critical concerns.
+      <description>Recently, we build pub/sub system based on AWS&amp;rsquo;s SNS &amp;amp; SQS service, take some notes.
+Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&amp;rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&amp;rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
+There&amp;rsquo;re three obvious choices in my mind:
+ kafka AMQP based system (rabbitmq,activemq &amp;hellip;) SNS + SQS  My demands for this system are:
+ Support message persistence. Support topic based message distribution. Easy to manage.  The data volume won&amp;rsquo;t be very large, so performance and throughput won&amp;rsquo;t be critical concerns.
 I choose SNS + SQS, main concerns are from operation side:
  kafka need zookeeper to support cluster. rabbitmq need extra configuration for HA, and AMQP model is relatively complex for programming.  So my decision is:
  application publish message to SNS topic Setup multi SQS queues to subscribe SNS topic Let different application processes to subscribe to different queues to finish its logic.  SQS and SNS is very simple, not too much to say, just some notes:</description>
@@ -399,7 +399,7 @@ I choose SNS + SQS, main concerns are from operation side:
       <pubDate>Sun, 20 May 2018 15:11:31 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/</guid>
-      <description>最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些. 原来的 db 层代码历史非常古老(10年以上...), 最早写代码的人早就不在了, 问题很多: 完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表结构，只能</description>
+      <description>最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些. 原来的 db 层代码历史非常古老(10年以上&amp;hellip;), 最早写代码的人早就不在了, 问题很多: 完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表</description>
     </item>
     
     <item>
@@ -426,7 +426,7 @@ I choose SNS + SQS, main concerns are from operation side:
       <pubDate>Sat, 17 Mar 2018 14:24:33 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2018/03/17/%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</guid>
-      <description>一叶障目, 不见泰山. 前阵子一直在排查一个性能问题, 结果由于一些惯性思维, 费了好大劲才弄明白原因, 而且原因非常简单....把这事记录下来,免得以后再掉坑里去. 现象是到了晚上10点多, server lantency 突然一瞬间变高, 但持续时间很短，马上就会恢复, timeout 的请求也不多，影响不大.问题其实从蛮久前就出现了, 但一直也没很重视, 因为持续时间短,影响也不大,简单看了下也没看出明显的问题, 就一直搁置着. 直到最近，觉得问题变严重了,</description>
+      <description>一叶障目, 不见泰山. 前阵子一直在排查一个性能问题, 结果由于一些惯性思维, 费了好大劲才弄明白原因, 而且原因非常简单&amp;hellip;.把这事记录下来,免得以后再掉坑里去. 现象是到了晚上10点多, server lantency 突然一瞬间变高, 但持续时间很短，马上就会恢复, timeout 的请求也不多，影响不大.问题其实从蛮久前就出现了, 但一直也没很重视, 因为持续时间短,影响也不大,简单看了下也没看出明显的问题, 就一直搁置着. 直到最近，觉得问题</description>
     </item>
     
     <item>
@@ -435,12 +435,12 @@ I choose SNS + SQS, main concerns are from operation side:
       <pubDate>Wed, 28 Feb 2018 21:45:23 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/</guid>
-      <description>AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token...
-Usually, we inject secrets as environment variables, but they&#39;re still visable on lambda console. I don&#39;t use it in aws lambda.
+      <description>AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&amp;hellip;
+Usually, we inject secrets as environment variables, but they&amp;rsquo;re still visable on lambda console. I don&amp;rsquo;t use it in aws lambda.
 The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
 Code example:
 client = boto3.client(&#39;ssm&#39;) resp = client.get_parameter( Name=&#39;/redshift/admin/password&#39;, WithDecryption=True ) resp: { &amp;quot;Parameter&amp;quot;: { &amp;quot;Name&amp;quot;: &amp;quot;/redshift/admin/password&amp;quot;, &amp;quot;Type&amp;quot;: &amp;quot;SecureString&amp;quot;, &amp;quot;Value&amp;quot;: &amp;quot;password value&amp;quot;, &amp;quot;Version&amp;quot;: 1 } }  Things you need to do to make it work:
- Create a new KMS key Use new created KMS key to encrypt your data in parameter store. Set a execution role for your lambda function. In the KMS key&#39;s setting page, add the lambda execution role to the list which can read this KMS key.  Then your lambda code can access encrypted data at runtime, and you needn&#39;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.
+ Create a new KMS key Use new created KMS key to encrypt your data in parameter store. Set a execution role for your lambda function. In the KMS key&amp;rsquo;s setting page, add the lambda execution role to the list which can read this KMS key.  Then your lambda code can access encrypted data at runtime, and you needn&amp;rsquo;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.
 BTW, parameter store support hierarchy(at most 15 levels), splitted by /. You can retrive data under same level in one call, deltails can be found in doc, eg: http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path</description>
     </item>
     
@@ -468,16 +468,16 @@ BTW, parameter store support hierarchy(at most 15 levels), splitted by /. You ca
       <pubDate>Thu, 01 Feb 2018 15:20:37 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/</guid>
-      <description>If you run a webserver on AWS, get real client ip will be tricky if you didn&#39;t configure server right and write code correctly.
+      <description>If you run a webserver on AWS, get real client ip will be tricky if you didn&amp;rsquo;t configure server right and write code correctly.
 Things related to client real ip:
  CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application).  Request sequence diagram will be like following:
-User&#39;s real client ip is forwarded by front proxies one by one in head X-Forwarded-For.
+User&amp;rsquo;s real client ip is forwarded by front proxies one by one in head X-Forwarded-For.
 For CloudFront:
- If user&#39;s req header don&#39;t have X-Forwarded-For, it will set user&#39;s ip(from tcp connection) in X-Forwarded-For If user&#39;s req already have X-Forwarded-For, it will append user&#39;s ip(from tcp connection) to the end of X-Forwarded-For  For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront&#39;s ip.
+ If user&amp;rsquo;s req header don&amp;rsquo;t have X-Forwarded-For, it will set user&amp;rsquo;s ip(from tcp connection) in X-Forwarded-For If user&amp;rsquo;s req already have X-Forwarded-For, it will append user&amp;rsquo;s ip(from tcp connection) to the end of X-Forwarded-For  For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront&amp;rsquo;s ip.
 For nginx, things will be tricky depends on your config.
 Things maybe involved in nginx:
- real ip module proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;  If you didn&#39;t use real ip module, you need to pass X-Forwarded-For head explictly.
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; will append ALB&#39;s ip to the end of X-Forwarded-For header received from ALB.
+ real ip module proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;  If you didn&amp;rsquo;t use real ip module, you need to pass X-Forwarded-For head explictly.
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; will append ALB&amp;rsquo;s ip to the end of X-Forwarded-For header received from ALB.
 So X-Forwarded-For header your webserver received will be user ip,cloudfront ip, alb ip
 Or you can use real ip module to trust the value passed from ALB.</description>
     </item>
@@ -497,10 +497,10 @@ Or you can use real ip module to trust the value passed from ALB.</description>
       <pubDate>Sun, 10 Dec 2017 11:13:53 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/12/10/handle-outage/</guid>
-      <description>A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&#39;m working on a long term solution. I learned some important things from this accident.
-The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&#39;s health check failed due to high load.
+      <description>A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&amp;rsquo;m working on a long term solution. I learned some important things from this accident.
+The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&amp;rsquo;s health check failed due to high load.
 I did following:
- Check monitor Identify the problem is caused by KV system  Okay, problem is here, I know the problem is KV system&#39;s performance issue. But I can&#39;t figure out the root case right now, I need a temporary solution. Straightward way is redirect traffic to slave instance. But I know it won&#39;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&#39;t work.
+ Check monitor Identify the problem is caused by KV system  Okay, problem is here, I know the problem is KV system&amp;rsquo;s performance issue. But I can&amp;rsquo;t figure out the root case right now, I need a temporary solution. Straightward way is redirect traffic to slave instance. But I know it won&amp;rsquo;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&amp;rsquo;t work.
 The real down time was not long, performance recovered to some degree soon, but latency was still high, not normal. I monitored it for long time, and tried to find out the root case until morning. Since traffic was growing when peak hour coming, performance became problem again.</description>
     </item>
     
@@ -510,11 +510,11 @@ The real down time was not long, performance recovered to some degree soon, but 
       <pubDate>Sat, 14 Oct 2017 22:33:36 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/</guid>
-      <description>AWS&#39;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
+      <description>AWS&amp;rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
 It works, but have some concerns. Take some notes when doing this project.
 Prerequisites Source RDS must:
  Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration(&#39;binlog retention hours&#39;, 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT, REPLICATION SLAVE, SELECT on replication target tables  DDL on source table Redshift has some limits on change columns:
- New column only must be added in the end Can&#39;t rename columns  So for DDL on source MySQL, you can&#39;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
+ New column only must be added in the end Can&amp;rsquo;t rename columns  So for DDL on source MySQL, you can&amp;rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
  &amp;quot;ChangeProcessingDdlHandlingPolicy&amp;quot;:{ &amp;quot;HandleSourceTableDropped&amp;quot;:false, &amp;quot;HandleSourceTableTruncated&amp;quot;:false, &amp;quot;HandleSourceTableAltered&amp;quot;:false },  If source table schema changed, I just drop and reload target table on console.
 Control write speed on Redshift Since Redshift is an OLAP database, write operation is slow and concurrency is low, streaming data directly will have big impact on it.
 And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.
