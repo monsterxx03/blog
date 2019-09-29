@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Thu, 26 Sep 2019 16:05:05 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 29 Sep 2019 15:07:11 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>gospy dev note</title>
+      <link>https://blog.monsterxx03.com/2019/09/29/gospy-dev-note/</link>
+      <pubDate>Sun, 29 Sep 2019 15:07:11 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2019/09/29/gospy-dev-note/</guid>
+      <description>前文讲了下 gospy 的大致用法, 这篇记录具体实现和过程中碰到的一些问题. 原理 要从外部获取 golang 进程的 runtime 信息, 需要做得是从进程的 binary 中的 debug 信息里 parse 出需要的一些变量的虚拟内存地址, 读取目标进程的内存, 得到相应的数据, 将两者映射起来就好了.只支持了 linux 上的 ELF 格式 binary, debug 信息是 go 在编译时候弄进去的, 格式是通用的 DWARF. ELF 和 DWARF 格式本身不细究(汗, 文档几百页也实在看不动), go 标准库里自带相应的 parser: debug/elf, debug/dwarf, debug/gosym. 一个基本的读取例子: f, _ := os.Open(path) b, _ :=</description>
+    </item>
     
     <item>
       <title>割裂感</title>

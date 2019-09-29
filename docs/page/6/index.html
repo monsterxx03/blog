@@ -92,6 +92,47 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2017/10/14/aws-dms-notes/'>AWS DMS notes</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>AWS&rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
+It works, but have some concerns. Take some notes when doing this project.
+Prerequisites Source RDS must:
+ Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration('binlog retention hours', 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT, REPLICATION SLAVE, SELECT on replication target tables  DDL on source table Redshift has some limits on change columns:
+ New column only must be added in the end Can&rsquo;t rename columns  So for DDL on source MySQL, you can&rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
+ &quot;ChangeProcessingDdlHandlingPolicy&quot;:{ &quot;HandleSourceTableDropped&quot;:false, &quot;HandleSourceTableTruncated&quot;:false, &quot;HandleSourceTableAltered&quot;:false },  If source table schema changed, I just drop and reload target table on console.
+Control write speed on Redshift Since Redshift is an OLAP database, write operation is slow and concurrency is low, streaming data directly will have big impact on it.
+And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.
+So I need to batch apply changes on DMS.......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2017.10.14</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/dms/">DMS</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2017/09/29/get-all-invalid-ptr-record-on-route53/'>Get all invalid PTR record on  Route53</a></h2>
   </div>
   
@@ -402,39 +443,6 @@ avro (used in hadoop), have a write schema and a read schema, when store a large
           <i class="remixicon-stack-line"></i>
           
           <a href="https://blog.monsterxx03.com/tags/book/">book</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/05/04/designing-data-intensive-application-reading-notes-part-1/'>Designing data intensive application, reading notes, Part 1</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>Notes when reading chapter 2 &#8220;Data models and query languages&#8221;, chapter 3 &#8220;Storage and retrieval&#8221;</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.05.04</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/book/">book</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/database/">Database</a>
           
         </span>
         
