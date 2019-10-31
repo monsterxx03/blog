@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.58.3" />
+	<meta name="generator" content="Hugo 0.59.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -89,6 +89,41 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2018/09/26/eks-%E8%AF%84%E6%B5%8B-part-3/'>EkS 评测 part-3</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>这篇记录对 ingress 的测试. ingress 用来将外部流量导入 k8s 内的 service. 将 service 的类型设置为 LoadBalancer / NodePort 也可以将单个 service 暴露到公网, 但用 ingress 可以只使用一个公网入口,根据 host name 或 url path 来将请求分发到不同的 service. 一般 k8s 内的资源都会由一个 controller 来负责它的状态管理, 都由 kube-controller-manager 负责， 但 ingress controller 不是它的一部分，需要是视情况自己选择合适的 ingress controller. 在 eks 上我主要需要 ingress-nginx 和 aws-alb-ingress-controller. 注意, nginx inc 还维护一个 kubernetes-ingress, 和官方那个不是一个东西， 没测试过. 这里主要只测试了 ingress-nginx, 看了下内部实现, 数据的转发真扭曲......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2018.09.26</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -374,48 +409,6 @@ future, it tries to make you write single clean python3.x code without ugly hack
           <i class="remixicon-stack-line"></i>
           
           <a href="https://blog.monsterxx03.com/tags/python/">python</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/05/23/use-sns-sqs-to-build-pub/sub-system/'>Use SNS &amp; SQS to build Pub/Sub System</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, take some notes.
-Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
-There&rsquo;re three obvious choices in my mind:
- kafka AMQP based system (rabbitmq,activemq &hellip;) SNS + SQS  My demands for this system are:
- Support message persistence. Support topic based message distribution. Easy to manage.  The data volume won&rsquo;t be very large, so performance and throughput won&rsquo;t be critical concerns.
-I choose SNS + SQS, main concerns are from operation side:
- kafka need zookeeper to support cluster. rabbitmq need extra configuration for HA, and AMQP model is relatively complex for programming.  So my decision is:
- application publish message to SNS topic Setup multi SQS queues to subscribe SNS topic Let different application processes to subscribe to different queues to finish its logic.  SQS and SNS is very simple, not too much to say, just some notes:......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.05.23</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/sns/">SNS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/sqs/">SQS</a>
           
         </span>
         

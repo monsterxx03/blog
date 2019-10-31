@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>tech on Shining Moon</title>
@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sun, 29 Sep 2019 15:07:11 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 31 Oct 2019 11:45:44 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/categories/tech/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>老代码里和 MySQL 的事务隔离相关的一个bug</title>
+      <link>https://blog.monsterxx03.com/2019/10/31/%E8%80%81%E4%BB%A3%E7%A0%81%E9%87%8C%E5%92%8C-mysql-%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%80%E4%B8%AAbug/</link>
+      <pubDate>Thu, 31 Oct 2019 11:45:44 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2019/10/31/%E8%80%81%E4%BB%A3%E7%A0%81%E9%87%8C%E5%92%8C-mysql-%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%80%E4%B8%AAbug/</guid>
+      <description>这两天在调试代码的时候, 发现 db 层的代码在每次把 connection 放回 db pool 的时候,即使之前执行的是 select 语句,也会 rollback 一下, 这代码很古老, 我也不知道为啥, 尝试把 rollback 去掉, 结果单元测试挂了一堆, 大多都是数据不一致的问题, debug 了一下, 最后发现这坑还挺大的. 为什么去掉 select 的 rollback 后会出现数据不一致? pymysql 默认关闭了 autocommit, connection A 进行 select 之后, 其实 MySQL 内部为 select 也开启了一个 transaction(Repeatable Read), 可以通过 SELECT * FROM information_schema.innodb_trx\G 查看. 所以当 connection A 先 select 一次, connection B 在 transaction 内更新数据并 commit, connection A 再次 select (之前</description>
+    </item>
     
     <item>
       <title>gospy dev note</title>

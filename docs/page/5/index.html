@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.58.3" />
+	<meta name="generator" content="Hugo 0.59.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -89,6 +89,48 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2018/05/23/use-sns-sqs-to-build-pub/sub-system/'>Use SNS &amp; SQS to build Pub/Sub System</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, take some notes.
+Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
+There&rsquo;re three obvious choices in my mind:
+ kafka AMQP based system (rabbitmq,activemq &hellip;) SNS + SQS  My demands for this system are:
+ Support message persistence. Support topic based message distribution. Easy to manage.  The data volume won&rsquo;t be very large, so performance and throughput won&rsquo;t be critical concerns.
+I choose SNS + SQS, main concerns are from operation side:
+ kafka need zookeeper to support cluster. rabbitmq need extra configuration for HA, and AMQP model is relatively complex for programming.  So my decision is:
+ application publish message to SNS topic Setup multi SQS queues to subscribe SNS topic Let different application processes to subscribe to different queues to finish its logic.  SQS and SNS is very simple, not too much to say, just some notes:......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2018.05.23</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/sns/">SNS</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/sqs/">SQS</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -389,34 +431,6 @@ Or you can use real ip module to trust the value passed from ALB.......</p>
           
           <a href="https://blog.monsterxx03.com/tags/nosql/">NoSQL</a>
           
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/12/10/handle-outage/'>Handle outage</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&rsquo;m working on a long term solution. I learned some important things from this accident.
-The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&rsquo;s health check failed due to high load.
-I did following:
- Check monitor Identify the problem is caused by KV system  Okay, problem is here, I know the problem is KV system&rsquo;s performance issue. But I can&rsquo;t figure out the root case right now, I need a temporary solution. Straightward way is redirect traffic to slave instance. But I know it won&rsquo;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&rsquo;t work.
-The real down time was not long, performance recovered to some degree soon, but latency was still high, not normal. I monitored it for long time, and tried to find out the root case until morning. Since traffic was growing when peak hour coming, performance became problem again.......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.12.10</span>
         </span>
         
       </div>

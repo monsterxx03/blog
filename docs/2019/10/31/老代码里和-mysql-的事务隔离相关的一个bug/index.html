@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-cn" >
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  
+  <meta name="author"
+        content="monsterxx03"/>
+
+  
+  <meta name="description" content="这两天在调试代码的时候, 发现 db 层的代码在每次把 connection 放回 db pool 的时候,即使之前执行的是 select 语句,也会 rollback 一下, 这代码很古老, 我也不知道为啥, 尝试把 rollback 去掉, 结果单元测试挂了一堆, 大多都是数据不一致的问题, debug 了一下, 最后发现这坑还挺大的. 为什么去掉 select 的 rollback 后会出现数据不一致? pymysql 默认关闭了 autocommit, connection A 进行 select 之后, 其实 MySQL 内部为 select 也开启了一个 transaction(Repeatable Read), 可以通过 SELECT * FROM information_schema.innodb_trx\G 查看. 所以当 connection A 先 select 一次, connection B 在 transaction 内更新数据并 commit, connection A 再次 select (之前"/>
+  
+
+  
+
+  
+  <link rel="canonical" href="https://blog.monsterxx03.com/2019/10/31/%E8%80%81%E4%BB%A3%E7%A0%81%E9%87%8C%E5%92%8C-mysql-%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%80%E4%B8%AAbug/"/>
+
+  
+
+  <title>老代码里和 MySQL 的事务隔离相关的一个bug &middot; Shining Moon</title>
+
+  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
+
+  
+  
+</head>
+
+<body>
+<div class="main animated">
+  <div class="nav_container animated fadeInDown">
+  <div class="site_nav" id="site_nav">
+    <ul>
+      
+      <li>
+        <a href="/">Home</a>
+      </li>
+      
+      <li>
+        <a href="/posts/">Archive</a>
+      </li>
+      
+      <li>
+        <a href="/about/">About</a>
+      </li>
+      
+      <li>
+        <a href="/tags">Tags</a>
+      </li>
+      
+    </ul>
+  </div>
+  <div class="menu_icon">
+    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
+  </div>
+</div>
+
+  <div class="header animated fadeInDown">
+  <div class="site_title_container">
+    <div class="site_title">
+      <h1>
+        <a href="https://blog.monsterxx03.com">
+          <span>Shining Moon</span>
+          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
+        </a>
+      </h1>
+    </div>
+    <div class="description">
+      <p class="sub_title">百种弊病,皆从懒生</p>
+      <div class="my_socials">
+        
+        
+        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
+        
+        
+        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    <div class="post_page">
+      <div class="post animated fadeInDown">
+        <div class="post_title post_detail_title">
+          <h2><a href='/2019/10/31/%E8%80%81%E4%BB%A3%E7%A0%81%E9%87%8C%E5%92%8C-mysql-%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%80%E4%B8%AAbug/'>老代码里和 MySQL 的事务隔离相关的一个bug</a></h2>
+          <span class="date">2019.10.31</span>
+        </div>
+        <div class="post_content markdown"><p>这两天在调试代码的时候, 发现 db 层的代码在每次把 connection 放回 db pool 的时候,即使之前执行的是 select 语句,也会 rollback 一下,
+这代码很古老, 我也不知道为啥, 尝试把 rollback 去掉, 结果单元测试挂了一堆, 大多都是数据不一致的问题, debug 了一下, 最后发现这坑还挺大的.</p>
+
+<p></br>
+为什么去掉 select 的 rollback 后会出现数据不一致?</p>
+
+<p></br>
+pymysql 默认关闭了 autocommit, connection A 进行 select 之后, 其实 MySQL 内部为 select 也开启了一个 transaction(Repeatable Read),
+可以通过 <code>SELECT * FROM information_schema.innodb_trx\G</code>  查看.</p>
+
+<p></br>
+所以当 connection A 先 select 一次, connection B 在 transaction 内更新数据并 commit, connection A 再次 select (之前的 transaction 并没 rollback 或 commit),
+得到了老的数据. MySQL 在 repeatable read 下, 为了 consistent read 会使用一个 snapshot, 时间是第一次 read 发生的时间: <a href="https://dev.mysql.com/doc/refman/5.7/en/glossary.html#glos_consistent_read">https://dev.mysql.com/doc/refman/5.7/en/glossary.html#glos_consistent_read</a></p>
+
+<p></br>
+connection A 执行一次 rollback 就能看到新的数据, 我去掉了 rollback 自然就挂了&hellip;&hellip;</p>
+
+<p></br>
+不想在每条 select 后都发一句 rollback, 只要打开 autocommit 就行了. 但这份老代码因为某些原因, connection 的建立过程包装了一下,是 lazy 的, 当一个 connection 调用 <code>begin()</code> 函数尝试开始一个 transaction 的时候, 底下真正的 dbc 还没建立, <code>begin()</code> 函数有可能空跑了一下,啥都没干. 如果开了 autocommit, 会导致一些 write 没法 rollback.</p>
+
+<p></br>
+陈年老代码就是坑, 彻底改需要对这整套逻辑重构了.</p>
+</div>
+        <div class="post_footer">
+          
+          <div class="meta">
+            <div class="info">
+              <span class="field tags">
+                <i class="remixicon-stack-line"></i>
+                
+                <a href="https://blog.monsterxx03.com/tags/mysql/">mysql</a>
+                
+              </span>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mx03" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      
+      
+    </div>
+  </div>
+  <a id="back_to_top" href="#" class="back_to_top"><span>△</span></a>
+</div>
+<footer class="footer">
+  <div class="powered_by">
+    <a href="https://zeuk.me">Designed by Zeuk,</a>
+    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
+  </div>
+
+  <div class="footer_slogan">
+    <span></span>
+  </div>
+</footer>
+
+
+
+<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
+<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
+<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
+<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
+<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-98667627-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</body>
+</html>
