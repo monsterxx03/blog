@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Thu, 31 Oct 2019 11:45:44 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 15 Nov 2019 14:05:59 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>集成 opentracing</title>
+      <link>https://blog.monsterxx03.com/2019/11/15/%E9%9B%86%E6%88%90-opentracing/</link>
+      <pubDate>Fri, 15 Nov 2019 14:05:59 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2019/11/15/%E9%9B%86%E6%88%90-opentracing/</guid>
+      <description>之前用过 datadog 的 tracing 功能, 非常好用, 但是很贵(单台30$), 迁移到 k8s 后, 监控迁移到了 prometheus, 也把 datadog 的 tracing 去掉了.datadog 的 tracing 也是 opentracing 的一种实现, 索性就换上开源实现. tracing 系统是分布式系统中很好用的 performance tuning 工具, opentracing 只是一个标准，里面定义了 span, scope, tracer 等概念，但不规定 tracing 数据应该怎么 encoding, 怎么存储, 跨进程的 span 数据怎么串起来. 首先要挑选一个开源的 tracer 实现，tracer 用来接受业务系统发出的 encode 过的 span 数据,并存储，提供一个界面供查询. 我选</description>
+    </item>
     
     <item>
       <title>老代码里和 MySQL 的事务隔离相关的一个bug</title>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-cn" >
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  
+  <meta name="author"
+        content="monsterxx03"/>
+
+  
+  <meta name="description" content="之前用过 datadog 的 tracing 功能, 非常好用, 但是很贵(单台30$), 迁移到 k8s 后, 监控迁移到了 prometheus, 也把 datadog 的 tracing 去掉了.datadog 的 tracing 也是 opentracing 的一种实现, 索性就换上开源实现. tracing 系统是分布式系统中很好用的 performance tuning 工具, opentracing 只是一个标准，里面定义了 span, scope, tracer 等概念，但不规定 tracing 数据应该怎么 encoding, 怎么存储, 跨进程的 span 数据怎么串起来. 首先要挑选一个开源的 tracer 实现，tracer 用来接受业务系统发出的 encode 过的 span 数据,并存储，提供一个界面供查询. 我选"/>
+  
+
+  
+
+  
+  <link rel="canonical" href="https://blog.monsterxx03.com/2019/11/15/%E9%9B%86%E6%88%90-opentracing/"/>
+
+  
+
+  <title>集成 opentracing &middot; Shining Moon</title>
+
+  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
+
+  
+  
+</head>
+
+<body>
+<div class="main animated">
+  <div class="nav_container animated fadeInDown">
+  <div class="site_nav" id="site_nav">
+    <ul>
+      
+      <li>
+        <a href="/">Home</a>
+      </li>
+      
+      <li>
+        <a href="/posts/">Archive</a>
+      </li>
+      
+      <li>
+        <a href="/about/">About</a>
+      </li>
+      
+      <li>
+        <a href="/tags">Tags</a>
+      </li>
+      
+    </ul>
+  </div>
+  <div class="menu_icon">
+    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
+  </div>
+</div>
+
+  <div class="header animated fadeInDown">
+  <div class="site_title_container">
+    <div class="site_title">
+      <h1>
+        <a href="https://blog.monsterxx03.com">
+          <span>Shining Moon</span>
+          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
+        </a>
+      </h1>
+    </div>
+    <div class="description">
+      <p class="sub_title">百种弊病,皆从懒生</p>
+      <div class="my_socials">
+        
+        
+        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
+        
+        
+        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    <div class="post_page">
+      <div class="post animated fadeInDown">
+        <div class="post_title post_detail_title">
+          <h2><a href='/2019/11/15/%E9%9B%86%E6%88%90-opentracing/'>集成 opentracing</a></h2>
+          <span class="date">2019.11.15</span>
+        </div>
+        <div class="post_content markdown">
+
+<p>之前用过 datadog 的 tracing 功能, 非常好用, 但是很贵(单台30$), 迁移到 k8s 后, 监控迁移到了 prometheus, 也把 datadog 的 tracing 去掉了.datadog 的 tracing 也是 opentracing 的一种实现, 索性就换上开源实现.</p>
+
+<p></br>
+tracing 系统是分布式系统中很好用的 performance tuning 工具, opentracing 只是一个标准，里面定义了 span, scope, tracer 等概念，但不规定 tracing
+数据应该怎么 encoding, 怎么存储, 跨进程的 span 数据怎么串起来.</p>
+
+<p></br>
+首先要挑选一个开源的 tracer 实现，tracer 用来接受业务系统发出的 encode 过的 span 数据,并存储，提供一个界面供查询. 我选的是 jaeger, go实现的,部署起来比较轻量级,
+也是 cncf 的项目, 还有个 jaeger-operator 方便部署.</p>
+
+<h2 id="集成-client-端">集成 client 端</h2>
+
+<p></br>
+业务系统是 python 写的，需要把 tracing 数据发送到 jaeger, 需要两个 lib: <a href="https://github.com/opentracing/opentracing-python">opentracing-python</a>, <a href="https://github.com/jaegertracing/jaeger-client-python">jaeger-client-python</a>.
+opentracing-python 里面只是写了一些空的接口, span 如何 encode, 如何通过网络传送, 在 jaeger-client-python 里面实现.</p>
+
+<p></br>
+jaeger-client-python 里面网络部分是基于 tornado 的 ioloop 实现的, 但业务系统基于 gevent 实现, 这两跑一起总有各种奇奇怪怪的问题, 于是我 fork 了一下, 把网络
+部分基于 gevent 重写了一下: <a href="https://github.com/monsterxx03/jaeger-client-python">monsterxx03/jaeger-client-python</a>, 分支 <code>gevent</code>, 用法不变.</p>
+
+<p>初始化:</p>
+
+<pre><code>from jaeger_client import Config
+
+config = Config(
+    config={ # usually read from some yaml config
+        'sampler': {
+            'type': 'const',
+            'param': 1,
+        },
+        'logging': True,
+    },  
+    service_name='your-app-name',
+    validate=True,
+)
+# 会初始化默认的全局 tracer opentracing.tracer
+tracer = config.initialize_tracer()
+</code></pre>
+
+<p>使用:</p>
+
+<pre><code>import opentracing
+
+# 这里得到的 tracer 就是上面初始化的 
+tracer = opentracing.global_tracer()
+
+with tracer.start_active_span(&quot;test&quot;)  as scope:
+    scope.span.set_tag('kind', 'client')
+    ...
+</code></pre>
+
+<p>当 context manager 结束的时候, span 会被刷入内存里的一个队列, 当队列满了, 或设定的 flush interval 到了就会把内容发送到 jaeger.</p>
+
+<h2 id="跨进程-tracing">跨进程 tracing</h2>
+
+<p>假设 service A 通过 http 调用 service B, 如何才能把 A 和 B 串起来呢? opentracing 里通过 <code>inject</code> 和 <code>extract</code> 这两个过程来实现.</p>
+
+<p></br>
+<code>inject</code> 时会给 SpanContext 注入 tracer id, 然后得到 encode 过的 kv 形式 tracer id, 在调用 service B 时, 我们只要把这个 kv 对设定在
+http header 上就行了.</p>
+
+<p></br>
+在 service B 里通过 <code>extract</code> 来从 http header 里根据 tracer id 生成新的 SpanContext, 两个 service 就串起来了.</p>
+
+<p>service A:</p>
+
+<pre><code>with tracer.start_active_span(call) as scope:
+    scope.span.set_tag(tags.SPAN_KIND, tags.SPAN_KIND_RPC_CLIENT)
+    scope.span.set_tag('webrpc_client', self.service_name)
+    carrier = {}
+    tracer.inject(scope.span.context, opentracing.Format.HTTP_HEADERS, carrier)
+    # carrier 已经被填充了 tracer id
+    resp = requests.get(url, headers=carrier)
+</code></pre>
+
+<p>service B:</p>
+
+<pre><code>span_ctx = tracer.extract(opentracing.Format.HTTP_HEADERS,
+                                request.headers)
+scope = tracer.start_active_span(operation_name,
+                                        child_of=span_ctx)
+</code></pre>
+
+<h2 id="自动-patch">自动 patch</h2>
+
+<p>因为系统里会用到大量的第三方 client lib: mysql, redis, requests, urllib&hellip;不可能全部改一边,　可以通过 monkey_patch 的形式把那些库最后网络发送的部分替换成带 tracing 的实现,
+可以看下 <a href="https://github.com/uber-common/opentracing-python-instrumentation/">opentracing_instrumentation</a> 这个库, 里面提供了对 requests, redis, urllib, psycopg2, mysqldb 等库的 hook.</p>
+
+<p></br>
+有些库里面没有, 也可以自己写一个 patch, 比如 elasticsearch 的 python client, 我们只需要替换 <code>elasticsearch.transport.Transport.perform_request</code> 这个函数就行:</p>
+
+<pre><code>import opentracing
+from elasticsearch.transport import Transport
+
+tracer = opentracing.global_tracer()
+_origin_perform_request = Transport.perform_request
+
+def _perform_request(self, method, url, params=None, body=None):
+    op_name = url
+
+    span = tracer.start_span(op_name)
+    span.set_tag('component', 'es-py')
+    span.set_tag('span.kind', 'client')
+    span.set_tag('es.url', url)
+    span.set_tag('es.method', method)
+
+    if body:
+        span.set_tag('db.statement', body)
+    if params:
+        span.set_tag('elasticsearch.params', params)
+
+    try:
+        rv = _origin_perform_request(self, method, url, params, body)
+    except Exception as exc:
+        span.set_tag('error', True)
+        span.log_kv({
+            'event': tags.ERROR,
+            'error.object': exc,
+        })
+        span.finish()
+        raise
+
+    span.finish()
+    return rv
+
+
+setattr(Transport, 'perform_request', _perform_request)
+</code></pre>
+
+<h2 id="界面">界面</h2>
+
+<p>最后的使用效果如下, 每一长条就是一个 span, 不同颜色的 span 表示在不同的进程中.</p>
+
+<p><img src="/posts/images/tracing.png" alt="" /></p>
+
+<p>可以很容易的分析在一次 api call 里调用了哪些外部 service, 哪些是瓶颈,是否可以优化. 因为我全部是在发生网络 io 的部分做的 patch, 如果某个 span 的所有子 span
+加起来都没有父 span 长, 有空白, 那那段空白就是 cpu heavy 的部分.</p>
+</div>
+        <div class="post_footer">
+          
+          <div class="meta">
+            <div class="info">
+              <span class="field tags">
+                <i class="remixicon-stack-line"></i>
+                
+                <a href="https://blog.monsterxx03.com/tags/python/">python</a>
+                
+                <a href="https://blog.monsterxx03.com/tags/opentracing/">opentracing</a>
+                
+              </span>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mx03" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      
+      
+    </div>
+  </div>
+  <a id="back_to_top" href="#" class="back_to_top"><span>△</span></a>
+</div>
+<footer class="footer">
+  <div class="powered_by">
+    <a href="https://zeuk.me">Designed by Zeuk,</a>
+    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
+  </div>
+
+  <div class="footer_slogan">
+    <span></span>
+  </div>
+</footer>
+
+
+
+<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
+<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
+<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
+<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
+<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-98667627-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</body>
+</html>
