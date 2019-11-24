@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 15 Nov 2019 14:05:59 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 24 Nov 2019 22:31:42 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>11月</title>
+      <link>https://blog.monsterxx03.com/2019/11/24/11%E6%9C%88/</link>
+      <pubDate>Sun, 24 Nov 2019 22:31:42 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2019/11/24/11%E6%9C%88/</guid>
+      <description>前两天落枕了, 起床后脖子特别疼, 久坐不动的恶果, 这周末去了附近一家盲人按摩推拿了一下, 舒坦了不少, 这还是第一次近距离接触一个盲人, 感触颇深. 给我推拿的是个大姐, 大我几岁, 刚进门的时候我还没意识到她是个盲人, 动作特别利落, 屋里也收拾得井井有条(惭愧!), 直到看到她用手机才确定是真的看不见. 一般在外面我不太喜欢和店员搭话, 比如理发师话多的话绝对不会去第二次, 这次虽然对盲人的生活有点好奇, 也没多问, 不清</description>
+    </item>
     
     <item>
       <title>集成 opentracing</title>
