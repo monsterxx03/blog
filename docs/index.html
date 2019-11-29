@@ -92,6 +92,41 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2019/11/29/snet-dev-note/'>snet dev note</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>snet: 0.5 ~ 0.6.1, 整理从上一篇以来的一些更新. 新增选项 proxy-scope, 默认 bypassCN, 可选 global. bypassCN 会做国内外分流, global 直接让所有流量去往国外. host-map, 为域名指定 ip. 之前在测试一个功能的时候需要在内网让手机对某个域名的解析切换到我的测试 ip 上, 坑爹的是公司的路由器竟然没这功能, 索性在 snet 里写了这个功能, 让我的台式机发射 wifi, 手机连上来, snet 的 mode 切换成 router, listen-host 改为 0.0.0.0 就好了. block-hosts, 因为 block-host-file 里的域名是从一个现成的列表生成出来的, 不好支持通配符, 所以加了这个, 比如 [&quot;*.hpplay.cn&quot;], 就能把电......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2019.11.29</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/network/">network</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/golang/">golang</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/snet/">snet</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2019/11/24/11%E6%9C%88/'>11月</a></h2>
   </div>
   
@@ -349,30 +384,6 @@
           
           <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
           
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2019/07/24/%E6%9D%82%E8%B0%88/'>杂谈</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>回首一看, 大半年没写过杂谈系列了, 今年都没休假, 也是醉了. 随便唠叨几句. 小区门口的大爷养的花猫生了二胎, 长特别好看, 随它们妈, 颜值吊打白猫大哥, 每天下班路过看它们在马路口咬报纸也是很有意思. 犹豫了几天要不要抱只回来, 犹豫着犹豫着就都被别人领走了, 叹. 最近在看西泽保彦的书, 看完了一本&lt;死了7次的男人&gt;, 正在读&lt;解体诸因&gt;. 简直是发现了宝藏, 好久没有看到喜欢的推理小说了, 真的是......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2019.07.24</span>
         </span>
         
       </div>

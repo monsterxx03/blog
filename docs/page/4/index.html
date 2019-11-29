@@ -92,6 +92,41 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2018/10/31/aws-aurora-db/'>AWS Aurora DB</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比. Paper notes 存储计算分离 redo log 下推到存储层 副本: 6 副本 3 AZ(2 per az), 失去一个 AZ + 1 additoinal node 不会丢数据(可读不可写). 失去一个 AZ (或任意2 node) 不影响数据写入. 10GB 一个 segment, 每个 segment 6 副本一个 PG (protection group), 一 AZ 两副本. 在 10Gbps 的网络上, 修复一个 10GB 的segment 需要 10s. MySQL 一个应用层的写会在底层产生很多额外的写操作，会带来写放大问题: redo log 用来 crash recovery, binlog 会上传 s3 用于 point in time restore. 在 aurora 里，只......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2018.10.31</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/mysql/">mysql</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/database/">database</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2018/10/15/%E4%B8%BA-service-%E5%88%B6%E5%AE%9A-slo/'>为 service 制定 SLO</a></h2>
   </div>
   
@@ -377,30 +412,6 @@ Job Job is used to run a single completable task.......</p>
           
           <a href="https://blog.monsterxx03.com/tags/python/">python</a>
           
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/06/10/%E6%9D%82%E8%B0%88%E6%9D%BE%E6%9C%AC%E6%B8%85%E5%BC%A0/'>杂谈松本清张</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>去年在 kindle 上买了套松本清张的合集, 总共有10本, 断断续续看到现在终于看完了第 9 本&lt;隐花平原&gt;, 随便扯一点(喂，为什么不看完最后一本! 松本清张 (1909 ~ 1992), 社会派推理开创人, 这套书里的作品各个年代都有, 最有名的&lt;砂之器&gt;(貌似仲间姐姐拍过剧?) 和 &lt;点与线&gt; 却没收录. 本格派讲究逻辑的精巧， 整个故事就像在玩密室逃脱一样, 一环扣一环, 最后谜底揭开的时候让人惊呼&quot;卧槽&r......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.06.10</span>
         </span>
         
       </div>

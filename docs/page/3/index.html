@@ -92,6 +92,41 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2019/04/10/snet-dev-note/'>snet dev note</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>完成 SNET 初版后又做了些后续更新, 记录一点. 支持 http tunnel 配置文件里增加一个 proxy-type 选项, 默认为 ss, 可改成 http, 这样可以将 支持 http tunnel 的代理服务器作为 upstream(例如 squid). 填上 http-proxy- 开头 的选项就行. 实现上 client 端要对接 http tunnel 非常简单: client 发送请求: Connect tgt-host:tgt-port HTTP/1.1 server response: HTTP/1.1 200, 即表示 server 端支持 http tunnel client 后续向该 tcp connection 写入的数据都会被 server 转发到 tgt-host:tgt-port 改动的时候把 upstream proxy 的部分重构了一下, 抽了个 Proxy interface 出来, 后续想对接其他协议方便扩展. 对 udp 支持的尝试 对 tcp 流量的转发能通过 iptables REDIRECT......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2019.04.10</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/network/">network</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/golang/">golang</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/snet/">snet</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2019/03/31/snet-transparent-ss-proxy-on-linux/'>snet: transparent ss proxy on Linux</a></h2>
   </div>
   
@@ -372,41 +407,6 @@ free -h humanize output (automatically show in KB/MB/GB&hellip;)......</p>
         <span class="field">
           <i class="remixicon-map-pin-time-line"></i>
           <span class="date">2018.11.04</span>
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/10/31/aws-aurora-db/'>AWS Aurora DB</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比. Paper notes 存储计算分离 redo log 下推到存储层 副本: 6 副本 3 AZ(2 per az), 失去一个 AZ + 1 additoinal node 不会丢数据(可读不可写). 失去一个 AZ (或任意2 node) 不影响数据写入. 10GB 一个 segment, 每个 segment 6 副本一个 PG (protection group), 一 AZ 两副本. 在 10Gbps 的网络上, 修复一个 10GB 的segment 需要 10s. MySQL 一个应用层的写会在底层产生很多额外的写操作，会带来写放大问题: redo log 用来 crash recovery, binlog 会上传 s3 用于 point in time restore. 在 aurora 里，只......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.10.31</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/mysql/">mysql</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/database/">database</a>
-          
         </span>
         
       </div>

@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sun, 24 Nov 2019 22:31:42 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 29 Nov 2019 12:00:01 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>snet dev note</title>
+      <link>https://blog.monsterxx03.com/2019/11/29/snet-dev-note/</link>
+      <pubDate>Fri, 29 Nov 2019 12:00:01 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2019/11/29/snet-dev-note/</guid>
+      <description>snet: 0.5 ~ 0.6.1, 整理从上一篇以来的一些更新. 新增选项 proxy-scope, 默认 bypassCN, 可选 global. bypassCN 会做国内外分流, global 直接让所有流量去往国外. host-map, 为域名指定 ip. 之前在测试一个功能的时候需要在内网让手机对某个域名的解析切换到我的测试 ip 上, 坑爹的是公司的路由器竟然没这功能, 索性在 snet 里写了这个功能, 让我的台式机发射 wifi, 手机连上来, snet 的 mode 切换成 router, listen-host 改为 0.0.0.0 就好了. block-hosts, 因为 block-host-file 里的域名是从一个现成的列表生成出来的, 不好支持通配符, 所以加了这个, 比如 [&amp;quot;*.hpplay.cn&amp;quot;], 就能把电</description>
+    </item>
     
     <item>
       <title>11月</title>

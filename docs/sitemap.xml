@@ -3,27 +3,57 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://blog.monsterxx03.com/categories/</loc>
+    <lastmod>2019-11-29T12:00:01+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/golang/</loc>
+    <lastmod>2019-11-29T12:00:01+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/network/</loc>
+    <lastmod>2019-11-29T12:00:01+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/posts/</loc>
+    <lastmod>2019-11-29T12:00:01+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/</loc>
+    <lastmod>2019-11-29T12:00:01+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/snet/</loc>
+    <lastmod>2019-11-29T12:00:01+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/2019/11/29/snet-dev-note/</loc>
+    <lastmod>2019-11-29T12:00:01+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/</loc>
+    <lastmod>2019-11-29T12:00:01+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/categories/tech/</loc>
+    <lastmod>2019-11-29T12:00:01+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.monsterxx03.com/2019/11/24/11%E6%9C%88/</loc>
     <lastmod>2019-11-24T22:31:42+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/categories/</loc>
-    <lastmod>2019-11-24T22:31:42+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://blog.monsterxx03.com/categories/life/</loc>
-    <lastmod>2019-11-24T22:31:42+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/posts/</loc>
-    <lastmod>2019-11-24T22:31:42+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/</loc>
     <lastmod>2019-11-24T22:31:42+08:00</lastmod>
   </url>
   
@@ -34,16 +64,6 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/python/</loc>
-    <lastmod>2019-11-15T14:05:59+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/tags/</loc>
-    <lastmod>2019-11-15T14:05:59+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/categories/tech/</loc>
     <lastmod>2019-11-15T14:05:59+08:00</lastmod>
   </url>
   
@@ -60,11 +80,6 @@
   <url>
     <loc>https://blog.monsterxx03.com/2019/10/31/%E8%80%81%E4%BB%A3%E7%A0%81%E9%87%8C%E5%92%8C-mysql-%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%80%E4%B8%AAbug/</loc>
     <lastmod>2019-10-31T11:45:44+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/tags/golang/</loc>
-    <lastmod>2019-09-29T15:07:11+08:00</lastmod>
   </url>
   
   <url>
@@ -125,16 +140,6 @@
   <url>
     <loc>https://blog.monsterxx03.com/2019/06/30/k8s-%E5%89%A9%E4%B8%8B%E7%9A%84%E9%97%AE%E9%A2%98/</loc>
     <lastmod>2019-06-30T16:11:06+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/tags/network/</loc>
-    <lastmod>2019-06-20T16:03:56+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/tags/snet/</loc>
-    <lastmod>2019-06-20T16:03:56+08:00</lastmod>
   </url>
   
   <url>

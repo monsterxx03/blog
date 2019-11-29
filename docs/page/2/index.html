@@ -92,6 +92,30 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2019/07/24/%E6%9D%82%E8%B0%88/'>杂谈</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>回首一看, 大半年没写过杂谈系列了, 今年都没休假, 也是醉了. 随便唠叨几句. 小区门口的大爷养的花猫生了二胎, 长特别好看, 随它们妈, 颜值吊打白猫大哥, 每天下班路过看它们在马路口咬报纸也是很有意思. 犹豫了几天要不要抱只回来, 犹豫着犹豫着就都被别人领走了, 叹. 最近在看西泽保彦的书, 看完了一本&lt;死了7次的男人&gt;, 正在读&lt;解体诸因&gt;. 简直是发现了宝藏, 好久没有看到喜欢的推理小说了, 真的是......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2019.07.24</span>
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2019/07/23/%E8%BF%81%E7%A7%BB%E5%88%B0-k8s-%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%A2%B0%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/'> 迁移到 k8s 过程中碰到的问题</a></h2>
   </div>
   
@@ -383,41 +407,6 @@ Application level  configuration management (setup nginx, jenkins, redis, twempr
           <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
           
           <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2019/04/10/snet-dev-note/'>snet dev note</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>完成 SNET 初版后又做了些后续更新, 记录一点. 支持 http tunnel 配置文件里增加一个 proxy-type 选项, 默认为 ss, 可改成 http, 这样可以将 支持 http tunnel 的代理服务器作为 upstream(例如 squid). 填上 http-proxy- 开头 的选项就行. 实现上 client 端要对接 http tunnel 非常简单: client 发送请求: Connect tgt-host:tgt-port HTTP/1.1 server response: HTTP/1.1 200, 即表示 server 端支持 http tunnel client 后续向该 tcp connection 写入的数据都会被 server 转发到 tgt-host:tgt-port 改动的时候把 upstream proxy 的部分重构了一下, 抽了个 Proxy interface 出来, 后续想对接其他协议方便扩展. 对 udp 支持的尝试 对 tcp 流量的转发能通过 iptables REDIRECT......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2019.04.10</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/network/">network</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/golang/">golang</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/snet/">snet</a>
           
         </span>
         
