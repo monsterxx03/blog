@@ -28,11 +28,11 @@
       
       <guid>https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/</guid>
       <description>AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&amp;hellip;
-Usually, we inject secrets as environment variables, but they&amp;rsquo;re still visable on lambda console. I don&amp;rsquo;t use it in aws lambda.
+Usually, we inject secrets as environment variables, but they&#39;re still visable on lambda console. I don&#39;t use it in aws lambda.
 The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
 Code example:
 client = boto3.client(&#39;ssm&#39;) resp = client.get_parameter( Name=&#39;/redshift/admin/password&#39;, WithDecryption=True ) resp: { &amp;quot;Parameter&amp;quot;: { &amp;quot;Name&amp;quot;: &amp;quot;/redshift/admin/password&amp;quot;, &amp;quot;Type&amp;quot;: &amp;quot;SecureString&amp;quot;, &amp;quot;Value&amp;quot;: &amp;quot;password value&amp;quot;, &amp;quot;Version&amp;quot;: 1 } }  Things you need to do to make it work:
- Create a new KMS key Use new created KMS key to encrypt your data in parameter store. Set a execution role for your lambda function. In the KMS key&amp;rsquo;s setting page, add the lambda execution role to the list which can read this KMS key.  Then your lambda code can access encrypted data at runtime, and you needn&amp;rsquo;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.
+ Create a new KMS key Use new created KMS key to encrypt your data in parameter store. Set a execution role for your lambda function. In the KMS key&#39;s setting page, add the lambda execution role to the list which can read this KMS key.  Then your lambda code can access encrypted data at runtime, and you needn&#39;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.
 BTW, parameter store support hierarchy(at most 15 levels), splitted by /. You can retrive data under same level in one call, deltails can be found in doc, eg: http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path</description>
     </item>
     

@@ -92,54 +92,33 @@
           <h2><a href='/2019/05/14/prometheus-on-k8s/'>Prometheus on K8S</a></h2>
           <span class="date">2019.05.14</span>
         </div>
-        <div class="post_content markdown">
-
-<h1 id="why-move-to-prometheus">Why move to prometheus?</h1>
-
+        <div class="post_content markdown"><h1 id="why-move-to-prometheus">Why move to prometheus?</h1>
 <p>把生产环境迁移到 k8s 的第一步是要搞定监控, 目前线上监控用的是商业的 datadog, 在 container 环境下
 datadog 监控还要按 container 数目收费, 单 host 只有 10 个的额度, 超过要加钱, 高密度部署下很不划算.
 一个 server 跑 20 个以上 container 是很正常的事情, 单台 server 的监控费用立马翻倍.</p>
-
 <p>tracing 这块之前用的也是 datadog, 但太贵了,一直也想换开源实现, 索性监控报警也换了, 踩一把坑吧.</p>
-
 <p>vendor lock 总是不爽的&hellip;</p>
-
 <h1 id="metrics-in-k8s">Metrics in k8s</h1>
-
 <p>先不提 prometheus, k8s 中 metrics 来源有那么几个:</p>
-
-<h2 id="metrics-serever">metrics-serever</h2>
-
+<h2 id="metricsserever">metrics-serever</h2>
 <p><a href="https://github.com/kubernetes-incubator/metrics-server">metrics-server</a> (取代 heapster), 从 node
 上 kubelet 的 <a href="https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/apis/stats/v1alpha1/types.go">summary api</a> 抓取数据(node/pod 的 cpu/memory 信息), kubectl top 和 kube-dashboard 的 metrics 数据来源就是它, horizontal pod
 autoscaler 做 scale up/down 决策的数据来源也是它, metrics-server 只在内存里保留 node 和 pod 的最新值.</p>
-
 <p>kubelet 以前是内置了 <a href="https://github.com/google/cadvisor">cadvisor</a> 来获取　container 信息, 从1.7 开始正式换成 <a href="https://github.com/kubernetes/community/blob/master/contributors/devel/sig-node/container-runtime-interface.md">CRI</a>.</p>
-
 <p>metrics-server 通过 k8s aggregator 把接口注册到 k8s apiserver, 访问 k8s apiserver 的 <code>/apis/metrics.k8s.io/v1beta1/</code> 的时候请求会被代理到 metrics-server 的 pod.</p>
-
 <p>prometheus 并不通过 metrics-server 来获取 cpu/ram 信息.</p>
-
-<h2 id="kube-state-metrics">kube-state-metrics</h2>
-
+<h2 id="kubestatemetrics">kube-state-metrics</h2>
 <p><a href="https://github.com/kubernetes/kube-state-metrics">kube-state-metrics</a> 会监听 k8s apiserver, 获取 cluster 中 object的状态变化(deployment, node, endpoint, pod&hellip;), 完整的列表: <a href="https://github.com/kubernetes/kube-state-metrics/tree/master/docs">https://github.com/kubernetes/kube-state-metrics/tree/master/docs</a>, 在内存中保存这些 object 的最新状态.</p>
-
 <p>prometheus 可以通过 kube-state-metrics 来获取 k8s 集群信息.</p>
-
-<h1 id="部署-prometheus">部署 prometheus</h1>
-
+<h1 id="-prometheus">部署 prometheus</h1>
 <p>在 k8s 上部署　prometheus, 我碰到了以下选择:</p>
-
 <ol>
-<li>直接部署 prometheus 的 helm chart:　<a href="https://github.com/helm/charts/tree/master/stable/prometheus">https://github.com/helm/charts/tree/master/stable/prometheus</a></li>
+<li>直接部署 prometheus 的 helm chart:　https://github.com/helm/charts/tree/master/stable/prometheus</li>
 <li>通过 prometheus-operator 的 helm chart 部署: <a href="https://github.com/helm/charts/tree/master/stable/prometheus-operator">https://github.com/helm/charts/tree/master/stable/prometheus-operator</a></li>
 <li>通过 <a href="https://github.com/coreos/kube-prometheus">https://github.com/coreos/kube-prometheus</a> 部署 prometheus-operator</li>
 </ol>
-
 <p>2和3 选项比较接近,都是通过 prometheus-operator 来部署 prometheus, 里面还包括了一堆预设的 prometheus record rule, alerting rule, grafana dashboard. 实际上 2 中的 rules 和 dashboard 也是从３中同步过来的.</p>
-
 <p>prometheus-operator 和直接部署 prometheus 区别是 operator 把 prometheus, alertmanager server 的配置, 还有scape config, record/alert rule 包装成了 k8s 中的 crd:</p>
-
 <pre><code>kubectl get crd 
 
 NAME                                    CREATED AT
@@ -148,11 +127,8 @@ prometheuses.monitoring.coreos.com      2019-05-05T09:37:39Z
 prometheusrules.monitoring.coreos.com   2019-05-05T09:37:39Z
 servicemonitors.monitoring.coreos.com   2019-05-05T09:37:39Z
 </code></pre>
-
 <p>我是选择了方式2, 部署 prometheus-operator 的 helm chart.</p>
-
 <p>比如想获取 prometheus 监控的所有对现象, 不需要去看茫茫长的配置文件, 直接:</p>
-
 <pre><code>kubectl get servicemonitor --all-namespaces
 
 NAMESPACE   NAME                                            AGE
@@ -166,27 +142,17 @@ default     prom-op-prometheus-operato-node-exporter        4d
 default     prom-op-prometheus-operato-operator             4d
 default     prom-op-prometheus-operato-prometheus           4d
 </code></pre>
-
 <p>修改 crd 之后, operator 监控到 crd 的修改, 生成一份 prometheus 的 配置文件, gzip 压缩后存成 k8s secrets(因为 etcd d的 value 有1M 的大小限制, 所以这里压缩了), 查看生成的完整配置文件:</p>
-
 <pre><code>kubectl get secret prometheus-prom-op-prometheus-operato-prometheus -o json | jq -r '.data.&quot;prometheus.yaml.gz&quot;' | base64 -d | gzip -d
 </code></pre>
-
 <p>alertmanager 的配置同理(没压缩):</p>
-
 <pre><code>kubectl get secret  alertmanager-prom-op-prometheus-operato-alertmanager -o json | jq -r '.data.&quot;alertmanager.yaml&quot;' | base64 -d
 </code></pre>
-
 <p>prometheus 和 alertmanager 的 pod 中都有 监控 configmap/secrets 的 container, 如果挂载的 配置文件发生了修改(k8s 同步 configmap 需要1分钟左右), 会让 server 进程 reload 配置文件.</p>
-
 <p>grafana 我是单独部署的, 没有用 prometheus-operator chart弄, 因为需要修改一些细节参数(resources, pvc&hellip;), kube-prometheus 中的 dashboard: <a href="https://github.com/coreos/kube-prometheus/blob/master/manifests/grafana-dashboardDefinitions.yaml">https://github.com/coreos/kube-prometheus/blob/master/manifests/grafana-dashboardDefinitions.yaml</a> 可以拿来直接用.</p>
-
-<h2 id="监控-etcd-kubelet-kube-controller-kube-scheduler-coredns">监控 etcd, kubelet, kube-controller, kube-scheduler, coredns</h2>
-
+<h2 id="-etcd-kubelet-kubecontroller-kubescheduler-coredns">监控 etcd, kubelet, kube-controller, kube-scheduler, coredns</h2>
 <p>在 operator 的 chart 中可以 enable 对应的选项, 因为 eks 上 etcd, kube-controller, kube-scheduler 是托管的, 没法直接访问, 所以我 disable 了.</p>
-
 <p>看下监控 kubelet 具体干了什么:</p>
-
 <pre><code>kubectl get servicemonitor  prom-op-prometheus-operato-kubelet -o yaml
 
 apiVersion: monitoring.coreos.com/v1
@@ -213,9 +179,7 @@ spec:
     matchLabels:
       k8s-app: kubelet
 </code></pre>
-
 <p>哦, prometheus-operator 在 kube-system 里替我们创建了一个 endpoint 指向 kubelet 的 metrics 端口, address 是 node 的 ip</p>
-
 <pre><code>kubectl get ep -n kube-system -l k8s-app=kubelet  -o yaml 
 
 apiVersion: v1
@@ -240,21 +204,13 @@ items:
     ...
 kind: List
 </code></pre>
-
 <p>前面说过 prometheus 不通过 metrics-server 拿 cpu/ram 数据, 实际是直接从 kubelet 拿的.</p>
-
 <h2 id="blackbox-exporter">blackbox exporter</h2>
-
 <p>prometheus 是基于 pull 的监控系统, 它通过 k8s 的 service discovery 获取要监控的对象, 然后定时爬取对象的 <code>metrics_path</code>,  默认 <code>/metrics</code></p>
-
 <p>所以一个 service 要能被 prometheus 监控必须使用 <a href="https://prometheus.io/docs/instrumenting/clientlibs/">instrumenting client</a> 来提供 prometheus 格式的 数据.</p>
-
 <p>但是有很多第三方程序或者内部的老系统并没有提供 prometheus 的交互(<code>/metrics</code>), 我们又不能/不想改系统源码, 怎么让 prometheus 监控他们呢?</p>
-
 <p>可以专门写一个 exporter 来暴露一些特定 metrics,  也可以用 <a href="https://github.com/prometheus/blackbox_exporter/">blackbox-exporter</a> 来简单得检查对象是否存活, 其实它就是一个代理, 通过 url 参数传递你要访问的系统的url, 它访问后检查 status code 告诉访问者结果, 具体使用看文档.</p>
-
 <p>假设我们部署了 <a href="https://github.com/apache/incubator-superset">superset</a>, 为它创建一个 servicemonitor (prometheus-operator 会将它转换成prometheus 中的 <code>scrape_config</code>):</p>
-
 <pre><code>apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
@@ -285,22 +241,16 @@ spec:
     matchNames:
     - monitor
 </code></pre>
-
 <p>namespaceSelector 是 blackbox-exporter 运行的namepsace, 再通过 selector 定位到 endpoint.</p>
-
 <pre><code>kubectl get ep -n monitor -l app=prometheus-blackbox-exporter
 
 NAME                                                  ENDPOINTS         AGE
 prom-blackbox-exporter-prometheus-blackbox-exporter   10.0.0.200:9115   23h
 </code></pre>
-
 <p>endpoints 那段定义了传递给 endponit 的参数, 所以发起检查的时候等价于:</p>
-
 <pre><code>curl http://10.0.0.200:9115?module=http_2xx&amp;target=superset.analytics
 </code></pre>
-
 <p>superset.analytics 是 superet 在 k8s 中的 service name (处在 analytics namespace 中)</p>
-
 <p>因为我们访问的是 blockbox-exporter, 没有直接访问 superset, 获取到的 label 都不对, 可以通过 relabel config
 将 job, namespace, service 重命名成 superset 的信息.</p>
 </div>

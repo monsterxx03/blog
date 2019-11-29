@@ -12,11 +12,11 @@
   
   <meta name="description" content="Coredump file is useful for debuging program crash. This post will show several settings related to coredump.
 Enable coredump If you run program from shell , enable coredump via unlimit -c unlimited， then check unlimit -a | grep core, if it shows unlimited, coredump is enabled for your current session.
-If your program is hosted by systemd, you need to edit your program&amp;#8217;s service unit file&amp;#8217;s [Service] section, add LimitCORE=infinity to enable coredump.
-coredump location Coredump file&amp;#8217;s location is determined by kernerl parameter kernel.core_pattern.
+If your program is hosted by systemd, you need to edit your program’s service unit file’s [Service] section, add LimitCORE=infinity to enable coredump.
+coredump location Coredump file’s location is determined by kernerl parameter kernel.core_pattern.
 On ubuntu 16.04 kernel.core_pattern default value is |/usr/share/apport/apport %p %s %c %P. Leading | means pass coredump file to following program. %p %c %P is used to create dump filename, their meaning can check via man core. apport will save dump file in /var/crash
-If your default disk partition don&amp;#8217;t have enough space to hold dump file, you can change kernel.core_pattern to another location, eg: /mnt/core/%e-%t.%P. If redis-server crashes, the dump file will be something like /mnt/core/redis-server-1500000000.1452. Also ensure crash process&amp;#8217;s running user have write privilege on target location.
-systemd-coredump You can install systemd-coredump to control dump file deeply, like: size, compression&amp;#8230;.
+If your default disk partition don’t have enough space to hold dump file, you can change kernel.core_pattern to another location, eg: /mnt/core/%e-%t.%P. If redis-server crashes, the dump file will be something like /mnt/core/redis-server-1500000000.1452. Also ensure crash process’s running user have write privilege on target location.
+systemd-coredump You can install systemd-coredump to control dump file deeply, like: size, compression….
 Its config file is /etc/systemd/coredump.conf.
 After install, it will change kernel.core_pattern to |/lib/systemd/systemd-coredump %P %u %g %s %t 9223372036854775808 %e."/>
   
@@ -100,45 +100,25 @@ After install, it will change kernel.core_pattern to |/lib/systemd/systemd-cored
           <h2><a href='/2017/07/15/enable-coredump-on-ubuntu-16.04/'>Enable coredump on ubuntu 16.04</a></h2>
           <span class="date">2017.07.15</span>
         </div>
-        <div class="post_content markdown">
-
-<p>Coredump file is useful for debuging program crash. This post will show several settings related to coredump.</p>
-
+        <div class="post_content markdown"><p>Coredump file is useful for debuging program crash. This post will show several settings related to coredump.</p>
 <h2 id="enable-coredump">Enable coredump</h2>
-
 <p>If you run program from shell , enable coredump via <code>unlimit  -c unlimited</code>， then check <code>unlimit -a | grep core</code>, if it shows <code>unlimited</code>, coredump is enabled for your current session.</p>
-
-<p>If your program is hosted by systemd, you need to edit your program&#8217;s service unit file&#8217;s <code>[Service]</code> section, add <code>LimitCORE=infinity</code> to enable coredump.</p>
-
+<p>If your program is hosted by systemd, you need to edit your program’s service unit file’s <code>[Service]</code> section, add <code>LimitCORE=infinity</code> to enable coredump.</p>
 <h2 id="coredump-location">coredump location</h2>
-
-<p>Coredump file&#8217;s location is determined by kernerl parameter <code>kernel.core_pattern</code>.</p>
-
+<p>Coredump file’s location is determined by kernerl parameter <code>kernel.core_pattern</code>.</p>
 <p>On ubuntu 16.04 <code>kernel.core_pattern</code> default value is <code>|/usr/share/apport/apport %p %s %c %P</code>. Leading <code>|</code> means pass coredump file to following program. <code>%p %c %P</code> is used to create dump filename, their meaning can check via <code>man core</code>. apport will save dump file in /var/crash</p>
-
-<p>If your default disk partition don&#8217;t have enough space to hold dump file, you can change <code>kernel.core_pattern</code> to another location, eg: <code>/mnt/core/%e-%t.%P</code>. If redis-server crashes, the dump file will be something like /mnt/core/redis-server-1500000000.1452. Also ensure crash process&#8217;s running user have write privilege on target location.</p>
-
-<h2 id="systemd-coredump">systemd-coredump</h2>
-
-<p>You can install systemd-coredump to control dump file deeply, like: size, compression&#8230;.</p>
-
+<p>If your default disk partition don’t have enough space to hold dump file, you can change <code>kernel.core_pattern</code> to another location, eg: <code>/mnt/core/%e-%t.%P</code>. If redis-server crashes, the dump file will be something like /mnt/core/redis-server-1500000000.1452. Also ensure crash process’s running user have write privilege on target location.</p>
+<h2 id="systemdcoredump">systemd-coredump</h2>
+<p>You can install systemd-coredump to control dump file deeply, like: size, compression….</p>
 <p>Its config file is /etc/systemd/coredump.conf.</p>
-
 <p>After install, it will change <code>kernel.core_pattern</code> to <code>|/lib/systemd/systemd-coredump %P %u %g %s %t 9223372036854775808 %e</code>.</p>
-
-<p>By default it will save dump file in /var/lib/systemd/coredump/. But I didn&#8217;t find how to modify it to a customize location other than journal log.</p>
-
+<p>By default it will save dump file in /var/lib/systemd/coredump/. But I didn’t find how to modify it to a customize location other than journal log.</p>
 <p>After dumped, you can retrive dump file via <code>coredumpctl</code> command.</p>
-
 <h2 id="trigger-process-dump-core-manually">Trigger process dump core manually.</h2>
-
 <p>Send siginal: <code>sudo kill -s SIGSEGV   {pid}</code>, it will crash process and save coredump.</p>
-
-<p>Or <code>gcore {pid}</code>, it will make process save core file in current dir, won&#8217;t crash it.</p>
-
+<p>Or <code>gcore {pid}</code>, it will make process save core file in current dir, won’t crash it.</p>
 <h2 id="attach-coredump-file-to-gdb">Attach coredump file to gdb</h2>
-
-<p>Very simple, if the process is redis, and its binary is <code>/usr/local/bin/redis-server</code>, dump file is <code>core</code>. Just <code>gdb /usr/local/bin/redis-server core</code>, needn&#8217;t config file. Then you can debug process memory when it crashed.</p>
+<p>Very simple, if the process is redis, and its binary is <code>/usr/local/bin/redis-server</code>, dump file is <code>core</code>. Just <code>gdb /usr/local/bin/redis-server core</code>, needn’t config file. Then you can debug process memory when it crashed.</p>
 </div>
         <div class="post_footer">
           

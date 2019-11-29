@@ -95,24 +95,18 @@
         <div class="post_content markdown"><p>从 k8s 1.8 开始支持 <a href="https://kubernetes.io/blog/2018/07/12/resizing-persistent-volumes-using-kubernetes/">PersistentVolumeClaimResize</a>. 但 api 是 alpha 状态, 默认不开启, eks launch
 的时候版本是 1.10, 因为没法改 control plane, 所以没法直接在 k8s 内做 ebs 扩容. 后来升级到了
 1.11, 这个 feature 默认被打开了, 尝试了下直接在 EKS 内做 ebs 的扩容.</p>
-
 <p>注意:</p>
-
 <ul>
 <li>这个 feature 只能对通过 pvc 管理的 volume 做扩容, 如果直接挂的是 pv, 只能自己按传统的 ebs 扩容流程在 eks 之外做.</li>
 <li>用来创建 pvc 的 storageclass 上必须设置 <code>allowVolumeExpansion</code> 为 true</li>
 </ul>
-
 <p>在 eks 上使用 pv/pvc,　对于需要 retain 的 volume, 我一般的流程是:</p>
-
 <ul>
 <li>在 eks 之外手工创建 ebs volume.</li>
 <li>在 eks 中创建 pv, 指向 ebs 的 volume id</li>
 <li>在 eks 中创建 pvc, 指向 pv</li>
 </ul>
-
 <p>示例 yaml:</p>
-
 <pre><code>---
 kind: PersistentVolume
 apiVersion: v1
@@ -141,25 +135,17 @@ spec:
       storage: 5Gi
   volumeName: test
 </code></pre>
-
 <p>假如现在要扩容到 10Gi, 流程是:</p>
-
 <p><code>kubectl edit pvc test-claim</code>,　将 requests 的 storage 改成: <code>10Gi</code></p>
-
 <p><code>kubectl get pvc test-claim -o yaml</code>　会看到 condition type 是 <code>resizing</code>,
 此时看 ebs 的 console, 能看到 ebs status 那栏是黄色的: <code>available - optimizing (1%)</code>,
 这个过程会比较慢.</p>
-
 <p>完成之后 pvc 的 condition type 会变成: <code>FileSystemResizePending</code>.</p>
-
 <p>但此时挂载该 volume 的 pod 看到的 size 还没更新, 需要删除 pod, 重新创建, pod 就会自动更新 volume size, <code>kubectl exec</code>　
 进去, <code>df -h</code> 看下, size 已经被更新了. 1.11 开始有个 alpha 的 feature <code>ExpandInUsePersistentVolumes</code> 可以不重新创建 pod
 的情况下更新 volume size.</p>
-
 <p>完成后 <code>kubectl get pv test</code>, 看一下, 发现对应 pv 的 capacity 也被更新成 10Gi 了.</p>
-
 <p>注意:</p>
-
 <p>一定要更改 pvc 的大小, 而不是 pv 的大小, 如果改了 pv, pvc 就会检测不到 size 的变化, 底层 ebs 并没被扩容,
 但 k8s 里看 pv/pvc 大小已经被改了. 因为不能缩容, 如果改了 pv size, 只能把 pv/pvc 都删除, 重新创建(指向同一个 ebs volume id),
 再将 pvc resize.</p>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.59.0" />
+	<meta name="generator" content="Hugo 0.60.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -97,16 +97,16 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>If you run a webserver on AWS, get real client ip will be tricky if you didn&rsquo;t configure server right and write code correctly.
+      <p>If you run a webserver on AWS, get real client ip will be tricky if you didn't configure server right and write code correctly.
 Things related to client real ip:
  CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application).  Request sequence diagram will be like following:
-User&rsquo;s real client ip is forwarded by front proxies one by one in head X-Forwarded-For.
+User's real client ip is forwarded by front proxies one by one in head X-Forwarded-For.
 For CloudFront:
- If user&rsquo;s req header don&rsquo;t have X-Forwarded-For, it will set user&rsquo;s ip(from tcp connection) in X-Forwarded-For If user&rsquo;s req already have X-Forwarded-For, it will append user&rsquo;s ip(from tcp connection) to the end of X-Forwarded-For  For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront&rsquo;s ip.
+ If user's req header don't have X-Forwarded-For, it will set user's ip(from tcp connection) in X-Forwarded-For If user's req already have X-Forwarded-For, it will append user's ip(from tcp connection) to the end of X-Forwarded-For  For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront's ip.
 For nginx, things will be tricky depends on your config.
 Things maybe involved in nginx:
- real ip module proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;  If you didn&rsquo;t use real ip module, you need to pass X-Forwarded-For head explictly.
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; will append ALB&rsquo;s ip to the end of X-Forwarded-For header received from ALB.
+ real ip module proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;  If you didn't use real ip module, you need to pass X-Forwarded-For head explictly.
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; will append ALB's ip to the end of X-Forwarded-For header received from ALB.
 So X-Forwarded-For header your webserver received will be user ip,cloudfront ip, alb ip
 Or you can use real ip module to trust the value passed from ALB.......</p>
     </div>
@@ -178,10 +178,10 @@ Or you can use real ip module to trust the value passed from ALB.......</p>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&rsquo;m working on a long term solution. I learned some important things from this accident.
-The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&rsquo;s health check failed due to high load.
+      <p>A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I'm working on a long term solution. I learned some important things from this accident.
+The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service's health check failed due to high load.
 I did following:
- Check monitor Identify the problem is caused by KV system  Okay, problem is here, I know the problem is KV system&rsquo;s performance issue. But I can&rsquo;t figure out the root case right now, I need a temporary solution. Straightward way is redirect traffic to slave instance. But I know it won&rsquo;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&rsquo;t work.
+ Check monitor Identify the problem is caused by KV system  Okay, problem is here, I know the problem is KV system's performance issue. But I can't figure out the root case right now, I need a temporary solution. Straightward way is redirect traffic to slave instance. But I know it won't work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn't work.
 The real down time was not long, performance recovered to some degree soon, but latency was still high, not normal. I monitored it for long time, and tried to find out the root case until morning. Since traffic was growing when peak hour coming, performance became problem again.......</p>
     </div>
   </div>
@@ -206,15 +206,14 @@ The real down time was not long, performance recovered to some degree soon, but 
   
   <div class="list">
     <div class="post_content markdown">
-      <p>AWS&rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
+      <p>AWS's DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
 It works, but have some concerns. Take some notes when doing this project.
 Prerequisites Source RDS must:
- Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration('binlog retention hours', 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT, REPLICATION SLAVE, SELECT on replication target tables  DDL on source table Redshift has some limits on change columns:
- New column only must be added in the end Can&rsquo;t rename columns  So for DDL on source MySQL, you can&rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
+ Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration('binlog retention hours', 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT , REPLICATION SLAVE , SELECT on replication target tables  DDL on source table Redshift has some limits on change columns:
+ New column only must be added in the end Can't rename columns  So for DDL on source MySQL, you can't add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
  &quot;ChangeProcessingDdlHandlingPolicy&quot;:{ &quot;HandleSourceTableDropped&quot;:false, &quot;HandleSourceTableTruncated&quot;:false, &quot;HandleSourceTableAltered&quot;:false },  If source table schema changed, I just drop and reload target table on console.
 Control write speed on Redshift Since Redshift is an OLAP database, write operation is slow and concurrency is low, streaming data directly will have big impact on it.
-And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.
-So I need to batch apply changes on DMS.......</p>
+And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.......</p>
     </div>
   </div>
   
@@ -248,10 +247,10 @@ So I need to batch apply changes on DMS.......</p>
   <div class="list">
     <div class="post_content markdown">
       <p>I use autoscaling group to manage stateless servers. Servers go up and down every day.
-Once server is up, I will add a PTR record for it&#8217;s internal ip. But when it&#8217;s down, I didn&#8217;t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.
+Once server is up, I will add a PTR record for it’s internal ip. But when it’s down, I didn’t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.
 To cleanup those PTR records realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?
 Straightforward way is write a script to call AWS API to get a PTR list, get ip from record, test whether the ip is live, if not, delete it.
-Since use awscli to delete a Route53 record is very troublesome (involve json format), you&#8217;d better write a python script to delete them. I just demo some ideas to collect those records via shell.
+Since use awscli to delete a Route53 record is very troublesome (involve json format), you’d better write a python script to delete them. I just demo some ideas to collect those records via shell.
 You can do it in a single line, but make things clear and easy to debug, I split it into several steps.
 Get PTR record list aws route53 list-resource-record-sets --hosted-zone-id xxxxx --query &quot;ResourceRecordSets[?Type=='PTR'].Name&quot; | grep -Po '&quot;(.+?)&quot;' | tr -d \&quot; &gt; ptr.txt  ptr.txt will contain lines like:
 1.0.0.10.in-addr.arpa. 2.0.0.10.in-addr.arpa.  Get ip list from PTR records cat ptr.......</p>
@@ -287,10 +286,10 @@ Get PTR record list aws route53 list-resource-record-sets --hosted-zone-id xxxxx
   
   <div class="list">
     <div class="post_content markdown">
-      <p>Build static website on S3 is very easy, but by default, it can be accessed by open internet.It will be super helpful if we can build website only available in VPC. Then we can use it to host internal deb repo, doc site&#8230;
+      <p>Build static website on S3 is very easy, but by default, it can be accessed by open internet.It will be super helpful if we can build website only available in VPC. Then we can use it to host internal deb repo, doc site…
 Steps are very easy, you only need VPC endpoints and S3 bucket policy.
-AWS api is open to internet, if you need to access S3 in VPC, your requests will pass through VPC&#8217;s internet gateway or NAT gateway. With VPC endpoints(can be found in VPC console), your requests to S3 will go through AWS&#8217;s internal network. Currently, VPC endpoints only support S3, support for dynamodb is in test.
-To restrict S3 bucket only available in your VPC, need to set bucket policy (to host static website, enable static website support first). At first, I didn&#8217;t check doc, try to restrict access by my VPC ip cidr, but it didn&#8217;t work, I need to restrict by VPC endpoint id:
+AWS api is open to internet, if you need to access S3 in VPC, your requests will pass through VPC’s internet gateway or NAT gateway. With VPC endpoints(can be found in VPC console), your requests to S3 will go through AWS’s internal network. Currently, VPC endpoints only support S3, support for dynamodb is in test.
+To restrict S3 bucket only available in your VPC, need to set bucket policy (to host static website, enable static website support first). At first, I didn’t check doc, try to restrict access by my VPC ip cidr, but it didn’t work, I need to restrict by VPC endpoint id:
 { &quot;Version&quot;: &quot;2012-10-17&quot;, &quot;Id&quot;: &quot;Policy1415115909152&quot;, &quot;Statement&quot;: [ { &quot;Sid&quot;: &quot;Access-to-specific-VPCE-only&quot;, &quot;Principal&quot;: &quot;*&quot;, &quot;Action&quot;: &quot;s3:GetObject&quot;, &quot;Effect&quot;: &quot;Allow&quot;, &quot;Resource&quot;: [&quot;arn:aws:s3:::my_secure_bucket&quot;, &quot;arn:aws:s3:::my_secure_bucket/*&quot;], &quot;Condition&quot;: { &quot;StringEquals&quot;: { &quot;aws:sourceVpce&quot;: &quot;vpce-1a2b3c4d&quot; } } } ] }  BTW, if you can config bucket policy restrict on VPC directly, with VPC endpoint you can limit to subnets.......</p>
     </div>
   </div>
@@ -385,11 +384,11 @@ To restrict S3 bucket only available in your VPC, need to set bucket policy (to 
     <div class="post_content markdown">
       <p>Coredump file is useful for debuging program crash. This post will show several settings related to coredump.
 Enable coredump If you run program from shell , enable coredump via unlimit -c unlimited， then check unlimit -a | grep core, if it shows unlimited, coredump is enabled for your current session.
-If your program is hosted by systemd, you need to edit your program&#8217;s service unit file&#8217;s [Service] section, add LimitCORE=infinity to enable coredump.
-coredump location Coredump file&#8217;s location is determined by kernerl parameter kernel.core_pattern.
+If your program is hosted by systemd, you need to edit your program’s service unit file’s [Service] section, add LimitCORE=infinity to enable coredump.
+coredump location Coredump file’s location is determined by kernerl parameter kernel.core_pattern.
 On ubuntu 16.04 kernel.core_pattern default value is |/usr/share/apport/apport %p %s %c %P. Leading | means pass coredump file to following program. %p %c %P is used to create dump filename, their meaning can check via man core. apport will save dump file in /var/crash
-If your default disk partition don&#8217;t have enough space to hold dump file, you can change kernel.core_pattern to another location, eg: /mnt/core/%e-%t.%P. If redis-server crashes, the dump file will be something like /mnt/core/redis-server-1500000000.1452. Also ensure crash process&#8217;s running user have write privilege on target location.
-systemd-coredump You can install systemd-coredump to control dump file deeply, like: size, compression&#8230;.
+If your default disk partition don’t have enough space to hold dump file, you can change kernel.core_pattern to another location, eg: /mnt/core/%e-%t.%P. If redis-server crashes, the dump file will be something like /mnt/core/redis-server-1500000000.1452. Also ensure crash process’s running user have write privilege on target location.
+systemd-coredump You can install systemd-coredump to control dump file deeply, like: size, compression….
 Its config file is /etc/systemd/coredump.conf.
 After install, it will change kernel.core_pattern to |/lib/systemd/systemd-coredump %P %u %g %s %t 9223372036854775808 %e.......</p>
     </div>

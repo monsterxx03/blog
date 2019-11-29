@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.59.0" />
+	<meta name="generator" content="Hugo 0.60.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -168,7 +168,6 @@
   <div class="list">
     <div class="post_content markdown">
       <p><p>最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.</p>
-
 <p>比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.</p>......</p>
     </div>
   </div>
@@ -236,7 +235,6 @@
   <div class="list">
     <div class="post_content markdown">
       <p><p>什么是索引,索引怎么建这些基本的就跳过不谈了,整理一些前段时间优化线上 SQL 查询时碰到的一些问题. 主要解决下面几个问题:</p>
-
 <ul>
 <li>建立索引怎样选择合适的列.</li>
 <li>怎样让 SQL 能有效利用索引.</li>
@@ -275,9 +273,7 @@
   <div class="list">
     <div class="post_content markdown">
       <p><p>Glow 的 server infrastructure 全部搭建在 AWS 上，一般要选择一些基础服务的时候，总是先看 AWS, 只要功能和成本符合要求，不会特意选择开源方案。</p>
-
 <p>数据仓库我们选择了 AWS 的 Redshift.</p>
-
 <p>在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.</p>......</p>
     </div>
   </div>
@@ -316,9 +312,7 @@
   <div class="list">
     <div class="post_content markdown">
       <p><p>最近在对公司的 MySQL 服务器做性能优化, 一直对 innodb 的内存使用方式不是很清楚, 乘这机会做点总结.</p>
-
-<p>在配置 MySQL 的时候, 一般都会需要设置 _innodb_buffer_pool<em>size</em>, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.</p>
-
+<p>在配置 MySQL 的时候, 一般都会需要设置 <em>innodb_buffer_pool_size</em>, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.</p>
 <p>之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?</p>......</p>
     </div>
   </div>

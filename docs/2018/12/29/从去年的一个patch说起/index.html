@@ -96,36 +96,26 @@
 上线后发起 rpc 调用的 server 整体负载低了很多, 但 client 端 latency 却高了很多, 经过 debug
 觉得问题是 geventhttpclient 把 header 和 body 通过两次 sock send 发出的额外开销造成的, 尝试
 修改成一次 send 后 latency 就恢复了: <a href="https://github.com/gwik/geventhttpclient/pull/85">https://github.com/gwik/geventhttpclient/pull/85</a></p>
-
 <p>最近在调试 gunicorn 的代码时候, 看到它建立 socket 的时候设置了 TCP_NODELAY, 在很多项目里看到过这个
 tcp option, 但没细究过, <code>man tcp</code> 得知是用来关闭 tcp 里的 nagle 算法的. nagle 在 linux 的
 默认 tcp 协议栈里是开启的, 当发送的数据包 size 小于 mss 的时候会在内存里 buffer 起来, 积累起来后再发送,
 目的是提高带宽利用率, 毕竟 payload 只发一次字节也要带上 40 字节的 ip+tcp header.</p>
-
 <p>看到这想起了去年的那个 patch, 其实当时也怀疑分两次 send 发数据包是不是真的有那么大 overhead, 但问题解决了,就没细究.
 发现 nagle 这个问题后, 搜了一下, 应该算是 socket 编程里一个很普遍的问题, google <code>tcp 40ms</code> 有很多文章.
 尝试用自己的语言把这个问题说清楚吧.</p>
-
-<p>40ms delay = Nagle&rsquo;s algorithm + TCP delayed ACK + write-write-read</p>
-
+<p>40ms delay = Nagle's algorithm + TCP delayed ACK + write-write-read</p>
 <p>在 40ms 这个问题里, nagle 算法作用在发送方, delayed ACK 作用在接收方.</p>
-
 <p>delayed ACK 也是默认开启的, 目的和 nagle 一样是为了减少传输的 packet 数目, 当 server 收到一个数据包的时候
 它会等待一个时间(40 ~ 200ms), 如果在这个时间里有数据包需要返回, ack 标志位就会插在返回的数据包上一起回去, 如果
 timeout 时间内没有数据返回, 则返回一个单独的 ack 数据包. delayed ACK 是为了 req-resp-req-resp 这种通讯模式设计的.</p>
-
 <p>和 delay ack 相关的参数是:</p>
-
 <ul>
 <li>TCP_ATO_MIN  (40ms)</li>
 <li>TCP_DELACK_MIN (40ms)</li>
 <li>TCP_DELACK_MAX  (200ms)</li>
 </ul>
-
 <p><a href="https://github.com/torvalds/linux/blob/v4.20/include/net/tcp.h#L133">https://github.com/torvalds/linux/blob/v4.20/include/net/tcp.h#L133</a></p>
-
 <p>再来看看 nagle 算法, wiki 上 的伪代码:</p>
-
 <pre><code>    1. if there is new data to send
     2.     if the window size &gt;= MSS and available data is &gt;= MSS
     3.        send complete MSS segment now
@@ -138,35 +128,27 @@ timeout 时间内没有数据返回, 则返回一个单独的 ack 数据包. del
     10.    end if
     11. end if
 </code></pre>
-
 <p>问题出在第5行, 当缓存里存在未收到 ack 的数据, 并且包比较小没达到 MSS 的时候, 就会将数据写入缓存.</p>
-
 <p>如果 http client 按以下顺序工作:</p>
-
 <ul>
 <li>send header</li>
 <li>send body</li>
 <li>read response</li>
 </ul>
-
 <p>如果 header 和 body 都很小, 加起来都没到 MSS, 由于第二个 body 被 buffer 起来了, 没发出去, 此时 server 默认又开了
 delayed ack, server 端的 tcp 协议栈就会等程序写 response, 但 body 还在 client 端 buffer 着呢, 现象就像死锁了一样, client 等 ack,
 server 在等 client 发完整数据包. 最后就到了超时时间 40ms.</p>
-
 <p>解决办法有三种:</p>
-
 <ul>
 <li>和我 patch 里做的一样将 http header body 通过一个 send 发送, 将 write-write-read 的方式转换成 write-read 的方式.</li>
 <li>client 端 socket 设置 TCP_NODELAY, 这样每次 send 都会发出 packet, 缺点是对小的包不太友好</li>
 <li>server 端 socket 设置 TCP_QUICKACK, 就会关闭 delayed ack. server 端的返回 ack 包会变多.</li>
 </ul>
-
 <p>写个测试程序验证一下这个 40ms 问题, server 端用的是默认配置的 nginx(没有设置 TCP_QUICKACK):</p>
-
 <pre><code>    <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        <span style="color:#f92672">import</span> socket
         <span style="color:#f92672">import</span> time
 
-        host <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;192.168.33.10&#39;</span>
+        host <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">192.168.33.10</span><span style="color:#e6db74">&#39;</span>
         port <span style="color:#f92672">=</span> <span style="color:#ae81ff">80</span>
 
         TOTAL_TIME <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
@@ -176,8 +158,8 @@ server 在等 client 发完整数据包. 最后就到了超时时间 40ms.</p>
         <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_func</span>(s, together<span style="color:#f92672">=</span>False):
             <span style="color:#66d9ef">global</span> TOTAL_TIME
 
-            header <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;POST / HTTP/1.1</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">Host: 192.168.33.10</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">Connection: keep-alive</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">User-Agent: curl/7.58.0</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">Content-Length: 3</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">Content-Type: application/x-www-form-urlencoded</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">Accept: */*</span><span style="color:#ae81ff">\r\n\r\n</span><span style="color:#e6db74">&#39;</span>
-            body <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;abc&#39;</span>
+            header <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">POST / HTTP/1.1</span><span style="color:#ae81ff">\r</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Host: 192.168.33.10</span><span style="color:#ae81ff">\r</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Connection: keep-alive</span><span style="color:#ae81ff">\r</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">User-Agent: curl/7.58.0</span><span style="color:#ae81ff">\r</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Content-Length: 3</span><span style="color:#ae81ff">\r</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Content-Type: application/x-www-form-urlencoded</span><span style="color:#ae81ff">\r</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Accept: */*</span><span style="color:#ae81ff">\r</span><span style="color:#ae81ff">\n</span><span style="color:#ae81ff">\r</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>
+            body <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">abc</span><span style="color:#e6db74">&#39;</span>
             _all <span style="color:#f92672">=</span> header <span style="color:#f92672">+</span> body
             <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(count):
                 start <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time()
@@ -187,7 +169,7 @@ server 在等 client 发完整数据包. 最后就到了超时时间 40ms.</p>
                     s<span style="color:#f92672">.</span>send(header)
                     s<span style="color:#f92672">.</span>send(body)
                 s<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">1024</span>)
-                TOTAL_TIME <span style="color:#f92672">+=</span> time<span style="color:#f92672">.</span>time() <span style="color:#f92672">-</span> start
+                TOTAL_TIME <span style="color:#f92672">+</span><span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time() <span style="color:#f92672">-</span> start
                 <span style="color:#66d9ef">print</span>(TOTAL_TIME <span style="color:#f92672">*</span> <span style="color:#ae81ff">1000</span>)
 
 
@@ -197,9 +179,7 @@ server 在等 client 发完整数据包. 最后就到了超时时间 40ms.</p>
             test_func(s)
         </code></pre></div>
 </code></pre>
-
 <p>不设置 TCP_NODELAY, 并且分开发送 header, body, 耗时结果如下, 很明显出现了 40ms,:</p>
-
 <pre><code>    0.15425682067871094
     55.33957481384277
     55.64403533935547
@@ -211,9 +191,7 @@ server 在等 client 发完整数据包. 最后就到了超时时间 40ms.</p>
     191.3611888885498
     240.60606956481934
 </code></pre>
-
 <p>设置 TCP_NODELAY, 还是分开发 header, body, 解决了 40ms:</p>
-
 <pre><code>    0.2655982971191406
     0.4208087921142578
     0.6325244903564453
@@ -225,9 +203,7 @@ server 在等 client 发完整数据包. 最后就到了超时时间 40ms.</p>
     1.519918441772461
     1.618862152099609
 </code></pre>
-
 <p>不设置 TCP_NODELAY, 将 header, body 合并发送, 也能解决 40ms:</p>
-
 <pre><code>    0.21886825561523438
     0.3108978271484375
     0.3769397735595703
@@ -239,17 +215,12 @@ server 在等 client 发完整数据包. 最后就到了超时时间 40ms.</p>
     1.0802745819091797
     1.155853271484375 
 </code></pre>
-
 <p>python2.7 标准库的 httplib 中, 如果发送的 body　是简单字符串会和 header
 拼在一起后调用一次 sendall. requests 底下用的是 httplib, 所以没 40ms 问题.</p>
-
 <p>在 python3.6 标准库的 http.client 里创建 tcp socket 时设了 TCP_NODELAY, 先发 header, 再发 body,
 也不会有问题.</p>
-
 <p>有趣的是 nagle 算法的作者几十年后还在网上吐槽了 delayed ack: <a href="https://news.ycombinator.com/item?id=10607422">https://news.ycombinator.com/item?id=10607422</a></p>
-
 <p>Reference:</p>
-
 <ul>
 <li><a href="https://eklitzke.org/the-caveats-of-tcp-nodelay">https://eklitzke.org/the-caveats-of-tcp-nodelay</a></li>
 </ul>

@@ -31,7 +31,7 @@
     </item>
     
     <item>
-      <title>SNET dev note: Support MacOS</title>
+      <title>snet dev note: support MacOS</title>
       <link>https://blog.monsterxx03.com/2019/06/20/snet-dev-note-support-macos/</link>
       <pubDate>Thu, 20 Jun 2019 16:03:56 +0800</pubDate>
       
@@ -40,7 +40,7 @@
     </item>
     
     <item>
-      <title>SNET Dev Note</title>
+      <title>snet dev note</title>
       <link>https://blog.monsterxx03.com/2019/04/10/snet-dev-note/</link>
       <pubDate>Wed, 10 Apr 2019 22:33:49 +0800</pubDate>
       
@@ -49,7 +49,7 @@
     </item>
     
     <item>
-      <title>SNET: Transparent SS proxy on Linux</title>
+      <title>snet: transparent ss proxy on Linux</title>
       <link>https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/</link>
       <pubDate>Sun, 31 Mar 2019 22:19:46 +0800</pubDate>
       
@@ -63,7 +63,7 @@
       <pubDate>Wed, 19 Apr 2017 16:26:58 +0000</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/</guid>
-      <description>&lt;p&gt;A few notes taken when reading &lt;Concurrency in Go&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;A few notes taken when reading &lt;!-- raw HTML omitted --&gt;&lt;/p&gt;</description>
     </item>
     
   </channel>

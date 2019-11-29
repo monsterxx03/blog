@@ -10,7 +10,7 @@
         content="monsterxx03"/>
 
   
-  <meta name="description" content="上一篇 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情. __future__ python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件. 首先是几个在 python 2.7 里不用特意写，已经默认开启的特性: from __future__ import nested_scopes 2.2 开始就默认开启了，用于修改嵌套函数内的变量搜索作用域, 在此之前, 全局模块的优先级比被嵌套函数的父函数要高, 现"/>
+  <meta name="description" content="上一篇 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情. _future_ python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件. 首先是几个在 python 2.7 里不用特意写，已经默认开启的特性: from __future__ import nested_scopes 2.2 开始就默认开启了，用于修改嵌套函数内的变量搜索作用域, 在此之前, 全局模块的优先级比被嵌套函数的父函数要高, 现"/>
   
 
   
@@ -92,116 +92,71 @@
           <h2><a href='/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/'>编写 python 2/3 兼容代码</a></h2>
           <span class="date">2018.06.16</span>
         </div>
-        <div class="post_content markdown">
-
-<p><a href="https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/">上一篇</a> 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情.</p>
-
-<h2 id="future">__future__</h2>
-
+        <div class="post_content markdown"><p><a href="https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/">上一篇</a> 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情.</p>
+<h2 id="future">_<em>future</em>_</h2>
 <p>python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件.</p>
-
 <p>首先是几个在 python 2.7 里不用特意写，已经默认开启的特性:</p>
-
 <ul>
 <li><code>from __future__ import nested_scopes</code> 2.2 开始就默认开启了，用于修改嵌套函数内的变量搜索作用域, 在此之前, 全局模块的优先级比被嵌套函数的父函数要高, 现在都没这个问题了.</li>
 <li><code>from __future__ import generators</code>, yield 关键词, 2.3 默认支持.</li>
 <li><code>from __future__ import with_statement</code>, with 关键词, 2.6 默认支持.</li>
 </ul>
-
 <p>我显示开启的两个特性:</p>
-
 <ul>
 <li><code>from __future__ import print_function</code>, 就是将 <code>print</code> 关键词变成函数啦, 导入后支持 python3 中 print 的完整参数，再用不带括号的 print 就会在文件被导入的时候报语法错误啦.</li>
 <li><code>from __future__ import absolute_import</code>, python2 导入模块的时候默认是相对路径优先, 比如:在同级目录下有个 <code>email.py</code>, 你在代码中写 <code>import email</code> 的时候就会优先导入同目录的文件, 而不会去找标准库的 email 模块. 开启这个之后, 就会从全局的 PYTHONPATH 里找, 相对导入只能用 <code>from . import xx</code> 这种语法.</li>
 </ul>
-
 <p>还有两个比较有用但因为影响比较大我没用的功能:</p>
-
 <ul>
 <li><code>from __future__ import division</code>, py2 中除法是向下取整的 floor division, 开启后就像 py3 一样 <code>1/2</code> 就返回浮点数了. 因为代码量比较大， 我并没有在每个文件头部加上这句, 实际使用除法的时候, 需要 floor division 就用 <code>//</code>, 否则和以前一样 <code>1 * 1.0/2</code>, 保证代码正确.</li>
 <li><code>from __future__ import unicode_literals</code>, 开启后默认所有的字符串定义都会变成 unicode, 不过 <code>str</code> 还是 byte string 啦, 这个并没法解决 unicode 的问题, 所以也没用.</li>
 </ul>
-
-<h2 id="list-comprehension-中变量作用域的变化">list comprehension 中变量作用域的变化</h2>
-
-<pre><code class="language-python">    i=0
-    [i for i in range(10)]
-    print(i)
-</code></pre>
-
-<p>这段代码在 py2 中会打印9, 在 py3 中打印0, list comprehension 中的变量不再污染外部作用域.</p>
-
+<h2 id="list-comprehension-">list comprehension 中变量作用域的变化</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
+    [i <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10</span>)]
+    <span style="color:#66d9ef">print</span>(i)
+</code></pre></div><p>这段代码在 py2 中会打印9, 在 py3 中打印0, list comprehension 中的变量不再污染外部作用域.</p>
 <p>不过普通 for 循环中的变量作用域并没什么变化:</p>
-
-<pre><code class="language-python">    i =0
-    for i in range(10):
-        pass
-    print(i)
-</code></pre>
-
-<p>py2 / 3 中都打印 9, 原因是 python 中并没有 block 的概念.</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    i <span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10</span>):
+        <span style="color:#66d9ef">pass</span>
+    <span style="color:#66d9ef">print</span>(i)
+</code></pre></div><p>py2 / 3 中都打印 9, 原因是 python 中并没有 block 的概念.</p>
 <p>list comprehension 如果作用在 class define 中行为也不太一样, 下面代码在 py2 里是队的， 但在 py3 里就会报错:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>(object):
+        name <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">test</span><span style="color:#e6db74">&#39;</span>
+        d <span style="color:#f92672">=</span> {<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">a</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">1</span><span style="color:#e6db74">&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">2</span><span style="color:#e6db74">&#39;</span>}
+        [d<span style="color:#f92672">.</span>update({_k: name}) <span style="color:#66d9ef">for</span> _k <span style="color:#f92672">in</span> d]
 
-<pre><code class="language-python">    class A(object):
-        name = 'test'
-        d = {'a': '1', 'b': '2'}
-        [d.update({_k: name}) for _k in d]
+    <span style="color:#f92672">&gt;&gt;</span><span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">NameError</span>: name <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">d</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> defined
+</code></pre></div><p>解决方法1, 在 class 的定义之外做更改操作:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>(object):
+        name <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">test</span><span style="color:#e6db74">&#39;</span>
+        d <span style="color:#f92672">=</span> {<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">a</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">1</span><span style="color:#e6db74">&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">2</span><span style="color:#e6db74">&#39;</span>}
 
-    &gt;&gt;&gt; NameError: name 'd' is not defined
-</code></pre>
-
-<p>解决方法1, 在 class 的定义之外做更改操作:</p>
-
-<pre><code class="language-python">    class A(object):
-        name = 'test'
-        d = {'a': '1', 'b': '2'}
-
-    [A.d.update({_k: A.name}) for _k in A.d]
-</code></pre>
-
-<p>方法2, 用一个匿名lambda 函数将 class variable 传进去:</p>
-
-<pre><code class="language-python">    class A(object):
-        name = 'test'
-        (lambda name=name, d=d: [d.update({_k: name}) for _k in d])()
-</code></pre>
-
-<p>方法2 看上去太 trick, 我用 1.</p>
-
-<h2 id="长整型">长整型</h2>
-
+    [A<span style="color:#f92672">.</span>d<span style="color:#f92672">.</span>update({_k: A<span style="color:#f92672">.</span>name}) <span style="color:#66d9ef">for</span> _k <span style="color:#f92672">in</span> A<span style="color:#f92672">.</span>d]
+</code></pre></div><p>方法2, 用一个匿名lambda 函数将 class variable 传进去:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>(object):
+        name <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">test</span><span style="color:#e6db74">&#39;</span>
+        (<span style="color:#66d9ef">lambda</span> name<span style="color:#f92672">=</span>name, d<span style="color:#f92672">=</span>d: [d<span style="color:#f92672">.</span>update({_k: name}) <span style="color:#66d9ef">for</span> _k <span style="color:#f92672">in</span> d])()
+</code></pre></div><p>方法2 看上去太 trick, 我用 1.</p>
+<h2 id="heading">长整型</h2>
 <p>py2 中如果 int 数值大于 <code>sys.maxint</code> (2**63-1), 会被隐式得转换成 long, 定义数值变量的时候可以在最后加上 <code>l</code> 或 <code>L</code> 声明这是个 long, py3 中去把 int 和long 合并了, 只用 int 就行, <code>long</code> 不存在了, 使用会报错, <code>l</code> 和 <code>L</code> 也不能再加了,对代码的影响主要是类型判断.</p>
-
 <p><code>isinstance(v, (int, long))</code>, 需要改成 <code>isinstance(v, six.integer_types)</code>,</p>
-
 <p><code>isinstance(v, (int, long, float))</code> &ndash;&gt; <code>isinstance(v,(six.integer_types, float))</code></p>
-
 <h2 id="reload">reload</h2>
-
 <p>不再是 builtin 函数, 用 <code>from imp import reload</code> 可以兼容 2,3.</p>
-
 <h2 id="zip-map-filter">zip, map, filter</h2>
-
 <p>py2 里会返回 list, py3 会返回 iterable 对象, 这样在取 slice, 或多次遍历的时候就会出问题, 需要用 <code>list()</code> 手动转成 list, 我的建议是不使用这些函数, 完全用 list comprehension 改写, 就不会出问题了.</p>
-
 <h2 id="reduce">reduce</h2>
-
 <p>也不再是 built 函数, 需要 <code>from functools import reduce</code>.</p>
-
 <h2 id="xrange">xrange</h2>
-
 <p>py3 中没有啦, 只能用 range, 而且返回结果也是 iterable, 用 <code>six.moves import range</code>, 这个在 py2 下就是 <code>xrange</code>.</p>
-
 <h2 id="dict">dict</h2>
-
 <p><code>iterkeys(), itervalues(), iteritems()</code> 在 py3 中也没有啦, <code>keys(), values(), items()</code> 会返回 iterable, 要
 list也要自己转换, 可以用 <code>six.iteritems(d), six.iterkeys(d), six.itervalues(d)</code>.</p>
-
-<h2 id="异常处理">异常处理</h2>
-
+<h2 id="heading1">异常处理</h2>
 <p>一些特别老的语法不再支持, 下面的写法在 py3 下都会报错:</p>
-
 <pre><code>try:
     1/0
 except Exception, e:
@@ -209,9 +164,7 @@ except Exception, e:
 
 raise ValueError, &quot;yahaha&quot;
 </code></pre>
-
 <p>用正常的写法就行:</p>
-
 <pre><code>try:
     1/0
 except Exception as e:
@@ -219,97 +172,69 @@ except Exception as e:
 
 raise ValueError(&quot;yahaha&quot;)
 </code></pre>
-
 <h2 id="stringio">StringIO</h2>
-
 <p>StringIO (cStringIO) 在 py3 里都没了, 用 <code>io.BytesIO</code> 和 <code>io.StringIO</code>, 注意 <code>BytesIO</code> 只接受bytes, <code>StringIO</code> 只接受 unicode.</p>
-
-<h2 id="其他标准库的变化">其他标准库的变化</h2>
-
+<h2 id="heading2">其他标准库的变化</h2>
 <p>只列一些用的比较多的,不常用的就不列了, <code>six</code> 代码里看看就知道了.</p>
-
 <p><code>ConfigParser</code> 变成了 <code>configparser</code>, 在 py2 下有 backport的版本,装一个就行.</p>
-
 <p><code>from HTMLParser import HTMLParser</code> &ndash;&gt; <code>from html.parser import HTMLParser</code>, 如果你装过 <code>future</code> 的话,后一种导入在 py2 里是能用的, future 在安装时候会安装一个假的 html 包, 里面判断了python 版本决定真正的导入方式.</p>
-
 <p><code>Queue</code> &ndash;&gt; <code>queue</code>, 装过 <code>future</code>, 后一种也能用.</p>
-
 <p><code>urlparse</code> &ndash;&gt; <code>from six.moves.urllib import parse as urlparse</code>,  future 有个 backport的版本, 但需要调用它的 <code>install_alias</code> 来修改全局 sys.modules, 这个有坑,前篇讲过,所以我用 six.</p>
-
 <p>一些 urllib 里的 url encode 函数也移到了 <code>urllib.parse</code> 里去, 所以需要 <code>from six.moves.urllib.parse import quote, unquote, unquote_plus, quote_plus, urlencode</code>.</p>
-
 <p>urllib2 也没有了,变成了 <code>urllib.request</code>, 需要用 six: <code>from six.moves.urllib import request</code>.</p>
-
-<h2 id="unicode-和-str">unicode 和 str</h2>
-
+<h2 id="unicode--str">unicode 和 str</h2>
 <p>这个坑是最大的, py2 里 <code>str</code> 表示 byte string, 实际上是是带有些字符串行为的 binary data, 它和 <code>unicode</code> 的边界非常模糊,为了使用方便做了很多 hack, 所以 py2 里 <code>str</code> 和 <code>unicode</code> 经常混用, 而 <code>bytes</code> 和 <code>str</code> 完全等价,只是个 alias. py3 里 <code>str</code> 默认就是 unicode, <code>bytes</code> 就是二进制字节, <code>unicode</code> 关键词没了, 而且 <code>str</code> 和 <code>bytes</code> 分界明显,不能混在一起.</p>
-
 <h3 id="in-py2">in py2</h3>
-
 <p>你明白下面的语句,哪些会失败,哪些成功, 失败是报 <code>UnicodeDecodeError</code> 还是 <code>UnicodeEncodeError</code>, 成功的话返回值是 <code>str</code> 还是 <code>unicode</code> 呢? 准确说出来你就明白啦.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊啊</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">yaha</span><span style="color:#e6db74">&#39;</span>
 
-<pre><code class="language-python">
-'啊啊' + 'yaha'
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">yaha</span><span style="color:#e6db74">&#39;</span>
 
-u'啊' + 'yaha'
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">yaha</span><span style="color:#e6db74">&#39;</span>
 
-u'啊' + u'yaha'
+<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">.</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>,  <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">yaha</span><span style="color:#e6db74">&#39;</span>])
 
-'.'.join(['啊',  'yaha'])
+<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">.</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>])
 
-'.'.join([u'啊', '啊'])
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">.</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">abc</span><span style="color:#e6db74">&#39;</span>])
 
-u'.'.join(['啊', 'abc'])
-
-u'.'.join([u'啊', 'abc'])
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">.</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">abc</span><span style="color:#e6db74">&#39;</span>])
 
 
-u'test {}'.format('啊')
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">test {}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>)
 
-'test {}'.format(u'啊')
+<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">test {}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>)
 
-'test {}'.format('啊')
+<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">test {}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>)
 
-u'test {}'.format(u'啊')
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">test {}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>)
 
-'test %s' % '啊'
+<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">test </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>
 
-u'test %s' % '啊'
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">test </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>
 
-'test %s' % u'啊'
+<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">test </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> <span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>
 
-'黑test %s' % u'啊'
-</code></pre>
-
-<p>我把规则总结下, <code>%s</code> 格式化, 字符串内置的 <code>join, replace</code>,其实行为和 <code>+</code> 是一样的:</p>
-
+<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">黑test </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> <span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>
+</code></pre></div><p>我把规则总结下, <code>%s</code> 格式化, 字符串内置的 <code>join, replace</code>,其实行为和 <code>+</code> 是一样的:</p>
 <ul>
 <li>所有部分都是 <code>str</code>, 结果就是 <code>str</code>, 不会发生 decode, encode</li>
 <li>所有部分都是 <code>unicode</code>, 结果就是 <code>unicode</code>, 不会发生 decode, encode</li>
 <li><code>str</code> 和 <code>unicode</code> 混合, 会将所有 <code>str</code> 用 ascii 解码,  所以可能会报 <code>UnicodeDecodeError</code>, 结果是 unicode.</li>
 </ul>
-
 <p>string format 比较特别:</p>
-
 <ul>
 <li>format的结果和 format string 的类型保持相同</li>
 <li>如果 format string 是 <code>str</code>, 会将所有 format 参数中的 <code>unicode</code> 用 ascii 编码, 可能会有 <code>UnicodeEncodeError</code>, 如果 format string, 会将所有 format 参数中的 <code>str</code> 用 ascii 解码,可能报 <code>UnicodeDecodeError</code>.</li>
 </ul>
-
 <h3 id="in-py3">in py3</h3>
-
 <p><code>bytes</code> 和  <code>str</code> 无法相加, <code>bytes</code> 也无法作为 format string, 也不能用 <code>str</code> 将 bytes 换为字符(会的到 <code>&quot;b'a'&quot;</code> 之类的结果), 原因是 str 会调用传入参数的 <code>__str__</code> 函数,并不会去解码, 你需要指定编码: <code>str(b'abc', encoding='utf-8')</code>  或 <code>b'abc'.decode('utf-8')</code></p>
-
-<h3 id="兼容-py2-3">兼容 py2/3</h3>
-
+<h3 id="-py23">兼容 py2/3</h3>
 <p>简单讲, 如果你代码中出现 <code>unicode</code> 关键词, 在py3一定是错的, 因为 <code>unicode</code> 关键词被移除了, 出现 <code>str</code> 大概率在 py3 下是错的, 因为语义变成了 unicode.</p>
-
 <p>永远不要使用 <code>str(v)</code>, 需要字符串,用 <code>six.text_type(v)</code>.</p>
-
 <p>不要用 <code>isinstance(v, str)</code> 做类型检查, 检查bytes, 用 <code>isinstance(v, bytes)</code>, 检查text, 用 <code>isinstance(v, six.text_type)</code>.</p>
-
 <p>basestring 也没了, 用 <code>isinstance(v, six.string_types)</code>, 注意 py3 下这个就是 <code>str</code>, 所以正确与否要看上下文语义.</p>
-
 <p>在函数之间传递的时候, 统一使用 unicode 类型, 只在程序的边界 encode 成 bytes,比如写入文件, 通过网络发送, base64 编码, 丢给散列函数等.</p>
 </div>
         <div class="post_footer">

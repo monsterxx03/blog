@@ -92,45 +92,29 @@
           <h2><a href='/2018/12/16/kubernetes-%E4%B8%AD%E7%9A%84-pod-%E8%B0%83%E5%BA%A6/'>Kubernetes 中的 pod 调度</a></h2>
           <span class="date">2018.12.16</span>
         </div>
-        <div class="post_content markdown">
-
-<p>定义 pod 的时候通过添加 node selector 可以让 pod 调度到有特定 label 的 node 上去, 这是最简单的调度方式.
+        <div class="post_content markdown"><p>定义 pod 的时候通过添加 node selector 可以让 pod 调度到有特定 label 的 node 上去, 这是最简单的调度方式.
 其他还有更复杂的调度方式: node-taints/tolerations, node-affinity, pod-affinity, 来达到让某些类型的 pod 调度到一起,
 让某些类型的 pod 不跑一起的效果.</p>
-
 <h2 id="taints-and-tolerations">Taints and Tolerations</h2>
-
 <p>如果 node 有 taints, 那只有能 tolerate 这些 taints 的 pod 才能调度到上面.</p>
-
 <p>taint 的基本格式是: <code>&lt;key&gt;&lt;operator&gt;&lt;value&gt;:&lt;effect&gt;</code></p>
-
 <p><code>kubectl describe node xxx</code> 可以看到节点的 taints, 比如 master 节点上会有:</p>
-
 <pre><code>Taints:       node-role.kubernetes.io/master:NoSchedule 
 </code></pre>
-
 <p>这里 key 是 <code>node-role.kubernetes.io/master</code>, 没有等号和 value, operator 就是 <code>Exists</code> , effect 是 <code>NoSchedule</code>.</p>
-
 <p>master 节点上的这条 taint 就定义了只有能 tolerate 它的 pod 能调度到上面, 一般都是些系统 pod.</p>
-
 <p>比如看下 kube-proxy: <code>kubectl describe pod kube-proxy-efiv -n kube-system</code></p>
-
 <pre><code>Tolerations:     :NoExecute
                  :NoSchedule
 </code></pre>
-
 <p><code>:NoSchedule</code> 表示 kube-proxy pod 可以 tolerate 所有 taints, 自然可以被调度到 master 节点上了.</p>
-
 <p>taints 的 effect 有三种:</p>
-
 <ul>
 <li>NoSchedule, 只允许能 tolerate 这种 taint 的 pod 被调度到该节点上.</li>
 <li>PreferNoSchedule, <strong>尽量</strong>避免将 pod 调度到该节点上, 但如果没有节点可以选了, 还是会调度上去的.</li>
 <li>NoExecute, 前两种只影响 pod 的调度, NoExecute 会影响正跑在节点上的 pod, 除非 pod 能 tolerate NoExecute, 否则会被从上面踢走.</li>
 </ul>
-
 <p>再看下 kube-dns 的 tolerations: <code>kubectl get pod kube-dns-aedfs -o yaml  -n kube-system</code></p>
-
 <pre><code>tolerations:
   - key: CriticalAddonsOnly
     operator: Exists
@@ -143,17 +127,11 @@
     operator: Exists
     tolerationSeconds: 300
 </code></pre>
-
 <p><code>no-ready</code> 和 <code>unreachable</code> 这两种状态还有 <code>tolerationSeconds</code> 字段, 表示当该节点陷入这两种状态后, 该 pod 会在该节点上停留 5 分钟, 如果 5 分钟后节点还没有恢复, kube-dns 就会被从上面踢走.  这个用来在 node 启动期间或偶尔的 network partition 发生时, 避免 kube-dns 被踢走.</p>
-
 <p><code>not-ready</code> 和 <code>unreachable</code> 这两条 tolerations 是自动给所有 pod 加上的.</p>
-
 <h2 id="node-affinity">Node affinity</h2>
-
 <p>node affinity 就是高级版的 node selector, 也是基于 node label 调度的, 以后会取代 node selector. 和 node selector 比, node affinity 支持更复杂的匹配语法, 也允许为每条规则添加优先级. 如果 node selector 和 node affinity 同时被指定, 那必须同时满足 pod 才会被调度到节点.</p>
-
 <p><code>&lt;kubernetes in action&gt;</code> 里的一个例子:</p>
-
 <pre><code>apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -180,20 +158,13 @@ spec:
                 values:                                       
                 - dedicated                                   
 </code></pre>
-
 <p>nodeAffinity 目前支持两种规则: <code>requiredDuringSchedulingIgnoredDuringExecution</code> 和 <code>preferredDuringSchedulingIgnoredDuringExecution</code>
 后半部分 <code>IgnoredDuringExecution</code> 目前是固定的(以后会支持 requiredDuringExecution), 表示规则不会影响 running 的 pod, 只会在 schedule pod 的时候起作用.</p>
-
 <p>和上面的 taints 一样 <code>required</code> 表明这是必须满足的规则, <code>preferred</code> 则是优先规则, 但没有节点满足的情况下就会忽略该规则.</p>
-
 <p>operator 支持: In, NotIn, Exists, DoesNotExist, Gt, Lt</p>
-
 <h2 id="pod-affinity">Pod affinity</h2>
-
 <p>假设一个系统有一个 web 的 frontend server 和 一个 rpc backend server, 这两个 pod 当然可以放在不同的节点上, 但为了减少 latency, 我们希望它们尽量能被 schedule 到同一个节点上(同 nodeAffinity, 这条规则可以是 required 也可以是 preferred).</p>
-
 <p>Frontend pod 的定义:</p>
-
 <pre><code>apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -212,15 +183,10 @@ spec:
                 app: backend                                
       ...
 </code></pre>
-
 <p>规则类型和 nodeAffinity 是一样的, 这里是强制要求(required), <code>topologyKey</code> 表明要让 pod 调度到 <code>kubernetes.io/hostname</code> 一样的节点上(就是同一个节点), 当然也可以选择一样的 region, available zone&hellip;</p>
-
 <p>由该 podAffinity 规则可知, 当调度 frontend pod 的时候, 必须和带 label: app=backend 的 pod 调度到同一节点上.</p>
-
 <p>如果测试删除 backend pod, k8s 会对 backend pod 重新调度, 虽然 podAffinity 是定义在 frontend 上的, 还是会把 backend pod 调度到 frontend 上.</p>
-
 <p>默认情况下 <code>labelSelector</code> 只会匹配同一个 namespace 的 pod, 要匹配其他的, 可以在同一级添加 <code>namespace</code> 字段.</p>
-
 <p>pod antiAffinity 的定义是一样的, 只要用 <code>podAntiAffinity</code> 字段就行了, 此时 <code>topologyKey</code> 就表示 antiAffinity 的 pod 不能在同一个 node/region/zone.</p>
 </div>
         <div class="post_footer">

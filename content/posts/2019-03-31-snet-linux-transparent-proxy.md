@@ -1,5 +1,5 @@
 ---
-title: "SNET: Transparent SS proxy on Linux"
+title: "snet: transparent ss proxy on Linux"
 date: 2019-03-31T22:19:46+08:00
 categories:
   - tech

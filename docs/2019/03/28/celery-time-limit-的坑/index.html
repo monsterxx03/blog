@@ -93,12 +93,9 @@
           <span class="date">2019.03.28</span>
         </div>
         <div class="post_content markdown"><p>之前用 celery 做的 task 都是一些很简单轻量级的 task, 从来没触发过 timeout, 最近加入了一些复杂很耗时的 task, 碰到一些 time limit 的坑.</p>
-
 <p>celery 中 time limit 有两种, soft_time_limit 和 hard_time_limit, 区别是 soft_time_limit 会在内部抛一个 Exception, task 可以 catch 自行处理.
 hard time limit 没法被 catch.</p>
-
 <p>使用如下:</p>
-
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> myapp <span style="color:#f92672">import</span> app
 <span style="color:#f92672">from</span> celery.exceptions <span style="color:#f92672">import</span> SoftTimeLimitExceeded
 
@@ -108,16 +105,11 @@ hard time limit 没法被 catch.</p>
         do_work()
     <span style="color:#66d9ef">except</span> SoftTimeLimitExceeded:
         clean_up_in_a_hurry()</code></pre></div>
-
 <p>我 celery pool 用的是 gevent, 实际上在现在的实现里 gevent 做 worker pool 的时候会忽略 soft_time_limit, 只有 hard_time_limit 会被触发(通过 gevent.Timeout 实现).</p>
-
 <p>坑爹的是文档里写的是错的: <a href="http://docs.celeryproject.org/en/latest/userguide/workers.html#time-limit">http://docs.celeryproject.org/en/latest/userguide/workers.html#time-limit</a></p>
-
 <p>soft_time_limit 只在 prefork pool 里支持.</p>
-
 <p>我现在想让 celery 把这个 hard timeout 的情况 report 到 sentry, 看了圈代码并没法从外面 override timeout 的 callback. 只能很丑得做了个 monkey patch, 在初始化 celeryapp
 的代码里:</p>
-
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> gevent <span style="color:#f92672">import</span> Timeout
 <span style="color:#f92672">from</span> celery.concurrency.base <span style="color:#f92672">import</span> apply_target <span style="color:#66d9ef">as</span> celery_apply_target
 <span style="color:#f92672">from</span> celery.concurrency <span style="color:#f92672">import</span> gevent <span style="color:#66d9ef">as</span>  celery_gevent_pool
@@ -132,23 +124,21 @@ _original_apply_timeout <span style="color:#f92672">=</span> celery_gevent_pool<
 <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">apply_timeout_with_report</span>(target, args<span style="color:#f92672">=</span>(), kwargs<span style="color:#f92672">=</span>{}, callback<span style="color:#f92672">=</span>None,
                   accept_callback<span style="color:#f92672">=</span>None, pid<span style="color:#f92672">=</span>None, timeout<span style="color:#f92672">=</span>None,
                   timeout_callback<span style="color:#f92672">=</span>None, Timeout<span style="color:#f92672">=</span>Timeout,
-                  apply_target<span style="color:#f92672">=</span>celery_apply_target, <span style="color:#f92672">**</span>rest):
+                  apply_target<span style="color:#f92672">=</span>celery_apply_target, <span style="color:#f92672">*</span><span style="color:#f92672">*</span>rest):
     <span style="color:#66d9ef">try</span>:
         <span style="color:#66d9ef">with</span> Timeout(timeout):
             <span style="color:#66d9ef">return</span> apply_target(target, args, kwargs, callback,
-                                accept_callback, pid, propagate<span style="color:#f92672">=</span>(Timeout,), <span style="color:#f92672">**</span>rest)
+                                accept_callback, pid, propagate<span style="color:#f92672">=</span>(Timeout,), <span style="color:#f92672">*</span><span style="color:#f92672">*</span>rest)
     <span style="color:#66d9ef">except</span> Timeout <span style="color:#66d9ef">as</span> e:
         <span style="color:#75715e"># report to sentry</span>
 
 
 celery_gevent_pool<span style="color:#f92672">.</span>apply_timeout <span style="color:#f92672">=</span> apply_timeout_with_report</code></pre></div>
-
 <p>其实稍微修改下 <a href="https://github.com/celery/celery/blob/v4.3.0rc3/celery/concurrency/gevent.py#L21">https://github.com/celery/celery/blob/v4.3.0rc3/celery/concurrency/gevent.py#L21</a>  这个函数就能让celery 支持 soft time limit:</p>
-
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">apply_timeout</span>(target, args<span style="color:#f92672">=</span>(), kwargs<span style="color:#f92672">=</span>{}, callback<span style="color:#f92672">=</span>None,
                   accept_callback<span style="color:#f92672">=</span>None, pid<span style="color:#f92672">=</span>None, timeout<span style="color:#f92672">=</span>None,
                   soft_timeout<span style="color:#f92672">=</span>None, timeout_callback<span style="color:#f92672">=</span>None,
-                  Timeout<span style="color:#f92672">=</span>Timeout, apply_target<span style="color:#f92672">=</span>base<span style="color:#f92672">.</span>apply_target, <span style="color:#f92672">**</span>rest):
+                  Timeout<span style="color:#f92672">=</span>Timeout, apply_target<span style="color:#f92672">=</span>base<span style="color:#f92672">.</span>apply_target, <span style="color:#f92672">*</span><span style="color:#f92672">*</span>rest):
     hard_timeout <span style="color:#f92672">=</span> Timeout(timeout)
     soft_timeout <span style="color:#f92672">=</span> Timeout(soft_timeout, SoftTimeLimitExceeded)
     hard_timeout<span style="color:#f92672">.</span>start()
@@ -156,7 +146,7 @@ celery_gevent_pool<span style="color:#f92672">.</span>apply_timeout <span style=
     <span style="color:#66d9ef">try</span>:
         <span style="color:#66d9ef">return</span> apply_target(target, args, kwargs, callback,
                             accept_callback, pid,
-                            propagate<span style="color:#f92672">=</span>(Timeout,), <span style="color:#f92672">**</span>rest)
+                            propagate<span style="color:#f92672">=</span>(Timeout,), <span style="color:#f92672">*</span><span style="color:#f92672">*</span>rest)
     <span style="color:#66d9ef">except</span> Timeout <span style="color:#66d9ef">as</span> t:
         <span style="color:#66d9ef">if</span> isinstance(t, hard_timeout):
             <span style="color:#75715e"># only catch gevent.Timeout set by us</span>
@@ -166,7 +156,6 @@ celery_gevent_pool<span style="color:#f92672">.</span>apply_timeout <span style=
     <span style="color:#66d9ef">finally</span>:
         hard_timeout<span style="color:#f92672">.</span>close()
         soft_timeout<span style="color:#f92672">.</span>close()</code></pre></div>
-
 <p>但这块单元测试很难写啊&hellip;先凑合着用了.</p>
 </div>
         <div class="post_footer">

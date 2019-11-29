@@ -27,7 +27,7 @@
       <pubDate>Tue, 12 Feb 2019 13:08:29 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/</guid>
-      <description>最近在看 google 的 &amp;lt;The Site Reliablity Workbook&amp;gt;, 其中有一章是&amp;rdquo;Manage load&amp;rdquo;, 内容还挺详细的, 结合在 aws 上的经验做点笔记. Load Balancing 流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存. google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency. 但只依赖 BGP 会带来两个问题: 某个地区的用户过多会给最近的 frontend server 带来过高的</description>
+      <description>最近在看 google 的 &amp;lt;The Site Reliablity Workbook&amp;gt;, 其中有一章是&amp;quot;Manage load&amp;rdquo;, 内容还挺详细的, 结合在 aws 上的经验做点笔记. Load Balancing 流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存. google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency. 但只依赖 BGP 会带来两个问题: 某个地区的用户过多会给最近的 frontend server 带来过高的负</description>
     </item>
     
     <item>
@@ -81,11 +81,11 @@
       <pubDate>Wed, 23 May 2018 18:05:28 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub/sub-system/</guid>
-      <description>Recently, we build pub/sub system based on AWS&amp;rsquo;s SNS &amp;amp; SQS service, take some notes.
-Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&amp;rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&amp;rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
-There&amp;rsquo;re three obvious choices in my mind:
+      <description>Recently, we build pub/sub system based on AWS&#39;s SNS &amp;amp; SQS service, take some notes.
+Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&#39;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&#39;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
+There&#39;re three obvious choices in my mind:
  kafka AMQP based system (rabbitmq,activemq &amp;hellip;) SNS + SQS  My demands for this system are:
- Support message persistence. Support topic based message distribution. Easy to manage.  The data volume won&amp;rsquo;t be very large, so performance and throughput won&amp;rsquo;t be critical concerns.
+ Support message persistence. Support topic based message distribution. Easy to manage.  The data volume won&#39;t be very large, so performance and throughput won&#39;t be critical concerns.
 I choose SNS + SQS, main concerns are from operation side:
  kafka need zookeeper to support cluster. rabbitmq need extra configuration for HA, and AMQP model is relatively complex for programming.  So my decision is:
  application publish message to SNS topic Setup multi SQS queues to subscribe SNS topic Let different application processes to subscribe to different queues to finish its logic.  SQS and SNS is very simple, not too much to say, just some notes:</description>
@@ -116,11 +116,11 @@ I choose SNS + SQS, main concerns are from operation side:
       
       <guid>https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/</guid>
       <description>AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&amp;hellip;
-Usually, we inject secrets as environment variables, but they&amp;rsquo;re still visable on lambda console. I don&amp;rsquo;t use it in aws lambda.
+Usually, we inject secrets as environment variables, but they&#39;re still visable on lambda console. I don&#39;t use it in aws lambda.
 The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
 Code example:
 client = boto3.client(&#39;ssm&#39;) resp = client.get_parameter( Name=&#39;/redshift/admin/password&#39;, WithDecryption=True ) resp: { &amp;quot;Parameter&amp;quot;: { &amp;quot;Name&amp;quot;: &amp;quot;/redshift/admin/password&amp;quot;, &amp;quot;Type&amp;quot;: &amp;quot;SecureString&amp;quot;, &amp;quot;Value&amp;quot;: &amp;quot;password value&amp;quot;, &amp;quot;Version&amp;quot;: 1 } }  Things you need to do to make it work:
- Create a new KMS key Use new created KMS key to encrypt your data in parameter store. Set a execution role for your lambda function. In the KMS key&amp;rsquo;s setting page, add the lambda execution role to the list which can read this KMS key.  Then your lambda code can access encrypted data at runtime, and you needn&amp;rsquo;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.
+ Create a new KMS key Use new created KMS key to encrypt your data in parameter store. Set a execution role for your lambda function. In the KMS key&#39;s setting page, add the lambda execution role to the list which can read this KMS key.  Then your lambda code can access encrypted data at runtime, and you needn&#39;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.
 BTW, parameter store support hierarchy(at most 15 levels), splitted by /. You can retrive data under same level in one call, deltails can be found in doc, eg: http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path</description>
     </item>
     
@@ -130,16 +130,16 @@ BTW, parameter store support hierarchy(at most 15 levels), splitted by /. You ca
       <pubDate>Thu, 01 Feb 2018 15:20:37 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/</guid>
-      <description>If you run a webserver on AWS, get real client ip will be tricky if you didn&amp;rsquo;t configure server right and write code correctly.
+      <description>If you run a webserver on AWS, get real client ip will be tricky if you didn&#39;t configure server right and write code correctly.
 Things related to client real ip:
  CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application).  Request sequence diagram will be like following:
-User&amp;rsquo;s real client ip is forwarded by front proxies one by one in head X-Forwarded-For.
+User&#39;s real client ip is forwarded by front proxies one by one in head X-Forwarded-For.
 For CloudFront:
- If user&amp;rsquo;s req header don&amp;rsquo;t have X-Forwarded-For, it will set user&amp;rsquo;s ip(from tcp connection) in X-Forwarded-For If user&amp;rsquo;s req already have X-Forwarded-For, it will append user&amp;rsquo;s ip(from tcp connection) to the end of X-Forwarded-For  For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront&amp;rsquo;s ip.
+ If user&#39;s req header don&#39;t have X-Forwarded-For, it will set user&#39;s ip(from tcp connection) in X-Forwarded-For If user&#39;s req already have X-Forwarded-For, it will append user&#39;s ip(from tcp connection) to the end of X-Forwarded-For  For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront&#39;s ip.
 For nginx, things will be tricky depends on your config.
 Things maybe involved in nginx:
- real ip module proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;  If you didn&amp;rsquo;t use real ip module, you need to pass X-Forwarded-For head explictly.
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; will append ALB&amp;rsquo;s ip to the end of X-Forwarded-For header received from ALB.
+ real ip module proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;  If you didn&#39;t use real ip module, you need to pass X-Forwarded-For head explictly.
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; will append ALB&#39;s ip to the end of X-Forwarded-For header received from ALB.
 So X-Forwarded-For header your webserver received will be user ip,cloudfront ip, alb ip
 Or you can use real ip module to trust the value passed from ALB.</description>
     </item>
@@ -159,15 +159,14 @@ Or you can use real ip module to trust the value passed from ALB.</description>
       <pubDate>Sat, 14 Oct 2017 22:33:36 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/</guid>
-      <description>AWS&amp;rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
+      <description>AWS&#39;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
 It works, but have some concerns. Take some notes when doing this project.
 Prerequisites Source RDS must:
- Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration(&#39;binlog retention hours&#39;, 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT, REPLICATION SLAVE, SELECT on replication target tables  DDL on source table Redshift has some limits on change columns:
- New column only must be added in the end Can&amp;rsquo;t rename columns  So for DDL on source MySQL, you can&amp;rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
+ Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration(&#39;binlog retention hours&#39;, 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT , REPLICATION SLAVE , SELECT on replication target tables  DDL on source table Redshift has some limits on change columns:
+ New column only must be added in the end Can&#39;t rename columns  So for DDL on source MySQL, you can&#39;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
  &amp;quot;ChangeProcessingDdlHandlingPolicy&amp;quot;:{ &amp;quot;HandleSourceTableDropped&amp;quot;:false, &amp;quot;HandleSourceTableTruncated&amp;quot;:false, &amp;quot;HandleSourceTableAltered&amp;quot;:false },  If source table schema changed, I just drop and reload target table on console.
 Control write speed on Redshift Since Redshift is an OLAP database, write operation is slow and concurrency is low, streaming data directly will have big impact on it.
-And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.
-So I need to batch apply changes on DMS.</description>
+And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.</description>
     </item>
     
     <item>
@@ -177,10 +176,10 @@ So I need to batch apply changes on DMS.</description>
       
       <guid>https://blog.monsterxx03.com/2017/09/29/get-all-invalid-ptr-record-on-route53/</guid>
       <description>I use autoscaling group to manage stateless servers. Servers go up and down every day.
-Once server is up, I will add a PTR record for it&amp;#8217;s internal ip. But when it&amp;#8217;s down, I didn&amp;#8217;t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.
+Once server is up, I will add a PTR record for it’s internal ip. But when it’s down, I didn’t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.
 To cleanup those PTR records realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?
 Straightforward way is write a script to call AWS API to get a PTR list, get ip from record, test whether the ip is live, if not, delete it.
-Since use awscli to delete a Route53 record is very troublesome (involve json format), you&amp;#8217;d better write a python script to delete them. I just demo some ideas to collect those records via shell.
+Since use awscli to delete a Route53 record is very troublesome (involve json format), you’d better write a python script to delete them. I just demo some ideas to collect those records via shell.
 You can do it in a single line, but make things clear and easy to debug, I split it into several steps.
 Get PTR record list aws route53 list-resource-record-sets --hosted-zone-id xxxxx --query &amp;quot;ResourceRecordSets[?Type==&#39;PTR&#39;].Name&amp;quot; | grep -Po &#39;&amp;quot;(.+?)&amp;quot;&#39; | tr -d \&amp;quot; &amp;gt; ptr.txt  ptr.txt will contain lines like:
 1.0.0.10.in-addr.arpa. 2.0.0.10.in-addr.arpa.  Get ip list from PTR records cat ptr.</description>
@@ -192,10 +191,10 @@ Get PTR record list aws route53 list-resource-record-sets --hosted-zone-id xxxxx
       <pubDate>Sat, 19 Aug 2017 07:28:16 +0000</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/08/19/build-private-staticwebsite-on-s3/</guid>
-      <description>Build static website on S3 is very easy, but by default, it can be accessed by open internet.It will be super helpful if we can build website only available in VPC. Then we can use it to host internal deb repo, doc site&amp;#8230;
+      <description>Build static website on S3 is very easy, but by default, it can be accessed by open internet.It will be super helpful if we can build website only available in VPC. Then we can use it to host internal deb repo, doc site…
 Steps are very easy, you only need VPC endpoints and S3 bucket policy.
-AWS api is open to internet, if you need to access S3 in VPC, your requests will pass through VPC&amp;#8217;s internet gateway or NAT gateway. With VPC endpoints(can be found in VPC console), your requests to S3 will go through AWS&amp;#8217;s internal network. Currently, VPC endpoints only support S3, support for dynamodb is in test.
-To restrict S3 bucket only available in your VPC, need to set bucket policy (to host static website, enable static website support first). At first, I didn&amp;#8217;t check doc, try to restrict access by my VPC ip cidr, but it didn&amp;#8217;t work, I need to restrict by VPC endpoint id:
+AWS api is open to internet, if you need to access S3 in VPC, your requests will pass through VPC’s internet gateway or NAT gateway. With VPC endpoints(can be found in VPC console), your requests to S3 will go through AWS’s internal network. Currently, VPC endpoints only support S3, support for dynamodb is in test.
+To restrict S3 bucket only available in your VPC, need to set bucket policy (to host static website, enable static website support first). At first, I didn’t check doc, try to restrict access by my VPC ip cidr, but it didn’t work, I need to restrict by VPC endpoint id:
 { &amp;quot;Version&amp;quot;: &amp;quot;2012-10-17&amp;quot;, &amp;quot;Id&amp;quot;: &amp;quot;Policy1415115909152&amp;quot;, &amp;quot;Statement&amp;quot;: [ { &amp;quot;Sid&amp;quot;: &amp;quot;Access-to-specific-VPCE-only&amp;quot;, &amp;quot;Principal&amp;quot;: &amp;quot;*&amp;quot;, &amp;quot;Action&amp;quot;: &amp;quot;s3:GetObject&amp;quot;, &amp;quot;Effect&amp;quot;: &amp;quot;Allow&amp;quot;, &amp;quot;Resource&amp;quot;: [&amp;quot;arn:aws:s3:::my_secure_bucket&amp;quot;, &amp;quot;arn:aws:s3:::my_secure_bucket/*&amp;quot;], &amp;quot;Condition&amp;quot;: { &amp;quot;StringEquals&amp;quot;: { &amp;quot;aws:sourceVpce&amp;quot;: &amp;quot;vpce-1a2b3c4d&amp;quot; } } } ] }  BTW, if you can config bucket policy restrict on VPC directly, with VPC endpoint you can limit to subnets.</description>
     </item>
     
@@ -215,25 +214,19 @@ To restrict S3 bucket only available in your VPC, need to set bucket policy (to 
       
       <guid>https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/</guid>
       <description>&lt;p&gt;Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.&lt;/p&gt;
-
 &lt;p&gt;You will come to:&lt;/p&gt;
-
 &lt;ul&gt;
-&lt;li&gt;How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what&amp;#8217;s the DHCP option set?), navigate around AWS console is okay, but not convenient.&lt;/li&gt;
+&lt;li&gt;How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what’s the DHCP option set?), navigate around AWS console is okay, but not convenient.&lt;/li&gt;
 &lt;li&gt;Who did what to which resource at when? AWS have a service called &lt;code&gt;Config&lt;/code&gt;, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do.&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;Ideally, we should manage AWS resources like code, all changes kept in VCS, so called &lt;code&gt;Infrastructure as Code&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;I&amp;#8217;ve tried three ways to do it:&lt;/p&gt;
-
+&lt;p&gt;I’ve tried three ways to do it:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;ansible&lt;/li&gt;
 &lt;li&gt;CloudFormation&lt;/li&gt;
 &lt;li&gt;terraform&lt;/li&gt;
 &lt;/ul&gt;
-
-&lt;p&gt;In this article, I&amp;#8217;ll compare them, however, the conclusion is to use terraform 🙂&lt;/p&gt;</description>
+&lt;p&gt;In this article, I’ll compare them, however, the conclusion is to use terraform 🙂&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -243,7 +236,6 @@ To restrict S3 bucket only available in your VPC, need to set bucket policy (to 
       
       <guid>https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/</guid>
       <description>&lt;p&gt;最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.&lt;/p&gt;
-
 &lt;p&gt;比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.&lt;/p&gt;</description>
     </item>
     
@@ -254,9 +246,7 @@ To restrict S3 bucket only available in your VPC, need to set bucket policy (to 
       
       <guid>https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/</guid>
       <description>&lt;p&gt;Glow 的 server infrastructure 全部搭建在 AWS 上，一般要选择一些基础服务的时候，总是先看 AWS, 只要功能和成本符合要求，不会特意选择开源方案。&lt;/p&gt;
-
 &lt;p&gt;数据仓库我们选择了 AWS 的 Redshift.&lt;/p&gt;
-
 &lt;p&gt;在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.&lt;/p&gt;</description>
     </item>
     

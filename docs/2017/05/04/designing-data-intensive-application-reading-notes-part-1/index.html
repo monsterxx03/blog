@@ -10,7 +10,7 @@
         content="will"/>
 
   
-  <meta name="description" content="Notes when reading chapter 2 &amp;#8220;Data models and query languages&amp;#8221;, chapter 3 &amp;#8220;Storage and retrieval&amp;#8221;
+  <meta name="description" content="Notes when reading chapter 2 “Data models and query languages”, chapter 3 “Storage and retrieval”
 "/>
   
 
@@ -93,110 +93,71 @@
           <h2><a href='/2017/05/04/designing-data-intensive-application-reading-notes-part-1/'>Designing data intensive application, reading notes, Part 1</a></h2>
           <span class="date">2017.05.04</span>
         </div>
-        <div class="post_content markdown"><p>Notes when reading chapter 2 &#8220;Data models and query languages&#8221;, chapter 3 &#8220;Storage and retrieval&#8221;</p>
-
+        <div class="post_content markdown"><p>Notes when reading chapter 2 “Data models and query languages”, chapter 3 “Storage and retrieval”</p>
 <h2 id="data-model">Data model</h2>
-
-<h3 id="document-model-like-mongodb">Document model(like mongoDB)</h3>
-
+<h3 id="document-modellike-mongodb">Document model(like mongoDB)</h3>
 <p>good parts:</p>
-
 <ul>
 <li>schema less, do DDL on relational database is painful,</li>
-<li>can store all related objects in one document(maybe not so good &#8230; refer by id is more flexible)</li>
+<li>can store all related objects in one document(maybe not so good … refer by id is more flexible)</li>
 <li>easy to scale in size.</li>
 </ul>
-
 <p>bad parts:</p>
-
 <ul>
 <li>hard to describe many-to-many relationship</li>
 <li>hard to do join</li>
 <li>lack of transaction</li>
 </ul>
-
 <h3 id="graph-model">Graph model</h3>
-
 <p>Tow categories:</p>
-
 <ol>
 <li>property graph model, like: Neo4j, Titan</li>
 <li>triple-store model, like: Datomic, AllegroGraph. triple means: (subject, predicate, object), eg: (Jim, likes, apple)</li>
 </ol>
-
 <p>Graph model used in case: everything is potentially related to everything.</p>
-
 <p>Different type of objects are placed in same graph, your query start at a vertex to traverse the graph to get result.</p>
-
 <h2 id="storage-and-retrieval">Storage and retrieval</h2>
-
 <h3 id="sstable-and-lsm-tree">SSTable and LSM tree</h3>
-
 <p>From Bigtable, opensource: LevelDB, RocksDB.</p>
-
 <p>Insert,update,delete key just append a log on disk, maintain memtable(maybe a B tree) in RAM.</p>
-
-<p>Write operation is fast(sequential writes on disk). Read operation need to check memtable first, if not found, search on disk, from newest sstable to oldest, since data is stored in sorted order, do range query on disk is quick(scan block&#8217;s maxium and minium, like redshift store data by sortkey).</p>
-
+<p>Write operation is fast(sequential writes on disk). Read operation need to check memtable first, if not found, search on disk, from newest sstable to oldest, since data is stored in sorted order, do range query on disk is quick(scan block’s maxium and minium, like redshift store data by sortkey).</p>
 <p>To reclaim disk space, will do compaction for sstable on disk(merge duplicated keys, only keep the latest one).</p>
-
 <p>Tow strategies to decide when to do compaction: size-tiered and leveled.</p>
-
 <p>HBase use size-tired, Cassandra use both, LevelDB and RocksDB use leveled compaction.</p>
-
 <p>size-tired: newer and smaller SSTables are successively merged into older and larger SSTables.</p>
-
-<p>leveled: key range is split up into smaller SSTables and older data is moved into separate &#8220;levels&#8221;, allows the compaction to proceed more incrementally and use less disk space.</p>
-
+<p>leveled: key range is split up into smaller SSTables and older data is moved into separate “levels”, allows the compaction to proceed more incrementally and use less disk space.</p>
 <p>downside of LSM:</p>
-
 <ul>
 <li>compaction can will cause high write throughput.</li>
-<li>if write throughput is high, and compaction is not configured carefully, compaction maybe can&#8217;t keep up with incoming write, then the unmerged segments on disk keeps growing.</li>
+<li>if write throughput is high, and compaction is not configured carefully, compaction maybe can’t keep up with incoming write, then the unmerged segments on disk keeps growing.</li>
 </ul>
-
 <h3 id="b-tree">B tree</h3>
-
 <p>B tree keep key-value pairs sorted by key, allows efficient key-value lookups and range query, this is like LSM tree.</p>
-
 <p>B tree break database into fixed-size blocks or pages, 4 KB(usually), read or write one page at a time. Every page can refer to another, they construct a tree together.</p>
-
 <p>If key number is n, tree depth is O(log n).</p>
-
-<p>LSM is appendonly, but B tree will update pages in place, if the size is over 4 KB, one page will be splitted into two pages, and update their parent page&#8217;s reference. If database crashed during this process, the index will be corrupted. To avoid it, B tree use WAL(write head log) or called redo-log to track every B tree modification, it&#8217;s an append-only file, all operation must be write to it before apply to B tree. If database crashed, it can be used to restore back to a consistent state.</p>
-
+<p>LSM is appendonly, but B tree will update pages in place, if the size is over 4 KB, one page will be splitted into two pages, and update their parent page’s reference. If database crashed during this process, the index will be corrupted. To avoid it, B tree use WAL(write head log) or called redo-log to track every B tree modification, it’s an append-only file, all operation must be write to it before apply to B tree. If database crashed, it can be used to restore back to a consistent state.</p>
 <p>B tree optimization:</p>
-
 <ul>
-<li>LMDB don&#8217;t modify page in place, it do it copy-on-write, a modified page is written to a different location and a new version of parent pages in the tree is created.</li>
-<li>Don&#8217;t store whole key in pages, only provide a few words to act as boundaries between key ranges. Lead to higher branching factor, and fewer level.</li>
+<li>LMDB don’t modify page in place, it do it copy-on-write, a modified page is written to a different location and a new version of parent pages in the tree is created.</li>
+<li>Don’t store whole key in pages, only provide a few words to act as boundaries between key ranges. Lead to higher branching factor, and fewer level.</li>
 <li>Try to maintain leaf pages appear in sequential order on disk, then range scan for keys will be efficient.</li>
-<li>Add pointers for leaf pages, to refer to its sibling pages on left and right, then scaning keys in order needn&#8217;t go back to parent pages.</li>
+<li>Add pointers for leaf pages, to refer to its sibling pages on left and right, then scaning keys in order needn’t go back to parent pages.</li>
 </ul>
-
 <h3 id="data-warehouse">Data warehouse</h3>
-
 <p>Stars and snowflakes: fact table and dimension table.</p>
-
 <p>Fact table usually stores events, which is very large in number, some cols are attributes, other columns are foreign keys refer to dimension tables. every row in a fact table is an event.</p>
-
-<p>Dimension tables: user table, product list table&#8230; usually means: who, what, where, how, why &#8230; of the event in fact table.</p>
-
+<p>Dimension tables: user table, product list table… usually means: who, what, where, how, why … of the event in fact table.</p>
 <p>Data warehouse usually designed as columnar storage, benefits:</p>
-
 <ul>
 <li>can only fetch need columns from table (fact table usually have hundreds of columns)</li>
 <li>can use different compression algorithms for every columns.</li>
 </ul>
-
 <p>Columnar storage store data on disk by sortkey, # &gt;= 1, advantages:</p>
-
 <ul>
 <li>Help narrow down query range quick.</li>
-<li>If the firt sortkey don&#8217;t have many distinct values, there will be long sequences with same values, then will have great compression ratio.</li>
+<li>If the firt sortkey don’t have many distinct values, there will be long sequences with same values, then will have great compression ratio.</li>
 </ul>
-
-<p>Columbar storage usually replicate data to different nodes for HA, it&#8217;s possible to use different sort order on replication, when querying, master node can decide choose which version based on query, Vertica did so.</p></div>
+<p>Columbar storage usually replicate data to different nodes for HA, it’s possible to use different sort order on replication, when querying, master node can decide choose which version based on query, Vertica did so.</p></div>
         <div class="post_footer">
           
           <div class="meta">

@@ -14,7 +14,7 @@
 and provide a unified query interface as normal tables.
 Benefit:
  Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly. Speed up query based on partition key(partitoin pruning)  Limit:
- For partition table, every unique key must use every column in table&amp;#8217;s partition expression(include primary key) For innodb engine, paritioned table can&amp;#8217;t have foreign key,and can&amp;#8217;t have columns referenced by foreign keys. For MyISAM engine, mysql version &amp;lt;= 5.6.5, DML operation will lock all partition as a whole. "/>
+ For partition table, every unique key must use every column in table’s partition expression(include primary key) For innodb engine, paritioned table can’t have foreign key,and can’t have columns referenced by foreign keys. For MyISAM engine, mysql version &amp;lt;= 5.6.5, DML operation will lock all partition as a whole. "/>
   
 
   
@@ -97,36 +97,24 @@ Benefit:
           <span class="date">2017.04.05</span>
         </div>
         <div class="post_content markdown"><h1 id="overview">Overview</h1>
-
 <p>MySQL has buildin partition table support, which can help split data accross multi tables,</p>
-
 <p>and provide a unified query interface as normal tables.</p>
-
 <p>Benefit:</p>
-
 <ul>
 <li>Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly.</li>
 <li>Speed up query based on partition key(partitoin pruning)</li>
 </ul>
-
 <p>Limit:</p>
-
 <ul>
-<li>For partition table, every unique key must use every column in table&#8217;s partition expression(include primary key)</li>
-<li>For innodb engine, paritioned table can&#8217;t have foreign key,and can&#8217;t have columns referenced by foreign keys.</li>
+<li>For partition table, every unique key must use every column in table’s partition expression(include primary key)</li>
+<li>For innodb engine, paritioned table can’t have foreign key,and can’t have columns referenced by foreign keys.</li>
 <li>For MyISAM engine, mysql version &lt;= 5.6.5, DML operation will lock all partition as a whole.</li>
 </ul>
-
 <h1 id="partition-live-db-table">Partition live db table</h1>
-
-<p>MySQL have several different partition type: range, list, key, hash&#8230;</p>
-
+<p>MySQL have several different partition type: range, list, key, hash…</p>
 <p>For my live db table, I just want to partition it by date, one table per month.</p>
-
-<p>So I choose to use range partition by the <code>time_created</code> column (it&#8217;s a bigint).</p>
-
+<p>So I choose to use range partition by the <code>time_created</code> column (it’s a bigint).</p>
 <p>origin table schema:</p>
-
 <pre><code>CREATE TABLE `Record` (
     `id` bigint NOT NULL, AUTO_INCREMENT,
     `data` text DEFAULT '',
@@ -134,23 +122,16 @@ Benefit:
     PRIMARY KEY (`id`)
 )
 </code></pre>
-
 <p>After partitioning, I only want to keep recent 3 months data. If I delete rows in original table first, it will take a lot of time, also rebuild primary key and partitioning will cost many time as well.</p>
-
 <p>So I decide create a new partitioned table first, and select needed data from original table to it, and do a rename operation at last.</p>
-
 <p>Steps:</p>
-
 <ul>
 <li>create new partiton table <code>Record_new</code> (with corrent primary key and partition info)</li>
 <li>insert into <code>Record_new</code> select * from Record where id &gt; xxx and id &lt; yyy. (copy needed data to new table, should do it chunk by chunk since the number is huge).</li>
 <li>rename table <code>Record</code> to <code>Record_old</code>, <code>Record_new</code> to <code>Record</code>.</li>
 </ul>
-
 <p>With this flow, we can have minimum impact on live server, and can cancel at any time during copy data.</p>
-
 <p>Create sql for new partition table:</p>
-
 <pre><code>CREATE TABLE `Record` (
     `id` bigint NOT NULL, AUTO_INCREMENT,
     `data` text DEFAULT '',
@@ -164,23 +145,16 @@ Benefit:
      PARTITION p_2017_04 VALUES LESS THAN (UNIX_TIMESTAMP('2017-05-01')),
      PARTITION p_default VALUES LESS THAN MAXVALUE);
 </code></pre>
-
 <p><code>p_default</code> is used to hold data if no suitable partition is available, usually, it should be null. I use a montly cronjob to reoriganize it to genearate a new partition:</p>
-
 <pre><code>ALTER TABLE Record REORGANIZE p_default into 
 (PARTITION p_2017_05 VALUES LESS THAN (UNIX_TIMESTAMP('2017-06-01')),
  PARTITION p_2017_06 VALUES LESS THAN (UNIX_TIMESTAMP('2017-07-01')));
 </code></pre>
-
 <h1 id="partitoin-management">Partitoin management</h1>
-
 <p>Check how many rows every partitoin have:</p>
-
 <pre><code>select PARTITION_NAME,TABLE_ROWS from information_schema.partitions where table_schema='test_db' and table_name='test';
 </code></pre>
-
 <p>Drop partition:</p>
-
 <pre><code>ALTER TABLE Record DROP PARTITION p_xxx;
 </code></pre></div>
         <div class="post_footer">

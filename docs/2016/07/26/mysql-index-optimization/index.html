@@ -94,21 +94,15 @@
           <span class="date">2016.07.26</span>
         </div>
         <div class="post_content markdown"><p>什么是索引,索引怎么建这些基本的就跳过不谈了,整理一些前段时间优化线上 SQL 查询时碰到的一些问题. 主要解决下面几个问题:</p>
-
 <ul>
 <li>建立索引怎样选择合适的列.</li>
 <li>怎样让 SQL 能有效利用索引.</li>
 <li>如果对 SQL 效率进行评估(即设置索引前后是否真的有性能提升).</li>
 </ul>
-
-<h2 id="索引的开销">索引的开销</h2>
-
+<h2 id="heading">索引的开销</h2>
 <p>我们都知道利用索引能提高查询效率, 但也不能盲目得随意添加索引, 索引也是有成本的.</p>
-
-<h3 id="磁盘空间开销">磁盘空间开销</h3>
-
+<h3 id="heading1">磁盘空间开销</h3>
 <p>对于下面的表:</p>
-
 <pre><code>CREATE TABLE `User` (
     `id` bigint NOT NULL AUTO_INCREMENT,
     `name` varchar(255),
@@ -121,136 +115,75 @@
     PRIMARY KEY (`id`)
 )ENGINE=InnoDB;
 </code></pre>
-
-<p>如果我们要添加一个索引 <strong>KEY &#96;idx_email&#96; (&#96;email&#96;)</strong> 加快对email列的查询, MySQL 实际上做的是把 email 字段复制一份来构建索引列, 此外对每个索引, 主键也会附加在后面, 所以每个索引的实际磁盘开销是被索引列+主键, 因此设计表的时候最好选择一个简单又短的主键列.</p>
-
-<h3 id="索引维护开销">索引维护开销</h3>
-
+<p>如果我们要添加一个索引 <strong>KEY `idx_email` (`email`)</strong> 加快对email列的查询, MySQL 实际上做的是把 email 字段复制一份来构建索引列, 此外对每个索引, 主键也会附加在后面, 所以每个索引的实际磁盘开销是被索引列+主键, 因此设计表的时候最好选择一个简单又短的主键列.</p>
+<h3 id="heading2">索引维护开销</h3>
 <p>这里讨论的索引只限于 innodb 的 B 树索引, 不包括 hash 索引和 fulltext索引.</p>
-
 <p>B 树是平衡树的一种, 数据存储在 leaf node 上, 在 INSERT, DELETE, UPDATE 的时候需要移动 leaf node 来保持树的高度. 这就是索引维护的成本, 因此过多的索引会增加 INSERT, DELETE, UPDATE时候的开销, 对写多于读的表慎用索引.</p>
-
-<h2 id="选择合适的列建立索引">选择合适的列建立索引</h2>
-
+<h2 id="heading3">选择合适的列建立索引</h2>
 <h3 id="leftmost">LeftMost</h3>
-
 <p>索引查询遵循 LeftMost 原则, 假设上面的 User 表有索引:</p>
-
 <pre><code>     Key `idx_user` (`name`, `email`, `time_removed`)
 </code></pre>
-
 <p>以下查询是能利用到索引的</p>
-
-<p>SELECT * FROM User WHERE name=&#8221;zhang&#8221;</p>
-
-<p>SELECT * FROM User WHERE name=&#8221;zhang&#8221; and email=&#8221;z@g.com&#8221;</p>
-
-<p>SELECT * FROM User WHERE name=&#8221;zhang&#8221; and email=&#8221;z@g.com&#8221; and time_removed=0</p>
-
+<p>SELECT * FROM User WHERE name=”zhang”</p>
+<p>SELECT * FROM User WHERE name=”zhang” and email=”z@g.com”</p>
+<p>SELECT * FROM User WHERE name=”zhang” and email=”z@g.com” and time_removed=0</p>
 <p>如果查询 where 语句中只包含 email 或 email + time_removed, 或 time_removed 是不会走索引的.</p>
-
 <p>如果 where 语句中包含 name + time_removed, 还是会走索引, 但起作用的只是 name 部分, 并没法根据索引来跳过 time_removed 列.</p>
-
 <p>假如索引是:</p>
-
 <pre><code>    KEY `idx_location_gener` (`location`, `gender`, `time_removed`)
 </code></pre>
-
 <p>按照 LeftMost 原则, 如果我们的 where 中只包含 location + time_removed, 最后的 time_removed 并不会被用到.</p>
-
-<p>这里有个小技巧, 由于 gender 只有男女两种(好吧, 通常情况下&#8230;), 我们可以这么做来利用到最后的 time_removed 字段: <code>SELECT * FROM User WHERE location=&quot;China&quot; and gender=0 or gender=1 and time_removed=0</code></p>
-
+<p>这里有个小技巧, 由于 gender 只有男女两种(好吧, 通常情况下…), 我们可以这么做来利用到最后的 time_removed 字段: <code>SELECT * FROM User WHERE location=&quot;China&quot; and gender=0 or gender=1 and time_removed=0</code></p>
 <p>就是在这个查询中我们本来就是要选择所有的gender, 通过这种方式来让查询强制走索引.</p>
-
 <p>可惜的是如果写 <code>gender in (0, 1)</code>, 并不会work,原因是 in 属于range query, 后详.</p>
-
-<h3 id="一个索引还是多个索引">一个索引还是多个索引?</h3>
-
+<h3 id="heading4">一个索引还是多个索引?</h3>
 <p>对于 User 表, 如果我们有如下的查询语句:</p>
-
 <pre><code>SELECT * FROM User where name=&quot;Zhang&quot; and email=&quot;zhang@gmail.com&quot;
 </code></pre>
-
 <p>那我们应该是为name和email列各自建立一个索引,还是建立一个索引同时包含name和email呢?</p>
-
-<p>通常情况下我们都应该选择建立一个 <strong>KEY &#96;idx_name_email&#96; (&#96;name&#96;, &#96;email&#96;)</strong>, 有以下原因.</p>
-
+<p>通常情况下我们都应该选择建立一个 <strong>KEY `idx_name_email` (`name`, `email`)</strong>, 有以下原因.</p>
 <p>由于主键在每个索引上会被复制一份,建立一个索引显然比两个索引要省空间, 当然也省了索引维护的成本.</p>
-
 <p>还有是 MySQL 索引遵循 LeftMost 原则, 所以建立在 (name, email) 上的查询可以用在 where 条件中只包含name的情况, 和where 条件中同时包含name 和 email的情况, 只带email的 where条件则无法使用该索引.</p>
-
 <p>那如果我在 name 和 email 上各自建立一个索引, MySQL 能不能同时用到这两个索引呢? 不一定. 取决于 query plan 的评估结果, 5.6.7之前的版本中如果 where 条件中如果某个列使用了 range 查询那就不会做 index merge. 由于两个 index 的查询结果做归并也是有成本的, 显然不如建立一个多列的索引. index merge的过程比较复杂而且不确定性很高,不建议依赖它来做查询优化.</p>
-
-<h3 id="对区分度高的列做索引">对区分度高的列做索引</h3>
-
+<h3 id="heading5">对区分度高的列做索引</h3>
 <p>对于上面的 User 表, 如果在业务系统中,用户删除是一个极少会发生的行为, 可以考虑不对 time_removed 做索引.</p>
-
 <p>比如大部分的查询可能都只包含name 或 email, 根据这两个条件查询出的数据集已经很小了(通常 email 还是 unique 的), 再加上一个time_removed列其实意义不是很大.</p>
-
-<h2 id="让查询能有效利用索引">让查询能有效利用索引</h2>
-
+<h2 id="heading6">让查询能有效利用索引</h2>
 <p>前面已经讲过 LeftMost 原则, 但写查询的时候也有些 case 需要注意, 否则索引可能并不会生效.</p>
-
 <h3 id="range-query">range query</h3>
-
 <p>MySQL 中的 range query 包括 <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>, <code>!=</code>, <code>in</code>, <code>between</code>, <code>like</code>, <code>is null</code>, <code>is not null</code>.</p>
-
 <p>一些要注意的地方:</p>
-
 <ul>
 <li>对于 <code>in</code>, 如果集合里只有一个元素, 比如 <code>user_id in (1)</code>, 是会被优化成<code>user_id = 1</code>的,不算 range query.</li>
 <li>对于<code>like</code>, 只有like的的部分不以<code>%</code>开头才算 range query,否则是个完全没有优化的全表扫描操作.</li>
 </ul>
-
 <p>如果对被索引字段做 range query, 索引扫描会停在第一个 range query 上, 后面的索引列不会被用到.</p>
-
 <p>还是 User 表, 假设我们有索引<strong>KEY idx_age_location(age, location)</strong></p>
-
 <p>查询是: <code>SELECT * FROM User where age&gt;13 and location=&quot;China&quot;</code></p>
-
 <p><code>age &gt; 13</code> 就是 range query, 所以所以扫描就会停在age字段, location并不会被用到.</p>
-
 <p>对于这个查询, 合理地索引应该是<strong>KEY idx_location_age(location, age)</strong></p>
-
 <p>但如果我们的查询中只有 <code>age &gt; 13</code>, 没有location 字段, 这个新的索引又不会被用到, 这种情况需要对age单独做索引.</p>
-
 <p>一般原则是: 被索引列中只能有一列含有范围查询,且该列要放最后.</p>
-
 <h3 id="order-by">order by</h3>
-
 <p>有查询: <code>SELECT * FROM User where location=&quot;China&quot; order by time_created desc limit 100</code></p>
-
 <p>我们想取 location 为 China 的最近创建的100个用户.</p>
-
 <p>假设我们只有索引 <code>KEY idx_location (location)</code>, 对该 select 语句做 explain, 会发现 <code>rows</code> 字段远大于100. 理想情况我们希望该字段只扫描最后我们需要的100行数据.</p>
-
 <p>需要建立索引 <code>KEY idx_location_recent(location, time_created)</code>, 此时再做explain, rows就是100行了.</p>
-
 <p>要注意的是order by 也遵循 LeftMost 原则, 如果索引是 (location, gender, time_created), 对于我们上面的查询则不会对order by做优化.</p>
-
 <p>对 order by, 还有个可以利用的小 trick, 前文说过每个索引都会将主键拷到该索引的最后, 所以 order by 其实是可以利用这个主键的.</p>
-
 <p>由于 User 表的主键 id 列是个自增字段, id 大的 time_created 一定大, 所以我们完全可以 <code>order by id desc limit 100</code>, 这样就只需要对一个location 列做索引了.</p>
-
 <h2 id="sql-profiling">SQL profiling</h2>
-
 <p>通过对 query 做精确计时,我们可以知道更改索引后效果是否明显.</p>
-
 <p>通过 mysql client 连接上 server:</p>
-
 <p><code>set profiling=1</code> , 打开profiling, 这个变量是 session level的,只对当前连接起作用.</p>
-
 <p>然后执行一些query. 再执行: <code>show profiles</code>, 可以得到:</p>
-
 <pre><code>    1   0.01275200  SELECT  * FROM `User`  WHERE `user_id` =  AND `time_removed` = 0   ORDER BY `id` DESC  LIMIT 100 
 
     2   0.01018250  SELECT  E * FROM `Notification`  WHERE `user_id`=816121  AND `time_removed` = 0 AND `time_modified` &gt;= 0  ORDER BY `id` DESC  LIMIT 100 OFFSET 0
 </code></pre>
-
 <p>可以看到很精确的 sql 计时.</p>
-
 <p><code>show profile for query 2</code>, 可以得到某一条查询在各个步骤的耗时. 输出结果如下:</p>
-
 <pre><code>    starting    0.000111
     checking permissions 0.000035
     Opening tables  0.000041
@@ -269,21 +202,13 @@
     freeing items   0.000174
     cleaning up 0.000041
 </code></pre>
-
 <p>使用 <code>show profile all for query 2</code>, 可以得到各个步骤在cpu, block io上更详细的统计信息.</p>
-
 <p>关闭 profile: <code>set profiling=0</code></p>
-
 <h3 id="check-row-examined">Check row examined</h3>
-
 <p>在 MySQL 的慢查询日志中有 rows_sent 和 rows_examined, 优化的目的一般都是要使这两个值尽量接近, 两个值完全相等就意味着为了得到最后的查询结果,没有扫描多余的列, 这是最佳情况.</p>
-
 <p>有没有办法在慢查询之外的地方知道我们的 query 扫过了多少行呢?</p>
-
 <p>可以通过检查 MySQL 几个 status 变量间接得知道 examine 的行数.</p>
-
 <p><code>show status like &quot;Handler_read_%&quot;</code>, 输出:</p>
-
 <pre><code>        Handler_read_first  0
         Handler_read_key    0
         Handler_read_last   0
@@ -292,19 +217,12 @@
         Handler_read_rnd    0
         Handler_read_rnd_next   0
 </code></pre>
-
 <p>完全解释清这几个变量的含义比较麻烦, 举个例子, 对于 User 表, 我们假设有索引: <code>KEY idx_location (location)</code></p>
-
 <p>假设我们的查询是 <code>SELECT * FROM User WHERE location=&quot;China&quot; order by time_created desc 100</code></p>
-
-<p>根据前文所述, 这里的 time_created 不在索引列中,所以query其实会扫描 location=&#8221;China&#8221; 的所有行, 对整个结果做排序后再取top 100.</p>
-
-<p>首先将所有的状态变量归0: <code>flush status</code>, 然后执行query, 再查看状态变量, 看到 <code>Handler_read_next</code> 是188, 多于设的 limit 100, 188也是对location=&#8221;China&#8221; 做count的结果.</p>
-
+<p>根据前文所述, 这里的 time_created 不在索引列中,所以query其实会扫描 location=”China” 的所有行, 对整个结果做排序后再取top 100.</p>
+<p>首先将所有的状态变量归0: <code>flush status</code>, 然后执行query, 再查看状态变量, 看到 <code>Handler_read_next</code> 是188, 多于设的 limit 100, 188也是对location=”China” 做count的结果.</p>
 <p>假设索引不变, 将条件变为 <code>WHERE location=&quot;China&quot; order by id desc limit 100</code>, 先<code>flush status</code>, 再执行query, 查看变量,会发现 <code>Handler_read_next</code> 变成了0, <code>Handler_read_prev</code>变成了99, 这表明查询中的order by id得到了优化.</p>
-
-<h2 id="总结">总结</h2>
-
+<h2 id="heading7">总结</h2>
 <p>实际业务中,可能并没法让每条查询都完美hit到索引,怎么选择索引需要根据实际 query 做取舍.</p></div>
         <div class="post_footer">
           

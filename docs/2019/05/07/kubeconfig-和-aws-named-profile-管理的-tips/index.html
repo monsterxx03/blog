@@ -94,28 +94,20 @@
         </div>
         <div class="post_content markdown"><p>我有两个 EKS 集群 (sandbox + production), 这两个集群分处两个 aws 帐号中.
 所以管理的时候也需要两套 aws credential.</p>
-
 <p>同时我用 <a href="https://github.com/futuresimple/helm-secrets">helm-secrets</a> 来管理 helm charts
 中需要加密的一些配置. helm-secrets 只是 <a href="https://github.com/mozilla/sops">sops</a> 的一个 shell
 wrapper, 实际加密是通过 sops 进行的.</p>
-
 <p>sops 支持 aws KMS, gcp KMS, azure key vault.. 等加密服务. 我用的是 aws KMS, 在 KMS 里创建一个 key,
 授权允许我这个 iam 帐号能用它来进行加解密.</p>
-
 <p>这带来了一个问题, kubectl 和 helm-secrets 都需要 aws credential, 如果两边用的不一样就会执行失败.</p>
-
 <p>我统一使用 aws 的 <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html">named profiles</a>
 来管理 credential. 不在环境变量里设 aws 的 access key/secret key(如果设置了, 优先级比 named profile 高)</p>
-
 <p>目录结构:</p>
-
 <pre><code>~/.aws/
     credential
     config
 </code></pre>
-
 <p>credentail 中内容:</p>
-
 <pre><code>[sandbox]
 aws_access_key_id = xxx
 aws_secret_access_key = yyy
@@ -124,29 +116,21 @@ aws_secret_access_key = yyy
 aws_access_key_id = aaa
 aws_secret_access_key = bbb
 </code></pre>
-
 <p>config 中内容:</p>
-
 <pre><code>[profile sandbox]
 region=us-west-1
 
 [profile production]
 region=us-west-2
 </code></pre>
-
 <p>一般来说, 多个 eks 集群的信息可以写在 ~/.kube/config 中, 通过 <code>kubectl config use-context</code> 来切换.</p>
-
 <p>我更喜欢一个集群一个配置文件, 通过环境变量 <code>KUBECONFIG</code> 来指定使用哪个配置文件.</p>
-
 <p>假设我把所有 kubconfig 放在 <code>~/.kube/configs/</code> 下:</p>
-
 <pre><code>~/.kube/configs/
     production
     sandbox
 </code></pre>
-
 <p>使用 eks 时, kubectl 是通过 iam-authenticator-aws 来进行认证的, kubeconfig 示例配置:</p>
-
 <pre><code>users:
 - name: arn:aws:eks:us-west-1:123456:cluster/sandbox
   user:
@@ -161,32 +145,23 @@ region=us-west-2
       - name: AWS_PROFILE
         value: sandbox
 </code></pre>
-
 <p>通过环境变量让 aws-iam-authenticator 使用指定的 profile.</p>
-
 <p>所以只要同时控制 <code>KUBECONFIG</code> 和 <code>AWS_PROFILE</code> 这两个环境变量就达成了同时切换 aws profile 和 eks cluster 的目的.</p>
-
 <p>写个 shell 函数就行啦:</p>
-
 <pre><code>function eks {
     local config_dir=~/.kube/configs
     export KUBECONFIG=$config_dir/$1
     export AWS_PROFILE=$1
 }
 </code></pre>
-
 <p>使用:</p>
-
 <ul>
 <li>eks production</li>
 <li>eks sandbox</li>
 </ul>
-
 <p>当有多个集群的时候, 操作时候经常会忘记自己目前的 context 是那个 cluster (还有对应的 aws profile). 可以把信息显示到 zsh
 的提示符上.</p>
-
 <p>在 .zshrc 中加入:</p>
-
 <pre><code>function aws_prof {
     echo &quot;%{$fg_bold[blue]%}aws:(%{$fg[yellow]%}${AWS_PROFILE}%{$fg_bold[blue]%})%{$reset_color%} &quot;
 }
@@ -197,11 +172,8 @@ function k8s_ctx {
 
 export PROMPT=&quot;\$(aws_prof)\$(k8s_ctx)$PROMPT&quot;
 </code></pre>
-
 <p>效果如下:</p>
-
-<p><img src="/posts/images/zsh-k8s.png" alt="" /></p>
-
+<p><img src="/posts/images/zsh-k8s.png" alt=""></p>
 <p>因为偶尔还是可能单独切换 aws profile 的, 所以两个分开显示了.</p>
 </div>
         <div class="post_footer">

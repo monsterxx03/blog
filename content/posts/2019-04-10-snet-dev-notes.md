@@ -1,5 +1,5 @@
 ---
-title: "SNET Dev Note"
+title: "snet dev note"
 date: 2019-04-10T22:33:49+08:00
 categories:
   - tech

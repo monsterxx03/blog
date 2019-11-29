@@ -18,7 +18,7 @@
       <pubDate>Tue, 12 Feb 2019 13:08:29 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/</guid>
-      <description>最近在看 google 的 &amp;lt;The Site Reliablity Workbook&amp;gt;, 其中有一章是&amp;rdquo;Manage load&amp;rdquo;, 内容还挺详细的, 结合在 aws 上的经验做点笔记. Load Balancing 流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存. google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency. 但只依赖 BGP 会带来两个问题: 某个地区的用户过多会给最近的 frontend server 带来过高的</description>
+      <description>最近在看 google 的 &amp;lt;The Site Reliablity Workbook&amp;gt;, 其中有一章是&amp;quot;Manage load&amp;rdquo;, 内容还挺详细的, 结合在 aws 上的经验做点笔记. Load Balancing 流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存. google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency. 但只依赖 BGP 会带来两个问题: 某个地区的用户过多会给最近的 frontend server 带来过高的负</description>
     </item>
     
     <item>
@@ -28,16 +28,16 @@
       
       <guid>https://blog.monsterxx03.com/2018/09/03/kubernetes-in-action-notes/</guid>
       <description>Miscellaneous notes when reading &amp;lt;Kubernetes in Action&amp;gt;.
-api group and api version core api group need&amp;rsquo;t specified in apiVersion field.
+api group and api version core api group need&#39;t specified in apiVersion field.
 For example, ReplicationController is on core api group, so only:
 apiVersion: v1 kind: ReplicationController ...  ReplicationSet is added later in app group, v1beta2 version (k8s v1.8):
 apiVersion: apps/v1beta2 1 kind: ReplicaSet  https://kubernetes.io/docs/concepts/overview/kubernetes-api/
 ReplicationController VS ReplicationSet ReplicationController is replaced by ReplicationSet, which has more expressive pod selectors.
-ReplicationController&amp;rsquo;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
+ReplicationController&#39;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
 rs also support operator on key value: In, NotIn, Exists, DoesNotExist
 If migrate from rc to rs, can delete rc with --cascade=false option, it will delete rc only, but left pods running, then we can create a rs with same selector to make pods under management.
 DaemonSet DaemonSet ensures pod run exact one copy on one node, useful for processes like monitor agent and log collector. Use node-selector to make ds only run on specific nodes.
-If node is made unschedulable, normal pods won&amp;rsquo;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass scheduler.
+If node is made unschedulable, normal pods won&#39;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass scheduler.
 Job Job is used to run a single completable task.</description>
     </item>
     
@@ -48,8 +48,8 @@ Job Job is used to run a single completable task.</description>
       
       <guid>https://blog.monsterxx03.com/2017/05/17/designing-data-intensive-application-reading-notes-part-2/</guid>
       <description>Chapter 4, 5, 6
-Encoding formats xml, json, msgpack are text based encoding format, they can&amp;#8217;t carry binary bytes (useless you encode them in base64, size grows 33%). And they cary schema definition with data, wast a lot of space.
-thrift, protobuf are binary format, can take binary bytes, only carry data, the schema is defined with IDL(interface definition language). They have code generation tool to generate code to encode and decode data, along with check. Every field of data is binded with a tag(mapped to a field in IDL file). If a field is defined is required, it can&amp;#8217;t by removed or change tag value, otherwise old code will not be able to decode it.
+Encoding formats xml, json, msgpack are text based encoding format, they can’t carry binary bytes (useless you encode them in base64, size grows 33%). And they cary schema definition with data, wast a lot of space.
+thrift, protobuf are binary format, can take binary bytes, only carry data, the schema is defined with IDL(interface definition language). They have code generation tool to generate code to encode and decode data, along with check. Every field of data is binded with a tag(mapped to a field in IDL file). If a field is defined is required, it can’t by removed or change tag value, otherwise old code will not be able to decode it.
 avro (used in hadoop), have a write schema and a read schema, when store a large file in avro format(contain many records with same schema), the avro write schama file is appended to the data. If use avro in RPC, the avro schema is exchanged during connection setup. When decoding avro, the lib will look both write schema and read schema, and translate write schema into read schema. Forward compatibility means that you can have a new version of the schema as writer and an old version of the schema as reader, backward compatibility means that you can have a new version of the schema as reader and an old version as writer.</description>
     </item>
     
@@ -59,7 +59,7 @@ avro (used in hadoop), have a write schema and a read schema, when store a large
       <pubDate>Thu, 04 May 2017 16:27:52 +0000</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/</guid>
-      <description>&lt;p&gt;Notes when reading chapter 2 &amp;#8220;Data models and query languages&amp;#8221;, chapter 3 &amp;#8220;Storage and retrieval&amp;#8221;&lt;/p&gt;</description>
+      <description>&lt;p&gt;Notes when reading chapter 2 “Data models and query languages”, chapter 3 “Storage and retrieval”&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -68,7 +68,7 @@ avro (used in hadoop), have a write schema and a read schema, when store a large
       <pubDate>Wed, 19 Apr 2017 16:26:58 +0000</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/</guid>
-      <description>&lt;p&gt;A few notes taken when reading &lt;Concurrency in Go&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;A few notes taken when reading &lt;!-- raw HTML omitted --&gt;&lt;/p&gt;</description>
     </item>
     
   </channel>

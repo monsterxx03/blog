@@ -92,34 +92,24 @@
           <h2><a href='/2018/05/20/migrate-to-sqlalchemy/'>Migrate to Sqlalchemy</a></h2>
           <span class="date">2018.05.20</span>
         </div>
-        <div class="post_content markdown">
-
-<p>最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些.</p>
-
+        <div class="post_content markdown"><p>最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些.</p>
 <p>原来的 db 层代码历史非常古老(10年以上&hellip;), 最早写代码的人早就不在了, 问题很多:</p>
-
 <ul>
 <li>完全没有单元测试.</li>
 <li>暴露出的接口命名很混乱, 多数是为了兼容一些历史问题.</li>
 <li>里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便.</li>
 <li>老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表结构，只能直接看数据库.</li>
 </ul>
-
 <p>重写时候要考虑到的:</p>
-
 <ul>
 <li>现有业务代码基于老 db 代码已经写了很多了, 重写不现实, 迁移到 sqlalchemy 需要封装一套完全兼容的 api, 没用到的混乱的老 api 趁机清理.</li>
 <li>db migration 需要重新实现, 只用 alembic 不能满足需求, 后详.</li>
 <li>重写完的代码保证高测试覆盖率.</li>
 </ul>
-
-<h2 id="orm-or-core">ORM  or Core</h2>
-
+<h2 id="orm--or-core">ORM  or Core</h2>
 <p>sqlalchemy 分成两部分, 底层的 sqlalchemy core 是一套 sql 语法生成器, 通过重载 python 的 magic function 实现用比较漂亮的 python 语法来构造 sql.
 ORM 部分是基于 core 做的面向对象封装.</p>
-
 <p>声明 model 的时候也有两种写法, core 是直接实例化 Table 对象, orm 用的是 declarative 语法(declare 一个 class), 例子:</p>
-
 <pre><code># Table syntax
 User = Table(&quot;user&quot;, metadata, Column('name', Integer, primary_key=True))
 # ORM declarative syntax
@@ -127,11 +117,8 @@ class User(Base):
     __tablename__ = 'user'
     name = Column('name', Integer, primary_key=True)
 </code></pre>
-
 <p>重写时候最后选择了, 用 declarative 语法声明 model, 但用 core 语法封装 sql.</p>
-
 <p>为什么用 core 不用 orm:</p>
-
 <ul>
 <li>原先的业务代码相当过程式, 就算底层用了 orm 封装, 向上传递的对象也得转成 dict, 没啥用</li>
 <li>ORM 默认在 query 的时候会加载所有 column, 虽然可以通过 defer 实现懒加载, 但这个只能定义在 model 上, 而需求是要能让上层代码控制加载哪些 column</li>
@@ -139,40 +126,29 @@ class User(Base):
 <li>需要用到一些 MySQL 独有的语法, core 可以, orm 就不行, 比如 <code>insert ...on duplicate update</code>, <code>SQL_CALC_FOUND_ROWS</code>, <code>insert ignore</code> &hellip;</li>
 <li>core 语法生成的 query statement 可以很方便的转成 raw sql, orm 的一些操作会转成什么样的 sql 很不直观.</li>
 </ul>
-
 <p>为什么定义 model 不 定义 table</p>
-
 <ul>
 <li>通过 ORM 的 model 可以通过 <code>User.__table__</code> 获得等价的 table 对象, 直接定义 model, 以后要使用 ORM 的话可以直接用.</li>
 <li>所有 table 都有一些相同的 column, model 定义可以通过继承来复用.</li>
 <li>model 可以定义一些 derived column.</li>
 </ul>
-
 <p>已存在的表比较多, 用 <a href="https://pypi.org/project/sqlacodegen/">https://pypi.org/project/sqlacodegen/</a> 这个工具自动化生成 model 代码后手工修改.</p>
-
 <p>需要注意的是原来的项目里很多字段定义成了 unsigned int, 但 unsigned 是 MySQL 专属的数据类型, 需要用 <code>sqlalchemy.dialects.mysql</code> 里的 INTEGER, 为了统一, 所有数据类型都使用该包下的.</p>
-
 <h2 id="simulate-old-api">Simulate old api</h2>
-
 <p>这倒不难, 原来的 api 暴露出一组类似下面的函数:</p>
-
 <ul>
 <li>select(where, cols=None, offset=0, limit=None, order_by=None)</li>
 <li>update_many(where, update_dict)</li>
 <li>insert_one(row)</li>
 <li>&hellip;</li>
 </ul>
-
 <p>select 里的 where 是个 dict, 会被转成 sql 的 where 部分:</p>
-
 <pre><code>{'id': 1}  -&gt;  `id=1`
 {'id:' {'&gt;': 1}}  -&gt; `id &gt; 1`
 {'id': [1, 2]}  -&gt; `id in (1, 2)`
 {'first_name': 'tester', 'last_name': 'x'} -&gt; `first_name=&quot;tester&quot; and last_name=&quot;x&quot;`
 </code></pre>
-
 <p>原先的逻辑中查询条件全是 <code>and</code> 没有 <code>or</code>, 通过 sqlalchemy 实现很容易, 转换函数类似:</p>
-
 <pre><code>def build_where(sa_model_cls, stmt, where):
     for key, value in where.items():
         col = getattr(sa_model_cls, key)
@@ -186,49 +162,34 @@ class User(Base):
             stmt = stmt.where(col == value)   # if value is None, will be converted to `is NULL`
     return stmt
 </code></pre>
-
 <p>模拟之后老的 api 向上是透明的，调用老 api 的人完全不会 sqlalchemy 也没问题, 新的业务需要使用 join 或 orm 的话，直接拿 model class 自己去处理就行.</p>
-
 <p>要调试生成的 sql 可以通过以下方法:</p>
-
 <pre><code>import sqlparse
 from sqlalchemy.dialects import mysql
 
 stmt = stmt.compile(dialect=mysql.dialect(), compile_kwargs={&quot;literal_binds&quot;: True})
 print sqlparse.format(str(stmt), reindent=True)
 </code></pre>
-
 <h2 id="db-migration-based-on-alembic">DB migration based on alembic</h2>
-
 <p>alembic 是 sqlalchemy 官方的 migration 工具, 但有点简陋, 不会在数据库里记录历次 migration 的内容, 只能看代码, 数据库里只有一张 <code>alembic_version</code> 表记录数据库当前处在的版本.</p>
-
 <p>对 db migration 的需求:</p>
-
 <ol>
 <li>migration 版本号使用递增的数字，而不是 alembic 默认的 hash id.</li>
 <li>通过修改 model 能生成对应的 schema ddl sql, 最后到 live 上运行的一定要是 raw sql, 不是 alembic 的 python 脚本.</li>
 <li>在数据库里用一张 db_revisions 表记录每次运行 migration 的时候在什么时候对什么表做了什么操作.</li>
 <li>可以重复运行一个 revision, 并检测其中哪张表已经运行过 migration 了, 直接跳过, 只 apply 没运行过的表. 原因是一个项目经常有多个分支在同时开发, 大家可能同时在修改数据库，生成了 revision 005, 但一般是对不同表的修改, 比如 branchA  修改了 User, branchB 修改了 Topic, branchA 先 merge 回 master 上线了, 所以线上已经是 revision 005, 希望 branchB 的人 merge master代码的时候没有冲突，上线 branchB 时候再运行一次 revision 005, 这回只 apply Topic 表的修改. 如果两分支同时修改了一张表，那merge 时候生成的 sql 会冲突, 人工解决冲突, 这种情况比较少.</li>
 </ol>
-
 <p>实现:</p>
-
 <p>raw sql 可以通过 alembic 的 offline 模式生成, 但有几个问题:</p>
-
 <ul>
 <li>生成的语句不支持 online ddl, <code>ALGORITHM=INPLACE, LOCK=None</code> 语法.</li>
 <li>add column 默认总是加在最后面, developer 希望保持 column 在 class 定义时候顺序.</li>
 <li>如果一次修改了多个 model class, offline 模式生成的 sql 是混合在一起的一个大字符串, 需求是每次生成的 revision 中将 sql 按表名分组.</li>
 </ul>
-
 <p>这些可以通过 <code>sqlparse</code> 将大 sql 字符串拆分成单句 sql, 然后用正则处理单句 sql, 给 <code>alter table add column</code> 语句添加 <code>ALGORITHM=INPLACE, LOCK=None</code>, column 的顺序可以通过 <code>User.__table__.columns</code> 来得到, 提取新加 column的前一个 column name, 给 sql 添加 <code>after xxx</code> 部分. 用正则从所有类型的 sql 中提取 table name 进行分组.</p>
-
 <p>递增的 migration 版本号数字 id 通过 <code>alembic revision --autogenerate --rev-id {next_rev}</code> 传进去.</p>
-
 <p>在线上运行 migration 的时候, 就直接将指定 revision 的 sql 文件运行就行了.</p>
-
 <p>测试过程中 alembic 有些更改是检测不到或有问题的:</p>
-
 <ul>
 <li>更改 column name 会生成一句 <code>drop column</code> 和 <code>add column</code></li>
 <li>更改表名会生成一句 <code>drop table</code> 和 <code>create table</code></li>
@@ -237,13 +198,9 @@ print sqlparse.format(str(stmt), reindent=True)
 <li>删除 index 无法检测</li>
 <li>更改 index name 会生成一句创建新 index 的语句</li>
 </ul>
-
 <p>因为生成的 raw sql 是完全可以自己编辑的所以这些问题不大, 只要注意 review 生成的 sql 就行.</p>
-
 <p>alembic 默认不会比较字段类型的变化, 需要在 alembic 的 env.py 中设置 <code>compare_type=True</code>.</p>
-
 <p>alembic 默认不会比较server default值的变化, 需要设置 <code>compare_server_default</code>, 但 alembic 默认的比较函数有 bug, 如果原来没设置过 server_default 会报错, 所以把 <code>alembic.ddl.mysql.compare_server_default</code> 拷贝出来稍作修改传递给 <code>compare_server_default</code>:</p>
-
 <pre><code>def compare_server_default(
     context,
     inspected_column,
@@ -278,24 +235,17 @@ elif rendered_inspector_default and rendered_metadata_default:
 else:
     return rendered_inspector_default != rendered_metadata_default
 </code></pre>
-
 <h3 id="migration-steps">migration steps</h3>
-
 <p>生成 migration sql 的过程:</p>
-
 <ol>
 <li>修改 model class</li>
 <li><code>alembic revision --autogenerate --rev-id {next_rev}</code>  生成 alembic 的 python 脚本</li>
 <li><code>alembic upgrade --sql {last_ver:next_ver}</code> 将刚在的 python 脚本转换成 sql 语句.</li>
 <li>用 <code>sqlparse</code> 拆分大 sql, 并按需求修改单行 sql, 按表名分文件存储.</li>
 </ol>
-
 <p>以上2-4过程封装成 <code>migrate.py create</code> 命令. 注意在生成之前要先检查当前的所有 revision 是不是已经在当前数据库中运行过了(检查 db_revisions 表), 如果没有要终止生成, 否则代码和生成的 migration sql 对不上.</p>
-
 <p>对数据库运行某个 revision 的时候需要检查该 revision 中每个表是否已经在数据库中运行过了, 运行过了就跳过, 没有就执行. 这个操作封装成 <code>migrate.py apply</code> 命令.</p>
-
-<h2 id="总结">总结</h2>
-
+<h2 id="heading">总结</h2>
 <p>基于 sqlalchemy 重写后, db 层代码干净了很多, 也保证了 100% 的测试覆盖率, 也有了直接操作 model class 可以生成复杂 sql 的能力, 达到了效果.</p>
 </div>
         <div class="post_footer">

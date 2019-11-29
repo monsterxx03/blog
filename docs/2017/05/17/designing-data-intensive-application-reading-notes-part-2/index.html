@@ -11,8 +11,8 @@
 
   
   <meta name="description" content="Chapter 4, 5, 6
-Encoding formats xml, json, msgpack are text based encoding format, they can&amp;#8217;t carry binary bytes (useless you encode them in base64, size grows 33%). And they cary schema definition with data, wast a lot of space.
-thrift, protobuf are binary format, can take binary bytes, only carry data, the schema is defined with IDL(interface definition language). They have code generation tool to generate code to encode and decode data, along with check. Every field of data is binded with a tag(mapped to a field in IDL file). If a field is defined is required, it can&amp;#8217;t by removed or change tag value, otherwise old code will not be able to decode it.
+Encoding formats xml, json, msgpack are text based encoding format, they can’t carry binary bytes (useless you encode them in base64, size grows 33%). And they cary schema definition with data, wast a lot of space.
+thrift, protobuf are binary format, can take binary bytes, only carry data, the schema is defined with IDL(interface definition language). They have code generation tool to generate code to encode and decode data, along with check. Every field of data is binded with a tag(mapped to a field in IDL file). If a field is defined is required, it can’t by removed or change tag value, otherwise old code will not be able to decode it.
 avro (used in hadoop), have a write schema and a read schema, when store a large file in avro format(contain many records with same schema), the avro write schama file is appended to the data. If use avro in RPC, the avro schema is exchanged during connection setup. When decoding avro, the lib will look both write schema and read schema, and translate write schema into read schema. Forward compatibility means that you can have a new version of the schema as writer and an old version of the schema as reader, backward compatibility means that you can have a new version of the schema as reader and an old version as writer."/>
   
 
@@ -95,112 +95,69 @@ avro (used in hadoop), have a write schema and a read schema, when store a large
           <h2><a href='/2017/05/17/designing-data-intensive-application-reading-notes-part-2/'>Designing data intensive application, reading notes, Part 2</a></h2>
           <span class="date">2017.05.17</span>
         </div>
-        <div class="post_content markdown">
-
-<p>Chapter 4, 5, 6</p>
-
+        <div class="post_content markdown"><p>Chapter 4, 5, 6</p>
 <h2 id="encoding-formats">Encoding formats</h2>
-
-<p>xml, json, msgpack are text based encoding format, they can&#8217;t carry binary bytes (useless you encode them in base64, size grows 33%). And they cary schema definition with data, wast a lot of space.</p>
-
-<p>thrift, protobuf are binary format, can take binary bytes, only carry data, the schema is defined with IDL(interface definition language). They have code generation tool to generate code to encode and decode data, along with check. Every field of data is binded with a tag(mapped to a field in IDL file). If a field is defined is required, it can&#8217;t by removed or change tag value, otherwise old code will not be able to decode it.</p>
-
+<p>xml, json, msgpack are text based encoding format, they can’t carry binary bytes (useless you encode them in base64, size grows 33%). And they cary schema definition with data, wast a lot of space.</p>
+<p>thrift, protobuf are binary format, can take binary bytes, only carry data, the schema is defined with IDL(interface definition language). They have code generation tool to generate code to encode and decode data, along with check. Every field of data is binded with a tag(mapped to a field in IDL file). If a field is defined is required, it can’t by removed or change tag value, otherwise old code will not be able to decode it.</p>
 <p>avro (used in hadoop), have a write schema and a read schema, when store a large file in avro format(contain many records with same schema), the avro write schama file is appended to the data. If use avro in RPC, the avro schema is exchanged during connection setup. When decoding avro, the lib will look both write schema and read schema, and translate write schema into read schema. Forward compatibility means that you can have a new version of the schema as writer and an old version of the schema as reader, backward compatibility means that you can have a new version of the schema as reader and an old version as writer.</p>
-
 <h2 id="replication">Replication</h2>
-
 <p>purpose:</p>
-
 <ul>
 <li>reduce latency (replication via geo location)</li>
 <li>HA</li>
 <li>increase read throughput</li>
 </ul>
-
-<h3 id="sinle-leader-replication">sinle-leader replication</h3>
-
+<h3 id="sinleleader-replication">sinle-leader replication</h3>
 <p>Also called master/slave or active/passive</p>
-
-<p>Use case: postgresql, MySQL, Oracle Data guard, SQLServer Always On, MongoDB, RethinkDB,Espresso, Kafka, RabbitMQ, DRBD&#8230;.</p>
-
+<p>Use case: postgresql, MySQL, Oracle Data guard, SQLServer Always On, MongoDB, RethinkDB,Espresso, Kafka, RabbitMQ, DRBD….</p>
 <p>If replication is synchronous, leader is usually setup to replicate to one slave synchronously, to other slaves asynchronously.</p>
-
 <p>Complete asynchronously replication is used more often.</p>
-
 <p>Process of setting up new slave:</p>
-
 <ul>
-<li>Take snapshot of leader&#8217;s database, without lock if possible. (like innobackupex for MySQL)</li>
+<li>Take snapshot of leader’s database, without lock if possible. (like innobackupex for MySQL)</li>
 <li>Copy snapshot to slave.</li>
 <li>Slave connects to the leader and requests all the data changes that have happened since the snapshot was taken (snapshot must have position info)</li>
 <li>slave wait until catch up with master, then it can handle incoming data.</li>
 </ul>
-
 <p>Failover for leader:</p>
-
 <ul>
 <li>Determining leader has failed. Failure may have many reasons, usually use timeout.</li>
 <li>Choosing a new leader. Choose slave with least lag with leader, let all slave agree on new leader involved consensus problem(raft, paxos)</li>
 <li>Reconfigure system to use new leader.</li>
 </ul>
-
-<h2 id="multi-leader">multi-leader</h2>
-
+<h2 id="multileader">multi-leader</h2>
 <p>Also called master/master or active/active. Usually used in multi data centers, every data center have a master.</p>
-
 <p>Benefit:</p>
-
 <ul>
 <li>Can make database closer to users in geo, reduce latency.</li>
 <li>If one master fails, promote remote master to be new master.</li>
 </ul>
-
 <p>related projects:</p>
-
 <ul>
 <li>Tungsten Replicator for MySQL</li>
 <li>BDR for PostgreSQL</li>
 <li>GoldenGate for Oracle</li>
 </ul>
-
 <p>Some db features will be problem when working with multi-leader: autoincreasementing keys, triggers,integrity constraints.</p>
-
 <p>multi-leader replication must resolve data conflict problem:</p>
-
 <ul>
-<li>try to avoid conflict completely, if one user&#8217;s action is restricted to one leader strictly(maybe based on location), you won&#8217;t come to this issue.</li>
+<li>try to avoid conflict completely, if one user’s action is restricted to one leader strictly(maybe based on location), you won’t come to this issue.</li>
 </ul>
-
 <h3 id="leaderless">leaderless</h3>
-
-<p>System like amazon&#8217;s dynamo(raik, openstack swift).</p>
-
-<p>Write requests are sent to multi replicas at the same time, client needn&#8217;t wait for all replicas response ok, use formula <code>W + R &gt; N</code>(N is # of configured replicas) to decide whether the write successed or not. You can configure the value of W and R to make system more efficient for write or read requests.</p>
-
+<p>System like amazon’s dynamo(raik, openstack swift).</p>
+<p>Write requests are sent to multi replicas at the same time, client needn’t wait for all replicas response ok, use formula <code>W + R &gt; N</code>(N is # of configured replicas) to decide whether the write successed or not. You can configure the value of W and R to make system more efficient for write or read requests.</p>
 <p>A backgroup repair will check data consistent between replicas and resolve conflicts, so value should have a version.</p>
-
 <h2 id="partition">Partition</h2>
-
 <p>Based on key range or hash.</p>
-
-<p>Hash can reduce hot spots than key range (since hash value is meanless), but if a key is very hot, may still come to problem. A protential solution is adding a random number(2 digits) at the begin or end of the key to split the key across 100 keys, but whening reading, you need to read whole 100 keys and combine them (not very clear, if need to write 100 times and read 100 times, what&#8217;s the meaning?).</p>
-
+<p>Hash can reduce hot spots than key range (since hash value is meanless), but if a key is very hot, may still come to problem. A protential solution is adding a random number(2 digits) at the begin or end of the key to split the key across 100 keys, but whening reading, you need to read whole 100 keys and combine them (not very clear, if need to write 100 times and read 100 times, what’s the meaning?).</p>
 <h3 id="rebalancing">Rebalancing</h3>
-
-<p>If you use hash, better to devide possible hash value into ranges, and assign each range a partition. But you can&#8217;t simply mod # of nodes. Since if add nodes, the value will change, and you must rebalancing all your data.</p>
-
+<p>If you use hash, better to devide possible hash value into ranges, and assign each range a partition. But you can’t simply mod # of nodes. Since if add nodes, the value will change, and you must rebalancing all your data.</p>
 <p>Better way is to do presharding, create much more partitions than nodes. You can mod # of partitions to place your keys, then place the partitions to ndoes. If you need to add more nodes, just move partitions, key -&gt; partition mapping will not change. Raik, ElasticSearch, Couchbase, Voldemort and RedisCluster use this way.</p>
-
 <h3 id="dynamic-partition">Dynamic partition</h3>
-
 <p>For key range based partition, if you configure the range wrong, the distribution will be very skewed, reconfigure the range is very tedious.</p>
-
 <p>HBase and RethinkDB create partitions dynamically. If a partition grows to specific size, it will be splited into two partitions.If lots of data are deleted, it can be merged with a adjacent partition.</p>
-
 <h3 id="request-routing">Request routing</h3>
-
 <p>One way is use service discover(mostly, rely on zookeeper) to track partition assignment. When partitions changed, ZooKeeper will notify its client where to find the moved partition.</p>
-
 <p>Another way is use gossip protocol to tell all nodes the change in cluster.Request can be sent to any nodes, then the node will forward the request to appropriate node for the requested partition. (Cassandra, Raik, RedisCluster, Consul)</p>
 </div>
         <div class="post_footer">

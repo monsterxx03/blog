@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.59.0" />
+	<meta name="generator" content="Hugo 0.60.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -260,16 +260,16 @@
   <div class="list">
     <div class="post_content markdown">
       <p>Miscellaneous notes when reading &lt;Kubernetes in Action&gt;.
-api group and api version core api group need&rsquo;t specified in apiVersion field.
+api group and api version core api group need't specified in apiVersion field.
 For example, ReplicationController is on core api group, so only:
 apiVersion: v1 kind: ReplicationController ...  ReplicationSet is added later in app group, v1beta2 version (k8s v1.8):
 apiVersion: apps/v1beta2 1 kind: ReplicaSet  https://kubernetes.io/docs/concepts/overview/kubernetes-api/
 ReplicationController VS ReplicationSet ReplicationController is replaced by ReplicationSet, which has more expressive pod selectors.
-ReplicationController&rsquo;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
+ReplicationController's label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
 rs also support operator on key value: In, NotIn, Exists, DoesNotExist
 If migrate from rc to rs, can delete rc with --cascade=false option, it will delete rc only, but left pods running, then we can create a rs with same selector to make pods under management.
 DaemonSet DaemonSet ensures pod run exact one copy on one node, useful for processes like monitor agent and log collector. Use node-selector to make ds only run on specific nodes.
-If node is made unschedulable, normal pods won&rsquo;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass scheduler.
+If node is made unschedulable, normal pods won't be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass scheduler.
 Job Job is used to run a single completable task.......</p>
     </div>
   </div>
@@ -360,7 +360,7 @@ Job Job is used to run a single completable task.......</p>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>上一篇 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情. __future__ python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件. 首先是几个在 python 2.7 里不用特意写，已经默认开启的特性: from __future__ import nested_scopes 2.2 开始就默认开启了，用于修改嵌套函数内的变量搜索作用域, 在此之前, 全局模块的优先级比被嵌套函数的父函数要高, 现......</p>
+      <p>上一篇 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情. _future_ python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件. 首先是几个在 python 2.7 里不用特意写，已经默认开启的特性: from __future__ import nested_scopes 2.2 开始就默认开启了，用于修改嵌套函数内的变量搜索作用域, 在此之前, 全局模块的优先级比被嵌套函数的父函数要高, 现......</p>
     </div>
   </div>
   
@@ -391,7 +391,7 @@ Job Job is used to run a single completable task.......</p>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>去年在 kindle 上买了套松本清张的合集, 总共有10本, 断断续续看到现在终于看完了第 9 本&lt;隐花平原&gt;, 随便扯一点(喂，为什么不看完最后一本! 松本清张 (1909 ~ 1992), 社会派推理开创人, 这套书里的作品各个年代都有, 最有名的&lt;砂之器&gt;(貌似仲间姐姐拍过剧?) 和 &lt;点与线&gt; 却没收录. 本格派讲究逻辑的精巧， 整个故事就像在玩密室逃脱一样, 一环扣一环, 最后谜底揭开的时候让人惊呼&rdquo;卧槽&......</p>
+      <p>去年在 kindle 上买了套松本清张的合集, 总共有10本, 断断续续看到现在终于看完了第 9 本&lt;隐花平原&gt;, 随便扯一点(喂，为什么不看完最后一本! 松本清张 (1909 ~ 1992), 社会派推理开创人, 这套书里的作品各个年代都有, 最有名的&lt;砂之器&gt;(貌似仲间姐姐拍过剧?) 和 &lt;点与线&gt; 却没收录. 本格派讲究逻辑的精巧， 整个故事就像在玩密室逃脱一样, 一环扣一环, 最后谜底揭开的时候让人惊呼&quot;卧槽&r......</p>
     </div>
   </div>
   

@@ -18,13 +18,13 @@
       <pubDate>Fri, 23 Jun 2017 09:40:58 +0000</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/</guid>
-      <description>I&amp;#8217;m lazy, I don&amp;#8217;t want to be deb/rpm expert, I don&amp;#8217;t want to maintain repo server. I want as less maintenance effort as possible. 🙂
+      <description>I’m lazy, I don’t want to be deb/rpm expert, I don’t want to maintain repo server. I want as less maintenance effort as possible. 🙂
 Combine tools fpm, aptly with aws s3, we can do it.
-Use fpm to convert python package to deb fpm can transform python/gem/npm/dir/&amp;#8230; to deb/rpm/solaris/&amp;#8230; packages
+Use fpm to convert python package to deb fpm can transform python/gem/npm/dir/… to deb/rpm/solaris/… packages
 Example:
 fpm -s python -t deb -m xyj.asmy@gmail.com --verbose -v 0.10.1 --python-pip /usr/local/pip Flask  It will transform Flask 0.10.1 package to deb. Output package will be python-flask_0.10.1_all.deb
 Notes:
- If python packages rely on some c libs like MySQLdb (libmysqlclient-dev), you need to install them on the machine to build deb binary. By default fpm use easy_install to build packages, some packages like httplib2 have permission bug with easy_install, so I use pip By default, msgpack-python will be convert to python-msgpack-python, I don&amp;#8217;t like it, so add -n python-msgpack to normalize the package name. Some package&amp;#8217;s dependencies&amp;#8217; version number is not valid(eg: celery 3.1.25 deps pytz &amp;gt;= dev), so I replace the dependencies with --python-disable-dependency pytz -d &#39;pytz &amp;gt;= 2016.7&#39; fpm will not dowload package&amp;#8217;s dependency automatically, you need to do it by your self  Use aptly to setup deb repository aptly can help build a self host deb repository and publish it on s3.</description>
+ If python packages rely on some c libs like MySQLdb (libmysqlclient-dev), you need to install them on the machine to build deb binary. By default fpm use easy_install to build packages, some packages like httplib2 have permission bug with easy_install, so I use pip By default, msgpack-python will be convert to python-msgpack-python, I don’t like it, so add -n python-msgpack to normalize the package name. Some package’s dependencies’ version number is not valid(eg: celery 3.1.25 deps pytz &amp;gt;= dev), so I replace the dependencies with --python-disable-dependency pytz -d &#39;pytz &amp;gt;= 2016.7&#39; fpm will not dowload package’s dependency automatically, you need to do it by your self  Use aptly to setup deb repository aptly can help build a self host deb repository and publish it on s3.</description>
     </item>
     
   </channel>

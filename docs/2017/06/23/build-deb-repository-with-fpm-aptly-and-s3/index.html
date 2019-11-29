@@ -10,13 +10,13 @@
         content="will"/>
 
   
-  <meta name="description" content="I&amp;#8217;m lazy, I don&amp;#8217;t want to be deb/rpm expert, I don&amp;#8217;t want to maintain repo server. I want as less maintenance effort as possible. 🙂
+  <meta name="description" content="I’m lazy, I don’t want to be deb/rpm expert, I don’t want to maintain repo server. I want as less maintenance effort as possible. 🙂
 Combine tools fpm, aptly with aws s3, we can do it.
-Use fpm to convert python package to deb fpm can transform python/gem/npm/dir/&amp;#8230; to deb/rpm/solaris/&amp;#8230; packages
+Use fpm to convert python package to deb fpm can transform python/gem/npm/dir/… to deb/rpm/solaris/… packages
 Example:
 fpm -s python -t deb -m xyj.asmy@gmail.com --verbose -v 0.10.1 --python-pip /usr/local/pip Flask  It will transform Flask 0.10.1 package to deb. Output package will be python-flask_0.10.1_all.deb
 Notes:
- If python packages rely on some c libs like MySQLdb (libmysqlclient-dev), you need to install them on the machine to build deb binary. By default fpm use easy_install to build packages, some packages like httplib2 have permission bug with easy_install, so I use pip By default, msgpack-python will be convert to python-msgpack-python, I don&amp;#8217;t like it, so add -n python-msgpack to normalize the package name. Some package&amp;#8217;s dependencies&amp;#8217; version number is not valid(eg: celery 3.1.25 deps pytz &amp;gt;= dev), so I replace the dependencies with --python-disable-dependency pytz -d &#39;pytz &amp;gt;= 2016.7&#39; fpm will not dowload package&amp;#8217;s dependency automatically, you need to do it by your self  Use aptly to setup deb repository aptly can help build a self host deb repository and publish it on s3."/>
+ If python packages rely on some c libs like MySQLdb (libmysqlclient-dev), you need to install them on the machine to build deb binary. By default fpm use easy_install to build packages, some packages like httplib2 have permission bug with easy_install, so I use pip By default, msgpack-python will be convert to python-msgpack-python, I don’t like it, so add -n python-msgpack to normalize the package name. Some package’s dependencies’ version number is not valid(eg: celery 3.1.25 deps pytz &amp;gt;= dev), so I replace the dependencies with --python-disable-dependency pytz -d &#39;pytz &amp;gt;= 2016.7&#39; fpm will not dowload package’s dependency automatically, you need to do it by your self  Use aptly to setup deb repository aptly can help build a self host deb repository and publish it on s3."/>
   
 
   
@@ -98,43 +98,27 @@ Notes:
           <h2><a href='/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/'>Build deb repository with fpm , aptly and s3</a></h2>
           <span class="date">2017.06.23</span>
         </div>
-        <div class="post_content markdown">
-
-<p>I&#8217;m lazy, I don&#8217;t want to be deb/rpm expert, I don&#8217;t want to maintain repo server. I want as less maintenance effort as possible. 🙂</p>
-
+        <div class="post_content markdown"><p>I’m lazy, I don’t want to be deb/rpm expert, I don’t want to maintain repo server. I want as less maintenance effort as possible. 🙂</p>
 <p>Combine tools fpm, aptly with aws s3, we can do it.</p>
-
 <h2 id="use-fpm-to-convert-python-package-to-deb">Use fpm to convert python package to deb</h2>
-
-<p><a href="https://fpm.readthedocs.io/en/latest/">fpm</a> can transform python/gem/npm/dir/&#8230; to deb/rpm/solaris/&#8230; packages</p>
-
+<p><a href="https://fpm.readthedocs.io/en/latest/">fpm</a> can transform python/gem/npm/dir/… to deb/rpm/solaris/… packages</p>
 <p>Example:</p>
-
 <pre><code>fpm -s python -t  deb -m xyj.asmy@gmail.com --verbose  -v 0.10.1 --python-pip /usr/local/pip Flask
 </code></pre>
-
 <p>It will transform Flask 0.10.1 package to deb. Output package will be <code>python-flask_0.10.1_all.deb</code></p>
-
 <p>Notes:</p>
-
 <ul>
 <li>If python packages rely on some c libs like <code>MySQLdb</code> (libmysqlclient-dev), you need to install them on the machine to build deb binary.</li>
 <li>By default fpm use easy_install to build packages, some packages like httplib2 have permission bug with easy_install, so I use pip</li>
-<li>By default, msgpack-python will be convert to <code>python-msgpack-python</code>, I don&#8217;t like it, so add <code>-n python-msgpack</code> to normalize the package name.</li>
-<li>Some package&#8217;s dependencies&#8217; version number is not valid(eg: celery 3.1.25 deps pytz &gt;= dev), so I replace the dependencies with <code>--python-disable-dependency pytz -d 'pytz &gt;= 2016.7'</code></li>
-<li>fpm will not dowload package&#8217;s dependency automatically, you need to do it by your self</li>
+<li>By default, msgpack-python will be convert to <code>python-msgpack-python</code>, I don’t like it, so add <code>-n python-msgpack</code> to normalize the package name.</li>
+<li>Some package’s dependencies’ version number is not valid(eg: celery 3.1.25 deps pytz &gt;= dev), so I replace the dependencies with <code>--python-disable-dependency pytz -d 'pytz &gt;= 2016.7'</code></li>
+<li>fpm will not dowload package’s dependency automatically, you need to do it by your self</li>
 </ul>
-
 <h2 id="use-aptly-to-setup-deb-repository">Use aptly to setup deb repository</h2>
-
 <p><a href="https://www.aptly.info/">aptly</a> can help build a self host deb repository and publish it on s3.</p>
-
 <h3 id="gpg-key">gpg key</h3>
-
 <p>Before setup aptly, ensure you have vaild gpg key, deb reporistory need gpg key to sign packages.</p>
-
 <p>Quick tips about gpg key:</p>
-
 <ul>
 <li>generate gpg key: <code>gpg --gen-key</code>. on OSX, use <code>gpg2 --full-generate-key</code></li>
 <li>export private key: <code>gpg --export-secret-key -a &quot;User Name&quot; &gt; private.key</code></li>
@@ -142,23 +126,14 @@ Notes:
 <li>import private key: <code>gpg --allow-secret-key-import --import private.key</code></li>
 <li>import public key: <code>gpg --import public.key</code></li>
 </ul>
-
-<p>Assume we&#8217;re going to setup a dep repo named <code>release</code>:</p>
-
+<p>Assume we’re going to setup a dep repo named <code>release</code>:</p>
 <h3 id="aptly">aptly</h3>
-
 <p>Create local repo:</p>
-
 <p><code>aptly repo create -distribution=xenial -component=main release</code></p>
-
 <p>By default, it will create config file at <code>~/.aptly.conf</code>, and data dir <code>~/.aptly</code></p>
-
 <p>Import all deb packages in dir /mnt/debs to repo <code>release</code></p>
-
 <p><code>aptly repo add release /mnt/debs/</code></p>
-
 <p>setup s3 bucket info in ~/.aptly.conf:</p>
-
 <pre><code>{
    &quot;architectures&quot;:[],
    ....
@@ -171,32 +146,20 @@ Notes:
    }
 }
 </code></pre>
-
 <p>Publish repo to s3:</p>
-
 <p><code>aptly publish repo release s3:repo.example.com:</code></p>
-
 <p>If you added/updated/delete some packages in local repo, update s3: <code>aptly publish update  xenial  s3:repo.example.com:</code></p>
-
 <h2 id="use-the-repo">Use the repo</h2>
-
 <p>First, your client machine must import the gpg public key:</p>
-
 <p><code>apt-key add public.key</code></p>
-
 <p>Add repo url:</p>
-
 <p><code>echo 'deb http://repo.example.com xenial main' &gt;&gt; /etc/apt/sources.list &amp;&amp; apt update</code></p>
-
 <p>Since I want my repo have high priority than system default repo, I need to setup apt preferences, create /etc/apt/preferences, with content:</p>
-
 <pre><code>Package: *
 Pin: origin &quot;repo.example.com&quot;
 Pin-Priority: 1000
 </code></pre>
-
 <p>Then all packages will be installed from host <code>repo.example.com</code> first, priority 1000 means even package version in remote repo is lower than your installed version, still downgrade it.</p>
-
 <p>For detail about apt preferences: <code>man 5 apt_preference</code></p>
 </div>
         <div class="post_footer">

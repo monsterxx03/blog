@@ -94,7 +94,7 @@
     </item>
     
     <item>
-      <title>SNET dev note: Support MacOS</title>
+      <title>snet dev note: support MacOS</title>
       <link>https://blog.monsterxx03.com/2019/06/20/snet-dev-note-support-macos/</link>
       <pubDate>Thu, 20 Jun 2019 16:03:56 +0800</pubDate>
       
@@ -109,13 +109,13 @@
       
       <guid>https://blog.monsterxx03.com/2019/05/30/random-talk/</guid>
       <description>Just some random complains and notes about server infra management. I think those are my motivations to move to kubernetes.
-Won&amp;rsquo;t explain k8s or docker in detail, and how they solve those problems in this post.
+Won&#39;t explain k8s or docker in detail, and how they solve those problems in this post.
 Infrastructure level(on AWS) We use following services provided by AWS.
- Compute:  EC2 AutoScaling Group Lambda  network:  VPC (SDN network) DNS (route53) CDN (CloudFront)  Loadbalancer:  ELB (L4) NLB (L4, ELB successor, support static IP) ALB (L7)  Storage:  EBS (block storage) EFS (hosted NFS) RDS(MySQl/PostgreSQL &amp;hellip;) Redshift (data warehouse) DynamoDB (KV) S3 (object storage) Glacier (cheap archive storage)  Web Firewall (WAF) Monitor (CloudWatch) DMS (ETL) &amp;hellip;  For infra management, in early days, we just click, click, click&amp;hellip; or write some simple scripts to call AWS api.
+ Compute:  EC2 AutoScaling Group Lambda   network:  VPC (SDN network) DNS (route53) CDN (CloudFront)   Loadbalancer:  ELB (L4) NLB (L4, ELB successor, support static IP) ALB (L7)   Storage:  EBS (block storage) EFS (hosted NFS) RDS(MySQl/PostgreSQL &amp;hellip;) Redshift (data warehouse) DynamoDB (KV) S3 (object storage) Glacier (cheap archive storage)   Web Firewall (WAF) Monitor (CloudWatch) DMS (ETL) &amp;hellip;  For infra management, in early days, we just click, click, click&amp;hellip; or write some simple scripts to call AWS api.
 With infra resources growing, management became complex, a concept called Infrastructure as Code rising.
 AWS provides CloudFormation as orchestration tool, but we use terraform (for short: CloudFormation sucks, for long: Infrastructure as Code)
 So far, not bad.(tweak those services internally is another story&amp;hellip; never belive work out of box)
-Application level  configuration management (setup nginx, jenkins, redis, twemproxy, ElasticSearch or WTF..) CI/CD dependency management  They&amp;rsquo;re complicated, people developped bunch of tools to handle: puppet, chef, ansible, saltstack &amp;hellip;</description>
+Application level  configuration management (setup nginx, jenkins, redis, twemproxy, ElasticSearch or WTF..) CI/CD dependency management  They&#39;re complicated, people developped bunch of tools to handle: puppet, chef, ansible, saltstack &amp;hellip;</description>
     </item>
     
     <item>
@@ -164,7 +164,7 @@ Application level  configuration management (setup nginx, jenkins, redis, twempr
     </item>
     
     <item>
-      <title>SNET Dev Note</title>
+      <title>snet dev note</title>
       <link>https://blog.monsterxx03.com/2019/04/10/snet-dev-note/</link>
       <pubDate>Wed, 10 Apr 2019 22:33:49 +0800</pubDate>
       
@@ -173,7 +173,7 @@ Application level  configuration management (setup nginx, jenkins, redis, twempr
     </item>
     
     <item>
-      <title>SNET: Transparent SS proxy on Linux</title>
+      <title>snet: transparent ss proxy on Linux</title>
       <link>https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/</link>
       <pubDate>Sun, 31 Mar 2019 22:19:46 +0800</pubDate>
       
@@ -196,7 +196,7 @@ Application level  configuration management (setup nginx, jenkins, redis, twempr
       <pubDate>Tue, 12 Feb 2019 13:08:29 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/</guid>
-      <description>最近在看 google 的 &amp;lt;The Site Reliablity Workbook&amp;gt;, 其中有一章是&amp;rdquo;Manage load&amp;rdquo;, 内容还挺详细的, 结合在 aws 上的经验做点笔记. Load Balancing 流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存. google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency. 但只依赖 BGP 会带来两个问题: 某个地区的用户过多会给最近的 frontend server 带来过高的</description>
+      <description>最近在看 google 的 &amp;lt;The Site Reliablity Workbook&amp;gt;, 其中有一章是&amp;quot;Manage load&amp;rdquo;, 内容还挺详细的, 结合在 aws 上的经验做点笔记. Load Balancing 流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存. google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency. 但只依赖 BGP 会带来两个问题: 某个地区的用户过多会给最近的 frontend server 带来过高的负</description>
     </item>
     
     <item>
@@ -224,15 +224,15 @@ Application level  configuration management (setup nginx, jenkins, redis, twempr
       
       <guid>https://blog.monsterxx03.com/2018/12/03/debug-skills-on-linux/</guid>
       <description>This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04, some tools are not installed by default, you can installl by sudo apt install xxx. Some commands must be used via sudo.
-System resources can be classified in three main categories: compute, storage, and network. Usually, when you come to a performance issue, it&amp;rsquo;s always caused by exhaustion of those resources.
-Universal metric: System load There&amp;rsquo;re several ways to get system load, w, uptime, top, cat /proc/loadavg
+System resources can be classified in three main categories: compute, storage, and network. Usually, when you come to a performance issue, it&#39;s always caused by exhaustion of those resources.
+Universal metric: System load There&#39;re several ways to get system load, w, uptime, top, cat /proc/loadavg
 uptime example:
 03:34:23 up 20:31, 1 user, load average: 1.02, 0.65, 0.45  Top right corner three values named load average is system load.
 They means: average system load during last minute/last 5 minutes/last 15 minutes periods.
-If load/(# of cpu core) &amp;gt; 1 means there&amp;rsquo;re tasks pending in cpu queue. Usually, you will feel slow.
-It&amp;rsquo;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.
-If system load is high, means tasks are pending in CPU queue, maybe a result of: - High cpu usage. - Poor disk performance(disk io). - Exhaustion of ram. - &amp;hellip;
-free free -k/-m/-g show memory usage in KB/MB/GB
+If load/(# of cpu core) &amp;gt; 1 means there&#39;re tasks pending in cpu queue. Usually, you will feel slow.
+It&#39;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.
+If system load is high, means tasks are pending in CPU queue, maybe a result of:
+ High cpu usage. Poor disk performance(disk io). Exhaustion of ram. &amp;hellip;  free free -k/-m/-g show memory usage in KB/MB/GB
 free -h humanize output (automatically show in KB/MB/GB&amp;hellip;)</description>
     </item>
     
@@ -306,16 +306,16 @@ free -h humanize output (automatically show in KB/MB/GB&amp;hellip;)</descriptio
       
       <guid>https://blog.monsterxx03.com/2018/09/03/kubernetes-in-action-notes/</guid>
       <description>Miscellaneous notes when reading &amp;lt;Kubernetes in Action&amp;gt;.
-api group and api version core api group need&amp;rsquo;t specified in apiVersion field.
+api group and api version core api group need&#39;t specified in apiVersion field.
 For example, ReplicationController is on core api group, so only:
 apiVersion: v1 kind: ReplicationController ...  ReplicationSet is added later in app group, v1beta2 version (k8s v1.8):
 apiVersion: apps/v1beta2 1 kind: ReplicaSet  https://kubernetes.io/docs/concepts/overview/kubernetes-api/
 ReplicationController VS ReplicationSet ReplicationController is replaced by ReplicationSet, which has more expressive pod selectors.
-ReplicationController&amp;rsquo;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
+ReplicationController&#39;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
 rs also support operator on key value: In, NotIn, Exists, DoesNotExist
 If migrate from rc to rs, can delete rc with --cascade=false option, it will delete rc only, but left pods running, then we can create a rs with same selector to make pods under management.
 DaemonSet DaemonSet ensures pod run exact one copy on one node, useful for processes like monitor agent and log collector. Use node-selector to make ds only run on specific nodes.
-If node is made unschedulable, normal pods won&amp;rsquo;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass scheduler.
+If node is made unschedulable, normal pods won&#39;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass scheduler.
 Job Job is used to run a single completable task.</description>
     </item>
     
@@ -334,7 +334,7 @@ Job Job is used to run a single completable task.</description>
       <pubDate>Sat, 16 Jun 2018 14:38:26 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/</guid>
-      <description>上一篇 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情. __future__ python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件. 首先是几个在 python 2.7 里不用特意写，已经默认开启的特性: from __future__ import nested_scopes 2.2 开始就默认开启了，用于修改嵌套函数内的变量搜索作用域, 在此之前, 全局模块的优先级比被嵌套函数的父函数要高, 现</description>
+      <description>上一篇 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情. _future_ python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件. 首先是几个在 python 2.7 里不用特意写，已经默认开启的特性: from __future__ import nested_scopes 2.2 开始就默认开启了，用于修改嵌套函数内的变量搜索作用域, 在此之前, 全局模块的优先级比被嵌套函数的父函数要高, 现</description>
     </item>
     
     <item>
@@ -343,10 +343,10 @@ Job Job is used to run a single completable task.</description>
       <pubDate>Thu, 07 Jun 2018 16:41:57 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/</guid>
-      <description>This article won&amp;rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&amp;rsquo;t finished this project, also I haven&amp;rsquo;t gave up so far :).
-Won&amp;rsquo;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
-The codebase I&amp;rsquo;m working on:
- Only support python2.7, don&amp;rsquo;t consider python2.6 1X repos, about half a million lines of code in total (calculated by cloc). These repos will import each other, bad design from early days, not easy to resolve, which means I can&amp;rsquo;t switch to py3 one by one, I need write py2/3 compatiblility code for them, and switch together(I&amp;rsquo;m also considering solve the import problem first). Test coverage is not good, best is around 80%, lowest is 30%.  Tools 2to3, a command line tools packaged with py2, it&amp;rsquo;s a oneway porting to convert your code to py3, new code won&amp;rsquo;t work under py2, since I need be compatible with py2 and py3 for long time, didn&amp;rsquo;t try it.
+      <description>This article won&#39;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&#39;t finished this project, also I haven&#39;t gave up so far :).
+Won&#39;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
+The codebase I&#39;m working on:
+ Only support python2.7, don&#39;t consider python2.6 1X repos, about half a million lines of code in total (calculated by cloc). These repos will import each other, bad design from early days, not easy to resolve, which means I can&#39;t switch to py3 one by one, I need write py2/3 compatiblility code for them, and switch together(I&#39;m also considering solve the import problem first). Test coverage is not good, best is around 80%, lowest is 30%.  Tools 2to3, a command line tools packaged with py2, it&#39;s a oneway porting to convert your code to py3, new code won&#39;t work under py2, since I need be compatible with py2 and py3 for long time, didn&#39;t try it.
 future, it tries to make you write single clean python3.x code without ugly hack with six. I used it it first, but come to many problems, will explain later.</description>
     </item>
     
@@ -365,11 +365,11 @@ future, it tries to make you write single clean python3.x code without ugly hack
       <pubDate>Wed, 23 May 2018 18:05:28 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub/sub-system/</guid>
-      <description>Recently, we build pub/sub system based on AWS&amp;rsquo;s SNS &amp;amp; SQS service, take some notes.
-Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&amp;rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&amp;rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
-There&amp;rsquo;re three obvious choices in my mind:
+      <description>Recently, we build pub/sub system based on AWS&#39;s SNS &amp;amp; SQS service, take some notes.
+Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&#39;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&#39;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
+There&#39;re three obvious choices in my mind:
  kafka AMQP based system (rabbitmq,activemq &amp;hellip;) SNS + SQS  My demands for this system are:
- Support message persistence. Support topic based message distribution. Easy to manage.  The data volume won&amp;rsquo;t be very large, so performance and throughput won&amp;rsquo;t be critical concerns.
+ Support message persistence. Support topic based message distribution. Easy to manage.  The data volume won&#39;t be very large, so performance and throughput won&#39;t be critical concerns.
 I choose SNS + SQS, main concerns are from operation side:
  kafka need zookeeper to support cluster. rabbitmq need extra configuration for HA, and AMQP model is relatively complex for programming.  So my decision is:
  application publish message to SNS topic Setup multi SQS queues to subscribe SNS topic Let different application processes to subscribe to different queues to finish its logic.  SQS and SNS is very simple, not too much to say, just some notes:</description>
@@ -418,11 +418,11 @@ I choose SNS + SQS, main concerns are from operation side:
       
       <guid>https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/</guid>
       <description>AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&amp;hellip;
-Usually, we inject secrets as environment variables, but they&amp;rsquo;re still visable on lambda console. I don&amp;rsquo;t use it in aws lambda.
+Usually, we inject secrets as environment variables, but they&#39;re still visable on lambda console. I don&#39;t use it in aws lambda.
 The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
 Code example:
 client = boto3.client(&#39;ssm&#39;) resp = client.get_parameter( Name=&#39;/redshift/admin/password&#39;, WithDecryption=True ) resp: { &amp;quot;Parameter&amp;quot;: { &amp;quot;Name&amp;quot;: &amp;quot;/redshift/admin/password&amp;quot;, &amp;quot;Type&amp;quot;: &amp;quot;SecureString&amp;quot;, &amp;quot;Value&amp;quot;: &amp;quot;password value&amp;quot;, &amp;quot;Version&amp;quot;: 1 } }  Things you need to do to make it work:
- Create a new KMS key Use new created KMS key to encrypt your data in parameter store. Set a execution role for your lambda function. In the KMS key&amp;rsquo;s setting page, add the lambda execution role to the list which can read this KMS key.  Then your lambda code can access encrypted data at runtime, and you needn&amp;rsquo;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.
+ Create a new KMS key Use new created KMS key to encrypt your data in parameter store. Set a execution role for your lambda function. In the KMS key&#39;s setting page, add the lambda execution role to the list which can read this KMS key.  Then your lambda code can access encrypted data at runtime, and you needn&#39;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.
 BTW, parameter store support hierarchy(at most 15 levels), splitted by /. You can retrive data under same level in one call, deltails can be found in doc, eg: http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path</description>
     </item>
     
@@ -441,16 +441,16 @@ BTW, parameter store support hierarchy(at most 15 levels), splitted by /. You ca
       <pubDate>Thu, 01 Feb 2018 15:20:37 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/</guid>
-      <description>If you run a webserver on AWS, get real client ip will be tricky if you didn&amp;rsquo;t configure server right and write code correctly.
+      <description>If you run a webserver on AWS, get real client ip will be tricky if you didn&#39;t configure server right and write code correctly.
 Things related to client real ip:
  CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application).  Request sequence diagram will be like following:
-User&amp;rsquo;s real client ip is forwarded by front proxies one by one in head X-Forwarded-For.
+User&#39;s real client ip is forwarded by front proxies one by one in head X-Forwarded-For.
 For CloudFront:
- If user&amp;rsquo;s req header don&amp;rsquo;t have X-Forwarded-For, it will set user&amp;rsquo;s ip(from tcp connection) in X-Forwarded-For If user&amp;rsquo;s req already have X-Forwarded-For, it will append user&amp;rsquo;s ip(from tcp connection) to the end of X-Forwarded-For  For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront&amp;rsquo;s ip.
+ If user&#39;s req header don&#39;t have X-Forwarded-For, it will set user&#39;s ip(from tcp connection) in X-Forwarded-For If user&#39;s req already have X-Forwarded-For, it will append user&#39;s ip(from tcp connection) to the end of X-Forwarded-For  For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront&#39;s ip.
 For nginx, things will be tricky depends on your config.
 Things maybe involved in nginx:
- real ip module proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;  If you didn&amp;rsquo;t use real ip module, you need to pass X-Forwarded-For head explictly.
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; will append ALB&amp;rsquo;s ip to the end of X-Forwarded-For header received from ALB.
+ real ip module proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;  If you didn&#39;t use real ip module, you need to pass X-Forwarded-For head explictly.
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; will append ALB&#39;s ip to the end of X-Forwarded-For header received from ALB.
 So X-Forwarded-For header your webserver received will be user ip,cloudfront ip, alb ip
 Or you can use real ip module to trust the value passed from ALB.</description>
     </item>
@@ -470,10 +470,10 @@ Or you can use real ip module to trust the value passed from ALB.</description>
       <pubDate>Sun, 10 Dec 2017 11:13:53 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/12/10/handle-outage/</guid>
-      <description>A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&amp;rsquo;m working on a long term solution. I learned some important things from this accident.
-The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&amp;rsquo;s health check failed due to high load.
+      <description>A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&#39;m working on a long term solution. I learned some important things from this accident.
+The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&#39;s health check failed due to high load.
 I did following:
- Check monitor Identify the problem is caused by KV system  Okay, problem is here, I know the problem is KV system&amp;rsquo;s performance issue. But I can&amp;rsquo;t figure out the root case right now, I need a temporary solution. Straightward way is redirect traffic to slave instance. But I know it won&amp;rsquo;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&amp;rsquo;t work.
+ Check monitor Identify the problem is caused by KV system  Okay, problem is here, I know the problem is KV system&#39;s performance issue. But I can&#39;t figure out the root case right now, I need a temporary solution. Straightward way is redirect traffic to slave instance. But I know it won&#39;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&#39;t work.
 The real down time was not long, performance recovered to some degree soon, but latency was still high, not normal. I monitored it for long time, and tried to find out the root case until morning. Since traffic was growing when peak hour coming, performance became problem again.</description>
     </item>
     
@@ -483,15 +483,14 @@ The real down time was not long, performance recovered to some degree soon, but 
       <pubDate>Sat, 14 Oct 2017 22:33:36 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/</guid>
-      <description>AWS&amp;rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
+      <description>AWS&#39;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
 It works, but have some concerns. Take some notes when doing this project.
 Prerequisites Source RDS must:
- Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration(&#39;binlog retention hours&#39;, 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT, REPLICATION SLAVE, SELECT on replication target tables  DDL on source table Redshift has some limits on change columns:
- New column only must be added in the end Can&amp;rsquo;t rename columns  So for DDL on source MySQL, you can&amp;rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
+ Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration(&#39;binlog retention hours&#39;, 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT , REPLICATION SLAVE , SELECT on replication target tables  DDL on source table Redshift has some limits on change columns:
+ New column only must be added in the end Can&#39;t rename columns  So for DDL on source MySQL, you can&#39;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
  &amp;quot;ChangeProcessingDdlHandlingPolicy&amp;quot;:{ &amp;quot;HandleSourceTableDropped&amp;quot;:false, &amp;quot;HandleSourceTableTruncated&amp;quot;:false, &amp;quot;HandleSourceTableAltered&amp;quot;:false },  If source table schema changed, I just drop and reload target table on console.
 Control write speed on Redshift Since Redshift is an OLAP database, write operation is slow and concurrency is low, streaming data directly will have big impact on it.
-And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.
-So I need to batch apply changes on DMS.</description>
+And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.</description>
     </item>
     
     <item>
@@ -501,10 +500,10 @@ So I need to batch apply changes on DMS.</description>
       
       <guid>https://blog.monsterxx03.com/2017/09/29/get-all-invalid-ptr-record-on-route53/</guid>
       <description>I use autoscaling group to manage stateless servers. Servers go up and down every day.
-Once server is up, I will add a PTR record for it&amp;#8217;s internal ip. But when it&amp;#8217;s down, I didn&amp;#8217;t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.
+Once server is up, I will add a PTR record for it’s internal ip. But when it’s down, I didn’t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.
 To cleanup those PTR records realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?
 Straightforward way is write a script to call AWS API to get a PTR list, get ip from record, test whether the ip is live, if not, delete it.
-Since use awscli to delete a Route53 record is very troublesome (involve json format), you&amp;#8217;d better write a python script to delete them. I just demo some ideas to collect those records via shell.
+Since use awscli to delete a Route53 record is very troublesome (involve json format), you’d better write a python script to delete them. I just demo some ideas to collect those records via shell.
 You can do it in a single line, but make things clear and easy to debug, I split it into several steps.
 Get PTR record list aws route53 list-resource-record-sets --hosted-zone-id xxxxx --query &amp;quot;ResourceRecordSets[?Type==&#39;PTR&#39;].Name&amp;quot; | grep -Po &#39;&amp;quot;(.+?)&amp;quot;&#39; | tr -d \&amp;quot; &amp;gt; ptr.txt  ptr.txt will contain lines like:
 1.0.0.10.in-addr.arpa. 2.0.0.10.in-addr.arpa.  Get ip list from PTR records cat ptr.</description>
@@ -516,10 +515,10 @@ Get PTR record list aws route53 list-resource-record-sets --hosted-zone-id xxxxx
       <pubDate>Sat, 19 Aug 2017 07:28:16 +0000</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/08/19/build-private-staticwebsite-on-s3/</guid>
-      <description>Build static website on S3 is very easy, but by default, it can be accessed by open internet.It will be super helpful if we can build website only available in VPC. Then we can use it to host internal deb repo, doc site&amp;#8230;
+      <description>Build static website on S3 is very easy, but by default, it can be accessed by open internet.It will be super helpful if we can build website only available in VPC. Then we can use it to host internal deb repo, doc site…
 Steps are very easy, you only need VPC endpoints and S3 bucket policy.
-AWS api is open to internet, if you need to access S3 in VPC, your requests will pass through VPC&amp;#8217;s internet gateway or NAT gateway. With VPC endpoints(can be found in VPC console), your requests to S3 will go through AWS&amp;#8217;s internal network. Currently, VPC endpoints only support S3, support for dynamodb is in test.
-To restrict S3 bucket only available in your VPC, need to set bucket policy (to host static website, enable static website support first). At first, I didn&amp;#8217;t check doc, try to restrict access by my VPC ip cidr, but it didn&amp;#8217;t work, I need to restrict by VPC endpoint id:
+AWS api is open to internet, if you need to access S3 in VPC, your requests will pass through VPC’s internet gateway or NAT gateway. With VPC endpoints(can be found in VPC console), your requests to S3 will go through AWS’s internal network. Currently, VPC endpoints only support S3, support for dynamodb is in test.
+To restrict S3 bucket only available in your VPC, need to set bucket policy (to host static website, enable static website support first). At first, I didn’t check doc, try to restrict access by my VPC ip cidr, but it didn’t work, I need to restrict by VPC endpoint id:
 { &amp;quot;Version&amp;quot;: &amp;quot;2012-10-17&amp;quot;, &amp;quot;Id&amp;quot;: &amp;quot;Policy1415115909152&amp;quot;, &amp;quot;Statement&amp;quot;: [ { &amp;quot;Sid&amp;quot;: &amp;quot;Access-to-specific-VPCE-only&amp;quot;, &amp;quot;Principal&amp;quot;: &amp;quot;*&amp;quot;, &amp;quot;Action&amp;quot;: &amp;quot;s3:GetObject&amp;quot;, &amp;quot;Effect&amp;quot;: &amp;quot;Allow&amp;quot;, &amp;quot;Resource&amp;quot;: [&amp;quot;arn:aws:s3:::my_secure_bucket&amp;quot;, &amp;quot;arn:aws:s3:::my_secure_bucket/*&amp;quot;], &amp;quot;Condition&amp;quot;: { &amp;quot;StringEquals&amp;quot;: { &amp;quot;aws:sourceVpce&amp;quot;: &amp;quot;vpce-1a2b3c4d&amp;quot; } } } ] }  BTW, if you can config bucket policy restrict on VPC directly, with VPC endpoint you can limit to subnets.</description>
     </item>
     
@@ -540,11 +539,11 @@ To restrict S3 bucket only available in your VPC, need to set bucket policy (to 
       <guid>https://blog.monsterxx03.com/2017/07/15/enable-coredump-on-ubuntu-16.04/</guid>
       <description>Coredump file is useful for debuging program crash. This post will show several settings related to coredump.
 Enable coredump If you run program from shell , enable coredump via unlimit -c unlimited， then check unlimit -a | grep core, if it shows unlimited, coredump is enabled for your current session.
-If your program is hosted by systemd, you need to edit your program&amp;#8217;s service unit file&amp;#8217;s [Service] section, add LimitCORE=infinity to enable coredump.
-coredump location Coredump file&amp;#8217;s location is determined by kernerl parameter kernel.core_pattern.
+If your program is hosted by systemd, you need to edit your program’s service unit file’s [Service] section, add LimitCORE=infinity to enable coredump.
+coredump location Coredump file’s location is determined by kernerl parameter kernel.core_pattern.
 On ubuntu 16.04 kernel.core_pattern default value is |/usr/share/apport/apport %p %s %c %P. Leading | means pass coredump file to following program. %p %c %P is used to create dump filename, their meaning can check via man core. apport will save dump file in /var/crash
-If your default disk partition don&amp;#8217;t have enough space to hold dump file, you can change kernel.core_pattern to another location, eg: /mnt/core/%e-%t.%P. If redis-server crashes, the dump file will be something like /mnt/core/redis-server-1500000000.1452. Also ensure crash process&amp;#8217;s running user have write privilege on target location.
-systemd-coredump You can install systemd-coredump to control dump file deeply, like: size, compression&amp;#8230;.
+If your default disk partition don’t have enough space to hold dump file, you can change kernel.core_pattern to another location, eg: /mnt/core/%e-%t.%P. If redis-server crashes, the dump file will be something like /mnt/core/redis-server-1500000000.1452. Also ensure crash process’s running user have write privilege on target location.
+systemd-coredump You can install systemd-coredump to control dump file deeply, like: size, compression….
 Its config file is /etc/systemd/coredump.conf.
 After install, it will change kernel.core_pattern to |/lib/systemd/systemd-coredump %P %u %g %s %t 9223372036854775808 %e.</description>
     </item>
@@ -564,13 +563,13 @@ After install, it will change kernel.core_pattern to |/lib/systemd/systemd-cored
       <pubDate>Fri, 23 Jun 2017 09:40:58 +0000</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/</guid>
-      <description>I&amp;#8217;m lazy, I don&amp;#8217;t want to be deb/rpm expert, I don&amp;#8217;t want to maintain repo server. I want as less maintenance effort as possible. 🙂
+      <description>I’m lazy, I don’t want to be deb/rpm expert, I don’t want to maintain repo server. I want as less maintenance effort as possible. 🙂
 Combine tools fpm, aptly with aws s3, we can do it.
-Use fpm to convert python package to deb fpm can transform python/gem/npm/dir/&amp;#8230; to deb/rpm/solaris/&amp;#8230; packages
+Use fpm to convert python package to deb fpm can transform python/gem/npm/dir/… to deb/rpm/solaris/… packages
 Example:
 fpm -s python -t deb -m xyj.asmy@gmail.com --verbose -v 0.10.1 --python-pip /usr/local/pip Flask  It will transform Flask 0.10.1 package to deb. Output package will be python-flask_0.10.1_all.deb
 Notes:
- If python packages rely on some c libs like MySQLdb (libmysqlclient-dev), you need to install them on the machine to build deb binary. By default fpm use easy_install to build packages, some packages like httplib2 have permission bug with easy_install, so I use pip By default, msgpack-python will be convert to python-msgpack-python, I don&amp;#8217;t like it, so add -n python-msgpack to normalize the package name. Some package&amp;#8217;s dependencies&amp;#8217; version number is not valid(eg: celery 3.1.25 deps pytz &amp;gt;= dev), so I replace the dependencies with --python-disable-dependency pytz -d &#39;pytz &amp;gt;= 2016.7&#39; fpm will not dowload package&amp;#8217;s dependency automatically, you need to do it by your self  Use aptly to setup deb repository aptly can help build a self host deb repository and publish it on s3.</description>
+ If python packages rely on some c libs like MySQLdb (libmysqlclient-dev), you need to install them on the machine to build deb binary. By default fpm use easy_install to build packages, some packages like httplib2 have permission bug with easy_install, so I use pip By default, msgpack-python will be convert to python-msgpack-python, I don’t like it, so add -n python-msgpack to normalize the package name. Some package’s dependencies’ version number is not valid(eg: celery 3.1.25 deps pytz &amp;gt;= dev), so I replace the dependencies with --python-disable-dependency pytz -d &#39;pytz &amp;gt;= 2016.7&#39; fpm will not dowload package’s dependency automatically, you need to do it by your self  Use aptly to setup deb repository aptly can help build a self host deb repository and publish it on s3.</description>
     </item>
     
     <item>
@@ -580,11 +579,11 @@ Notes:
       
       <guid>https://blog.monsterxx03.com/2017/06/05/debug-python-performance-issue-with-pyflame/</guid>
       <description>pyflame is an opensource tool developed by uber: https://github.com/uber/pyflame
-It can take snapshots of running python process, combined with flamegraph.pl, can output flamegraph picture of python call stacks. Help analyze bottleneck of python program, needn&amp;#8217;t inject any perf code into your application, and overhead is very low.
+It can take snapshots of running python process, combined with flamegraph.pl, can output flamegraph picture of python call stacks. Help analyze bottleneck of python program, needn’t inject any perf code into your application, and overhead is very low.
 Basic Usage sudo pyflame -s 10 -x -r 0.001 $pid | ./flamegraph.pl &amp;gt; perf.svg
  -s, how many seconds to run -r, sample rate (seconds)  Your output will be something like following:
 Longer bar means more sample points located in it, which means this part code is slower so it has a higher chance seen by pyflame.
-In my case, the output graph has a long IDLE part. Pyflame can detect call stacks who are holding GIL, so if the running code doesn&amp;#8217;t hold GIL, pyflame don&amp;#8217;t know what it&amp;#8217;s doing, it will label them as IDLE. Following cases will be considered as IDLE:
+In my case, the output graph has a long IDLE part. Pyflame can detect call stacks who are holding GIL, so if the running code doesn’t hold GIL, pyflame don’t know what it’s doing, it will label them as IDLE. Following cases will be considered as IDLE:
  Your process is sleeping, do nothing. Waiting for IO.(eg: Your application is calling a very slow RPC server) Call libs written in C.  The right part is real application logic code. You can check this part to get a sense of overview performance of your code.</description>
     </item>
     
@@ -595,8 +594,8 @@ In my case, the output graph has a long IDLE part. Pyflame can detect call stack
       
       <guid>https://blog.monsterxx03.com/2017/05/17/designing-data-intensive-application-reading-notes-part-2/</guid>
       <description>Chapter 4, 5, 6
-Encoding formats xml, json, msgpack are text based encoding format, they can&amp;#8217;t carry binary bytes (useless you encode them in base64, size grows 33%). And they cary schema definition with data, wast a lot of space.
-thrift, protobuf are binary format, can take binary bytes, only carry data, the schema is defined with IDL(interface definition language). They have code generation tool to generate code to encode and decode data, along with check. Every field of data is binded with a tag(mapped to a field in IDL file). If a field is defined is required, it can&amp;#8217;t by removed or change tag value, otherwise old code will not be able to decode it.
+Encoding formats xml, json, msgpack are text based encoding format, they can’t carry binary bytes (useless you encode them in base64, size grows 33%). And they cary schema definition with data, wast a lot of space.
+thrift, protobuf are binary format, can take binary bytes, only carry data, the schema is defined with IDL(interface definition language). They have code generation tool to generate code to encode and decode data, along with check. Every field of data is binded with a tag(mapped to a field in IDL file). If a field is defined is required, it can’t by removed or change tag value, otherwise old code will not be able to decode it.
 avro (used in hadoop), have a write schema and a read schema, when store a large file in avro format(contain many records with same schema), the avro write schama file is appended to the data. If use avro in RPC, the avro schema is exchanged during connection setup. When decoding avro, the lib will look both write schema and read schema, and translate write schema into read schema. Forward compatibility means that you can have a new version of the schema as writer and an old version of the schema as reader, backward compatibility means that you can have a new version of the schema as reader and an old version as writer.</description>
     </item>
     
@@ -606,7 +605,7 @@ avro (used in hadoop), have a write schema and a read schema, when store a large
       <pubDate>Thu, 04 May 2017 16:27:52 +0000</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/</guid>
-      <description>&lt;p&gt;Notes when reading chapter 2 &amp;#8220;Data models and query languages&amp;#8221;, chapter 3 &amp;#8220;Storage and retrieval&amp;#8221;&lt;/p&gt;</description>
+      <description>&lt;p&gt;Notes when reading chapter 2 “Data models and query languages”, chapter 3 “Storage and retrieval”&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -616,25 +615,19 @@ avro (used in hadoop), have a write schema and a read schema, when store a large
       
       <guid>https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/</guid>
       <description>&lt;p&gt;Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.&lt;/p&gt;
-
 &lt;p&gt;You will come to:&lt;/p&gt;
-
 &lt;ul&gt;
-&lt;li&gt;How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what&amp;#8217;s the DHCP option set?), navigate around AWS console is okay, but not convenient.&lt;/li&gt;
+&lt;li&gt;How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what’s the DHCP option set?), navigate around AWS console is okay, but not convenient.&lt;/li&gt;
 &lt;li&gt;Who did what to which resource at when? AWS have a service called &lt;code&gt;Config&lt;/code&gt;, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do.&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;Ideally, we should manage AWS resources like code, all changes kept in VCS, so called &lt;code&gt;Infrastructure as Code&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;I&amp;#8217;ve tried three ways to do it:&lt;/p&gt;
-
+&lt;p&gt;I’ve tried three ways to do it:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;ansible&lt;/li&gt;
 &lt;li&gt;CloudFormation&lt;/li&gt;
 &lt;li&gt;terraform&lt;/li&gt;
 &lt;/ul&gt;
-
-&lt;p&gt;In this article, I&amp;#8217;ll compare them, however, the conclusion is to use terraform 🙂&lt;/p&gt;</description>
+&lt;p&gt;In this article, I’ll compare them, however, the conclusion is to use terraform 🙂&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -643,7 +636,7 @@ avro (used in hadoop), have a write schema and a read schema, when store a large
       <pubDate>Wed, 19 Apr 2017 16:26:58 +0000</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/</guid>
-      <description>&lt;p&gt;A few notes taken when reading &lt;Concurrency in Go&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;A few notes taken when reading &lt;!-- raw HTML omitted --&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -653,23 +646,17 @@ avro (used in hadoop), have a write schema and a read schema, when store a large
       
       <guid>https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/</guid>
       <description>&lt;h1 id=&#34;overview&#34;&gt;Overview&lt;/h1&gt;
-
 &lt;p&gt;MySQL has buildin partition table support, which can help split data accross multi tables,&lt;/p&gt;
-
 &lt;p&gt;and provide a unified query interface as normal tables.&lt;/p&gt;
-
 &lt;p&gt;Benefit:&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly.&lt;/li&gt;
 &lt;li&gt;Speed up query based on partition key(partitoin pruning)&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;Limit:&lt;/p&gt;
-
 &lt;ul&gt;
-&lt;li&gt;For partition table, every unique key must use every column in table&amp;#8217;s partition expression(include primary key)&lt;/li&gt;
-&lt;li&gt;For innodb engine, paritioned table can&amp;#8217;t have foreign key,and can&amp;#8217;t have columns referenced by foreign keys.&lt;/li&gt;
+&lt;li&gt;For partition table, every unique key must use every column in table’s partition expression(include primary key)&lt;/li&gt;
+&lt;li&gt;For innodb engine, paritioned table can’t have foreign key,and can’t have columns referenced by foreign keys.&lt;/li&gt;
 &lt;li&gt;For MyISAM engine, mysql version &amp;lt;= 5.6.5, DML operation will lock all partition as a whole.&lt;/li&gt;
 &lt;/ul&gt;</description>
     </item>
@@ -680,14 +667,10 @@ avro (used in hadoop), have a write schema and a read schema, when store a large
       <pubDate>Wed, 22 Mar 2017 16:22:32 +0000</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/03/22/elasticsearch-cluster/</guid>
-      <description>&lt;p&gt;In this article, let&amp;#8217;s talk about ElasticSearch&amp;#8217;s cluster mode, which means multi nodes ElasticSearch.&lt;/p&gt;
-
+      <description>&lt;p&gt;In this article, let’s talk about ElasticSearch’s cluster mode, which means multi nodes ElasticSearch.&lt;/p&gt;
 &lt;h2 id=&#34;basic-concepts&#34;&gt;Basic concepts&lt;/h2&gt;
-
 &lt;p&gt;cluster: A collection of server nodes with same &lt;code&gt;cluster.name&lt;/code&gt; settings in elasticsearch.yaml&lt;/p&gt;
-
 &lt;p&gt;primary shards: Divide a index into multi parts(by default 5), shards of an index can be distributed over multi nodes. It enables scale index horizontally and make access to index parallelly(accross multi nodes).&lt;/p&gt;
-
 &lt;p&gt;replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.&lt;/p&gt;</description>
     </item>
     
@@ -716,7 +699,6 @@ avro (used in hadoop), have a write schema and a read schema, when store a large
       
       <guid>https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/</guid>
       <description>&lt;p&gt;最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.&lt;/p&gt;
-
 &lt;p&gt;比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.&lt;/p&gt;</description>
     </item>
     
@@ -727,7 +709,6 @@ avro (used in hadoop), have a write schema and a read schema, when store a large
       
       <guid>https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/</guid>
       <description>&lt;p&gt;什么是索引,索引怎么建这些基本的就跳过不谈了,整理一些前段时间优化线上 SQL 查询时碰到的一些问题. 主要解决下面几个问题:&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;建立索引怎样选择合适的列.&lt;/li&gt;
 &lt;li&gt;怎样让 SQL 能有效利用索引.&lt;/li&gt;
@@ -742,9 +723,7 @@ avro (used in hadoop), have a write schema and a read schema, when store a large
       
       <guid>https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/</guid>
       <description>&lt;p&gt;Glow 的 server infrastructure 全部搭建在 AWS 上，一般要选择一些基础服务的时候，总是先看 AWS, 只要功能和成本符合要求，不会特意选择开源方案。&lt;/p&gt;
-
 &lt;p&gt;数据仓库我们选择了 AWS 的 Redshift.&lt;/p&gt;
-
 &lt;p&gt;在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.&lt;/p&gt;</description>
     </item>
     
@@ -755,9 +734,7 @@ avro (used in hadoop), have a write schema and a read schema, when store a large
       
       <guid>https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/</guid>
       <description>&lt;p&gt;最近在对公司的 MySQL 服务器做性能优化, 一直对 innodb 的内存使用方式不是很清楚, 乘这机会做点总结.&lt;/p&gt;
-
-&lt;p&gt;在配置 MySQL 的时候, 一般都会需要设置 _innodb_buffer_pool&lt;em&gt;size&lt;/em&gt;, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.&lt;/p&gt;
-
+&lt;p&gt;在配置 MySQL 的时候, 一般都会需要设置 &lt;em&gt;innodb_buffer_pool_size&lt;/em&gt;, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.&lt;/p&gt;
 &lt;p&gt;之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?&lt;/p&gt;</description>
     </item>
     

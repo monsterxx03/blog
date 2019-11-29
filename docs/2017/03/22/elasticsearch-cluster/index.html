@@ -10,7 +10,7 @@
         content="will"/>
 
   
-  <meta name="description" content="In this article, let&amp;#8217;s talk about ElasticSearch&amp;#8217;s cluster mode, which means multi nodes ElasticSearch.
+  <meta name="description" content="In this article, let’s talk about ElasticSearch’s cluster mode, which means multi nodes ElasticSearch.
 Basic concepts cluster: A collection of server nodes with same cluster.name settings in elasticsearch.yaml
 primary shards: Divide a index into multi parts(by default 5), shards of an index can be distributed over multi nodes. It enables scale index horizontally and make access to index parallelly(accross multi nodes).
 replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.
@@ -96,24 +96,15 @@ replicas: backup for shards, also replicas can handle search requests, which mea
           <h2><a href='/2017/03/22/elasticsearch-cluster/'>ElasticSearch cluster</a></h2>
           <span class="date">2017.03.22</span>
         </div>
-        <div class="post_content markdown"><p>In this article, let&#8217;s talk about ElasticSearch&#8217;s cluster mode, which means multi nodes ElasticSearch.</p>
-
+        <div class="post_content markdown"><p>In this article, let’s talk about ElasticSearch’s cluster mode, which means multi nodes ElasticSearch.</p>
 <h2 id="basic-concepts">Basic concepts</h2>
-
 <p>cluster: A collection of server nodes with same <code>cluster.name</code> settings in elasticsearch.yaml</p>
-
 <p>primary shards: Divide a index into multi parts(by default 5), shards of an index can be distributed over multi nodes. It enables scale index horizontally and make access to index parallelly(accross multi nodes).</p>
-
 <p>replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.</p>
-
 <h2 id="single-node">Single node</h2>
-
 <p>If you setup a single node ES, all shards will be hosted together, and there will be no replicas.</p>
-
 <p>Host replicas and shards on a same node make no sense, they will be lost at same time. If no additional node is available, ES will not allocate replicas.</p>
-
 <p>Get all shards info: <code>curl http://localhost:9200/_cat/shards?v</code></p>
-
 <pre><code>forum                 2     p      STARTED       0  159b 127.0.0.1 dev-host
 forum                 2     r      UNASSIGNED
 forum                 3     p      STARTED       0  159b 127.0.0.1 dev-host
@@ -125,43 +116,24 @@ forum                 1     r      UNASSIGNED
 forum                 0     p      STARTED       0  160b 127.0.0.1 dev-host
 forum                 0     r      UNASSIGNED
 </code></pre>
-
 <p>You can see, by default, a index will have 5 primary shards(symbol <code>p</code>), all replicas(symbol <code>r</code>) are not assigned.</p>
-
-<p>Also cluster status will be yellow, since there&#8217;re no replicas available.</p>
-
+<p>Also cluster status will be yellow, since there’re no replicas available.</p>
 <h2 id="two-nodes">Two nodes</h2>
-
-<p>Let&#8217;s add one node into cluster.</p>
-
+<p>Let’s add one node into cluster.</p>
 <p>ES have two ways to find other nodes in cluster: multicast and unicast.</p>
-
 <p><code>multicast</code> works via send a UDP ping to local network, in production environment, we should disable it(disabled by default), I think no body will like it.</p>
-
-<p><code>unicast</code> works via provide an initial host list (defined by <code>discovery.zen.ping.unicast.hosts</code>), nodes communite with each other via gossip protocol. So a new node needn&#8217;t know complete list of cluster, it can only talk to a few nodes to get whole cluster info. Some projects like consul and redis cluster also work like this way.</p>
-
+<p><code>unicast</code> works via provide an initial host list (defined by <code>discovery.zen.ping.unicast.hosts</code>), nodes communite with each other via gossip protocol. So a new node needn’t know complete list of cluster, it can only talk to a few nodes to get whole cluster info. Some projects like consul and redis cluster also work like this way.</p>
 <p>One more thing to care is you need to specify <code>network.publish_host</code> explicitly. By default it will be 127.0.0.1, you need to change it to a ip/host which other nodes can access.</p>
-
-<p><img src="http://blog.monsterxx03.com/wp-content/uploads/2017/05/two-nodes.png" alt="two-nodes-es" /></p>
-
+<p><img src="http://blog.monsterxx03.com/wp-content/uploads/2017/05/two-nodes.png" alt="two-nodes-es"></p>
 <p>In two nodes setup, all replicas will be hosted on another host. All write operations to NODE 2 will be forwarded to NODE 1 internally on server. As comparison, redis cluster use so called smart client, server only tell client the right one to query.</p>
-
 <p>With two nodes setup, we can suffer one node down with no data loss. However, network partition will make two nodes brain split.</p>
-
-<p>Each node think another one is down, so it make self be master. At the same time, client&#8217;s write operations still sucess on both. But data will split on two nodes, you will not be aware of it unless search return wired result. So you may come to data inconsistency on two nodes setup.</p>
-
+<p>Each node think another one is down, so it make self be master. At the same time, client’s write operations still sucess on both. But data will split on two nodes, you will not be aware of it unless search return wired result. So you may come to data inconsistency on two nodes setup.</p>
 <p>Cluster status will be green, since all shards will have one replicas.</p>
-
 <h3 id="three-nodes">Three nodes</h3>
-
 <p>Three nodes can suffer network partition. But you need to set <code>discovery.zen.minimum_master_nodes</code> to 2. If one node failed, left two will elect a new master. If two nodes failed, there will not be enough master eligible nodes, client will come to error, so no data inconsistency will happen.</p>
-
-<p><img src="https://blog.monsterxx03.com/wp-content/uploads/2017/05/three-nodes.png" alt="three-nodes-es" /></p>
-
+<p><img src="https://blog.monsterxx03.com/wp-content/uploads/2017/05/three-nodes.png" alt="three-nodes-es"></p>
 <p>Picture taken from es official doc, it uses 3 replicas as example.</p>
-
 <h3 id="notes">Notes</h3>
-
 <p>ES has very flexible configuration, you can setup dedicated master eligible node, data only node, ingest only node, tribe noly node based on your size: <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html">https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html</a></p></div>
         <div class="post_footer">
           

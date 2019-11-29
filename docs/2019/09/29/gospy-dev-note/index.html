@@ -92,51 +92,31 @@
           <h2><a href='/2019/09/29/gospy-dev-note/'>gospy dev note</a></h2>
           <span class="date">2019.09.29</span>
         </div>
-        <div class="post_content markdown">
-
-<p><a href="/2019/09/20/gospy-non-invasive-goroutine-inspector/">前文</a>讲了下 gospy 的大致用法, 这篇记录具体实现和过程中碰到的一些问题.</p>
-
-<h2 id="原理">原理</h2>
-
+        <div class="post_content markdown"><p><a href="/2019/09/20/gospy-non-invasive-goroutine-inspector/">前文</a>讲了下 gospy 的大致用法, 这篇记录具体实现和过程中碰到的一些问题.</p>
+<h2 id="heading">原理</h2>
 <p>要从外部获取 golang 进程的 runtime 信息, 需要做得是从进程的 binary 中的 debug 信息里 parse 出需要的一些变量的虚拟内存地址, 读取目标进程的内存, 得到相应的数据,
 将两者映射起来就好了.只支持了 linux 上的 ELF 格式 binary, debug 信息是 go 在编译时候弄进去的, 格式是通用的 DWARF.</p>
-
 <p>ELF 和 DWARF 格式本身不细究(汗, 文档几百页也实在看不动), go 标准库里自带相应的 parser: <code>debug/elf, debug/dwarf, debug/gosym</code>. 一个基本的读取例子:</p>
-
 <pre><code>f, _ := os.Open(path)
 b, _ := elf.NewFile(f)
 lndata, _ := b.Section(&quot;.gopclntab&quot;).Data()
 ln := gosym.NewLineTable(lndata, b.Section(&quot;.text&quot;).Addr)
 symtab, _ := gosym.NewTable([]byte{}, ln)
 </code></pre>
-
-<p>在 go 1.3 之前, elf binary 里有一节 session: <code>.gosymtab</code>, 1.3 开始不需要了,　为了 api 兼容, <code>gosym.NewTable</code> 还需要这个参数,传个空　byte slice 进去就行.
-</br>
-</br>
-得到的 <code>symtab</code> 主要作用是根据一个 PC(program counter) 值, 得到它对应的函数名，文件，行号信息. 这里和一般的 debugger(gdb, lldb) 实现原理类似, 不过 debugger 为了中断程序
+<p>在 go 1.3 之前, elf binary 里有一节 session: <code>.gosymtab</code>, 1.3 开始不需要了,　为了 api 兼容, <code>gosym.NewTable</code> 还需要这个参数,传个空　byte slice 进去就行.</p>
+<p>得到的 <code>symtab</code> 主要作用是根据一个 PC(program counter) 值, 得到它对应的函数名，文件，行号信息. 这里和一般的 debugger(gdb, lldb) 实现原理类似, 不过 debugger 为了中断程序
 需要向目标进程的寄存器写入数据, 而 gospy 只是读取, 要简单很多. 一般的 debugger 下断点的过程是获取目标进程的所有线程, 用 <code>PTRACE_ATTACH</code> 暂停所有线程, 从 RIP 寄存器里读出该
-线程的当前 pc 值, 再查符号表得到函数文本信息.
-</br>
-</br>
-但 golang 运行代码是以 goroutine 为单位, 要获取用户空间的代码信息, 我必须能定位到单独的 goroutine, 而不是系统线程, 怎么做? 开始也迷惑了很久, 后来看到篇文章 <a href="https://backtrace.io/blog/backtrace/building-a-go-debugger/">building a go debugger</a>, 才找到思路.
-</br>
-</br>
-需要从 elf binary 里 parse 出 <code>runtime.allgs</code> 和 <code>runtime.allglen</code>, 前者是 hold 所有 goroutine 的 slice, 后者是 slice 的当前长度, 有了这两个值就能算出
-每个 goroutine 的当前内存地址, <code>runtime.g</code> 是代表 goroutine 的结构体，把它的每个字段 offset 往 goroutine 的内存地址上一映射，就能得到每个字段的值.
-</br>
-</br>
-<code>runtime.g</code> 里有两字段 <code>gopc</code> 和 <code>startpc</code>, 前者是 goroutine 当前运行函数的 PC 值, 后者是触发这个 goroutine 的函数的 PC 值, 相当于提供了两种视角来看 goroutine,
+线程的当前 pc 值, 再查符号表得到函数文本信息.</p>
+<p>但 golang 运行代码是以 goroutine 为单位, 要获取用户空间的代码信息, 我必须能定位到单独的 goroutine, 而不是系统线程, 怎么做? 开始也迷惑了很久, 后来看到篇文章 <a href="https://backtrace.io/blog/backtrace/building-a-go-debugger/">building a go debugger</a>, 才找到思路.</p>
+<p>需要从 elf binary 里 parse 出 <code>runtime.allgs</code> 和 <code>runtime.allglen</code>, 前者是 hold 所有 goroutine 的 slice, 后者是 slice 的当前长度, 有了这两个值就能算出
+每个 goroutine 的当前内存地址, <code>runtime.g</code> 是代表 goroutine 的结构体，把它的每个字段 offset 往 goroutine 的内存地址上一映射，就能得到每个字段的值.</p>
+<p><code>runtime.g</code> 里有两字段 <code>gopc</code> 和 <code>startpc</code>, 前者是 goroutine 当前运行函数的 PC 值, 后者是触发这个 goroutine 的函数的 PC 值, 相当于提供了两种视角来看 goroutine,
 调用 <code>symtab.PCToLine(pc)</code>, 就能得到对应函数信息. golang 的 GMP 调度模型里的其他 P, M, sched, 信息也能用相同的方式 parse 出来.</p>
-
-<h2 id="从-dwarf-中-parse-出-struct">从 DWARF 中 parse 出 struct</h2>
-
+<h2 id="-dwarf--parse--struct">从 DWARF 中 parse 出 struct</h2>
 <p>DWARF 里 parse 变量地址比较简单，不提了, struct 比较搞. 开始看了下 delve 的实现，它实现了一套比较完整的 DWARF 地址转换代码, 对我的需求来说过于复杂. 先手工 dump 了下 ELF 中的 DWARF 信息, 看看有什么规律:</p>
-
 <pre><code>readelf -W --debug-dump=info &lt;elf file&gt;
 </code></pre>
-
 <p>搜索了一下 <code>runtime.g</code> 这个结构体, 大致结构如下:</p>
-
 <pre><code>&lt;1&gt;&lt;3ac4b&gt;: Abbrev Number: 37 (DW_TAG_structure_type)
     &lt;3ac4c&gt;   DW_AT_name        : runtime.g
     &lt;3ac56&gt;   DW_AT_byte_size   : 376
@@ -163,32 +143,16 @@ symtab, _ := gosym.NewTable([]byte{}, ln)
     &lt;3af4c&gt;   DW_AT_name        : runtime.g
     &lt;3af56&gt;   DW_AT_type        : &lt;0x3ac4b&gt;
 </code></pre>
-
 <p>最左边的 <code>&lt;1&gt;, &lt;2&gt;</code>表示层级，所有 struct field 都在第二级. <code>&lt;3ac4b&gt;</code> 这样的是该字段在 binary 中的 offset(其实就能当虚拟内存地址, 进程启动的时候直接把 binary mmap 进内存了嘛).</p>
-
 <p><code>DW_TAG_structure_type</code> 这一节里的 <code>DW_AT_byte_size</code> 是整个 struct 的大小, 每个字段都是　<code>DW_TAG_member</code>, 里面的 <code>DW_AT_DATA_member_location</code> 是该字段在 struct 内的 offset, 减去上一个字段的 offset 值，就能得到该字段的 size, 遍历一次就能得到整个 struct 结构.</p>
-
-<h2 id="读取进程内存">读取进程内存</h2>
-
-<p>从 DWARF 里能得到需要的变量的虚拟内存地址，拿着这个地址去读内存就能得到需要的数据. 怎么读呢? 有三种方法.
-</br>
-</br>
-一般做法是先 <code>PTRACE_ATTACH</code>, 暂停进程, 然后 <code>PTRACE_PEEKDATA</code>, 读取对应内存. 限制是 <code>PTRACE_PEEKDATA</code> 每次只能读取一个 long, 8 字节, 要读取一块连续内存就要切片多次调用.
-</br>
-</br>
-<a href="https://github.com/benfred/py-spy">py-spy</a> 用的是 <code>process_vm_readv</code>, 从 linux 3.2 开始支持, 可以读取连续内存.
-</br>
-</br>
-而我找了个更偷懒的方法, 直接读 <code>/proc/&lt;pid&gt;/mem</code>, 这个虚拟文件就是进程的虚拟内存, 可以当普通文件一样读, 效率比调用 syscall 高很多, golang 里一次 syscall 差不多都要几十 us.
-</br>
-</br>
-为了得到一致的内存视图, 还是要用 <code>PTRACE_ATTACH</code> 先暂停线程, 用着就发现了 golang 的一个坑, ptrace 的所有调用必须和 <code>PTRACE_ATTACH</code> 来自同一个线程, golang 没法控制运行线程, 后续 deatch 会报找不到线程的错. 看了 delve 的源码找了个 workaround. spawn 一个 goroutine 专门处理 ptrace 调用, 在这个 goroutine 里用 <code>runtime.LockOSThread()</code>, 锁定该 goroutine 的运行线程, 把要执行的 ptrace call 通过 chan 传进去: <a href="https://github.com/go-delve/delve/blob/v1.3.1/pkg/proc/native/proc.go#L391">https://github.com/go-delve/delve/blob/v1.3.1/pkg/proc/native/proc.go#L391</a>
-</br>
-</br>
-我的做法其实对跑在容器里的进程也管用, 但一开始没试, 直接照着 py-spy 的方法尝试用 <code>setns</code>, switch 进目标进程的 namespace 再搞事, 进 mnt namespace 的时候就老是报参数不对的错, 发现还是 goroutine 在系统线程上调度带来的坑: <a href="https://stackoverflow.com/questions/25704661/calling-setns-from-go-returns-einval-for-mnt-namespace">https://stackoverflow.com/questions/25704661/calling-setns-from-go-returns-einval-for-mnt-namespace</a>.
-</br>
-</br>
-不太明白的是为什么像上面 ptrace 那样锁定线程也不行, workaround 是要在 go 的 runtime 初始化前通过 cgo 来执行 setns, 但这样没法动态得传递目标 pid 信息. docker 里的单独 build 了一个 lib <a href="https://github.com/opencontainers/runc/tree/master/libcontainer/nsenter">nsenter</a>, 把 setns 相关的工作放在了一个子进程里用 C 去做, 但交互比较麻烦, 我就没尝试了.</p>
+<h2 id="heading1">读取进程内存</h2>
+<p>从 DWARF 里能得到需要的变量的虚拟内存地址，拿着这个地址去读内存就能得到需要的数据. 怎么读呢? 有三种方法.</p>
+<p>一般做法是先 <code>PTRACE_ATTACH</code>, 暂停进程, 然后 <code>PTRACE_PEEKDATA</code>, 读取对应内存. 限制是 <code>PTRACE_PEEKDATA</code> 每次只能读取一个 long, 8 字节, 要读取一块连续内存就要切片多次调用.</p>
+<p><a href="https://github.com/benfred/py-spy">py-spy</a> 用的是 <code>process_vm_readv</code>, 从 linux 3.2 开始支持, 可以读取连续内存.</p>
+<p>而我找了个更偷懒的方法, 直接读 <code>/proc/&lt;pid&gt;/mem</code>, 这个虚拟文件就是进程的虚拟内存, 可以当普通文件一样读, 效率比调用 syscall 高很多, golang 里一次 syscall 差不多都要几十 us.</p>
+<p>为了得到一致的内存视图, 还是要用 <code>PTRACE_ATTACH</code> 先暂停线程, 用着就发现了 golang 的一个坑, ptrace 的所有调用必须和 <code>PTRACE_ATTACH</code> 来自同一个线程, golang 没法控制运行线程, 后续 deatch 会报找不到线程的错. 看了 delve 的源码找了个 workaround. spawn 一个 goroutine 专门处理 ptrace 调用, 在这个 goroutine 里用 <code>runtime.LockOSThread()</code>, 锁定该 goroutine 的运行线程, 把要执行的 ptrace call 通过 chan 传进去: <a href="https://github.com/go-delve/delve/blob/v1.3.1/pkg/proc/native/proc.go#L391">https://github.com/go-delve/delve/blob/v1.3.1/pkg/proc/native/proc.go#L391</a></p>
+<p>我的做法其实对跑在容器里的进程也管用, 但一开始没试, 直接照着 py-spy 的方法尝试用 <code>setns</code>, switch 进目标进程的 namespace 再搞事, 进 mnt namespace 的时候就老是报参数不对的错, 发现还是 goroutine 在系统线程上调度带来的坑: <a href="https://stackoverflow.com/questions/25704661/calling-setns-from-go-returns-einval-for-mnt-namespace">https://stackoverflow.com/questions/25704661/calling-setns-from-go-returns-einval-for-mnt-namespace</a>.</p>
+<p>不太明白的是为什么像上面 ptrace 那样锁定线程也不行, workaround 是要在 go 的 runtime 初始化前通过 cgo 来执行 setns, 但这样没法动态得传递目标 pid 信息. docker 里的单独 build 了一个 lib <a href="https://github.com/opencontainers/runc/tree/master/libcontainer/nsenter">nsenter</a>, 把 setns 相关的工作放在了一个子进程里用 C 去做, 但交互比较麻烦, 我就没尝试了.</p>
 </div>
         <div class="post_footer">
           

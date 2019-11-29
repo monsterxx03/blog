@@ -95,117 +95,86 @@
           <span class="date">2016.10.28</span>
         </div>
         <div class="post_content markdown"><p>最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.</p>
-
 <p>比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.</p>
-
 <p>主要有以下两种方法:</p>
-
 <ol>
 <li>通过RDS 的snapshot 做迁移。</li>
 <li>通过mysqldump 手工迁移。</li>
 </ol>
-
 <p>准备工作, 在原db上执行:</p>
-
 <ul>
-<li>show variables like &#8216;sync_binlog&#8217;, 确保设置成1, 否则binlog可能会不全(通过db parameter group 设置).</li>
-<li>call mysql.rds_set_configuration(&#8216;binlog retention hours&#8217;, 24) , 默认rds 不保留binlog 文件, 让它保留24 小时，方便我们迁移。</li>
+<li>show variables like ‘sync_binlog’, 确保设置成1, 否则binlog可能会不全(通过db parameter group 设置).</li>
+<li>call mysql.rds_set_configuration(‘binlog retention hours’, 24) , 默认rds 不保留binlog 文件, 让它保留24 小时，方便我们迁移。</li>
 </ul>
-
-<h2 id="snapshot-方式">Snapshot 方式</h2>
-
+<h2 id="snapshot-">Snapshot 方式</h2>
 <ol>
 <li>将线上应用停止</li>
 <li>将db 设置为read only
-
 <ul>
 <li>FLUSH TABLES WITH READ LOCK;</li>
 <li>SET GLOBAL read_only = ON;</li>
-</ul></li>
+</ul>
+</li>
 <li>获取当前数据库的binlog 文件和位置: <code>show master status</code></li>
 <li>对当前 db 打snapshot</li>
 <li>恢复线上数据库, 和应用程序
-
 <ul>
 <li>SET GLOBAL read_only = OFF;</li>
 <li>UNLOCK TABLES;</li>
-</ul></li>
+</ul>
+</li>
 <li>将完成的snapshot 执行 Copy, Copy 的时候可以选择使用 KMS 进行加密。</li>
-
-<li><p>使用完成的加密 snapshot launch 新的 db instance, 注意 security group 和db parameter group 只能在db 创建后修改，为了让 db parameter group</p>
-
-<p>生效，还要重启一次新db.</p></li>
-
-<li><p>登陆新db, 设置replication 对象为原 db: <code>call mysql.rds_set_external_master('&lt;src_db_host&gt;', 3306, '&lt;repl_user&gt;', '&lt;password&gt;', 'log_file', position, 0)</code>.</p>
-
-<p>log_file, 和 postition 由第3步获得，最后一个参数0表示不使用ssl.</p></li>
-
-<li><p>开始replication, <code>call mysql.rds_start_replication</code></p></li>
-
-<li><p>在新 db 上用 <code>show slave status</code>, 检查 <code>Seconds_Behind_Master</code> 字段，如果变成0，表示slave已经追上了master.</p></li>
-
-<li><p>准备执行切换，再次停止所有的应用，然后停止replication:</p>
-
+<li>使用完成的加密 snapshot launch 新的 db instance, 注意 security group 和db parameter group 只能在db 创建后修改，为了让 db parameter group</li>
+</ol>
+<pre><code>生效，还要重启一次新db.
+</code></pre>
+<ol start="8">
+<li>登陆新db, 设置replication 对象为原 db: <code>call mysql.rds_set_external_master('&lt;src_db_host&gt;', 3306, '&lt;repl_user&gt;', '&lt;password&gt;', 'log_file', position, 0)</code>.</li>
+</ol>
+<pre><code>log_file, 和 postition 由第3步获得，最后一个参数0表示不使用ssl.
+</code></pre>
+<ol start="9">
+<li>开始replication, <code>call mysql.rds_start_replication</code></li>
+<li>在新 db 上用 <code>show slave status</code>, 检查 <code>Seconds_Behind_Master</code> 字段，如果变成0，表示slave已经追上了master.</li>
+<li>准备执行切换，再次停止所有的应用，然后停止replication:
 <ul>
 <li>call mysql.rds_stop_replication;</li>
 <li>call mysql.rds_reset_external_master</li>
-</ul></li>
-
-<li><p>将应用程序的db url 指向新的db后重新启动应用。</p></li>
+</ul>
+</li>
+<li>将应用程序的db url 指向新的db后重新启动应用。</li>
 </ol>
-
-<h2 id="mysqldump方式">mysqldump方式</h2>
-
+<h2 id="mysqldump">mysqldump方式</h2>
 <p>mysqldump 步骤和snapshot 差不多，只不过把创建snapshot的过程换成mysqldump 出文件，恢复过程变成先手工launch一台</p>
-
 <p>加密的新db，然后在把文件倒入。</p>
-
 <p>详细的过程可以参考 AWS 的这篇文档:</p>
-
 <p><a href="http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/MySQL.Procedural.Importing.NonRDSRepl.html">http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/MySQL.Procedural.Importing.NonRDSRepl.html</a></p>
-
-<h2 id="尽量减少server-的-down-time">尽量减少server 的 down time</h2>
-
+<h2 id="server--down-time">尽量减少server 的 down time</h2>
 <p>以上两种方式都需要将将live db 设置成 read_only, 以获得准确的 binlog 文件和position. 在做snapshot 和dump的过程</p>
-
 <p>中需要停机较长的时间， 但这两种方式都比较保险。</p>
-
 <p>还有一种方式在snapshot的基础上做一些改进，可以只stop，start 一次应用完成迁移, 中间不需要等。</p>
-
 <p>在创建snapshot 的时候，不停应用，也不设置read_only. 然后从加密的 snapshot 创建新的db.</p>
-
 <p>在原db 和新 db 上执行， <code>show binary logs</code>, 获取文件列表,</p>
-
 <p>原db 上的输出:</p>
-
 <pre><code>mysql-bin-changelog.138398  3221126
 mysql-bin-changelog.138399  4136769
 mysql-bin-changelog.138400  74066
 mysql-bin-changelog.138401  3637534
 mysql-bin-changelog.138402  6071405
 </code></pre>
-
 <p>新db上的输出:</p>
-
 <pre><code>mysql-bin-changelog.138398  3221126
 mysql-bin-changelog.138399  4136769
 mysql-bin-changelog.138400  74066
 mysql-bin-changelog.138401  35261
 mysql-bin-changelog.138402  1768
 </code></pre>
-
 <p>其实就是找到binlog 文件 size 出现分歧的地方，这里是138401. 说明新db 的binlog是停在了这个文件。</p>
-
 <p>我的做法是直接从138401 文件，position 0 开始做sync.</p>
-
 <p>这样的做法会导致部分binlog在新db上被重复执行, 但我们线上的sql DML操作只有update/insert, 没有delete, 且insert 的表</p>
-
 <p>都有 unique key 约束。</p>
-
 <p>当插入重复数据的时候，replication 会停止， 报<code>show slave status</code> 能看到 duplicate entry error 的错误，此时可以直接 <code>call mysql.rds_skip_repl_error</code>, 来跳过错误往下执行。</p>
-
 <p>同一row 被update多次也没有问题，反正最终值还是对的。</p>
-
 <p>如果有delete语句就不能这么做了，当然如果你能忍受少部分数据不一致，也可以从下一个binlog 文件开始做sync, 否则只能乖乖停机按标准流程走。</p></div>
         <div class="post_footer">
           

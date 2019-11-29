@@ -92,24 +92,14 @@
           <h2><a href='/2018/09/26/eks-%E8%AF%84%E6%B5%8B-part-3/'>EkS 评测 part-3</a></h2>
           <span class="date">2018.09.26</span>
         </div>
-        <div class="post_content markdown">
-
-<p>这篇记录对 ingress 的测试.</p>
-
+        <div class="post_content markdown"><p>这篇记录对 ingress 的测试.</p>
 <p>ingress 用来将外部流量导入　k8s 内的　service. 将 service 的类型设置为 LoadBalancer / NodePort 也可以将单个 service 暴露到公网, 但用 ingress 可以只使用一个公网入口,根据　host name 或　url path 来将请求分发到不同的 service.</p>
-
 <p>一般　k8s 内的资源都会由一个 controller 来负责它的状态管理, 都由 kube-controller-manager 负责，　但 ingress controller 不是它的一部分，需要是视情况自己选择合适的 ingress controller.</p>
-
 <p>在 eks 上我主要需要 <a href="https://github.com/kubernetes/ingress-nginx">ingress-nginx</a> 和 <a href="https://github.com/kubernetes-sigs/aws-alb-ingress-controller">aws-alb-ingress-controller</a>. 注意, nginx inc 还维护一个 <a href="https://github.com/nginxinc/kubernetes-ingress">kubernetes-ingress</a>, 和官方那个不是一个东西， 没测试过.</p>
-
 <p>这里主要只测试了 ingress-nginx, 看了下内部实现, 数据的转发真扭曲&hellip;.</p>
-
-<h2 id="ingress-nginx">ingress-nginx</h2>
-
+<h2 id="ingressnginx">ingress-nginx</h2>
 <p>用 helm 安装很简单: <code>helm install nginx-ingress --namespace ingress</code></p>
-
 <p>看看安装后多了些什么:</p>
-
 <pre><code>service:
 
 ingress       service/mean-quetzal-nginx-ingress-controller        LoadBalancer   172.20.220.213   internal-adcb...   80:30312/TCP,443:32273/TCP   2m
@@ -131,15 +121,10 @@ NAMESPACE     NAME                                                              
 ingress       pod/mean-quetzal-nginx-ingress-controller-7fb65bbd87-jc9kv        1/1       Running   0          2m
 ingress       pod/mean-quetzal-nginx-ingress-default-backend-75696ffd5d-x7ld5   1/1       Running   0          2m
 </code></pre>
-
 <p>pods 和　replicaset 都是由 deployment 创建的，实际上就是创建了 <code>nginx-ingress-controller</code> 和　<code>nginx-ingress-default-backend</code> 的 deployment 和 service.</p>
-
 <p><code>nginx-ingress-default-backend</code> 提供了 404 页面和 health check url, 不需要暴露到公网, 所以 service type 是 ClusterIP</p>
-
 <p><code>nginx-ingress-default-backend</code> service type 是 LoadBalancer, 在 aws 上默认会创建一个 classic ELB.</p>
-
 <p>这个 ELB 的 liseners 配置如下:</p>
-
 <table>
 <thead>
 <tr>
@@ -150,7 +135,6 @@ ingress       pod/mean-quetzal-nginx-ingress-default-backend-75696ffd5d-x7ld5   
 <th>SSL Certificate</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>HTTPS</td>
@@ -159,7 +143,6 @@ ingress       pod/mean-quetzal-nginx-ingress-default-backend-75696ffd5d-x7ld5   
 <td>32273</td>
 <td>xxxxx (ACM)</td>
 </tr>
-
 <tr>
 <td>HTTP</td>
 <td>80</td>
@@ -169,60 +152,39 @@ ingress       pod/mean-quetzal-nginx-ingress-default-backend-75696ffd5d-x7ld5   
 </tr>
 </tbody>
 </table>
-
 <p>在 helm charts 的默认值基础上做了些修改:</p>
-
 <ul>
 <li>service.annotations 里配置了 ssl cert, 用的是 aws 的 ACM.</li>
 <li>service.annotations 指定 backend end 协议是 http, 让 ELB 来做 ssl termination.</li>
 <li>service.targetPorts 里将 https 的 的targetPort 设置成 http (这样会把 https 的流量解密后发送给 nginx pod 的 80 端口)</li>
 </ul>
-
 <p>跟踪下大致的流量走向:</p>
-
 <p>public internet -&gt; ELB port 80</p>
-
 <p>ELB port 80 -&gt; ec2 instance (30312)</p>
-
 <p>在 instance 上　lsof -i:30312, 监听的进程是 kube-proxy.</p>
-
 <p>但实际接受流量的并不是 kube-proxy, 流量被　iptables 劫持了.</p>
-
 <p><code>iptables -t nat -L | grep 30312</code>:</p>
-
 <pre><code>KUBE-MARK-MASQ  tcp  --  anywhere             anywhere             /* ingress/mean-quetzal-nginx-ingress-controller:http */ tcp dpt:30312
 KUBE-SVC-YLASP4PF67FEI63M  tcp  --  anywhere             anywhere             /* ingress/mean-quetzal-nginx-ingress-controller:http */ tcp dpt:30312
 </code></pre>
-
 <p><code>iptablse -t nat -S KUBE-MARK-MASQ</code>:</p>
-
 <pre><code>-N KUBE-MARK-MASQ
 -A KUBE-MARK-MASQ -j MARK --set-xmark 0x4000/0x4000
 </code></pre>
-
 <p>只是给报文打上标记.</p>
-
 <p><code>iptables -t nat -S KUBE-SVC-YLASP4PF67FEI63M</code>:</p>
-
 <pre><code>-N KUBE-SVC-YLASP4PF67FEI63M
 -A KUBE-SVC-YLASP4PF67FEI63M -m comment --comment &quot;ingress/mean-quetzal-nginx-ingress-controller:http&quot; -j KUBE-SEP-TMFHHIS4O35AFOOH
 </code></pre>
-
 <p>转发到了 <code>KUBE-SEP-TMFHHIS4O35AFOOH</code></p>
-
 <p>继续往下看 <code>iptables -t nat -S KUBE-SEP-TMFHHIS4O35AFOOH</code>:</p>
-
 <pre><code>-N KUBE-SEP-TMFHHIS4O35AFOOH
 -A KUBE-SEP-TMFHHIS4O35AFOOH -s 10.0.47.59/32 -m comment --comment &quot;ingress/mean-quetzal-nginx-ingress-controller:http&quot; -j KUBE-MARK-MASQ
 -A KUBE-SEP-TMFHHIS4O35AFOOH -p tcp -m comment --comment &quot;ingress/mean-quetzal-nginx-ingress-controller:http&quot; -m tcp -j DNAT --to-destination 10.0.47.59:80
 </code></pre>
-
 <p>被转发到了 10.0.47.59 的 80 端口. 这个 ip 是 cni 分配的 vpc secondary ip, 找到该 ip 所在节点, 在宿主机上: <code>curl http://localhost:61678/v1/pods</code>, 能看到这个　ip 被分配给了 <code>mean-quetzal-nginx-ingress-controller-7fb65bbd87-jc9kva</code></p>
-
 <p>这个 container　里跑了两个进程, 一个 <code>nginx-ingress-controller</code>, 负责监听 ingress　的创建事件，并生成对应的 nginx 配置文件, reload nginx. 另一个进程就是　nginx,　监听 container　的 80 和 443　端口.</p>
-
 <p>试着部署一个 kube-dashboard, 并为它创建 ingress, helm charts 的 values.yaml 里设置:</p>
-
 <pre><code>ingress:
     ## If true, Kubernetes Dashboard Ingress will be created.
     ##
@@ -241,13 +203,9 @@ KUBE-SVC-YLASP4PF67FEI63M  tcp  --  anywhere             anywhere             /*
           hosts:
             - k8s.example.com
 </code></pre>
-
 <p>deploy 后,　对应的vhost　信息应该会被同步给 nginx, 进 nginx-ingress-controller 的  container 看下 nginx.conf</p>
-
 <p><code>kubectl exec -n ingress -it mean-quetzal-nginx-ingress-controller-7fb65bbd87-jc9kv -- cat nginx.conf | less</code></p>
-
 <p>能看到多了一节:</p>
-
 <pre><code>## start server k8s.example.com
 server {
     server_name k8s.example.com ;
@@ -257,9 +215,7 @@ server {
 }
 ## end server k8s.example.com
 </code></pre>
-
 <p>这里的 <code>upstream_balancer</code> 是由 luna 脚本来选择 upstream:</p>
-
 <pre><code>    upstream upstream_balancer {
         server 0.0.0.1; # placeholder
         balancer_by_lua_block {
@@ -268,25 +224,15 @@ server {
         keepalive 32;
     }
 </code></pre>
-
 <p>代码在 <code>/etc/nginx/luna/balancer.lua</code> 里, 大致逻辑是根据 <code>$proxy_upsteam_name</code> 来挑选一个 backend service, 默认算法 <code>round_robin</code>.</p>
-
 <p>可用 backend 可以在 container 内部通过 <code>curl -vv http://127.0.0.1:18080/configuration/backends</code> 查看.</p>
-
 <p>默认开启了 dynamic configure, backend 列表保存在 nginx 内存中. 由 <code>nginx-ingress-controller</code> 定时访问 apiserver, 得到该 ingresss controller 对应的 service 列表, 并通过 post nginx 的 <code>localhost:18080/configuration/backends</code> 来写入.</p>
-
 <p>由于 backend service 都是 ClusterIP, nginx　转发的流量到了宿主机要再走一遍　iptables 转发到对应的 node.</p>
-
 <p>ingress-nginx 部署的时候可以选择以　daemonset 方式，也可以以 deployment 的形式部署, 如果是 deployment　方式,　因为对应的　pod　不一定在收到　request　的　worker node 上， 可能会多一跳, 这个要注意.</p>
-
 <p>最后把　k8s.example.com 的域名 CNAME　到　ELB 的 dns, 就能通过 这个域名访问到 kube-dashboard 了.</p>
-
 <h2 id="internal-loadbalancer">internal loadbalancer</h2>
-
 <p>ingress-nginx 默认创建的 ELB 是一个 public ELB, 如果我想创建一个 internal ELB, 之后再通过 VPN 去访问 service 该怎么弄?</p>
-
-<p>只要在 ingress-nginx 的 <code>service.annotations</code> 里加上 <code>service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0</code> 就行. 但这里有个问题, 最早创建 eks cluster 的时候我同时勾选了 public subet 和 private subnet, 这样会导致创建 ELB 的时候随机挑选两个 subnet, 要强制 internal lb 在 private subnet 中创建的话,要给 private subnet 加上 tag <code>kubernetes.io/role/internal-elb=true</code>, 来告知 k8s 哪些 subnet 是 private 的.</p>
-
+<p>只要在 ingress-nginx 的 <code>service.annotations</code> 里加上 <code> service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0</code> 就行. 但这里有个问题, 最早创建 eks cluster 的时候我同时勾选了 public subet 和 private subnet, 这样会导致创建 ELB 的时候随机挑选两个 subnet, 要强制 internal lb 在 private subnet 中创建的话,要给 private subnet 加上 tag <code>kubernetes.io/role/internal-elb=true</code>, 来告知 k8s 哪些 subnet 是 private 的.</p>
 <p>ELB 默认的 security group 开放允许所有地址访问 <code>80/443</code> 端口, 可以通过 <code>loadBalancerSourceRanges</code> 来限制来源 ip.</p>
 </div>
         <div class="post_footer">

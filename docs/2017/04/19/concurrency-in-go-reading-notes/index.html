@@ -92,61 +92,38 @@
           <h2><a href='/2017/04/19/concurrency-in-go-reading-notes/'>Concurrency in Go, Reading Notes</a></h2>
           <span class="date">2017.04.19</span>
         </div>
-        <div class="post_content markdown"><p>A few notes taken when reading <Concurrency in Go></p>
-
+        <div class="post_content markdown"><p>A few notes taken when reading <!-- raw HTML omitted --></p>
 <h2 id="deadlock">Deadlock</h2>
-
 <p>Coffman Conditions theory is used to help detect potential deadlock problem.</p>
-
 <p>If your problem meet the following 4 conditions, it may come to deadlock.</p>
-
 <ol>
 <li>Mutual Exclusion: A concurrent process holds exclusive rights to a resource at any one time.</li>
 <li>Wait for condition: A concurrent process must simultaneously hold a resource and be waiting for an additional resource</li>
 <li>No Preemption: A resource held by a concurrent process can only be released by that process, so it fulfills this condition.</li>
 <li>Circular Wait: A concurrent process must be waiting on a chain of other concurrent processes which are in turn waiting on it , so it fulfills this final condition too</li>
 </ol>
-
-<p>If we can avoid any one of these conditions, we can avoid deadlock, but in real world, its&#8217;s usually very hard</p>
-
+<p>If we can avoid any one of these conditions, we can avoid deadlock, but in real world, its’s usually very hard</p>
 <h2 id="livelock">Livelock</h2>
-
 <p>Two processes try to avoid deadlock at same cadence, the result is no work is accomplished.</p>
-
 <h2 id="starvation">Starvation</h2>
-
 <p>Starvation is any situation where a concurrent process cannot get all the resources it needs to perform work.</p>
-
-<p>Eg: two goroutines share a same lock, If one goroutine acquires the lock for too long time, another goroutine will be waiting too long, like it&#8217;s starving 🙁</p>
-
+<p>Eg: two goroutines share a same lock, If one goroutine acquires the lock for too long time, another goroutine will be waiting too long, like it’s starving 🙁</p>
 <h2 id="concurrency-safety">Concurrency safety</h2>
-
-<p>When you handling existing code, consider following question to determine whether it&#8217;s concurrency safey:</p>
-
+<p>When you handling existing code, consider following question to determine whether it’s concurrency safey:</p>
 <ol>
 <li>Who is responsible for concurrency ?</li>
 <li>How is the problem space mapped onto concurrency primitives? (how to divide the problem to make it run concurrently)</li>
 <li>Who is response for synchronization ?</li>
 </ol>
-
 <h2 id="concurrency-and-parallelism">Concurrency and Parallelism</h2>
-
 <p>Concurrency is about code, parallelism is about the state running program.</p>
-
 <p>We write concurrent code to wish it can run in parallelly. (but if the running machine only have one core, the program will not be parallelism)</p>
-
 <h2 id="lock-or-channel">Lock or Channel</h2>
-
 <p><code>sync</code> package provide mutexes as well, how to choose it between channel?</p>
-
 <p>If trying to transfer onwership of data, use channel.</p>
-
 <p>If trying to guard internal state of a struct, use mutex.</p>
-
 <p>Channel is more composable than lock.</p>
-
 <h2 id="example">Example</h2>
-
 <pre><code>func main() {
         var wg sync.WaitGroup
         for _, v := range []string{&quot;a&quot;, &quot;b&quot;, &quot;c&quot;} {
@@ -159,21 +136,13 @@
         wg.Wait()
 }
 </code></pre>
-
 <p>If the loop is very faster, the program will exit before goroutines start, the ouput will be three <code>c</code>.</p>
-
 <p>If there is heavy logic in loop, result will be nondeterministic.</p>
-
 <p>The right way is pass <code>v</code> to the closure to make a copy, then every goroutine will hold the exact value passed to it.</p>
-
 <h2 id="misc">Misc</h2>
-
 <p>A goroutine consume a few kilobytes ram.</p>
-
 <p>System thread context switch will cost about 1 ~ 2 us per round(send message between threads).</p>
-
 <p>Goroutine context switch cost about 200 ns per round (send message between goroutines), about 92% faster than os thread.</p>
-
 <p>Use <code>sync.Cond</code>, if you need to suspend a goroutine.</p></div>
         <div class="post_footer">
           

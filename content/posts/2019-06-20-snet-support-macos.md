@@ -1,5 +1,5 @@
 ---
-title: "SNET dev note: Support MacOS"
+title: "snet dev note: support MacOS"
 date: 2019-06-20T16:03:56+08:00
 categories:
   - tech

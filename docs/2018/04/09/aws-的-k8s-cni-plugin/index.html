@@ -92,46 +92,29 @@
           <h2><a href='/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/'>AWS 的 K8S CNI Plugin</a></h2>
           <span class="date">2018.04.09</span>
         </div>
-        <div class="post_content markdown">
-
-<p>EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别.</p>
-
+        <div class="post_content markdown"><p>EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别.</p>
 <p>K8S 集群对网络有几个基本要求:</p>
-
 <ul>
 <li>container 之间网络必须可达，且不通过 NAT</li>
 <li>所有 node 必须可以和所有 container 通信, 且不通过 NAT</li>
 <li>container 自己看到的 IP, 必须和其他 container 看到的它的 ip 相同.</li>
 </ul>
-
 <h2 id="flannel-in-vpc">Flannel in VPC</h2>
-
 <p>flannel 是 K8S 的一个 CNI 插件, 在 VPC 里使用 flannel 的话, 有几个选择:</p>
-
 <ol>
 <li>通过 VXLAN/UDP 进行封包, 封包影响网络性能, 而且不好 debug</li>
 <li>用 aws vpc backend, 这种方式会把每台主机的 docker 网段添加进 vpc routing table, 但默认 routing table 里只能有50条规则, 所以只能 50 个 node, 可以发 ticket 提升, 但数量太多会影响 vpc 性能.</li>
 <li>host-gw, 在每个 node 上直接维护集群中所有节点的路由, 没测试过, 感觉出问题也很难 debug, 假如用 autoscaling group 管理 node 集群, 能否让 K8S 在 scale in/out 的时候修改所有节点的路由?</li>
 </ol>
-
 <p>以上方式都只能利用 EC2 上的单网卡, security group 也没法作用在 pod 上.</p>
-
 <h2 id="vpc-cni-plugin">VPC CNI plugin</h2>
-
 <p>每个 EC2 可以分配多网卡, 每张网卡可以分配多个 IP, aws 的 cni 插件就是利用了这个, 这样可以直接给每个 pod 分配一个 eni 上的 secondary ip. 既利用了多网卡的性能, 也可以把 security group 绑到 pod 上.</p>
-
 <p>每个 node 上跑一个 L-IPAM (local ip address manager) 作为 daemonset, 这个进程在启动的时候会预分配 eni 和 secondary ip: <a href="https://github.com/aws/amazon-vpc-cni-k8s/blob/3168630f86c0af63724a1a018341c819ca935a9c/ipamd/ipamd.go#L151">https://github.com/aws/amazon-vpc-cni-k8s/blob/3168630f86c0af63724a1a018341c819ca935a9c/ipamd/ipamd.go#L151</a></p>
-
 <p>不同类型的 EC2 可以 attach 的 eni 个数，还有每个 eni 上 ip 数目都是不同的: <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-eni.html#AvailableIpPerENI">https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-eni.html#AvailableIpPerENI</a></p>
-
 <p>每个 pod 一个 ip 的话, 单个 EC2 可以放置的 pod 理论个数上限就是: (# of eni) * (# of ip per eni), 比如 c5.large 类型就是 3 * 10 = 30</p>
-
 <p>初始化 ip pool 的代码很简单粗暴, 在死循环里强制分配 eni 直到 aws api 告诉它 eni 达到上限, secondary ip 也是一样分配. 这里有个问题, 没法人工控制单个 ec2 的 ip数目, 如果开始 vpc 的 cidr 设的比较小，很容易就会耗尽 vpc 内ip.</p>
-
 <p>cni plugin 是一个 binary, 由 kubelet 调用. cni plugin 通过 grpc 和 L-IPAM 通信, 由它来告诉 L-IPAM 分配和删除网络:  <a href="https://github.com/aws/amazon-vpc-cni-k8s/blob/master/plugins/routed-eni/cni.go">https://github.com/aws/amazon-vpc-cni-k8s/blob/master/plugins/routed-eni/cni.go</a></p>
-
 <p>在 node 上 路由表设置了每个 pod 的 IP 去到那个网卡:</p>
-
 <pre><code># ip route show
 default via 10.0.96.1 dev eth0 
 10.0.96.0/19 dev eth0  proto kernel  scope link  src 10.0.104.183 
@@ -141,18 +124,14 @@ default via 10.0.96.1 dev eth0
 10.0.102.98 dev aws4914061689b  scope link 
 ...
 </code></pre>
-
 <p>为每张网卡设置策略路由:</p>
-
 <pre><code># ip rule list
-0:  from all lookup local 
-512:    from all to 10.0.97.30 lookup main &lt;---------- to Pod's traffic
-1025:   not from all to 10.0.0.0/16 lookup main 
-1536:   from 10.0.97.30 lookup eni-1 &lt;-------------- from Pod's traffic
+0:	from all lookup local 
+512:	from all to 10.0.97.30 lookup main &lt;---------- to Pod's traffic
+1025:	not from all to 10.0.0.0/16 lookup main 
+1536:	from 10.0.97.30 lookup eni-1 &lt;-------------- from Pod's traffic
 </code></pre>
-
 <p>pod 内部的 eth0 就是分配到的 secondary ip:</p>
-
 <pre><code>/ # ip addr show
 1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN qlen 1
 link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
@@ -167,9 +146,7 @@ inet 10.0.97.30/32 brd 10.0.97.226 scope global eth0 &lt;&lt;&lt;&lt;&lt;&lt;&lt
 inet6 fe80::5441:95ff:fe26:1741/64 scope link 
     valid_lft forever preferred_lft forever
 </code></pre>
-
 <p>pod 到 vpc 外部的流量通过 EC2 的 primary ip 走 NAT 出去:</p>
-
 <pre><code>-A POSTROUTING ! -d &lt;VPC-CIDR&gt; -m comment --comment &quot;kubenetes: SNAT for outbound traffic from cluster&quot; -m addrtype ! --dst-type LOCAL -j SNAT --to-source &lt;Primary IP on the Primary ENI&gt;
 </code></pre>
 </div>

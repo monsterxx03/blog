@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.59.0" />
+	<meta name="generator" content="Hugo 0.60.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -97,10 +97,10 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>This article won&rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&rsquo;t finished this project, also I haven&rsquo;t gave up so far :).
-Won&rsquo;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
-The codebase I&rsquo;m working on:
- Only support python2.7, don&rsquo;t consider python2.6 1X repos, about half a million lines of code in total (calculated by cloc). These repos will import each other, bad design from early days, not easy to resolve, which means I can&rsquo;t switch to py3 one by one, I need write py2/3 compatiblility code for them, and switch together(I&rsquo;m also considering solve the import problem first). Test coverage is not good, best is around 80%, lowest is 30%.  Tools 2to3, a command line tools packaged with py2, it&rsquo;s a oneway porting to convert your code to py3, new code won&rsquo;t work under py2, since I need be compatible with py2 and py3 for long time, didn&rsquo;t try it.
+      <p>This article won't provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven't finished this project, also I haven't gave up so far :).
+Won't explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
+The codebase I'm working on:
+ Only support python2.7, don't consider python2.6 1X repos, about half a million lines of code in total (calculated by cloc). These repos will import each other, bad design from early days, not easy to resolve, which means I can't switch to py3 one by one, I need write py2/3 compatiblility code for them, and switch together(I'm also considering solve the import problem first). Test coverage is not good, best is around 80%, lowest is 30%.  Tools 2to3, a command line tools packaged with py2, it's a oneway porting to convert your code to py3, new code won't work under py2, since I need be compatible with py2 and py3 for long time, didn't try it.
 future, it tries to make you write single clean python3.x code without ugly hack with six. I used it it first, but come to many problems, will explain later.......</p>
     </div>
   </div>
@@ -163,11 +163,11 @@ future, it tries to make you write single clean python3.x code without ugly hack
   
   <div class="list">
     <div class="post_content markdown">
-      <p>Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, take some notes.
-Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
-There&rsquo;re three obvious choices in my mind:
+      <p>Recently, we build pub/sub system based on AWS's SNS &amp; SQS service, take some notes.
+Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It's really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don't support redelivery as well, if subscribers failed to process the message, message will be dropped.
+There're three obvious choices in my mind:
  kafka AMQP based system (rabbitmq,activemq &hellip;) SNS + SQS  My demands for this system are:
- Support message persistence. Support topic based message distribution. Easy to manage.  The data volume won&rsquo;t be very large, so performance and throughput won&rsquo;t be critical concerns.
+ Support message persistence. Support topic based message distribution. Easy to manage.  The data volume won't be very large, so performance and throughput won't be critical concerns.
 I choose SNS + SQS, main concerns are from operation side:
  kafka need zookeeper to support cluster. rabbitmq need extra configuration for HA, and AMQP model is relatively complex for programming.  So my decision is:
  application publish message to SNS topic Setup multi SQS queues to subscribe SNS topic Let different application processes to subscribe to different queues to finish its logic.  SQS and SNS is very simple, not too much to say, just some notes:......</p>
@@ -331,11 +331,11 @@ I choose SNS + SQS, main concerns are from operation side:
   <div class="list">
     <div class="post_content markdown">
       <p>AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&hellip;
-Usually, we inject secrets as environment variables, but they&rsquo;re still visable on lambda console. I don&rsquo;t use it in aws lambda.
+Usually, we inject secrets as environment variables, but they're still visable on lambda console. I don't use it in aws lambda.
 The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
 Code example:
 client = boto3.client('ssm') resp = client.get_parameter( Name='/redshift/admin/password', WithDecryption=True ) resp: { &quot;Parameter&quot;: { &quot;Name&quot;: &quot;/redshift/admin/password&quot;, &quot;Type&quot;: &quot;SecureString&quot;, &quot;Value&quot;: &quot;password value&quot;, &quot;Version&quot;: 1 } }  Things you need to do to make it work:
- Create a new KMS key Use new created KMS key to encrypt your data in parameter store. Set a execution role for your lambda function. In the KMS key&rsquo;s setting page, add the lambda execution role to the list which can read this KMS key.  Then your lambda code can access encrypted data at runtime, and you needn&rsquo;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.
+ Create a new KMS key Use new created KMS key to encrypt your data in parameter store. Set a execution role for your lambda function. In the KMS key's setting page, add the lambda execution role to the list which can read this KMS key.  Then your lambda code can access encrypted data at runtime, and you needn't set aws access_key/secret_key, lambda execution role enable access to data in parameter store.
 BTW, parameter store support hierarchy(at most 15 levels), splitted by /. You can retrive data under same level in one call, deltails can be found in doc, eg: http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path......</p>
     </div>
   </div>

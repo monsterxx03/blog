@@ -11,10 +11,10 @@
 
   
   <meta name="description" content="I use autoscaling group to manage stateless servers. Servers go up and down every day.
-Once server is up, I will add a PTR record for it&amp;#8217;s internal ip. But when it&amp;#8217;s down, I didn&amp;#8217;t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.
+Once server is up, I will add a PTR record for it’s internal ip. But when it’s down, I didn’t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.
 To cleanup those PTR records realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?
 Straightforward way is write a script to call AWS API to get a PTR list, get ip from record, test whether the ip is live, if not, delete it.
-Since use awscli to delete a Route53 record is very troublesome (involve json format), you&amp;#8217;d better write a python script to delete them. I just demo some ideas to collect those records via shell.
+Since use awscli to delete a Route53 record is very troublesome (involve json format), you’d better write a python script to delete them. I just demo some ideas to collect those records via shell.
 You can do it in a single line, but make things clear and easy to debug, I split it into several steps.
 Get PTR record list aws route53 list-resource-record-sets --hosted-zone-id xxxxx --query &amp;quot;ResourceRecordSets[?Type==&#39;PTR&#39;].Name&amp;quot; | grep -Po &#39;&amp;quot;(.&#43;?)&amp;quot;&#39; | tr -d \&amp;quot; &amp;gt; ptr.txt  ptr.txt will contain lines like:
 1.0.0.10.in-addr.arpa. 2.0.0.10.in-addr.arpa.  Get ip list from PTR records cat ptr."/>
@@ -99,53 +99,32 @@ Get PTR record list aws route53 list-resource-record-sets --hosted-zone-id xxxxx
           <h2><a href='/2017/09/29/get-all-invalid-ptr-record-on-route53/'>Get all invalid PTR record on  Route53</a></h2>
           <span class="date">2017.09.29</span>
         </div>
-        <div class="post_content markdown">
-
-<p>I use autoscaling group to manage stateless servers. Servers go up and down every day.</p>
-
-<p>Once server is up, I will add a PTR record for it&#8217;s internal ip. But when it&#8217;s down, I didn&#8217;t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.</p>
-
+        <div class="post_content markdown"><p>I use autoscaling group to manage stateless servers. Servers go up and down every day.</p>
+<p>Once server is up, I will add a PTR record for it’s internal ip. But when it’s down, I didn’t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.</p>
 <p>To cleanup those PTR records realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?</p>
-
 <p>Straightforward way is write a script to call AWS API to get a PTR list, get ip from record, test whether the ip is live, if not, delete it.</p>
-
-<p>Since use awscli to delete a Route53 record is very troublesome (involve json format), you&#8217;d better write a python script to delete them. I just demo some ideas to collect those records via shell.</p>
-
+<p>Since use awscli to delete a Route53 record is very troublesome (involve json format), you’d better write a python script to delete them. I just demo some ideas to collect those records via shell.</p>
 <p>You can do it in a single line, but make things clear and easy to debug, I split it into several steps.</p>
-
 <h2 id="get-ptr-record-list">Get PTR record list</h2>
-
 <pre><code>aws route53 list-resource-record-sets  --hosted-zone-id xxxxx --query &quot;ResourceRecordSets[?Type=='PTR'].Name&quot; |  grep -Po '&quot;(.+?)&quot;' | tr -d \&quot; &gt; ptr.txt
 </code></pre>
-
 <p>ptr.txt will contain lines like:</p>
-
 <pre><code>1.0.0.10.in-addr.arpa.
 2.0.0.10.in-addr.arpa.
 </code></pre>
-
 <h2 id="get-ip-list-from-ptr-records">Get ip list from PTR records</h2>
-
 <pre><code>cat ptr.txt | while read -r line ; do echo -n $line | tac -s. | cut -d. -f3- | sed 's/.$//' ; done &gt; ip.txt
 </code></pre>
-
 <p>ip.txt:</p>
-
 <pre><code>10.0.0.1
 10.0.0.2
 </code></pre>
-
 <h2 id="filter-out-invalid-ips">Filter out invalid ips</h2>
-
 <p>Please do it on server where you can access internal ips.</p>
-
 <pre><code>cat ip.txt | while read -r line  ; do ping -W1 -c1 $line &gt; /dev/null  2&gt;&amp;1 || echo $line  &gt;&gt; invalid_ip.txt ; done
 </code></pre>
-
 <p>Then invalid_ip.txt will have all ips not valid</p>
-
 <h2 id="transfer-invalid-ipts-to-ptr-records">Transfer invalid ipts to PTR records</h2>
-
 <pre><code>cat invalid_ip.txt  | while read -r line; do echo -n $line. | tac -s. &amp;&amp; echo in-addr.arpa ; done &gt; ptr_del.txt
 </code></pre>
 </div>

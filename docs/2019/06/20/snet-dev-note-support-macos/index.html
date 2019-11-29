@@ -20,7 +20,7 @@
 
   
 
-  <title>SNET dev note: Support MacOS &middot; Shining Moon</title>
+  <title>snet dev note: support MacOS &middot; Shining Moon</title>
 
   <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
   <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
@@ -89,55 +89,37 @@
     <div class="post_page">
       <div class="post animated fadeInDown">
         <div class="post_title post_detail_title">
-          <h2><a href='/2019/06/20/snet-dev-note-support-macos/'>SNET dev note: Support MacOS</a></h2>
+          <h2><a href='/2019/06/20/snet-dev-note-support-macos/'>snet dev note: support MacOS</a></h2>
           <span class="date">2019.06.20</span>
         </div>
-        <div class="post_content markdown">
-
-<p>这两天得了空, 让 snet 支持了下 MacOS.</p>
-
+        <div class="post_content markdown"><p>这两天得了空, 让 snet 支持了下 MacOS.</p>
 <p>snet 的大致原理是通过系统防火墙的流量重定向功能,将所有去往国外的流量导到 snet 监听的端口, 在程序内部
 将流量传递给上游的 proxy server(ss, http), 拿到响应后再回给客户端.</p>
-
 <p>实现关键是要在 snet 内部获取到流量的原目标地址, 因为重定向之后 tcp connnection 的目标地址变成了 snet 监听
 的地址.</p>
-
 <p>Linux 上的实现，以前讲过: <a href="https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/">https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/</a>
 是通过 <code>SO_ORIGINAL_DST</code> 这个 socket option 实现的.</p>
-
 <p>MacOS 上没有 iptables, 类似的工具是系统自带的 pfctl, 捣鼓了一下也能实现一样的功能.</p>
-
-<h2 id="用-pfctl-做流量重定向">用 pfctl 做流量重定向</h2>
-
+<h2 id="-pfctl-">用 pfctl 做流量重定向</h2>
 <p>pfctl 的文档可以通过 <code>man pfctl</code>, <code>man pf.conf</code> 查看. 我也只是看了个大概, 细节并不清楚.</p>
-
 <p>流量重定向需要用到 pf 的 <code>rdr</code> 规则, 但是 <code>rdr</code> 只能处理 incoming 的流量，对 outgoing 的流量无效.</p>
-
 <p>tricky 的地方是要把流量先重路由到 lo0, 再对 lo0 上的流量实行 rdr, 例子(顺序很重要):</p>
-
 <pre><code>dev=&quot;en0&quot;
 lo=&quot;lo0&quot;
 rdr on $lo proto tcp from $dev to any port 1:65535 -&gt; 127.0.0.1 port 1100  # let proxy handle tcp 
 pass out on $dev route-to $lo proto tcp from $dev to any port 1:65535  # re-route outgoing tcp
 </code></pre>
-
-<h2 id="获取重定向后流量的原始目标地址">获取重定向后流量的原始目标地址</h2>
-
+<h2 id="heading">获取重定向后流量的原始目标地址</h2>
 <p>darwin 上没有 <code>SO_ORIGINAL_DST</code>, 翻了点 OpenBSD 的资料, 找到了几段通过 C 获取原地址的代码, 尝试用 CGO
 做 wrapper, 最后试成功了.</p>
-
 <p>Mac 上坑爹的地方在于, 虽然 darwin 内核里有 pf 模块, 但 MacOS 系统里没有对应的头文件，需要自己下载:</p>
-
 <ul>
 <li><a href="https://github.com/opensource-apple/xnu/blob/master/bsd/net/pfvar.h">https://github.com/opensource-apple/xnu/blob/master/bsd/net/pfvar.h</a></li>
 <li><a href="https://github.com/opensource-apple/xnu/blob/master/bsd/net/radix.h">https://github.com/opensource-apple/xnu/blob/master/bsd/net/radix.h</a></li>
 <li><a href="https://github.com/opensource-apple/xnu/blob/master/libkern/libkern/tree.h">https://github.com/opensource-apple/xnu/blob/master/libkern/libkern/tree.h</a></li>
 </ul>
-
 <p>做了个 poc 的例子, 可以直接跑起来: <a href="https://github.com/monsterxx03/pf_poc">https://github.com/monsterxx03/pf_poc</a></p>
-
 <p>大致流程是:</p>
-
 <ul>
 <li>初始化 struct <code>pfioc_natlook</code></li>
 <li>填充 client socket 的 source ip, source port</li>

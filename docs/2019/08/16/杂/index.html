@@ -92,84 +92,51 @@
           <h2><a href='/2019/08/16/%E6%9D%82/'>杂</a></h2>
           <span class="date">2019.08.16</span>
         </div>
-        <div class="post_content markdown">
-
-<p>随记.</p>
-
+        <div class="post_content markdown"><p>随记.</p>
 <h2 id="life">Life</h2>
-
 <p><code>&lt;火焰文章-风花雪月&gt;</code> 流程过半, 这一作难度确实低, 怂如我玩的又是不死人模式, 即使是困难难度, 到后面也是切菜. 流程里学生们 seisei 得喊, 想到后面要把他们一个个干掉, 心情挺复杂得&hellip;
 风花雪月这个副标题, 玩着玩着也有点明白意思了, 美版竟然叫 <code>&lt;Three houses&gt;</code>, 老外神经果然傻大粗啊&hellip;</p>
-
 <p>西泽保彦的高千和千晓系列看完了好几本, 还剩下<code>&lt;依存&gt;</code> 和 <code>&lt;啤酒之家的冒险&gt;</code>. 昨晚读完了 <code>&lt;苏格兰游戏&gt;</code>, 剧情高开低走, 前半段的迷题和悬念设置堪称系列之最, 我都想大吹特吹这本了, 结果最后的凶手犯罪动机特别无语, 怪不得豆瓣上评分不高. 但仍旧非常推荐, 毕竟是高千的故事嘛.</p>
-
 <p>西泽这种安乐椅推理风格真的很有意思, 主角没有辛苦的调查, 挖掘证据, 完全从一个现象, 通过逻辑和想象逆推事件的根源, 借他之口告诉你的, 也只能算是真相的一种可能性, 仔细想想很扯淡, 但就是写得让人不由得相信这就是真相. 有些地方唠唠叨叨得像京极夏彦, 但能在失控的边缘把对话拽回来.</p>
-
 <h2 id="work">Work</h2>
-
-<p>往 k8s 上的迁移总算全部完成了. 这坑多得真是一把心酸泪. 之前<a href="/2019/07/23/迁移到-k8s-过程中碰到的问题/">写过些</a>.　后续在把全部流量切换到 k8s 上的时候又碰到了其他问题.</p>
-
+<p>往 k8s 上的迁移总算全部完成了. 这坑多得真是一把心酸泪. 之前<a href="/2019/07/23/%E8%BF%81%E7%A7%BB%E5%88%B0-k8s-%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%A2%B0%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">写过些</a>.　后续在把全部流量切换到 k8s 上的时候又碰到了其他问题.</p>
 <h3 id="dns">dns</h3>
-
 <p>每天到固定时间点报大量 dns 无法解析的问题, 这些时间都是系统向用户发送批量的推送, 回来用户比较多的时候. debug 得很费劲, 最后发现是 CoreDNS 跑在了一台 t2.small 的机器上.这台机器是最早时候测试 eks 时候起的, 后续忘了换掉.</p>
-
 <p>难 debug 的原因是 t2.small 的 cpu credit 是 burstable 的. 其实一开始就怀疑是 CoreDNS 那边性能问题, 但在出问题的时候, CoreDNS
 和它所在 node 的 cpu 利用率都非常低, 看样子 t2 类型的机器在 cpu credit 用完后会把 cpu 锁定到某个频率, 监控上都看不出异常, 一换掉就好了.</p>
-
-<h3 id="负载不均衡">负载不均衡</h3>
-
+<h3 id="heading">负载不均衡</h3>
 <p>k8s 内 service 是用的 iptables 模式, 全部流量在 k8s 内运行时候, 经常会出现负载不均衡的问题, 经常有 node 过载. 原因是 iptables 做 round robin 的过程只在 tcp 链接建立过程中起作用, 链接建立后, 状态记录在 conntrack 里, 我开始时候 keepalive 设置得很长, 原因是以前 service 是挂在 elb 下面的，elb 后面的 service keepalive timeout 必须大于 elb 的 idle timeout(默认一分钟), 否则会报很多 504. 尝试把 keepalive 减少到 5s, 负载不均衡的问题有所减轻. 长远看还是需要换到 ipvs, 或上 service mesh.</p>
-
 <h3 id="deployment-rollout-and-hpa">deployment rollout and HPA</h3>
-
 <p>更新 deployment 的 image 版本时候, 我用 <code>kubectl set image deployment/example example:xxx --record</code>, 但更新期间总是会创建很多多余的 pod, 即使我的 rollingUpdate strategy 是:</p>
-
 <pre><code>rollingUpdate:
   maxSurge: 1
   maxUnavailable: 0
 type: RollingUpdate
 </code></pre>
-
 <p>和 issue <a href="https://github.com/kubernetes/kubernetes/issues/72775">#72775</a> 是一样的, 原因是 HPA 在计算当前需要维持的 pod 数目的时候, 没有把 rollingUpdate 策略考虑进去, 新起的 pod 需要过一段时间才能被 hpa 拿到 metrics, 而新 pod 一旦 ready, 老 pod 立刻就会被关闭, HPA 只看到 pod 关了却没看到新来的, 就尝试增加 pod 数目, 造成了多余的 pod.</p>
-
 <p>主干上已经被修复了: <a href="https://github.com/kubernetes/kubernetes/pull/79035">https://github.com/kubernetes/kubernetes/pull/79035</a>, 并 backport 到了 1.13,1.14, 给 AWS 提了个 ticket, 希望他们下次升级的时候把这个 patch 加进去, 也不知道会不会. workaround 的话, 好像只能更新前先删除 hpa, 更新完成后再把 hpa 加回去, 比较麻烦.</p>
-
 <h3 id="dynamodb">DynamoDB</h3>
-
 <p>以前 DynamoDB 的计费模式只有Provisioned, 预先设置好需要的 WCU, RCU 个数, 虽然支持 auto scaling, 但对突发的 batch workload 并不友好(scale out 至少要 1m).</p>
-
 <p>有不少 cronjob 需要 daily 得往 table 里写入大量数据, 以前我的做法是在代码里先提高 WCU, sleep 一段时间, 再写入, 写完再降回去, 比较麻烦.</p>
-
 <p>后来 DynamoDB 支持 On-demand 模式, 按次数计费:</p>
-
 <ul>
 <li>$1.25 per million write request units</li>
 <li>$0.25 per million read request units</li>
 </ul>
-
 <p>我的这些表线上的并发 read 也很低(前面还有层缓存), 就改成了 on-demand 模式, 更划算一点. 不过要是 read/write 可以分开设置计费模式就更好了.</p>
-
-<h3 id="nginx-proxy-cache-导致-cookie-错乱">Nginx proxy_cache 导致 cookie 错乱</h3>
-
+<h3 id="nginx-proxycache--cookie-">Nginx proxy_cache 导致 cookie 错乱</h3>
 <p>大部分静态文件是在 S3 上的, 但有少量在 repo 里.</p>
-
 <p>以前 nginx 和 frontend server 在同一台 server 上, nginx 直接 serve 静态文件, 所以没有 <code>proxy_cache</code>, 换到 k8s 之后, nginx 和 upstream 只能通过 http 交互了, 我要在 nginx 那边给静态文件设缓存.</p>
-
 <p>开始发现 <code>proxy_cache</code> 不生效, 原因是如果 upstream 的 response 里有特定 header 的话就会不缓存, 在我的 case 里是 <code>Set-Cookie</code>, 当时没多想,就用 <code>proxy_ignore_headers</code> 忽略 <code>Set-Cookie</code>, 强行缓存, 结果这样会把 header 里的 <code>Set-Cookie</code> header 也给缓存了. 结果不久后用户那端 出现了 cookie 错乱的情况. 业务代码里处理 cookie 的部分写得也是很狗血, 我看代码看了半天, 偶然在浏览器里看到静态文件的 reponse header 里有 <code>Set-Cookie</code> 的时候才想起之前干了这么个操作.</p>
-
 <p>这事情的本质原因是 flask serve 静态文件的逻辑没写好, 把 cookie 也给塞进去了(当然更本质是应该把静态文件全丢 S3 上去).</p>
-
 <p>正确的处理是需要把 cookie 相关 header 手工去掉:</p>
-
 <pre><code> # ignore Set-Cookie to make proxy_cache work
  proxy_ignore_headers Set-Cookie;
  # flask static file handler will return Cookie header, remove them!
  proxy_hide_header Set-Cookie;
  proxy_set_header Cookie &quot;&quot;;
 </code></pre>
-
 <h3 id="cdn">CDN</h3>
-
 <p>最近 release 的短视频 feature 导致 CDN 流量激增, CloudFront 价格太贵了, 迁移到了 CloudFlare, 但 <code>200$</code> 的套餐, 我是不太相信他们的不限流量的说法, 那还不得亏到姥姥家去, enterprise 要 <code>3500$</code> 起, 看后续流量情况谈谈吧, 不行再找找便宜的.</p>
 </div>
         <div class="post_footer">
