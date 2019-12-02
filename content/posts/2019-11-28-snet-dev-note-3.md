@@ -30,6 +30,9 @@ tags:
 
 之前对 ssh 长链接的支持有问题, 很容易断, 因为只在连接建立的时候设置了 timeout, 修改了下 piping 的逻辑, 在每次读写新数据后都刷新一下 timeout 时间就好了.
 
+还有个问题是无法捕获 docker container 里来的流量. 原因是对宿主机来说, docker 里的流量不是 ouput 的 traffic 而是 incoming 的, 来自 172.17.0.0/16. 所以在 OUTPUT chain 里的 iptables 规则不工作, 实际需要在 PREROUTING chain 里捕获流量.
+只要配置 `mode: router` 就能对 docker container 工作. 目前没找到办法同时处理两种 case, 主要问题出在 dns 上, 在 linux desktop 上使用的时候, 如果在 PREROUTING chain 里处理流量, dns 的应答 server ip 会成宿主机 ip, 报错.
+
 ## CI/CD
 
 之前用的 Travis CI, 迁移到了 github actions, 尝试在打 tag 的时候自动发 release. 因为在 mac 上用到了 cgo, 没法从 linux 交叉编译过去. 开始想在两个
