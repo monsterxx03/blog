@@ -6,7 +6,9 @@ url: /2017/04/21/infrastructure-as-code/
 categories:
   - tech
 tags:
+  - lang-en
   - AWS
+  - server-infra
 
 ---
 Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.
@@ -24,10 +26,8 @@ I&#8217;ve tried three ways to do it:
   * CloudFormation
   * terraform
 
-In this article, I&#8217;ll compare them, however, the conclusion is to use terraform 🙂
+In this article, I'll compare them, however, the conclusion is to use terraform 🙂
   
-<!--more-->
-
 ## Ansible
 
 Provision tools, like ansible/chef/puppet, all can be used to create aws resources, but they have some common problems:

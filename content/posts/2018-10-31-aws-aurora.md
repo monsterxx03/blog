@@ -7,6 +7,7 @@ tags:
     - aws
     - mysql
     - database
+    - server-infra
 ---
 
 最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比.

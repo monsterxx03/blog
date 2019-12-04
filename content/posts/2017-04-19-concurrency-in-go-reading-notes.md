@@ -6,6 +6,7 @@ url: /2017/04/19/concurrency-in-go-reading-notes/
 categories:
   - tech
 tags:
+  - lang-en
   - book
   - golang
 

@@ -5,6 +5,7 @@ categories:
     - tech
 tags:
     - glow
+    - server-infra
 ---
 
 # Python web 应用性能调优

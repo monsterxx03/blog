@@ -14,8 +14,10 @@
 You will come to:
  How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what’s the DHCP option set?), navigate around AWS console is okay, but not convenient. Who did what to which resource at when? AWS have a service called Config, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do.  Ideally, we should manage AWS resources like code, all changes kept in VCS, so called Infrastructure as Code.
 I’ve tried three ways to do it:
- ansible CloudFormation terraform  In this article, I’ll compare them, however, the conclusion is to use terraform 🙂
-"/>
+ ansible CloudFormation terraform  In this article, I&#39;ll compare them, however, the conclusion is to use terraform 🙂
+Ansible Provision tools, like ansible/chef/puppet, all can be used to create aws resources, but they have some common problems:
+ Hard to track changes after bootstrap. No confident what it will do to existing resources.  For example, I define a security group in ansibble:
+ec2_group: name: &amp;quot;web&amp;quot; description: &amp;quot;security group in web&amp;quot; vpc_id: &amp;quot;vpc-xxx&amp;quot; region: &amp;quot;us-east-1&amp;quot; rules: - proto: tcp from_port: 80 to_port: 80 cidr_ip: 0."/>
   
 
   
@@ -110,7 +112,7 @@ I’ve tried three ways to do it:
 <li>CloudFormation</li>
 <li>terraform</li>
 </ul>
-<p>In this article, I’ll compare them, however, the conclusion is to use terraform 🙂</p>
+<p>In this article, I'll compare them, however, the conclusion is to use terraform 🙂</p>
 <h2 id="ansible">Ansible</h2>
 <p>Provision tools, like ansible/chef/puppet, all can be used to create aws resources, but they have some common problems:</p>
 <ul>
@@ -231,7 +233,8 @@ resource &quot;aws_instance&quot; &quot;web0&quot; {
 <p>Resources like vpc route table rule, can’t be imported, but you can write your config and make sure they’re right, then do a <code>terraform apply</code> operation, terraform will not change online settings if they’re matching, just update local state file.</p>
 <p>Some relationships between resources are also defined as resources in terraform, like ebs device mapping. They can’t be imported as well,</p>
 <p>If you create them manually, you can only write the config with same settings manually and do a <code>terraform apply</code> to let terraform update state file.</p>
-<p>It’s not good and a little dangerous, but seems no better way so far.</p></div>
+<p>It’s not good and a little dangerous, but seems no better way so far.</p>
+</div>
         <div class="post_footer">
           
           <div class="meta">
@@ -239,7 +242,11 @@ resource &quot;aws_instance&quot; &quot;web0&quot; {
               <span class="field tags">
                 <i class="remixicon-stack-line"></i>
                 
+                <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
+                
                 <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
+                
+                <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
                 
               </span>
             </div>

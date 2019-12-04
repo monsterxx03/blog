@@ -6,6 +6,7 @@ url: /2017/06/05/debug-python-performance-issue-with-pyflame/
 categories:
   - tech
 tags:
+  - lang-en
   - python
 
 ---

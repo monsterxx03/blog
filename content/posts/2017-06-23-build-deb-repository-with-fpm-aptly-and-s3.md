@@ -6,8 +6,10 @@ url: /2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/
 categories:
   - tech
 tags:
+  - lang-en
   - aptly
   - fpm
+  - server-infra
 
 ---
 I&#8217;m lazy, I don&#8217;t want to be deb/rpm expert, I don&#8217;t want to maintain repo server. I want as less maintenance effort as possible. 🙂

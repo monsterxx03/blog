@@ -4,6 +4,7 @@ date: 2018-02-28T21:45:23+08:00
 categories:
     - tech
 tags:
+    - lang-en
     - AWS
     - lambda
 ---

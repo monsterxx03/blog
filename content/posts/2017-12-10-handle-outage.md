@@ -3,6 +3,9 @@ title: "Handle outage"
 date: 2017-12-10T11:13:53+08:00
 categories:
   - Tech
+tags:
+  - lang-en
+  - server-infra
 ---
 
 A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I'm working on a long term solution. I learned some important things from this accident.

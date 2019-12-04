@@ -4,6 +4,7 @@ date: 2018-09-03T18:20:46+08:00
 categories:
     - tech
 tags:
+    - lang-en
     - book
     - k8s
 ---

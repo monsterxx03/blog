@@ -9,6 +9,7 @@ tags:
   - AWS
   - Database
   - MySQL
+  - server-infra
 
 ---
 最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.

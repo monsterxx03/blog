@@ -6,6 +6,7 @@ url: /2017/05/17/designing-data-intensive-application-reading-notes-part-2/
 categories:
   - tech
 tags:
+  - lang-en
   - book
 
 ---

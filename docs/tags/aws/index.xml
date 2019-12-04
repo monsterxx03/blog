@@ -213,20 +213,14 @@ To restrict S3 bucket only available in your VPC, need to set bucket policy (to 
       <pubDate>Fri, 21 Apr 2017 16:25:07 +0000</pubDate>
       
       <guid>https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/</guid>
-      <description>&lt;p&gt;Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.&lt;/p&gt;
-&lt;p&gt;You will come to:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what’s the DHCP option set?), navigate around AWS console is okay, but not convenient.&lt;/li&gt;
-&lt;li&gt;Who did what to which resource at when? AWS have a service called &lt;code&gt;Config&lt;/code&gt;, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Ideally, we should manage AWS resources like code, all changes kept in VCS, so called &lt;code&gt;Infrastructure as Code&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;I’ve tried three ways to do it:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;ansible&lt;/li&gt;
-&lt;li&gt;CloudFormation&lt;/li&gt;
-&lt;li&gt;terraform&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;In this article, I’ll compare them, however, the conclusion is to use terraform 🙂&lt;/p&gt;</description>
+      <description>Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.
+You will come to:
+ How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what’s the DHCP option set?), navigate around AWS console is okay, but not convenient. Who did what to which resource at when? AWS have a service called Config, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do.  Ideally, we should manage AWS resources like code, all changes kept in VCS, so called Infrastructure as Code.
+I’ve tried three ways to do it:
+ ansible CloudFormation terraform  In this article, I&#39;ll compare them, however, the conclusion is to use terraform 🙂
+Ansible Provision tools, like ansible/chef/puppet, all can be used to create aws resources, but they have some common problems:
+ Hard to track changes after bootstrap. No confident what it will do to existing resources.  For example, I define a security group in ansibble:
+ec2_group: name: &amp;quot;web&amp;quot; description: &amp;quot;security group in web&amp;quot; vpc_id: &amp;quot;vpc-xxx&amp;quot; region: &amp;quot;us-east-1&amp;quot; rules: - proto: tcp from_port: 80 to_port: 80 cidr_ip: 0.</description>
     </item>
     
     <item>

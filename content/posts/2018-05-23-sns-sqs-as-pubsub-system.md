@@ -4,9 +4,11 @@ date: 2018-05-23T18:05:28+08:00
 categories:
     - tech
 tags:
+    - lang-en
     - AWS
     - SNS
     - SQS
+    - code-infra
 ---
 
 Recently, we build pub/sub system based on AWS's SNS & SQS service, take some notes.

@@ -145,7 +145,7 @@ Benefit:
      PARTITION p_2017_04 VALUES LESS THAN (UNIX_TIMESTAMP('2017-05-01')),
      PARTITION p_default VALUES LESS THAN MAXVALUE);
 </code></pre>
-<p><code>p_default</code> is used to hold data if no suitable partition is available, usually, it should be null. I use a montly cronjob to reoriganize it to genearate a new partition:</p>
+<p><code>p_default</code> is used to hold data if no suitable partition is available, usually, it should be null. I use a monthly cronjob to reoriganize it to genearate a new partition:</p>
 <pre><code>ALTER TABLE Record REORGANIZE p_default into 
 (PARTITION p_2017_05 VALUES LESS THAN (UNIX_TIMESTAMP('2017-06-01')),
  PARTITION p_2017_06 VALUES LESS THAN (UNIX_TIMESTAMP('2017-07-01')));

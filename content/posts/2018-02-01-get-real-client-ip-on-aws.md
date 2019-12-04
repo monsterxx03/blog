@@ -4,6 +4,7 @@ date: 2018-02-01T15:20:37+08:00
 categories:
   - tech
 tags:
+  - lang-en
   - AWS
   - CloudFront
   - ALB

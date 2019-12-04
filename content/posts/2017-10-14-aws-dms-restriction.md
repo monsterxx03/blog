@@ -4,8 +4,10 @@ date: 2017-10-14T22:33:36+08:00
 categories:
   - tech
 tags:
+  - lang-en
   - AWS
   - DMS
+  - data-infra
 ---
 
 AWS's DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.

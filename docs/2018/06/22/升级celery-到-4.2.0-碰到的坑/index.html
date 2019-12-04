@@ -180,7 +180,7 @@ Memory usage: 44592 (kb)
 <p>继续debug下去发现问题在这行: <a href="https://github.com/celery/celery/blob/4.2/celery/result.py#L102">https://github.com/celery/celery/blob/4.2/celery/result.py#L102</a>, 去掉 <code>self.on_ready = promise(self._on_fulfilled)</code> 后内存就能被回收了. 而这个promise 有个 <code>weak</code> 参数, 设置成 True 之后就会创建 <code>self._on_fulfilled</code> 的弱引用, AsyncResult 也能被回收, 那 weak 改成 True 就对了吗?</p>
 <p>并不是, 找到以前的一个 pr: <a href="https://github.com/celery/celery/pull/4131">https://github.com/celery/celery/pull/4131</a>, 这段代码本来 weak 就是 True 的, 当时为什么要把弱引用去掉呢? 因为传入的 <code>self._on_fulfilled</code> 是一个对象的 bound method, <code>weakref.ref</code> 无法处理, 后续尝试获取引用的时候总会得到 None, 当时的 pr 就是为了解决 <code>self._on_fulfilled</code> 不会被执行的问题. 要对 bound method 做弱引用需要使用 <a href="https://docs.python.org/3/library/weakref.html#weakref.WeakMethod">WeakMethod</a>, 但这个只在 python3.4 才开始有.</p>
 <p>那内存泄露哪里来的呢，<code>AsyncResult</code> 里的确有循环引用 <code>AsyncResult -&gt; self.on_ready -&gt; promise -&gt; self._on_fulfilled -&gt; self</code>, python 的 内存管理同时使用 reference count 和 mark and sweep, reference count 碰到循环引用的对象时候无法回收对象, mark and sweep 可以, 可是 <code>AsyncResult</code> 这个 class 还定义了 <code>__del__</code> 方法, 这会让 python 的 gc 在处理循环引用的对象时不知道该以什么顺序去运行他们的 <code>__del__</code> 方法, 这些对象就会一直驻留在内存里: <a href="https://docs.python.org/2/library/gc.html#gc.garbage">gc.garbage</a></p>
-<p>我提了一个临时的 pr: <a href="https://github.com/celery/celery/pull/4839">https://github.com/celery/celery/pull/4839</a>  只是删除了 <code>__del__</code> 方法, 这样 python 的 gc 就能正确处理循环引用对象了. 官方打算把 WeakMethod backport 到 celery 用到的异步库 vine 里去: <a href="https://github.com/celery/vine/issues/21">https://github.com/celery/vine/issues/21</a> 这样在 celery 那头设置 <code>weak=True</code> 就能正确处理了.</p>
+<p>我提了一个临时的 pr: <a href="https://github.com/celery/celery/pull/4839">https://github.com/celery/celery/pull/4839</a>  只是删除了 <code>__del__</code> 方法, 这样 python 的 gc 就能正确处理循环引用对象了. 官方打算把 WeakMethod backport 到 celery 用到的异步库 vine 里去: <a href="https://github.com/celery/vine/issues/21">https://github.com/celery/vine/issues/21</a> 这样在 celery 那头设置 <code>weak=True</code> 就能正确处理了.</p>
 </div>
         <div class="post_footer">
           
@@ -192,6 +192,8 @@ Memory usage: 44592 (kb)
                 <a href="https://blog.monsterxx03.com/tags/python/">python</a>
                 
                 <a href="https://blog.monsterxx03.com/tags/celery/">celery</a>
+                
+                <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
                 
               </span>
             </div>

@@ -6,6 +6,7 @@ url: /2017/08/19/build-private-staticwebsite-on-s3/
 categories:
   - tech
 tags:
+  - lang-en
   - AWS
   - S3
 

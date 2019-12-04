@@ -6,6 +6,7 @@ categories:
 tags:
     - python
     - celery
+    - code-infra
 ---
 
 在把代码往 python3 迁移的过程中需要升级一些第三方库, 升级了 gevent 后发现 celery 有问题, 于是尝试把 celery 从3.1.25 升级到 4.2.0, 中间碰到了很多问题, 记录一点. 
@@ -129,4 +130,4 @@ Memory usage: 44592 (kb)
 
 那内存泄露哪里来的呢，`AsyncResult` 里的确有循环引用 `AsyncResult -> self.on_ready -> promise -> self._on_fulfilled -> self`, python 的 内存管理同时使用 reference count 和 mark and sweep, reference count 碰到循环引用的对象时候无法回收对象, mark and sweep 可以, 可是 `AsyncResult` 这个 class 还定义了 `__del__` 方法, 这会让 python 的 gc 在处理循环引用的对象时不知道该以什么顺序去运行他们的 `__del__` 方法, 这些对象就会一直驻留在内存里: [gc.garbage](https://docs.python.org/2/library/gc.html#gc.garbage)
 
-我提了一个临时的 pr: https://github.com/celery/celery/pull/4839  只是删除了 `__del__` 方法, 这样 python 的 gc 就能正确处理循环引用对象了. 官方打算把 WeakMethod backport 到 celery 用到的异步库 vine 里去: https://github.com/celery/vine/issues/21 这样在 celery 那头设置 `weak=True` 就能正确处理了.
+我提了一个临时的 pr: https://github.com/celery/celery/pull/4839  只是删除了 `__del__` 方法, 这样 python 的 gc 就能正确处理循环引用对象了. 官方打算把 WeakMethod backport 到 celery 用到的异步库 vine 里去: https://github.com/celery/vine/issues/21 这样在 celery 那头设置 `weak=True` 就能正确处理了.

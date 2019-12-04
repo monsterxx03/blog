@@ -4,6 +4,7 @@ date: 2018-12-03T22:47:51+08:00
 tags:
     - linux
 categories:
+    - lang-en
     - tech
 ---
 This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04,

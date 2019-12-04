@@ -8,6 +8,7 @@ categories:
 tags:
   - Database
   - MySQL
+  - server-infra
 
 ---
 最近在对公司的 MySQL 服务器做性能优化, 一直对 innodb 的内存使用方式不是很清楚, 乘这机会做点总结.

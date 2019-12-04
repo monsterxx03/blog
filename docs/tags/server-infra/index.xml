@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>server-infra on Shining Moon</title>
+    <link>https://blog.monsterxx03.com/tags/server-infra/</link>
+    <description>Recent content in server-infra on Shining Moon</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>monsterxx03</copyright>
+    <lastBuildDate>Thu, 30 May 2019 18:48:23 +0800</lastBuildDate>
+    
+	<atom:link href="https://blog.monsterxx03.com/tags/server-infra/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Random Talk</title>
+      <link>https://blog.monsterxx03.com/2019/05/30/random-talk/</link>
+      <pubDate>Thu, 30 May 2019 18:48:23 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2019/05/30/random-talk/</guid>
+      <description>Just some random complains and notes about server infra management. I think those are my motivations to move to kubernetes.
+Won&#39;t explain k8s or docker in detail, and how they solve those problems in this post.
+Infrastructure level(on AWS) We use following services provided by AWS.
+ Compute:  EC2 AutoScaling Group Lambda   network:  VPC (SDN network) DNS (route53) CDN (CloudFront)   Loadbalancer:  ELB (L4) NLB (L4, ELB successor, support static IP) ALB (L7)   Storage:  EBS (block storage) EFS (hosted NFS) RDS(MySQl/PostgreSQL &amp;hellip;) Redshift (data warehouse) DynamoDB (KV) S3 (object storage) Glacier (cheap archive storage)   Web Firewall (WAF) Monitor (CloudWatch) DMS (ETL) &amp;hellip;  For infra management, in early days, we just click, click, click&amp;hellip; or write some simple scripts to call AWS api.
+With infra resources growing, management became complex, a concept called Infrastructure as Code rising.
+AWS provides CloudFormation as orchestration tool, but we use terraform (for short: CloudFormation sucks, for long: Infrastructure as Code)
+So far, not bad.(tweak those services internally is another story&amp;hellip; never belive work out of box)
+Application level  configuration management (setup nginx, jenkins, redis, twemproxy, ElasticSearch or WTF..) CI/CD dependency management  They&#39;re complicated, people developped bunch of tools to handle: puppet, chef, ansible, saltstack &amp;hellip;</description>
+    </item>
+    
+    <item>
+      <title>AWS Aurora DB</title>
+      <link>https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/</link>
+      <pubDate>Wed, 31 Oct 2018 15:23:45 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/</guid>
+      <description>最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比. Paper notes 存储计算分离 redo log 下推到存储层 副本: 6 副本 3 AZ(2 per az), 失去一个 AZ + 1 additoinal node 不会丢数据(可读不可写). 失去一个 AZ (或任意2 node) 不影响数据写入. 10GB 一个 segment, 每个 segment 6 副本一个 PG (protection group), 一 AZ 两副本. 在 10Gbps 的网络上, 修复一个 10GB 的segment 需要 10s. MySQL 一个应用层的写会在底层产生很多额外的写操作，会带来写放大问题: redo log 用来 crash recovery, binlog 会上传 s3 用于 point in time restore. 在 aurora 里，只</description>
+    </item>
+    
+    <item>
+      <title>为 service 制定 SLO</title>
+      <link>https://blog.monsterxx03.com/2018/10/15/%E4%B8%BA-service-%E5%88%B6%E5%AE%9A-slo/</link>
+      <pubDate>Mon, 15 Oct 2018 11:31:05 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/10/15/%E4%B8%BA-service-%E5%88%B6%E5%AE%9A-slo/</guid>
+      <description>通常我们使用云服务的时候, 服务提供商会提供 SLA(Service Level Aggrement),作为他们提供的服务质量的标准(常说的几个9),达不到会进行赔偿. 比如 AWS 的计算类服务: https://aws.amazon.com/compute/sla/ . 对公司自己 host 的 service, 我们内部也需要一些技术指标来 track 我们为客户提供的服务质量如何, 这个叫做 SLO(Service Level Objective). 也可以把他当成一个对内的,没有赔偿协议的SLA. 定义指标 我主要 track 两个指标: Availability (服务的可用性) Quality (服务质量) Availability 的定义, 以前用简单的 service uptime 来定义, 在集群外部用一</description>
+    </item>
+    
+    <item>
+      <title>AWS lambda 的一些应用场景</title>
+      <link>https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</link>
+      <pubDate>Fri, 23 Mar 2018 17:40:54 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</guid>
+      <description>这几年吹 serverless 的比较多, 在公司内部也用 lambda , 记录一下, 这东西挺有用, 但远不到万能, 场景比较有限. lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平台, 我们就只在 aws lambda 上了. 我基本上就把 lambda 当成 trigger 和 web hook 用. 和 auto scaling group 一起用 线上所有分组的机器都是用 auto scaling group 管理的, 只不过 stateless 的 server 开了自动伸缩, 带状态的 (ElasticSearch cluster, redis cache cluster) 只用来维护固定 size. 在往一个 group 里加 server 的时候, 要做的事情挺多的, 给新 server 添加组内编号 tag, 添加内网域名, provision, 部署最新代码. 这些事都用</description>
+    </item>
+    
+    <item>
+      <title>DynamoDB</title>
+      <link>https://blog.monsterxx03.com/2017/12/15/dynamodb/</link>
+      <pubDate>Fri, 15 Dec 2017 22:24:36 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/12/15/dynamodb/</guid>
+      <description>DynamoDB 是 AWS 的托管 NoSQL 数据库，可以当作简单的 KV 数据库使用，也可以作为文档数据库使用. Data model 组织数据的单位是 table, 每张 table 必须设置 primary key, 可以设置可选的 sort key 来做索引. 每条数据记作一个 item, 每个 item 含有一个或多个 attribute, 其中必须包括 primary key. attribute 对应的 value 支持以下几种类型: Number, 由于 DynamoDB 的传输协议是 http + json, 为了跨语言的兼容性, number 一律会被转成 string 传输. Binary, 用来表示任意的二进制数据，会用 base64 encode 后传输. Boolean, true or false Null Document 类型包含 List 和 Map, 可以互相嵌套. List, 个数无限制, 总大小</description>
+    </item>
+    
+    <item>
+      <title>Handle outage</title>
+      <link>https://blog.monsterxx03.com/2017/12/10/handle-outage/</link>
+      <pubDate>Sun, 10 Dec 2017 11:13:53 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/12/10/handle-outage/</guid>
+      <description>A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&#39;m working on a long term solution. I learned some important things from this accident.
+The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&#39;s health check failed due to high load.
+I did following:
+ Check monitor Identify the problem is caused by KV system  Okay, problem is here, I know the problem is KV system&#39;s performance issue. But I can&#39;t figure out the root case right now, I need a temporary solution. Straightward way is redirect traffic to slave instance. But I know it won&#39;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&#39;t work.
+The real down time was not long, performance recovered to some degree soon, but latency was still high, not normal. I monitored it for long time, and tried to find out the root case until morning. Since traffic was growing when peak hour coming, performance became problem again.</description>
+    </item>
+    
+    <item>
+      <title>Python Web 应用性能调优</title>
+      <link>https://blog.monsterxx03.com/2017/07/01/python-web-%E5%BA%94%E7%94%A8%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</link>
+      <pubDate>Sat, 01 Jul 2017 23:38:24 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/07/01/python-web-%E5%BA%94%E7%94%A8%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</guid>
+      <description>Python web 应用性能调优 为了快速上线，早期很多代码基本是怎么方便怎么来，这样就留下了很多隐患，性能也不是很理想，python 因为 GIL 的原因，在性能上有天然劣势，即使用了 gevent/eventlet 这种协程方案，也很容易因为耗时的 CPU 操作阻塞住整个进程。前阵子对基础代码做了些重构，效果显著，记录一些。 设定目标: 性能提高了，最直接的效果当然是能用更少的机器处理相同流量，目标是关闭 20% 的 stateless webserver. 尽量在框架代码上做改动，不动业务逻辑代码。 低风险 (历</description>
+    </item>
+    
+    <item>
+      <title>Build deb repository with fpm , aptly and s3</title>
+      <link>https://blog.monsterxx03.com/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/</link>
+      <pubDate>Fri, 23 Jun 2017 09:40:58 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/</guid>
+      <description>I’m lazy, I don’t want to be deb/rpm expert, I don’t want to maintain repo server. I want as less maintenance effort as possible. 🙂
+Combine tools fpm, aptly with aws s3, we can do it.
+Use fpm to convert python package to deb fpm can transform python/gem/npm/dir/… to deb/rpm/solaris/… packages
+Example:
+fpm -s python -t deb -m xyj.asmy@gmail.com --verbose -v 0.10.1 --python-pip /usr/local/pip Flask  It will transform Flask 0.10.1 package to deb. Output package will be python-flask_0.10.1_all.deb
+Notes:
+ If python packages rely on some c libs like MySQLdb (libmysqlclient-dev), you need to install them on the machine to build deb binary. By default fpm use easy_install to build packages, some packages like httplib2 have permission bug with easy_install, so I use pip By default, msgpack-python will be convert to python-msgpack-python, I don’t like it, so add -n python-msgpack to normalize the package name. Some package’s dependencies’ version number is not valid(eg: celery 3.1.25 deps pytz &amp;gt;= dev), so I replace the dependencies with --python-disable-dependency pytz -d &#39;pytz &amp;gt;= 2016.7&#39; fpm will not dowload package’s dependency automatically, you need to do it by your self  Use aptly to setup deb repository aptly can help build a self host deb repository and publish it on s3.</description>
+    </item>
+    
+    <item>
+      <title>Infrastructure as Code</title>
+      <link>https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/</link>
+      <pubDate>Fri, 21 Apr 2017 16:25:07 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/</guid>
+      <description>Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.
+You will come to:
+ How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what’s the DHCP option set?), navigate around AWS console is okay, but not convenient. Who did what to which resource at when? AWS have a service called Config, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do.  Ideally, we should manage AWS resources like code, all changes kept in VCS, so called Infrastructure as Code.
+I’ve tried three ways to do it:
+ ansible CloudFormation terraform  In this article, I&#39;ll compare them, however, the conclusion is to use terraform 🙂
+Ansible Provision tools, like ansible/chef/puppet, all can be used to create aws resources, but they have some common problems:
+ Hard to track changes after bootstrap. No confident what it will do to existing resources.  For example, I define a security group in ansibble:
+ec2_group: name: &amp;quot;web&amp;quot; description: &amp;quot;security group in web&amp;quot; vpc_id: &amp;quot;vpc-xxx&amp;quot; region: &amp;quot;us-east-1&amp;quot; rules: - proto: tcp from_port: 80 to_port: 80 cidr_ip: 0.</description>
+    </item>
+    
+    <item>
+      <title>Migrate to encrypted RDS</title>
+      <link>https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/</link>
+      <pubDate>Fri, 28 Oct 2016 16:17:30 +0000</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/</guid>
+      <description>&lt;p&gt;最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.&lt;/p&gt;
+&lt;p&gt;比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>MySQL innodb buffer pool</title>
+      <link>https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/</link>
+      <pubDate>Sat, 16 Jul 2016 16:07:14 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/</guid>
+      <description>&lt;p&gt;最近在对公司的 MySQL 服务器做性能优化, 一直对 innodb 的内存使用方式不是很清楚, 乘这机会做点总结.&lt;/p&gt;
+&lt;p&gt;在配置 MySQL 的时候, 一般都会需要设置 &lt;em&gt;innodb_buffer_pool_size&lt;/em&gt;, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.&lt;/p&gt;
+&lt;p&gt;之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

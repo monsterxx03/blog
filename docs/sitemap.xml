@@ -148,7 +148,17 @@
   </url>
   
   <url>
+    <loc>https://blog.monsterxx03.com/tags/lang-en/</loc>
+    <lastmod>2019-05-30T18:48:23+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.monsterxx03.com/2019/05/30/random-talk/</loc>
+    <lastmod>2019-05-30T18:48:23+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/server-infra/</loc>
     <lastmod>2019-05-30T18:48:23+08:00</lastmod>
   </url>
   
@@ -258,6 +268,11 @@
   </url>
   
   <url>
+    <loc>https://blog.monsterxx03.com/categories/lang-en/</loc>
+    <lastmod>2018-12-03T22:47:51+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.monsterxx03.com/tags/linux/</loc>
     <lastmod>2018-12-03T22:47:51+08:00</lastmod>
   </url>
@@ -274,6 +289,11 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/bloomfilter/</loc>
+    <lastmod>2018-11-17T13:58:27+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/code-infra/</loc>
     <lastmod>2018-11-17T13:58:27+08:00</lastmod>
   </url>
   
@@ -424,6 +444,11 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/athena/</loc>
+    <lastmod>2018-02-23T23:25:13+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/data-infra/</loc>
     <lastmod>2018-02-23T23:25:13+08:00</lastmod>
   </url>
   

@@ -75,7 +75,7 @@ Create sql for new partition table:
          PARTITION p_default VALUES LESS THAN MAXVALUE);
     
 
-`p_default` is used to hold data if no suitable partition is available, usually, it should be null. I use a montly cronjob to reoriganize it to genearate a new partition:
+`p_default` is used to hold data if no suitable partition is available, usually, it should be null. I use a monthly cronjob to reoriganize it to genearate a new partition:
 
     ALTER TABLE Record REORGANIZE p_default into 
     (PARTITION p_2017_05 VALUES LESS THAN (UNIX_TIMESTAMP('2017-06-01')),

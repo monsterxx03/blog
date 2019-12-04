@@ -6,6 +6,7 @@ url: /2017/09/29/get-all-invalid-ptr-record-on-route53/
 categories:
   - tech
 tags:
+  - lang-en
   - AWS
   - route53
 

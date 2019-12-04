@@ -94,6 +94,24 @@
     </item>
     
     <item>
+      <title>lang-en</title>
+      <link>https://blog.monsterxx03.com/tags/lang-en/</link>
+      <pubDate>Thu, 30 May 2019 18:48:23 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/lang-en/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>server-infra</title>
+      <link>https://blog.monsterxx03.com/tags/server-infra/</link>
+      <pubDate>Thu, 30 May 2019 18:48:23 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/server-infra/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>fluentd</title>
       <link>https://blog.monsterxx03.com/tags/fluentd/</link>
       <pubDate>Sun, 26 May 2019 14:27:38 +0800</pubDate>
@@ -202,6 +220,15 @@
     </item>
     
     <item>
+      <title>code-infra</title>
+      <link>https://blog.monsterxx03.com/tags/code-infra/</link>
+      <pubDate>Sat, 17 Nov 2018 13:58:27 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/code-infra/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Database</title>
       <link>https://blog.monsterxx03.com/tags/database/</link>
       <pubDate>Wed, 31 Oct 2018 15:23:45 +0800</pubDate>
@@ -270,6 +297,15 @@
       <pubDate>Fri, 23 Feb 2018 23:25:13 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/tags/athena/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>data-infra</title>
+      <link>https://blog.monsterxx03.com/tags/data-infra/</link>
+      <pubDate>Fri, 23 Feb 2018 23:25:13 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/data-infra/</guid>
       <description></description>
     </item>
     

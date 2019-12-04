@@ -6,6 +6,7 @@ categories:
 tags:
   - python
   - sqlalchemy
+  - code-infra
 ---
 
 最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些.

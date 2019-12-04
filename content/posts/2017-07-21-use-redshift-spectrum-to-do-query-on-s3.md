@@ -9,6 +9,7 @@ tags:
   - AWS
   - Redshift
   - spark
+  - data-infra
 
 ---
 # 使用 redshift spectrum 查询 S3 数据

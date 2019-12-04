@@ -3,6 +3,9 @@ title: "Random Talk"
 date: 2019-05-30T18:48:23+08:00
 categories:
     - tech
+tags:
+    - lang-en
+    - server-infra
 ---
 
 Just some random complains and notes about server infra management. I think those are my motivations to move to kubernetes.

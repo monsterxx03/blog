@@ -8,6 +8,7 @@ tags:
     - spectrum
     - athena
     - glow
+    - data-infra
 ---
 
 # Glow data infrastructure 的演化
@@ -116,7 +117,7 @@ metrics log 是基于时间的数据, 产品分析一般也就需要最近几个
 
 1. DMS 默认更新频率大概 1 min 一次, 但我们的 Redshift 里几乎每时每刻都有 分析的 query 在跑，而 Redshift 并发上限比较低(50qps), 实测 DMS 对 Redshift 性能影响很大, 所以我控制了 DMS 的更新频率到 1 小时, 可以调节它的 BatchApplyTimeout 实现.
 2. Redshift 添加新列只能在表末尾, 而且不能改现有列属性, MySQL 里做 DDL 会导致 DMS task 失败, 可以单独把做 DDL 的表 reload.
-3. DMS 的配置很复杂，一定要用代码管理起来，不要手工设置, 我用 [terraform](terraform.io) 来管理 AWS.
+3. DMS 的配置很复杂，一定要用代码管理起来，不要手工设置, 我用 [terraform](https://terraform.io) 来管理 AWS.
 
 ## 淘汰掉 HDD 的 Redshift 集群 
 
