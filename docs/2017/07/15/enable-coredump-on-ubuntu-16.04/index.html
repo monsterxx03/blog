@@ -108,7 +108,7 @@ After install, it will change kernel.core_pattern to |/lib/systemd/systemd-cored
 <p>Coredump file’s location is determined by kernerl parameter <code>kernel.core_pattern</code>.</p>
 <p>On ubuntu 16.04 <code>kernel.core_pattern</code> default value is <code>|/usr/share/apport/apport %p %s %c %P</code>. Leading <code>|</code> means pass coredump file to following program. <code>%p %c %P</code> is used to create dump filename, their meaning can check via <code>man core</code>. apport will save dump file in /var/crash</p>
 <p>If your default disk partition don’t have enough space to hold dump file, you can change <code>kernel.core_pattern</code> to another location, eg: <code>/mnt/core/%e-%t.%P</code>. If redis-server crashes, the dump file will be something like /mnt/core/redis-server-1500000000.1452. Also ensure crash process’s running user have write privilege on target location.</p>
-<h2 id="systemdcoredump">systemd-coredump</h2>
+<h2 id="systemd-coredump">systemd-coredump</h2>
 <p>You can install systemd-coredump to control dump file deeply, like: size, compression….</p>
 <p>Its config file is /etc/systemd/coredump.conf.</p>
 <p>After install, it will change <code>kernel.core_pattern</code> to <code>|/lib/systemd/systemd-coredump %P %u %g %s %t 9223372036854775808 %e</code>.</p>

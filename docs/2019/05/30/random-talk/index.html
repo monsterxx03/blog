@@ -195,7 +195,7 @@ Application level  configuration management (setup nginx, jenkins, redis, twempr
 <p>Okay, it's python, we have GIL problem, we use gevent to do concurrency, but want to take use of multi cores on single server? Prefork by uwsgi/gunicorn, or deploy multi single process behind loadbalancer.</p>
 <p>How to do gracefully cycle(or called hot code reload)? It's a prefork application, and have supports for it, do <code>kill -HUP {pid}</code> is simple. No builin support? take down from loadbalancer , restart, and attach again, batch by batch.</p>
 <p>Making change is complicated, and involves a lot of efforts, but it's not the hardest part. How to apply changes and not affect other systems is a problem.</p>
-<h2 id="k8s-advantage-resource-allocation-and-selfhealing">K8S advantage: Resource allocation and self-healing</h2>
+<h2 id="k8s-advantage-resource-allocation-and-self-healing">K8S advantage: Resource allocation and self-healing</h2>
 <p>Application configuration or possible migration tasks are complex but still controllable if you take enough time.</p>
 <p>If you have written great chef recipes or ansible playbooks, it won't be your first reason to migrate to k8s. Actually, I'm not a big fan of docker, even I know it solves problems.</p>
 <p>For me, the biggest point is resource management, with container and k8s, we can binpack multi applications on single server to take advantage of resource, simple to scale when needs (with k8s deployment &amp; HPA). Won't affect each other (if configured right).</p>

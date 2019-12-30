@@ -93,7 +93,7 @@
           <span class="date">2018.06.16</span>
         </div>
         <div class="post_content markdown"><p><a href="https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/">上一篇</a> 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情.</p>
-<h2 id="future">_<em>future</em>_</h2>
+<h2 id="--future--">_<em>future</em>_</h2>
 <p>python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件.</p>
 <p>首先是几个在 python 2.7 里不用特意写，已经默认开启的特性:</p>
 <ul>
@@ -155,7 +155,7 @@
 <h2 id="dict">dict</h2>
 <p><code>iterkeys(), itervalues(), iteritems()</code> 在 py3 中也没有啦, <code>keys(), values(), items()</code> 会返回 iterable, 要
 list也要自己转换, 可以用 <code>six.iteritems(d), six.iterkeys(d), six.itervalues(d)</code>.</p>
-<h2 id="heading1">异常处理</h2>
+<h2 id="heading-1">异常处理</h2>
 <p>一些特别老的语法不再支持, 下面的写法在 py3 下都会报错:</p>
 <pre><code>try:
     1/0
@@ -174,7 +174,7 @@ raise ValueError(&quot;yahaha&quot;)
 </code></pre>
 <h2 id="stringio">StringIO</h2>
 <p>StringIO (cStringIO) 在 py3 里都没了, 用 <code>io.BytesIO</code> 和 <code>io.StringIO</code>, 注意 <code>BytesIO</code> 只接受bytes, <code>StringIO</code> 只接受 unicode.</p>
-<h2 id="heading2">其他标准库的变化</h2>
+<h2 id="heading-2">其他标准库的变化</h2>
 <p>只列一些用的比较多的,不常用的就不列了, <code>six</code> 代码里看看就知道了.</p>
 <p><code>ConfigParser</code> 变成了 <code>configparser</code>, 在 py2 下有 backport的版本,装一个就行.</p>
 <p><code>from HTMLParser import HTMLParser</code> &ndash;&gt; <code>from html.parser import HTMLParser</code>, 如果你装过 <code>future</code> 的话,后一种导入在 py2 里是能用的, future 在安装时候会安装一个假的 html 包, 里面判断了python 版本决定真正的导入方式.</p>

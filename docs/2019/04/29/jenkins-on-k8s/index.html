@@ -167,7 +167,7 @@ ut 的 container 挂载这个 pvc, 并在 pod 启动的时候用 init container 
 <p>因为现在 build 时候的 pod 都是动态 schedule 的了, yarn/npm 的本地 cache 就没意义, 我用 <a href="https://github.com/runk/npm-proxy-cache">npm-proxy-cache</a>
 做了一个代理 cache 部署到 k8s 里(挂块 pvc 上去做 storage dir). npm/yarn install 的时候指定 <code>--proxy --https-proxy</code>　来使用缓存(还要设置 strict-ssl false).
 即使 npm registry 挂了也不影响 build.</p>
-<h2 id="-clusterautoscaler-">和 cluster-autoscaler 集成</h2>
+<h2 id="-cluster-autoscaler-">和 cluster-autoscaler 集成</h2>
 <p>cluster-autoscaler 我也是用 helm chart 部署的, 设置成 autodiscovery 模式, 在 autoscaling group 上加上 tag:</p>
 <pre><code>k8s.io/cluster-autoscaler/enabled: 'true'
 k8s.io/cluster-autoscaler/sandbox-eks:  ''

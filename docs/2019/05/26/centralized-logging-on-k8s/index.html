@@ -98,7 +98,7 @@
 <p>选择 fluent-bit + fluentd 还有个好处是, 之前内部有套收集 metrics(用于统计 DAU, retention 之类指标) 的系统本来就是基于 fluentd 的, 用这套就不用改 metrics 那边的 ETL 了.</p>
 <p>fluent-bit 和 fluentd 比, 主要好处是纯 C 写的(fluentd 是 C+ruby), 性能很好, 资源消耗低, 支持 fluentd 的 forward 协议, input/output 的种类支持没有 fluentd 那么多. 所以实际部署时候
 fluent-bit 作为 daemonset 部署在所有节点上, fluentd 作为中心化的 aggregation layer, 定时把日志刷到 s3 上去, fluent-bit 和 fluentd 之间通过 fluentd 的 forward 协议传输日志.</p>
-<h2 id="fluentbit-">fluent-bit 的配置</h2>
+<h2 id="fluent-bit-">fluent-bit 的配置</h2>
 <p>用 tail input 监控日志文件</p>
 <pre><code>  [INPUT]
       Name tail

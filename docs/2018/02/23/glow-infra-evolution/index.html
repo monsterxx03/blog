@@ -198,7 +198,7 @@
 <p>firehose 和 S3 之间为什么夹了个 lambda? 这是因为 firehose 比较傻, 它会一次 flush 多条记录到 S3 上，但每条之间没有分隔，直接拼在一起，所以多条 json 记录变到1行去了, athena 和 redshift 都无法识别. 官方建议在数据源头给每条最后加个<code>\n</code>, 但我又改不了 maxwell 的输出格式，只能先拿 lambda 凑合下.</p>
 <p>在 athena 和 redshift 里都对 s3 做了 external table, 原因是在当前的数据格式下(每条记录都是嵌套的json) athena 里查询更方便, 因为它是基于 <a href="https://prestodb.io/">presto</a> 的， 支持嵌套 struct 和 map 结构, 目前 redshift 支持 delimiter 分隔的数据, 实际使用时候需要用一些内置函数提取特定字段, 不是很方便, json 支持在 roadmap 上, 目前还是 athena 更方便.</p>
 <p>在 ETL 部分，可以把 firehose 和 lambda 去掉, 自己订阅 kinesis 的数据实现上传 s3.</p>
-<h2 id="heading1">总结</h2>
+<h2 id="heading-1">总结</h2>
 <p>以上是 Glow 最近几年基于 AWS 构建 data infrastructure 的过程. 实际实施过程中，最麻烦的还是系统迁移时候老数据的 migration, 在刚转换过去的时候难免会碰到一些坑, 积极试错很有必要.</p>
 </div>
         <div class="post_footer">

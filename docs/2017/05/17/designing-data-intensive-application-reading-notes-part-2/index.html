@@ -107,7 +107,7 @@ avro (used in hadoop), have a write schema and a read schema, when store a large
 <li>HA</li>
 <li>increase read throughput</li>
 </ul>
-<h3 id="sinleleader-replication">sinle-leader replication</h3>
+<h3 id="sinle-leader-replication">sinle-leader replication</h3>
 <p>Also called master/slave or active/passive</p>
 <p>Use case: postgresql, MySQL, Oracle Data guard, SQLServer Always On, MongoDB, RethinkDB,Espresso, Kafka, RabbitMQ, DRBD….</p>
 <p>If replication is synchronous, leader is usually setup to replicate to one slave synchronously, to other slaves asynchronously.</p>
@@ -125,7 +125,7 @@ avro (used in hadoop), have a write schema and a read schema, when store a large
 <li>Choosing a new leader. Choose slave with least lag with leader, let all slave agree on new leader involved consensus problem(raft, paxos)</li>
 <li>Reconfigure system to use new leader.</li>
 </ul>
-<h2 id="multileader">multi-leader</h2>
+<h2 id="multi-leader">multi-leader</h2>
 <p>Also called master/master or active/active. Usually used in multi data centers, every data center have a master.</p>
 <p>Benefit:</p>
 <ul>

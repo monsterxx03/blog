@@ -145,7 +145,7 @@ symtab, _ := gosym.NewTable([]byte{}, ln)
 </code></pre>
 <p>最左边的 <code>&lt;1&gt;, &lt;2&gt;</code>表示层级，所有 struct field 都在第二级. <code>&lt;3ac4b&gt;</code> 这样的是该字段在 binary 中的 offset(其实就能当虚拟内存地址, 进程启动的时候直接把 binary mmap 进内存了嘛).</p>
 <p><code>DW_TAG_structure_type</code> 这一节里的 <code>DW_AT_byte_size</code> 是整个 struct 的大小, 每个字段都是　<code>DW_TAG_member</code>, 里面的 <code>DW_AT_DATA_member_location</code> 是该字段在 struct 内的 offset, 减去上一个字段的 offset 值，就能得到该字段的 size, 遍历一次就能得到整个 struct 结构.</p>
-<h2 id="heading1">读取进程内存</h2>
+<h2 id="heading-1">读取进程内存</h2>
 <p>从 DWARF 里能得到需要的变量的虚拟内存地址，拿着这个地址去读内存就能得到需要的数据. 怎么读呢? 有三种方法.</p>
 <p>一般做法是先 <code>PTRACE_ATTACH</code>, 暂停进程, 然后 <code>PTRACE_PEEKDATA</code>, 读取对应内存. 限制是 <code>PTRACE_PEEKDATA</code> 每次只能读取一个 long, 8 字节, 要读取一块连续内存就要切片多次调用.</p>
 <p><a href="https://github.com/benfred/py-spy">py-spy</a> 用的是 <code>process_vm_readv</code>, 从 linux 3.2 开始支持, 可以读取连续内存.</p>

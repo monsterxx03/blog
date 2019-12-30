@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.60.1" />
+	<meta name="generator" content="Hugo 0.61.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -89,6 +89,41 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2019/04/12/k8s-volume-resize-on-eks/'>K8s Volume Resize on EKS</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>从 k8s 1.8 开始支持 PersistentVolumeClaimResize. 但 api 是 alpha 状态, 默认不开启, eks launch 的时候版本是 1.10, 因为没法改 control plane, 所以没法直接在 k8s 内做 ebs 扩容. 后来升级到了 1.11, 这个 feature 默认被打开了, 尝试了下直接在 EKS 内做 ebs 的扩容. 注意: 这个 feature 只能对通过 pvc 管理的 volume 做扩容, 如果直接挂的是 pv, 只能自己按传统的 ebs 扩容流程在 eks 之外做. 用来创建 pvc 的 storageclass 上必须设置 allowVolumeExpansion 为 true 在 eks 上使用 pv/pvc, 对于需要 retain 的 volume, 我一般的流程是: 在 eks 之外手工创建 ebs volume. 在 eks 中创建 pv, 指向 ebs 的 volume id 在 eks 中创建 pvc, 指向 pv 示例 yaml:......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2019.04.12</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -385,30 +420,6 @@ free -h humanize output (automatically show in KB/MB/GB&hellip;)......</p>
           
           <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
           
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/11/04/%E6%BF%91%E6%88%B7%E5%86%85%E6%B5%B7%E7%9A%84%E9%A3%8E%E4%B8%8E%E9%98%B3/'>濑户内海的风与阳</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>上月休假去濑户内海溜达了一圈, 一个比想象中美太多的地方. 对濑户内海的印象, 要追溯到高中时看的一部搞笑番 &lt;濑户花嫁&gt;, 挺有意思的片子, 爆笑之余, 对濑户内海这个地方有了模模糊糊的印象. 去年去了青森和九州, 就想着再去个日本犄角旮旯的地吧, 四国就被提上了日程, 稍做攻略, 发现濑户内海就这里, 兴趣来了. 明年三月的时候濑户内海有艺术祭, 那会估计就被世界各地的人给挤爆了, 不凑这热闹, 还是10月去吧. 大......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.11.04</span>
         </span>
         
       </div>

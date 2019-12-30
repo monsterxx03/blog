@@ -114,7 +114,7 @@
 type: RollingUpdate
 </code></pre>
 <p>和 issue <a href="https://github.com/kubernetes/kubernetes/issues/72775">#72775</a> 是一样的, 原因是 HPA 在计算当前需要维持的 pod 数目的时候, 没有把 rollingUpdate 策略考虑进去, 新起的 pod 需要过一段时间才能被 hpa 拿到 metrics, 而新 pod 一旦 ready, 老 pod 立刻就会被关闭, HPA 只看到 pod 关了却没看到新来的, 就尝试增加 pod 数目, 造成了多余的 pod.</p>
-<p>主干上已经被修复了: <a href="https://github.com/kubernetes/kubernetes/pull/79035">https://github.com/kubernetes/kubernetes/pull/79035</a>, 并 backport 到了 1.13,1.14, 给 AWS 提了个 ticket, 希望他们下次升级的时候把这个 patch 加进去, 也不知道会不会. workaround 的话, 好像只能更新前先删除 hpa, 更新完成后再把 hpa 加回去, 比较麻烦.</p>
+<p>主干上已经被修复了: <a href="https://github.com/kubernetes/kubernetes/pull/79035,">https://github.com/kubernetes/kubernetes/pull/79035,</a> 并 backport 到了 1.13,1.14, 给 AWS 提了个 ticket, 希望他们下次升级的时候把这个 patch 加进去, 也不知道会不会. workaround 的话, 好像只能更新前先删除 hpa, 更新完成后再把 hpa 加回去, 比较麻烦.</p>
 <h3 id="dynamodb">DynamoDB</h3>
 <p>以前 DynamoDB 的计费模式只有Provisioned, 预先设置好需要的 WCU, RCU 个数, 虽然支持 auto scaling, 但对突发的 batch workload 并不友好(scale out 至少要 1m).</p>
 <p>有不少 cronjob 需要 daily 得往 table 里写入大量数据, 以前我的做法是在代码里先提高 WCU, sleep 一段时间, 再写入, 写完再降回去, 比较麻烦.</p>
@@ -124,7 +124,7 @@ type: RollingUpdate
 <li>$0.25 per million read request units</li>
 </ul>
 <p>我的这些表线上的并发 read 也很低(前面还有层缓存), 就改成了 on-demand 模式, 更划算一点. 不过要是 read/write 可以分开设置计费模式就更好了.</p>
-<h3 id="nginx-proxycache--cookie-">Nginx proxy_cache 导致 cookie 错乱</h3>
+<h3 id="nginx-proxy-cache--cookie-">Nginx proxy_cache 导致 cookie 错乱</h3>
 <p>大部分静态文件是在 S3 上的, 但有少量在 repo 里.</p>
 <p>以前 nginx 和 frontend server 在同一台 server 上, nginx 直接 serve 静态文件, 所以没有 <code>proxy_cache</code>, 换到 k8s 之后, nginx 和 upstream 只能通过 http 交互了, 我要在 nginx 那边给静态文件设缓存.</p>
 <p>开始发现 <code>proxy_cache</code> 不生效, 原因是如果 upstream 的 response 里有特定 header 的话就会不缓存, 在我的 case 里是 <code>Set-Cookie</code>, 当时没多想,就用 <code>proxy_ignore_headers</code> 忽略 <code>Set-Cookie</code>, 强行缓存, 结果这样会把 header 里的 <code>Set-Cookie</code> header 也给缓存了. 结果不久后用户那端 出现了 cookie 错乱的情况. 业务代码里处理 cookie 的部分写得也是很狗血, 我看代码看了半天, 偶然在浏览器里看到静态文件的 reponse header 里有 <code>Set-Cookie</code> 的时候才想起之前干了这么个操作.</p>

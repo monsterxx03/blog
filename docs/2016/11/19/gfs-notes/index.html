@@ -108,13 +108,13 @@
 <li>支持对同一文件的并发写入，支持原子性，同步开销尽可能小。</li>
 <li>throughput 优先级高于 latency</li>
 </ul>
-<h3 id="heading1">接口</h3>
+<h3 id="heading-1">接口</h3>
 <ul>
 <li>没有实现posix</li>
 <li>支持 create, delete, open, close, read, write 操作</li>
 <li>支持 snapshot 和 record append</li>
 </ul>
-<h3 id="heading2">架构</h3>
+<h3 id="heading-2">架构</h3>
 <p>single master + multiple chunkservers</p>
 <p>chunk: 每个文件会被分割成等长的chunk, 每个chunk 会在创建的时候由 master分配一个 全局唯一的64位长的标识符(chunk handle) .</p>
 <p>Chunkserver: chunk 存储在 chunkserver 本地磁盘，通过chunk handle 和 byte range 读写文件。每个chunk默认在3副本，可配置。</p>
@@ -146,7 +146,7 @@
 <h3 id="snapshot">Snapshot</h3>
 <p>使用 copy-on-write 实现snapshot。 master受到对某个file 的snapshot 请求时，会取消该文件所有chunk正在执行的lease. lease全部取消或过期后，master将log写入磁盘，并为原文件复制一份metadata， 新的snapshot文件指向原文件相同的chunk。</p>
 <p>当client第一次要对该文件某个chunk执行写操作时，先从master处得到当前获取lease的primiary，master发现对chunk的引用计数 &gt; 1, master会让当前持有该chunk副本的所有replica在本地复制一份chunk， 因此副本的复制发生在本地，不需要跨网络传输。</p>
-<h3 id="heading3">文件的删除</h3>
+<h3 id="heading-3">文件的删除</h3>
 <p>执行删除时， master立刻将删除操作log下来，文件会被重命名为一个隐藏文件名+删除时间戳，master会定期扫描namespace, 发现有这样的文件存在超过三天，就会将它真正删除，在真正删除前，仍可以用新名字访问待删除文件，想取消删除只要将文件重命名回去就行。</p>
 <h3 id="-stale-replica">检测 stale replica</h3>
 <p>如果 chunk server 宕机， 错过了master对chunk的修改，那上面存储的chunk就是脏数据(stale).</p>
@@ -157,7 +157,7 @@
 <p>无论service以什么样的方式终止，master 和 chunk server 都被设计成可以在几秒内恢复状态并启动. 并不区分正常终止和异常终止。如果某一台server shutdown或restart，client的请求就会超时，接着client 就会进行重试。</p>
 <p>chunk server 的replication 通过多副本实现（其他可能方式， parity or erasure codes? )</p>
 <p>master 的replication 称为shadows, 是read only 的， 当master宕机时， master 的dns 会被切换到shadows。</p>
-<h3 id="heading4">数据一致性</h3>
+<h3 id="heading-4">数据一致性</h3>
 <p>每个 chunk server 使用checksum检测数据一致性，checksum和其他metadata一样，存在内存中，通过log做持久化。</p>
 <p>read的时候，chunkserver会检查数据的一致性，发现和checksum不符，会对client报错，client就会向其他的replicas请求chunk，同时master会进行调度，从数据完整的chunk server上复制正确的chunk来覆盖错误的数据。</p></div>
         <div class="post_footer">

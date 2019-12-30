@@ -101,7 +101,7 @@
 </ul>
 <h2 id="heading">索引的开销</h2>
 <p>我们都知道利用索引能提高查询效率, 但也不能盲目得随意添加索引, 索引也是有成本的.</p>
-<h3 id="heading1">磁盘空间开销</h3>
+<h3 id="heading-1">磁盘空间开销</h3>
 <p>对于下面的表:</p>
 <pre><code>CREATE TABLE `User` (
     `id` bigint NOT NULL AUTO_INCREMENT,
@@ -116,10 +116,10 @@
 )ENGINE=InnoDB;
 </code></pre>
 <p>如果我们要添加一个索引 <strong>KEY `idx_email` (`email`)</strong> 加快对email列的查询, MySQL 实际上做的是把 email 字段复制一份来构建索引列, 此外对每个索引, 主键也会附加在后面, 所以每个索引的实际磁盘开销是被索引列+主键, 因此设计表的时候最好选择一个简单又短的主键列.</p>
-<h3 id="heading2">索引维护开销</h3>
+<h3 id="heading-2">索引维护开销</h3>
 <p>这里讨论的索引只限于 innodb 的 B 树索引, 不包括 hash 索引和 fulltext索引.</p>
 <p>B 树是平衡树的一种, 数据存储在 leaf node 上, 在 INSERT, DELETE, UPDATE 的时候需要移动 leaf node 来保持树的高度. 这就是索引维护的成本, 因此过多的索引会增加 INSERT, DELETE, UPDATE时候的开销, 对写多于读的表慎用索引.</p>
-<h2 id="heading3">选择合适的列建立索引</h2>
+<h2 id="heading-3">选择合适的列建立索引</h2>
 <h3 id="leftmost">LeftMost</h3>
 <p>索引查询遵循 LeftMost 原则, 假设上面的 User 表有索引:</p>
 <pre><code>     Key `idx_user` (`name`, `email`, `time_removed`)
@@ -137,7 +137,7 @@
 <p>这里有个小技巧, 由于 gender 只有男女两种(好吧, 通常情况下…), 我们可以这么做来利用到最后的 time_removed 字段: <code>SELECT * FROM User WHERE location=&quot;China&quot; and gender=0 or gender=1 and time_removed=0</code></p>
 <p>就是在这个查询中我们本来就是要选择所有的gender, 通过这种方式来让查询强制走索引.</p>
 <p>可惜的是如果写 <code>gender in (0, 1)</code>, 并不会work,原因是 in 属于range query, 后详.</p>
-<h3 id="heading4">一个索引还是多个索引?</h3>
+<h3 id="heading-4">一个索引还是多个索引?</h3>
 <p>对于 User 表, 如果我们有如下的查询语句:</p>
 <pre><code>SELECT * FROM User where name=&quot;Zhang&quot; and email=&quot;zhang@gmail.com&quot;
 </code></pre>
@@ -146,10 +146,10 @@
 <p>由于主键在每个索引上会被复制一份,建立一个索引显然比两个索引要省空间, 当然也省了索引维护的成本.</p>
 <p>还有是 MySQL 索引遵循 LeftMost 原则, 所以建立在 (name, email) 上的查询可以用在 where 条件中只包含name的情况, 和where 条件中同时包含name 和 email的情况, 只带email的 where条件则无法使用该索引.</p>
 <p>那如果我在 name 和 email 上各自建立一个索引, MySQL 能不能同时用到这两个索引呢? 不一定. 取决于 query plan 的评估结果, 5.6.7之前的版本中如果 where 条件中如果某个列使用了 range 查询那就不会做 index merge. 由于两个 index 的查询结果做归并也是有成本的, 显然不如建立一个多列的索引. index merge的过程比较复杂而且不确定性很高,不建议依赖它来做查询优化.</p>
-<h3 id="heading5">对区分度高的列做索引</h3>
+<h3 id="heading-5">对区分度高的列做索引</h3>
 <p>对于上面的 User 表, 如果在业务系统中,用户删除是一个极少会发生的行为, 可以考虑不对 time_removed 做索引.</p>
 <p>比如大部分的查询可能都只包含name 或 email, 根据这两个条件查询出的数据集已经很小了(通常 email 还是 unique 的), 再加上一个time_removed列其实意义不是很大.</p>
-<h2 id="heading6">让查询能有效利用索引</h2>
+<h2 id="heading-6">让查询能有效利用索引</h2>
 <p>前面已经讲过 LeftMost 原则, 但写查询的时候也有些 case 需要注意, 否则索引可能并不会生效.</p>
 <h3 id="range-query">range query</h3>
 <p>MySQL 中的 range query 包括 <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>, <code>!=</code>, <code>in</code>, <code>between</code>, <code>like</code>, <code>is null</code>, <code>is not null</code>.</p>
@@ -222,7 +222,7 @@
 <p>根据前文所述, 这里的 time_created 不在索引列中,所以query其实会扫描 location=”China” 的所有行, 对整个结果做排序后再取top 100.</p>
 <p>首先将所有的状态变量归0: <code>flush status</code>, 然后执行query, 再查看状态变量, 看到 <code>Handler_read_next</code> 是188, 多于设的 limit 100, 188也是对location=”China” 做count的结果.</p>
 <p>假设索引不变, 将条件变为 <code>WHERE location=&quot;China&quot; order by id desc limit 100</code>, 先<code>flush status</code>, 再执行query, 查看变量,会发现 <code>Handler_read_next</code> 变成了0, <code>Handler_read_prev</code>变成了99, 这表明查询中的order by id得到了优化.</p>
-<h2 id="heading7">总结</h2>
+<h2 id="heading-7">总结</h2>
 <p>实际业务中,可能并没法让每条查询都完美hit到索引,怎么选择索引需要根据实际 query 做取舍.</p></div>
         <div class="post_footer">
           

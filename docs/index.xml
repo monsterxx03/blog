@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 29 Nov 2019 12:00:01 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 30 Dec 2019 12:08:47 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>聊聊 AWS 的计费模式</title>
+      <link>https://blog.monsterxx03.com/2019/12/30/%E8%81%8A%E8%81%8A-aws-%E7%9A%84%E8%AE%A1%E8%B4%B9%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Mon, 30 Dec 2019 12:08:47 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2019/12/30/%E8%81%8A%E8%81%8A-aws-%E7%9A%84%E8%AE%A1%E8%B4%B9%E6%A8%A1%E5%BC%8F/</guid>
+      <description>网上经常有人诟病 AWS 的计费模式复杂, 喜欢国内那种打包式的售卖方式, 这个可能受限于每个公司的财务流程, 预算制定方式, 合不合国情,本文不讨论. 仅从开发者的角度介绍下 AWS 部分常用 service 的计费方式. PS: 那些为了蹭一年 free plan 然后抱怨什么偷跑流量, 偷偷扣费的大哥就省省吧, AWS 根本不是给个人用的, 老老实实用 lightsail 得了. EC2 EC2 的价格是最复杂的, 一台 EC2 instance 的价格组成: instance fee, 实际支付的是 CPU+RAM 的费用 EBS fee, server 的根分区都是 EBS volume, 按 EBS 计费(31GB 的 volume 使</description>
+    </item>
     
     <item>
       <title>snet dev note</title>

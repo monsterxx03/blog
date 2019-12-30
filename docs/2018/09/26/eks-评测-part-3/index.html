@@ -97,7 +97,7 @@
 <p>一般　k8s 内的资源都会由一个 controller 来负责它的状态管理, 都由 kube-controller-manager 负责，　但 ingress controller 不是它的一部分，需要是视情况自己选择合适的 ingress controller.</p>
 <p>在 eks 上我主要需要 <a href="https://github.com/kubernetes/ingress-nginx">ingress-nginx</a> 和 <a href="https://github.com/kubernetes-sigs/aws-alb-ingress-controller">aws-alb-ingress-controller</a>. 注意, nginx inc 还维护一个 <a href="https://github.com/nginxinc/kubernetes-ingress">kubernetes-ingress</a>, 和官方那个不是一个东西， 没测试过.</p>
 <p>这里主要只测试了 ingress-nginx, 看了下内部实现, 数据的转发真扭曲&hellip;.</p>
-<h2 id="ingressnginx">ingress-nginx</h2>
+<h2 id="ingress-nginx">ingress-nginx</h2>
 <p>用 helm 安装很简单: <code>helm install nginx-ingress --namespace ingress</code></p>
 <p>看看安装后多了些什么:</p>
 <pre><code>service:
