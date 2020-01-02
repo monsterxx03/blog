@@ -1,0 +1,8 @@
+p {
+    margin: 10px 0;
+}
+
+.markdown strong {
+    background-color: white;
+    font-weight: bold;
+}

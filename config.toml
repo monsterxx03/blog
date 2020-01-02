@@ -38,6 +38,7 @@ publishDir="docs"
     subtitle = "百种弊病,皆从懒生"
     enableMathJax = true
     enableSummary = true
+    customCSS = ["home.css"]
 
 [social]
     github = "https://github.com/monsterxx03"

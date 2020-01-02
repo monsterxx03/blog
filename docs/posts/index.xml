@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Mon, 30 Dec 2019 12:08:47 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 02 Jan 2020 13:04:22 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>基金定投复盘</title>
+      <link>https://blog.monsterxx03.com/2020/01/02/%E5%9F%BA%E9%87%91%E5%AE%9A%E6%8A%95%E5%A4%8D%E7%9B%98/</link>
+      <pubDate>Thu, 02 Jan 2020 13:04:22 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2020/01/02/%E5%9F%BA%E9%87%91%E5%AE%9A%E6%8A%95%E5%A4%8D%E7%9B%98/</guid>
+      <description>新年第一件事是算一下过去几年在基金这块的收益怎么样. 大概在16年的时候才开始接触股市, 但个股一直没怎么买, 基本都买基金, 4年里各种因素导致总投资额很低,在资金总额中占比太低. 这次复盘两只定投时间最长的基金, 天弘沪深300ETF联接A(000961), 嘉实沪港深精选股票(0001878), 前者追踪沪深300指数, 后者主要买上海和香港的股票. 天弘沪深300ETF联接A 嘉实沪港深精选股票 开始日期 2017-02-10 2017-08-22 计算</description>
+    </item>
     
     <item>
       <title>聊聊 AWS 的计费模式</title>
