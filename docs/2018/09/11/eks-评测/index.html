@@ -112,7 +112,7 @@ data:
         - system:nodes
 </code></pre>
 <p>这样 worker node 节点才能加入集群.</p>
-<h2 id="heading">网络</h2>
+<h2 id="网络">网络</h2>
 <p>之前一直没有在 AWS 上尝试构建 k8s 的一个原因, 就是不喜欢 overlay 网络, 给系统带来了额外的复杂度和管理开销, VPC flowlog 看不到 pod 之间流量, 封包后 tcpdump 不好 debug 应用层流量.</p>
 <p>随着 EKS 的发布，AWS 开源了基于 VPC 的 CNI 插件(<a href="https://github.com/aws/amazon-vpc-cni-k8s">https://github.com/aws/amazon-vpc-cni-k8s</a>)，之前也大致写过: <a href="https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/">https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/</a></p>
 <p>这个项目分成两部分, cni 插件 <code>aws-cni</code> (给 kubelet 调用) 和 <code>aws-k8s-agent</code>, 会以 daemonset 的形式运行(运行时 pod 名字是 aws-node),实际上是一个L-IPAM (local ip address management), 负责将 eni 绑定到 ec2 instance, 将 ip 地址绑定到 eni.</p>
@@ -139,7 +139,7 @@ tiller-deploy-78ddf4757c-ljs7p                          1/1       Running   0   
 <li>log 会输出在 worker node 的 <code>/var/log/aws-routed-eni</code></li>
 <li>可以启动一个收集　cni metrics 的 pod, <code>kubectl apply -f https://raw.githubusercontent.com/liwenwu-amazon/amazon-vpc-cni-k8s-1/metrics1/misc/cni_metrics_helper.yaml</code>, 之后 <code>kubectl logs cni-metrics-xxx -n kube-system</code> 可以看到 pod　的一些　metrics 信息.</li>
 </ul>
-<h2 id="metrics-server-">Metrics server 的问题</h2>
+<h2 id="metrics-server-的问题">Metrics server 的问题</h2>
 <p>为了测试　auto scaling, 需要在 EKS 中部署 metrics server.  EKS 最早发布的时候不支持　metrics server(因此 HPA 也不支持), EKS　的　PlantformVersion 需要是 &lsquo;eks.2&rsquo;.</p>
 <p>之前不支持的原因是 metrics server 基于　<code>api aggregation</code> , core api server 只能用 client 证书认证, EKS 为了和 IAM 交互用的是 webhook. 后来　EKS　的人修了下: <a href="https://github.com/kubernetes/kubernetes/pull/66394/files#diff-59f09be65a7ae1feb263f6bce1d856b1">https://github.com/kubernetes/kubernetes/pull/66394/files#diff-59f09be65a7ae1feb263f6bce1d856b1</a></p>
 <p>详情看: <a href="https://aws.amazon.com/cn/blogs/opensource/horizontal-pod-autoscaling-eks/">https://aws.amazon.com/cn/blogs/opensource/horizontal-pod-autoscaling-eks/</a></p>
@@ -160,7 +160,7 @@ tiller-deploy-78ddf4757c-ljs7p                          1/1       Running   0   
 nameserver 10.100.0.2
 </code></pre>
 <p>test.com 是　dhcp option 分发的域名, us-west-2.compute.internal 哪来的? 而且我的测试节点是启动在 us-east-1 的.</p>
-<h2 id="-helm">配置 helm</h2>
+<h2 id="配置-helm">配置 helm</h2>
 <p>给  helm 创建　service account, 和 cluster-admin　的　role 绑定:</p>
 <pre><code>---
 apiVersion: v1

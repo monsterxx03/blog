@@ -138,7 +138,7 @@ convertible class 的 instance 不能卖.</li>
 <h2 id="rds">RDS</h2>
 <p>RDS 算是一个典型, 其他托管的 elasticsearch, redis cluster, emr 计费方式都和它部分重合,只是更简单一点. 详细讲一下吧.</p>
 <p>RDS 分两大类, 一类是传统的基于底层 EBS 复制提供 HA 的 RDS(multi AZ), 还有 aurora(基于 redo log 复制), 两者的详细区别, 以前写过: <a href="https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/">https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/</a></p>
-<h3 id="-rds-">传统 RDS 的计费</h3>
+<h3 id="传统-rds-的计费">传统 RDS 的计费</h3>
 <ul>
 <li>instance fee: 不开启 multi az 就没有 ha, 按列表价收费, 价格比同算力 ec2 贵了80%左右(啧啧), 开 multi az 就 x2. 可以和 ec2 一样买 reserved instance, 只是没有 convertible class, 也不能卖.</li>
 <li>storage fee: db 的 storage size 由 EBS 决定, 和普通的 EBS 一样可以选 gp2, provisioned io 等类型, 但价格稍贵一点, 如果开了 multi az, 再 x2.</li>
@@ -146,7 +146,7 @@ convertible class 的 instance 不能卖.</li>
 <li>data transfer: 同 ec2.</li>
 </ul>
 <p>multi az 里 standby 的 server 不能用作 read replicator, 需要 replicator, 要另外起, 和 master 之间通过标准 binlog 同步.</p>
-<h3 id="aurora-">Aurora 的计费</h3>
+<h3 id="aurora-的计费">Aurora 的计费</h3>
 <p>Aurora　只支持 MySQL 和 PostgreSQL, 价格组成:</p>
 <ul>
 <li>instance fee: 同算力价格比 rds 还要贵一点点, 同样可以买 reserved instance. aurora 的 read replicator 可以同时用来做 failover 对象, 和 master 通过底层 redo log 同步.</li>
@@ -166,7 +166,7 @@ convertible class 的 instance 不能卖.</li>
 <p>这种计费方式叫 provisioned capacity, 后来支持了 on-demand 方式, 按每百万读写 reqeust 收费, 写价格依旧是读的5倍. 每张表可以在两种计费模式之间切换.
 on-demand 当然比 provisioned capacity 单位价格贵不少, 但它对突发的负载比较友好, provisioned capacity 即使开了 auto scaling 也需要一段时间反应过来.</p>
 <p>一些额外 feature 的计费方式略过不提(backup, DAX, stream, storage), 那些都比较好理解.</p>
-<h2 id="heading">其他</h2>
+<h2 id="其他">其他</h2>
 <p>aws 的计费非常详细, 善用<a href="https://calculator.s3.amazonaws.com/index.html">价格计算器</a>来规划开销, 另外也可以用一些第三方的服务来做 aws 的 cost 分析, 比如: <a href="http://cloudhealthtech.com/">http://cloudhealthtech.com/</a>.
 其他一些 service, 比如 s3, cloudfront, glacier, ELB/ALB/NLB 以后有空再谈吧.</p>
 </div>

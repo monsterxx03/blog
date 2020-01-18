@@ -98,7 +98,7 @@
 比如 AWS 的计算类服务: <a href="https://aws.amazon.com/compute/sla/">https://aws.amazon.com/compute/sla/</a> .</p>
 <p>对公司自己 host 的 service, 我们内部也需要一些技术指标来 track 我们为客户提供的服务质量如何, 这个叫做
 SLO(Service Level Objective). 也可以把他当成一个对内的,没有赔偿协议的SLA.</p>
-<h2 id="heading">定义指标</h2>
+<h2 id="定义指标">定义指标</h2>
 <p>我主要 track 两个指标:</p>
 <ul>
 <li>Availability (服务的可用性)</li>
@@ -123,7 +123,7 @@ service check　还是 up, 但用户就觉得你服务器挂了.</p>
 <p>针对 error budget 可以设置报警, 比如当 30%, 50%, 80% 的 budget 被用完后发送报警, 这时候就应该人工介入.</p>
 <p>这里的 total 数目，一般用上月的值来预测，根据该 service 的每月 request 增减情况做适当调整.</p>
 <p>当 error budget 接近耗完了，做操作和上线代码就要慎重了, 应该先把之前造成 error 的原因排查清楚再继续.</p>
-<h2 id="slo-policy--review">SLO policy 的变更与 review</h2>
+<h2 id="slo-policy-的变更与-review">SLO policy 的变更与 review</h2>
 <p>SLO　的指标定义和阈值可能会变化, 目前我定的 review 周期是 1 个月，会在每月初统计上个月的情况, 视情况调整阈值.</p>
 <p>当 SLO 的指标定义有变化, 要把具体算法的变动写到当月的 review doc 中.</p>
 </div>

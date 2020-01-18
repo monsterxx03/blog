@@ -95,7 +95,7 @@
           <span class="date">2019.11.29</span>
         </div>
         <div class="post_content markdown"><p><a href="https://github.com/monsterxx03/snet">snet</a>: 0.5 ~ 0.6.1, 整理从<a href="/2019/06/20/snet-dev-note-support-macos/">上一篇</a>以来的一些更新.</p>
-<h2 id="heading">新增选项</h2>
+<h2 id="新增选项">新增选项</h2>
 <p><code>proxy-scope</code>, 默认 <code>bypassCN</code>, 可选 <code>global</code>. <code>bypassCN</code> 会做国内外分流, <code>global</code> 直接让所有流量去往国外.</p>
 <p><code>host-map</code>, 为域名指定 ip. 之前在测试一个功能的时候需要在内网让手机对某个域名的解析切换到我的测试 ip 上, 坑爹的是公司的路由器竟然没这功能, 索性在 snet 里写了这个功能, 让我的台式机发射 wifi, 手机连上来, snet 的 <code>mode</code> 切换成 <code>router</code>, <code>listen-host</code> 改为 <code>0.0.0.0</code> 就好了.</p>
 <p><code>block-hosts</code>, 因为 <code>block-host-file</code> 里的域名是从一个现成的列表生成出来的, 不好支持通配符, 所以加了这个, 比如 <code>[&quot;*.hpplay.cn&quot;]</code>, 就能把电视上所有乐播投屏的广告干掉.</p>

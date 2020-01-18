@@ -112,7 +112,7 @@
 </li>
 <li>Set,  一个 set 内元素数目无限制, 无序，不超过 400KB, 但必须属于同一类型, 支持 number set, binary set, string set.</li>
 </ul>
-<h2 id="-primary-key">选择 primary key</h2>
+<h2 id="选择-primary-key">选择 primary key</h2>
 <p>Table 的 primary key 支持单一的 partition key 或复合的 partition key + sort key. 不管哪种，最后的组成的primary key 在一张表中必须唯一.</p>
 <p>简单说 partition key 用来做 hash, 决定了数据存储在底层哪个 partition 中. sort key 用来做排序, 如果几个item 共享相同的 partition key, 他们
 的 sort key 必须不同, sort key 用来在同一个 partition key 下快速定位数据。</p>
@@ -123,7 +123,7 @@
 <p>正确的做法，按月分表, user id 作 partition key, 老数据所在表设置设置较低的 read/write capacity, 要删除可以直接删表.</p>
 <p>正确的 partition key 选择: <code>user_id</code>, <code>device_id</code> 等区分度比较高的属性.</p>
 <p>错误的 partition key 选择: 年月日,  product type 等分布,访问模式不均匀，或区分度小的属性.</p>
-<h2 id="readwrite-capacity-">Read/Write capacity 和价格</h2>
+<h2 id="readwrite-capacity-和价格">Read/Write capacity 和价格</h2>
 <p>DynamoDB 的并发能力和价格由 read/write capacity 决定.</p>
 <p>一个 write capacity 在 1s 内可以处理一个写入请求.</p>
 <p>一个 read capacity 在 1s 内可以处理1个 strong consistent read 或 2 个 eventually consistent read.</p>

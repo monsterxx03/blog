@@ -96,7 +96,7 @@
         </div>
         <div class="post_content markdown"><p>go 自带的 profiling 工具很强大(pprof, trace, GODEBUG &hellip;), 但有时我还是想不修改目标进程的源码获取它的一些
 runtime 信息, 最近研究了一下 py-spy 和 delve, 发现还是可实现的, 就做了个小东西<a href="https://github.com/monsterxx03/gospy">gospy</a>.</p>
-<h2 id="heading">用法</h2>
+<h2 id="用法">用法</h2>
 <p>目前就两个命令: <code>gospy summary</code> 和 <code>gospy top</code></p>
 <p><code>sudo ./gospy summary --pid 1234</code>, 可以 dump 目标进程的一些信息和当前活动 goroutine 正在执行的函数信息,
 比如对一个 prometheus 进程做一次 snapshot:</p>
@@ -136,13 +136,13 @@ goroutines:
 <p><code>sudo ./gospy top --pid 1234</code>, 显示一个类似 top 命令的界面, 把 goroutine 按照正在执行的函数做了个 group by, 可以用来观察下有没有 goroutine 泄漏.</p>
 <p><img src="https://raw.githubusercontent.com/monsterxx03/gospy/master/images/top.png" alt="top"></p>
 <p>目前实现的性能不是很好, 如果目标进程有上百万的 goroutine, 不要轻易尝试, 但优化空间还挺大的, 后续整一下.</p>
-<h2 id="heading-1">一些限制</h2>
+<h2 id="一些限制">一些限制</h2>
 <ul>
 <li>只支持 x86_64 的 linux</li>
 <li>目标进程的 binary 需要保留 debug 信息, link 的时候传了 <code>-w -s</code> 就没办法了.</li>
 <li>build 时候如果用了 <code>-buildmod=pie</code>, 也不支持, pie 模式下, 二进制文件在进程虚拟内存里的基地址会随机化, 怎么算出这个基地址我倒是知道, 但 go build 出的 pie 格式里, 有 debug 信息, 却没有 <code>.gopclntab</code> 这个 section(用来根据 pc 查找到对应函数的行号), 目前没弄懂怎么搞&hellip; docker 官方 release 的 binary 就是 pie 模式的, 所以对 dockerd 无效.</li>
 </ul>
-<h2 id="heading-2">其他参数</h2>
+<h2 id="其他参数">其他参数</h2>
 <p><code>--bin</code>, 如果目标进程是 stripe 过的, 可以用相同源码再编译一个带 debug 信息的 binary, 用这个参数指定位置.</p>
 <p><code>--non-blocking</code>, 默认 gospy 会用 ptrace 把目标进程暂停(进程会进入 t 状态), 做完 snapshot 之手再 detach. 对目标进程是有一定性能影响的(goroutine 越多, 暂停时间越长),这个参数就是
 不暂停进程直接读取内存, 如果目标进程很活跃, 可能读不到一致的内存视图, 会失败.</p>

@@ -106,7 +106,7 @@
 <p>每天到固定时间点报大量 dns 无法解析的问题, 这些时间都是系统向用户发送批量的推送, 回来用户比较多的时候. debug 得很费劲, 最后发现是 CoreDNS 跑在了一台 t2.small 的机器上.这台机器是最早时候测试 eks 时候起的, 后续忘了换掉.</p>
 <p>难 debug 的原因是 t2.small 的 cpu credit 是 burstable 的. 其实一开始就怀疑是 CoreDNS 那边性能问题, 但在出问题的时候, CoreDNS
 和它所在 node 的 cpu 利用率都非常低, 看样子 t2 类型的机器在 cpu credit 用完后会把 cpu 锁定到某个频率, 监控上都看不出异常, 一换掉就好了.</p>
-<h3 id="heading">负载不均衡</h3>
+<h3 id="负载不均衡">负载不均衡</h3>
 <p>k8s 内 service 是用的 iptables 模式, 全部流量在 k8s 内运行时候, 经常会出现负载不均衡的问题, 经常有 node 过载. 原因是 iptables 做 round robin 的过程只在 tcp 链接建立过程中起作用, 链接建立后, 状态记录在 conntrack 里, 我开始时候 keepalive 设置得很长, 原因是以前 service 是挂在 elb 下面的，elb 后面的 service keepalive timeout 必须大于 elb 的 idle timeout(默认一分钟), 否则会报很多 504. 尝试把 keepalive 减少到 5s, 负载不均衡的问题有所减轻. 长远看还是需要换到 ipvs, 或上 service mesh.</p>
 <h3 id="deployment-rollout-and-hpa">deployment rollout and HPA</h3>
 <p>更新 deployment 的 image 版本时候, 我用 <code>kubectl set image deployment/example example:xxx --record</code>, 但更新期间总是会创建很多多余的 pod, 即使我的 rollingUpdate strategy 是:</p>
@@ -126,7 +126,7 @@ type: RollingUpdate
 <li>$0.25 per million read request units</li>
 </ul>
 <p>我的这些表线上的并发 read 也很低(前面还有层缓存), 就改成了 on-demand 模式, 更划算一点. 不过要是 read/write 可以分开设置计费模式就更好了.</p>
-<h3 id="nginx-proxy-cache--cookie-">Nginx proxy_cache 导致 cookie 错乱</h3>
+<h3 id="nginx-proxy_cache-导致-cookie-错乱">Nginx proxy_cache 导致 cookie 错乱</h3>
 <p>大部分静态文件是在 S3 上的, 但有少量在 repo 里.</p>
 <p>以前 nginx 和 frontend server 在同一台 server 上, nginx 直接 serve 静态文件, 所以没有 <code>proxy_cache</code>, 换到 k8s 之后, nginx 和 upstream 只能通过 http 交互了, 我要在 nginx 那边给静态文件设缓存.</p>
 <p>开始发现 <code>proxy_cache</code> 不生效, 原因是如果 upstream 的 response 里有特定 header 的话就会不缓存, 在我的 case 里是 <code>Set-Cookie</code>, 当时没多想,就用 <code>proxy_ignore_headers</code> 忽略 <code>Set-Cookie</code>, 强行缓存, 结果这样会把 header 里的 <code>Set-Cookie</code> header 也给缓存了. 结果不久后用户那端 出现了 cookie 错乱的情况. 业务代码里处理 cookie 的部分写得也是很狗血, 我看代码看了半天, 偶然在浏览器里看到静态文件的 reponse header 里有 <code>Set-Cookie</code> 的时候才想起之前干了这么个操作.</p>

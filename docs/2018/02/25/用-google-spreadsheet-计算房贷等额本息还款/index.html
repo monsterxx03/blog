@@ -95,7 +95,7 @@
           <span class="date">2018.02.25</span>
         </div>
         <div class="post_content markdown"><p>看房看的眼花缭乱, 网上有很多房贷计算器, 但都没什么方便的比价功能, 能直观得看到首付和月供就好啦, 但也不想注册，不想老收中介的广告,索性用 google spreadsheet 自己做个简单的吧.</p>
-<h2 id="pmt-">PMT 公式</h2>
+<h2 id="pmt-公式">PMT 公式</h2>
 <p>可以用 PMT 公式来计算等额本息的月供金额: <a href="https://support.google.com/docs/answer/3093185?hl=zh-Hans">https://support.google.com/docs/answer/3093185?hl=zh-Hans</a></p>
 <pre><code>PMT(rate, number_of_periods, present_value, [future_value, end_or_beginning])
 </code></pre>
@@ -117,7 +117,7 @@
 首付= 1190000 * 0.3 = 357000
 商贷=1190000-357000-300000=533000</p>
 <p>月供= -PMT(0.049/12 * 1, 30*12, 533000) - PMT(0.0325/12, 30 * 12, 300000) =4134</p>
-<h2 id="heading">抓取实时房价</h2>
+<h2 id="抓取实时房价">抓取实时房价</h2>
 <p>有了 PMT 公式，就能很容易的把各个楼盘的月供情况列在一起了，有没有办法让 spreadsheet 显示楼盘的最新单价呢?</p>
 <p>可以用 spreadsheet 的 IMPORTXML 函数从网页中用xpath提取元素.</p>
 <pre><code>IMPORTXML(url, xpath)

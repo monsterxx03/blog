@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>rds on Shining Moon</title>
+    <link>https://blog.monsterxx03.com/tags/rds/</link>
+    <description>Recent content in rds on Shining Moon</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>monsterxx03</copyright>
+    <lastBuildDate>Sat, 18 Jan 2020 15:20:47 +0800</lastBuildDate>
+    
+	<atom:link href="https://blog.monsterxx03.com/tags/rds/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>编写 postmortem</title>
+      <link>https://blog.monsterxx03.com/2020/01/18/%E7%BC%96%E5%86%99-postmortem/</link>
+      <pubDate>Sat, 18 Jan 2020 15:20:47 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2020/01/18/%E7%BC%96%E5%86%99-postmortem/</guid>
+      <description>成功的经验总是带有点运气成份, 失败则是必然的:). 工作中， 线上环境的问题千奇百怪, 有的来自自己代码 bug, 有的是配置错误, 有时候是第三方的 vendor 成了猪队友. 对于一些排查过程比较困难或具有代表性的问题, 需要记录下来, 一般把这个过程叫做 postmortem(验尸). 这篇写一下自己做 postmortem 的过程, 并记录一个最近处理的故障. Postmortem process 我大体分以下几个部分: 用尽量简练的语句描述清楚在什么时间发生了什么,谁参与了问题的处理(wh</description>
+    </item>
+    
+  </channel>
+</rss>

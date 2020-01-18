@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Mon, 30 Dec 2019 12:08:47 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 18 Jan 2020 15:20:47 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,9 +15,18 @@
     <item>
       <title>AWS</title>
       <link>https://blog.monsterxx03.com/tags/aws/</link>
-      <pubDate>Mon, 30 Dec 2019 12:08:47 +0800</pubDate>
+      <pubDate>Sat, 18 Jan 2020 15:20:47 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/tags/aws/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rds</title>
+      <link>https://blog.monsterxx03.com/tags/rds/</link>
+      <pubDate>Sat, 18 Jan 2020 15:20:47 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/rds/</guid>
       <description></description>
     </item>
     
@@ -238,7 +247,7 @@
     </item>
     
     <item>
-      <title>Redshift</title>
+      <title>redshift</title>
       <link>https://blog.monsterxx03.com/tags/redshift/</link>
       <pubDate>Fri, 12 Oct 2018 14:49:13 +0800</pubDate>
       

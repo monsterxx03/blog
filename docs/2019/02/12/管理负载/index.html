@@ -114,7 +114,7 @@
 <p>GSLB (global software load balancer) 充当各层之间的胶水, maglev　找最近的 GFE, GFE 找最近的 backend 都是通过 GSLB.</p>
 <p>GCLB (google cloud load balancing) 基于以上技术栈构建提供给 gce 用户的负载均衡方案． 用户创建 gclb 的时候,　会创建一个　vip, 并通知 Maglev, 来将发送到这个 vip 的数据包转发到最近的 GFE, GFE 再转发到用户的 backend service.</p>
 <p>相比较而言 AWS 的 ELB, ALB, NLB, 就传统多了, 没有 Maglev 这么潮,也不提供跨 region 的负载均衡能力.</p>
-<h3 id="pokemon-go-">Pokemon Go 的扩容例子</h3>
+<h3 id="pokemon-go-的扩容例子">Pokemon Go 的扩容例子</h3>
 <p>书里拿 Niantic 的 Pokemon Go 在 GCE 上的扩容做了个例子,来解释这套技术栈的应用.</p>
 <p>Pokemon Go 上线前, 他们预估的 traffic 是 X, 压测时候保证了他们的 infra 能在 5X 的负载之下工作. 可实际流量远超预期, 达到了 50X.</p>
 <p>在 Pokemon Go 刚 launch 的时候, 负载均衡用的是 GCE 的 NLB, 和 AWS 的 NLB 一样是个 region only 的 4 层负载均衡, 挂在 NLB 后面其实就是挂在了 Maglev 后面. Niantic 的 cluster 是 kubernetes, 结构如下图:</p>

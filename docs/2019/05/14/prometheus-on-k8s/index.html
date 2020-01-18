@@ -112,7 +112,7 @@ autoscaler 做 scale up/down 决策的数据来源也是它, metrics-server 只�
 <h2 id="kube-state-metrics">kube-state-metrics</h2>
 <p><a href="https://github.com/kubernetes/kube-state-metrics">kube-state-metrics</a> 会监听 k8s apiserver, 获取 cluster 中 object的状态变化(deployment, node, endpoint, pod&hellip;), 完整的列表: <a href="https://github.com/kubernetes/kube-state-metrics/tree/master/docs,">https://github.com/kubernetes/kube-state-metrics/tree/master/docs,</a> 在内存中保存这些 object 的最新状态.</p>
 <p>prometheus 可以通过 kube-state-metrics 来获取 k8s 集群信息.</p>
-<h1 id="-prometheus">部署 prometheus</h1>
+<h1 id="部署-prometheus">部署 prometheus</h1>
 <p>在 k8s 上部署　prometheus, 我碰到了以下选择:</p>
 <ol>
 <li>直接部署 prometheus 的 helm chart:　https://github.com/helm/charts/tree/master/stable/prometheus</li>
@@ -152,7 +152,7 @@ default     prom-op-prometheus-operato-prometheus           4d
 </code></pre>
 <p>prometheus 和 alertmanager 的 pod 中都有 监控 configmap/secrets 的 container, 如果挂载的 配置文件发生了修改(k8s 同步 configmap 需要1分钟左右), 会让 server 进程 reload 配置文件.</p>
 <p>grafana 我是单独部署的, 没有用 prometheus-operator chart弄, 因为需要修改一些细节参数(resources, pvc&hellip;), kube-prometheus 中的 dashboard: <a href="https://github.com/coreos/kube-prometheus/blob/master/manifests/grafana-dashboardDefinitions.yaml">https://github.com/coreos/kube-prometheus/blob/master/manifests/grafana-dashboardDefinitions.yaml</a> 可以拿来直接用.</p>
-<h2 id="-etcd-kubelet-kube-controller-kube-scheduler-coredns">监控 etcd, kubelet, kube-controller, kube-scheduler, coredns</h2>
+<h2 id="监控-etcd-kubelet-kube-controller-kube-scheduler-coredns">监控 etcd, kubelet, kube-controller, kube-scheduler, coredns</h2>
 <p>在 operator 的 chart 中可以 enable 对应的选项, 因为 eks 上 etcd, kube-controller, kube-scheduler 是托管的, 没法直接访问, 所以我 disable 了.</p>
 <p>看下监控 kubelet 具体干了什么:</p>
 <pre><code>kubectl get servicemonitor  prom-op-prometheus-operato-kubelet -o yaml

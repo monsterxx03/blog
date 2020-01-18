@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.62.2" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -15,13 +14,13 @@
   
 
   
-  <link rel="canonical" href="https://blog.monsterxx03.com/"/>
+  <link rel="canonical" href="https://blog.monsterxx03.com/tags/rds/"/>
 
   
-  <link rel="alternate" type="application/rss&#43;xml" href="https://blog.monsterxx03.com/index.xml">
+  <link rel="alternate" type="application/rss&#43;xml" href="https://blog.monsterxx03.com/tags/rds/index.xml">
   
 
-  <title>Shining Moon</title>
+  <title>rds &middot; Shining Moon</title>
 
   <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
   <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
@@ -89,86 +88,24 @@
 </div>
 
   <div class="content">
-    
-
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2016/07/16/mysql-innodb-buffer-pool/'>MySQL innodb buffer pool</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>最近在对公司的 MySQL 服务器做性能优化, 一直对 innodb 的内存使用方式不是很清楚, 乘这机会做点总结.</p>
-<p>在配置 MySQL 的时候, 一般都会需要设置 <em>innodb_buffer_pool_size</em>, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.</p>
-<p>之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2016.07.16</span>
-        </span>
+    <div class="list_with_title">
+      
+      <div class="listing_title">2020</div>
+      <div class="listing">
         
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/database/">Database</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/mysql/">MySQL</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
-          
-        </span>
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="/2020/01/18/%E7%BC%96%E5%86%99-postmortem/">编写 postmortem</a>
+            <div class="post_time"><span class="date">01-18</span></div>
+          </div>
+        </div>
         
       </div>
+      
     </div>
+    <div class="pagination"></div>
   </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/about/'>About Me</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>Work with tech, belive in magic, live on fun :)
-Daily work:
- Cloud infrastructure: AWS management, config management/monitoring/alerting/performance tuning. Data infrastructure: data warehouse/lake, ETL. Build CI/CD pipeline for fast deployment flow. Chaos is my friend.  I work with python/golang/js/shell, but always think language is the most trival part in life. Be professional, write robust code and useful doc.
-email: xyj.asmy@gmail.com......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2016.01.01</span>
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<div class="pagination">
-  
-  
-  <a href="/page/8/" class="pre">
-    返回上一页
-  </a>
-  
-  
-  
-</div>
-
-  </div>
+  <a id="back_to_top" href="#" class="back_to_top"><span>△</span></a>
 </div>
 <footer class="footer">
   <div class="powered_by">

@@ -102,7 +102,7 @@
 要通过 iptables 把　coredns 的 cluster ip, 转化到它真实的可路由 ip, 中间需要 SNAT, DNAT, 并在
 conntrack 内记录映射关系.</p>
 <p>这可能会带来两个问题:</p>
-<h3 id="conntrack-table--udp--dns-">conntrack table 被 udp 的 dns 查询填满</h3>
+<h3 id="conntrack-table-被-udp-的-dns-查询填满">conntrack table 被 udp 的 dns 查询填满</h3>
 <p>udp 是无连接的, tcp 关闭链接就会清理 conntrack 内记录, udp 不会，只能等超时, 默认 30s(<code>net.netfilter.nf_conntrack_udp_timeout</code>)
 短时间内大量 udp 查询可能填满 conntrack, 导致丢包.</p>
 <p>怀疑是这个原因的话, 首先看系统允许的最大 conntrack 是多少(默认值由内存大小决定,不同发行版和内核版本上好像参数名不太一样, 我在 amazon linux 2,kernel 4.14 下测试):</p>
@@ -111,7 +111,7 @@ conntrack 内记录映射关系.</p>
 <p>查看当前已使用 conntrack 数目:</p>
 <pre><code>sysctl net.netfilter.nf_conntrack_count
 </code></pre>
-<h3 id="snat-dnat-">SNAT, DNAT 的资源竞争导致丢包</h3>
+<h3 id="snat-dnat-的资源竞争导致丢包">SNAT, DNAT 的资源竞争导致丢包</h3>
 <p>在多线程 dns 查询下, SNAT,DNAT 可能会有个资源竞争的 bug, 导致部分 udp 包被 drop, 体现在 client 端就是5s 超时后重试, 详细解释和可能的 workaround 可以看这两篇:</p>
 <ul>
 <li><a href="https://www.weave.works/blog/racy-conntrack-and-dns-lookup-timeouts">https://www.weave.works/blog/racy-conntrack-and-dns-lookup-timeouts</a></li>
@@ -122,7 +122,7 @@ conntrack 内记录映射关系.</p>
 cpu=1           found=23588937 invalid=1 ignore=1418117 insert=0 insert_failed=0 drop=0 early_drop=0 error=0 search_restart=8585
 </code></pre>
 <p>看 <code>insert_failed</code> 那项, 如果不为0, 就是这个原因造成的.</p>
-<h3 id="heading">测试</h3>
+<h3 id="测试">测试</h3>
 <p>conntrack 填满的问题对我影响不大, 在 server 上抓了下包, 查询量不大, 4GB 内存的测试节点上, <code>nf_conntrack_max</code> 值默认有 13w 多, 完全够用.</p>
 <p>SNAT, DNAT 资源竞争的问题比较搞, 写了个简单的程序来 benchmark dns 查询: <a href="https://gist.github.com/monsterxx03/8217a664d301a1b3c07c983eefcb1a3b">https://gist.github.com/monsterxx03/8217a664d301a1b3c07c983eefcb1a3b</a></p>
 <p>用法:</p>
@@ -151,7 +151,7 @@ options ndots:5
 </ul>
 <p>要第5次才能得到结果, workaround 是使用 <code>google.com.</code> 这样以点号结尾的 fqdn, 会跳过 search domain.</p>
 <p>如果是 cluster 内域名, 跨 namespace 使用完整域名: <code>&lt;service&gt;.&lt;namespace&gt;.svc.cluster.local</code></p>
-<h2 id="ingress-">Ingress 的问题</h2>
+<h2 id="ingress-的问题">Ingress 的问题</h2>
 <p>目前用的比较多的是 nginx ingress controller. 它实际就是创建了一个 type 为 Loadbalancer 的 service,
 在 AWS 上会 provision 一个 ELB(4层lb), 在所有 worker 节点上创建一个 NodePort, 挂载到 ELB 后面.</p>
 <p>流量进来的时候，会通过 ELB 路由到任意一个 node 的 NodePort, 问题是 nginx ingress controller 创建的 nginx

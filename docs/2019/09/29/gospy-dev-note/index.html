@@ -95,7 +95,7 @@
           <span class="date">2019.09.29</span>
         </div>
         <div class="post_content markdown"><p><a href="/2019/09/20/gospy-non-invasive-goroutine-inspector/">前文</a>讲了下 gospy 的大致用法, 这篇记录具体实现和过程中碰到的一些问题.</p>
-<h2 id="heading">原理</h2>
+<h2 id="原理">原理</h2>
 <p>要从外部获取 golang 进程的 runtime 信息, 需要做得是从进程的 binary 中的 debug 信息里 parse 出需要的一些变量的虚拟内存地址, 读取目标进程的内存, 得到相应的数据,
 将两者映射起来就好了.只支持了 linux 上的 ELF 格式 binary, debug 信息是 go 在编译时候弄进去的, 格式是通用的 DWARF.</p>
 <p>ELF 和 DWARF 格式本身不细究(汗, 文档几百页也实在看不动), go 标准库里自带相应的 parser: <code>debug/elf, debug/dwarf, debug/gosym</code>. 一个基本的读取例子:</p>
@@ -114,7 +114,7 @@ symtab, _ := gosym.NewTable([]byte{}, ln)
 每个 goroutine 的当前内存地址, <code>runtime.g</code> 是代表 goroutine 的结构体，把它的每个字段 offset 往 goroutine 的内存地址上一映射，就能得到每个字段的值.</p>
 <p><code>runtime.g</code> 里有两字段 <code>gopc</code> 和 <code>startpc</code>, 前者是 goroutine 当前运行函数的 PC 值, 后者是触发这个 goroutine 的函数的 PC 值, 相当于提供了两种视角来看 goroutine,
 调用 <code>symtab.PCToLine(pc)</code>, 就能得到对应函数信息. golang 的 GMP 调度模型里的其他 P, M, sched, 信息也能用相同的方式 parse 出来.</p>
-<h2 id="-dwarf--parse--struct">从 DWARF 中 parse 出 struct</h2>
+<h2 id="从-dwarf-中-parse-出-struct">从 DWARF 中 parse 出 struct</h2>
 <p>DWARF 里 parse 变量地址比较简单，不提了, struct 比较搞. 开始看了下 delve 的实现，它实现了一套比较完整的 DWARF 地址转换代码, 对我的需求来说过于复杂. 先手工 dump 了下 ELF 中的 DWARF 信息, 看看有什么规律:</p>
 <pre><code>readelf -W --debug-dump=info &lt;elf file&gt;
 </code></pre>
@@ -147,7 +147,7 @@ symtab, _ := gosym.NewTable([]byte{}, ln)
 </code></pre>
 <p>最左边的 <code>&lt;1&gt;, &lt;2&gt;</code>表示层级，所有 struct field 都在第二级. <code>&lt;3ac4b&gt;</code> 这样的是该字段在 binary 中的 offset(其实就能当虚拟内存地址, 进程启动的时候直接把 binary mmap 进内存了嘛).</p>
 <p><code>DW_TAG_structure_type</code> 这一节里的 <code>DW_AT_byte_size</code> 是整个 struct 的大小, 每个字段都是　<code>DW_TAG_member</code>, 里面的 <code>DW_AT_DATA_member_location</code> 是该字段在 struct 内的 offset, 减去上一个字段的 offset 值，就能得到该字段的 size, 遍历一次就能得到整个 struct 结构.</p>
-<h2 id="heading-1">读取进程内存</h2>
+<h2 id="读取进程内存">读取进程内存</h2>
 <p>从 DWARF 里能得到需要的变量的虚拟内存地址，拿着这个地址去读内存就能得到需要的数据. 怎么读呢? 有三种方法.</p>
 <p>一般做法是先 <code>PTRACE_ATTACH</code>, 暂停进程, 然后 <code>PTRACE_PEEKDATA</code>, 读取对应内存. 限制是 <code>PTRACE_PEEKDATA</code> 每次只能读取一个 long, 8 字节, 要读取一块连续内存就要切片多次调用.</p>
 <p><a href="https://github.com/benfred/py-spy">py-spy</a> 用的是 <code>process_vm_readv</code>, 从 linux 3.2 开始支持, 可以读取连续内存.</p>

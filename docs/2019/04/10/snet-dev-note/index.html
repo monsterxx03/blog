@@ -95,7 +95,7 @@
           <span class="date">2019.04.10</span>
         </div>
         <div class="post_content markdown"><p>完成 <a href="https://github.com/monsterxx03/snet">SNET</a> 初版后又做了些后续更新,　记录一点.</p>
-<h2 id="-http-tunnel">支持 http tunnel</h2>
+<h2 id="支持-http-tunnel">支持 http tunnel</h2>
 <p>配置文件里增加一个 <code>proxy-type</code> 选项, 默认为 <code>ss</code>, 可改成 <code>http</code>, 这样可以将
 支持 http tunnel 的代理服务器作为 upstream(例如 squid). 填上 <code>http-proxy-</code> 开头
 的选项就行.</p>
@@ -106,7 +106,7 @@
 <li>client 后续向该 tcp connection 写入的数据都会被 server 转发到 tgt-host:tgt-port</li>
 </ul>
 <p>改动的时候把 upstream proxy 的部分重构了一下, 抽了个 <code>Proxy</code> interface 出来, 后续想对接其他协议方便扩展.</p>
-<h2 id="-udp-">对 udp 支持的尝试</h2>
+<h2 id="对-udp-支持的尝试">对 udp 支持的尝试</h2>
 <p>对 tcp 流量的转发能通过 iptables REDIRECT 实现的, 通过 getsockoption 可以知道 tcp connection
 的原目标, 但这对 udp 行不通, REDIRECT 之后拿不到原 target.</p>
 <p>shadowsocks-libev 对 udp 转发的支持是通过 iptables 里的 tproxy target 实现的, 尝试了一下 tproxy, 但是 tproxy 只能
@@ -118,7 +118,7 @@
 <a href="https://github.com/EtiennePerot/sshuttle/blob/master/firewall.py#L201">https://github.com/EtiennePerot/sshuttle/blob/master/firewall.py#L201</a>
 脑洞很大, 看上去很麻烦&hellip;没尝试.</p>
 <p>目前我对 udp 实在没什么需求, 暂时没什么动力弄了, 要做的话估计只能通过 tun 来搞(引入 lwip 总有点杀鸡用牛刀的感觉).</p>
-<h2 id="dns--bug">dns 处理的一个 bug</h2>
+<h2 id="dns-处理的一个-bug">dns 处理的一个 bug</h2>
 <p>用了一整子一直都很稳定, 但今天在用 kubectl 倒腾 k8s 的时候发现了问题, k8s cluster 在国外, api server 也是国外 ip.
 开了 snet 后用 kubectl 巨慢无比, 而且经常 timeout. 关了 snet 直连却很快.</p>
 <p>在 upsteam server 上试了下, 到 k8s api server 速度没问题.</p>

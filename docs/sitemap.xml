@@ -3,8 +3,43 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://blog.monsterxx03.com/tags/aws/</loc>
+    <lastmod>2020-01-18T15:20:47+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.monsterxx03.com/categories/</loc>
-    <lastmod>2020-01-02T13:04:22+08:00</lastmod>
+    <lastmod>2020-01-18T15:20:47+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/posts/</loc>
+    <lastmod>2020-01-18T15:20:47+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/rds/</loc>
+    <lastmod>2020-01-18T15:20:47+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/</loc>
+    <lastmod>2020-01-18T15:20:47+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/</loc>
+    <lastmod>2020-01-18T15:20:47+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/categories/tech/</loc>
+    <lastmod>2020-01-18T15:20:47+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/2020/01/18/%E7%BC%96%E5%86%99-postmortem/</loc>
+    <lastmod>2020-01-18T15:20:47+08:00</lastmod>
   </url>
   
   <url>
@@ -13,33 +48,8 @@
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/posts/</loc>
-    <lastmod>2020-01-02T13:04:22+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/</loc>
-    <lastmod>2020-01-02T13:04:22+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://blog.monsterxx03.com/2020/01/02/%E5%9F%BA%E9%87%91%E5%AE%9A%E6%8A%95%E5%A4%8D%E7%9B%98/</loc>
     <lastmod>2020-01-02T13:04:22+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/tags/aws/</loc>
-    <lastmod>2019-12-30T12:08:47+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/tags/</loc>
-    <lastmod>2019-12-30T12:08:47+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/categories/tech/</loc>
-    <lastmod>2019-12-30T12:08:47+08:00</lastmod>
   </url>
   
   <url>

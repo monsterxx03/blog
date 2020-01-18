@@ -94,7 +94,7 @@
           <h2><a href='/2018/02/23/glow-infra-evolution/'>Glow Infra Evolution</a></h2>
           <span class="date">2018.02.23</span>
         </div>
-        <div class="post_content markdown"><h1 id="glow-data-infrastructure-">Glow data infrastructure 的演化</h1>
+        <div class="post_content markdown"><h1 id="glow-data-infrastructure-的演化">Glow data infrastructure 的演化</h1>
 <p>Glow 一向是一个 data driven 做决策的公司，稳定高效的平台是必不可少的支撑, 本文总结几年里公司 data infrastructure 的演进过程.</p>
 <p>结合业务特点做技术选型和实现时候的几个原则:</p>
 <ol>
@@ -117,7 +117,7 @@
 <li>用户活动产生的 metrics log</li>
 <li>从各种第三方服务 api 拉下来的数据 (email之类)</li>
 </ol>
-<h2 id="heading">最早期</h2>
+<h2 id="最早期">最早期</h2>
 <p>刚开始的时候业务单纯，数据量也少, 所有数据都用 MySQL 存储，搭了台 slave, 分析查询都在 slave 上进行.</p>
 <p><img src="/posts/images/glow-infra/1.png" alt="1"></p>
 <p>优点是简单, 缺点也很明显:</p>
@@ -127,7 +127,7 @@
 <li>metrics log 和业务数据库不在一起， 无法做 join</li>
 <li>贵</li>
 </ol>
-<h2 id="-redshift">引入 Redshift</h2>
+<h2 id="引入-redshift">引入 Redshift</h2>
 <p>随着业务发展，MySQL 已经放不下 metrics log 了，更换更大的 instance 不划算, 性能也跟不上，算个 retention 要半个小时, 每天的 metrics report 越出越慢.</p>
 <p>这个阶段，我们要引入数据仓库, 用了 AWS 的 Redshift.</p>
 <p>当时也写过关于 Redshift 使用和优化的文章: <a href="http://tech.glowing.com/cn/redshift-as-data-warehouse/">redshift as data warehouse</a></p>
@@ -149,7 +149,7 @@
 <li>业务数据库全量更新, 只是当前阶段可接受, 长远来看不行.</li>
 <li>metrics log 增量很快, 现在是全存 SSD 的 Redshift 集群, 可预见的未来当前架构成本会很高.</li>
 </ol>
-<h2 id="-metrics-log-">减少 metrics log 的存储成本</h2>
+<h2 id="减少-metrics-log-的存储成本">减少 metrics log 的存储成本</h2>
 <p>metrics log 存进 Redshift 之后, 因为能对数据做按行压缩, 存储成本已经比之前 MySQL 低很多了, 我们的压缩比大概在 1:5.</p>
 <p>但数据增长实在太快,Redshift 扩容了几次之后, 我们觉得有必要消减成本.</p>
 <p>metrics log 是基于时间的数据, 产品分析一般也就需要最近几个月的数据，半年前的数据偶尔会用下,
@@ -161,7 +161,7 @@
 <li>为了做分析, 线上数据库在两个集群中都复制了一遍, 太冗余.</li>
 <li>HDD 集群迟早也是要扩容的.</li>
 </ol>
-<h2 id="-redshift--delay">减少线上数据库到 Redshift 的 delay</h2>
+<h2 id="减少线上数据库到-redshift-的-delay">减少线上数据库到 Redshift 的 delay</h2>
 <p>前面说过线上数据库是每天全量更新到 Redshift 的, 随着时间的推移, ETL 运行的时间越来越长, 要想办法做增量更新.</p>
 <p>原理很简单，拉 MySQL 的 binlog， 解析后就能增量更新 Redshift 里数据了, 正好 AWS 的 DMS
 差不多在这时候支持将数据导入 Redshift 了, 所以就把这块的 ETL 迁移到 DMS 上去.</p>
@@ -178,7 +178,7 @@
 <li>Redshift 添加新列只能在表末尾, 而且不能改现有列属性, MySQL 里做 DDL 会导致 DMS task 失败, 可以单独把做 DDL 的表 reload.</li>
 <li>DMS 的配置很复杂，一定要用代码管理起来，不要手工设置, 我用 <a href="https://terraform.io">terraform</a> 来管理 AWS.</li>
 </ol>
-<h2 id="-hdd--redshift-">淘汰掉 HDD 的 Redshift 集群</h2>
+<h2 id="淘汰掉-hdd-的-redshift-集群">淘汰掉 HDD 的 Redshift 集群</h2>
 <p>HDD 的 Redshift 虽然减少了成本，但带来了管理的复杂, hive 和 postgresql 支持 external table, Redshift 也能用多好?</p>
 <p>17 年 4 月的时候, Redshift 发布了 spectrum, 终于支持拿 S3 上数据做 external table 啦.</p>
 <p>决定把老的 metrics log 数据搬到 S3 上去, 关于 spectrum 的使用, 和 athena 的关系,以前也写过: <a href="http://tech.glowing.com/cn/shi-yong-redshift-spectrum-cha-xun-s3-shu-ju/">使用 Redshift Spectrum 查询 S3 数据</a></p>
@@ -190,7 +190,7 @@
 <li>用 S3 做 data lake，价格进一步降低.</li>
 <li>新老数据在一个 DB 里, 方便查询和 join.</li>
 </ol>
-<h2 id="-audit">线上数据的 Audit</h2>
+<h2 id="线上数据的-audit">线上数据的 Audit</h2>
 <p>对于部分关键业务表(支付相关)，我们希望从 DB 层记录下它的所有历史更改, 所以需要记下 binlog, 以前也做过，不过只是单纯得把 binlog 拉下来，存到 S3 上去, 由于存的是裸数据，要看比较麻烦.</p>
 <p>希望能直接在 redshift 里查询 MySQL 任意一张表的 binlog.</p>
 <p><img src="/posts/images/glow-infra/5.png" alt="5"></p>
@@ -200,7 +200,7 @@
 <p>firehose 和 S3 之间为什么夹了个 lambda? 这是因为 firehose 比较傻, 它会一次 flush 多条记录到 S3 上，但每条之间没有分隔，直接拼在一起，所以多条 json 记录变到1行去了, athena 和 redshift 都无法识别. 官方建议在数据源头给每条最后加个<code>\n</code>, 但我又改不了 maxwell 的输出格式，只能先拿 lambda 凑合下.</p>
 <p>在 athena 和 redshift 里都对 s3 做了 external table, 原因是在当前的数据格式下(每条记录都是嵌套的json) athena 里查询更方便, 因为它是基于 <a href="https://prestodb.io/">presto</a> 的， 支持嵌套 struct 和 map 结构, 目前 redshift 支持 delimiter 分隔的数据, 实际使用时候需要用一些内置函数提取特定字段, 不是很方便, json 支持在 roadmap 上, 目前还是 athena 更方便.</p>
 <p>在 ETL 部分，可以把 firehose 和 lambda 去掉, 自己订阅 kinesis 的数据实现上传 s3.</p>
-<h2 id="heading-1">总结</h2>
+<h2 id="总结">总结</h2>
 <p>以上是 Glow 最近几年基于 AWS 构建 data infrastructure 的过程. 实际实施过程中，最麻烦的还是系统迁移时候老数据的 migration, 在刚转换过去的时候难免会碰到一些坑, 积极试错很有必要.</p>
 </div>
         <div class="post_footer">

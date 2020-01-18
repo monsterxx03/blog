@@ -121,7 +121,7 @@
 </code></pre>
 <p><code>ls</code> 命令就会在 test container 里执行, 如果不用 <code>container()</code> step 的话，默认会在 pod 的 default container 里执行.</p>
 <p>每个 pod 里除了自己定义的 container 之外, 还会自动起一个 jnlp 的 container, 用来把 pod 变成 jenkins slave, 和 master 通信.</p>
-<h2 id="heading">单元测试</h2>
+<h2 id="单元测试">单元测试</h2>
 <p>原先 ci 上最麻烦的部分是跑单元测试, 环境配置很复杂, 包含:</p>
 <ul>
 <li>MySQL</li>
@@ -143,7 +143,7 @@ ut 的 container 挂载这个 pvc, 并在 pod 启动的时候用 init container 
 <p>因为每个 repo 跑 ut 的 pipeline 流程都差不多,只是参数区别, 所以可以把 ut 的 pipeline 写成 groovy shared lib, 从每个 repo 的 Jenkinsfile 里传需要自定义的参数就好了,
 可以参考: <a href="https://jenkins.io/blog/2017/10/02/pipeline-templates-with-shared-libraries/">https://jenkins.io/blog/2017/10/02/pipeline-templates-with-shared-libraries/</a></p>
 <p>这里碰到了一个 bug, 我的代码目录是挂在 slave 的 jenkins home 外面的, 此时在 pipeline 里用 <code>dir()</code> step 切换到代码目录的时候会报 AccessDenied 错误: <a href="https://issues.jenkins-ci.org/browse/JENKINS-54512">JENKINS-54512</a>, dir step 只能在 workspace 内部切换位置. 同样的 <code>junit</code> step 也没法把 workspace 外的 report xml 发布成 ut report.</p>
-<h2 id="-pod-build">多 pod build</h2>
+<h2 id="多-pod-build">多 pod build</h2>
 <p>我还有一个需求是可以在一个 jenkins job 内并行启动多个 pod 进行 build.</p>
 <p>场景是有个 repo 里面有 5 个前端项目, 当然可以分别建 5 个 jenkins job, 但能从一个 job 里选择要 build 哪几个项目会方便很多.</p>
 <p>用 script 的方式编写 pipeline 可以做到:</p>
@@ -169,7 +169,7 @@ ut 的 container 挂载这个 pvc, 并在 pod 启动的时候用 init container 
 <p>因为现在 build 时候的 pod 都是动态 schedule 的了, yarn/npm 的本地 cache 就没意义, 我用 <a href="https://github.com/runk/npm-proxy-cache">npm-proxy-cache</a>
 做了一个代理 cache 部署到 k8s 里(挂块 pvc 上去做 storage dir). npm/yarn install 的时候指定 <code>--proxy --https-proxy</code>　来使用缓存(还要设置 strict-ssl false).
 即使 npm registry 挂了也不影响 build.</p>
-<h2 id="-cluster-autoscaler-">和 cluster-autoscaler 集成</h2>
+<h2 id="和-cluster-autoscaler-集成">和 cluster-autoscaler 集成</h2>
 <p>cluster-autoscaler 我也是用 helm chart 部署的, 设置成 autodiscovery 模式, 在 autoscaling group 上加上 tag:</p>
 <pre><code>k8s.io/cluster-autoscaler/enabled: 'true'
 k8s.io/cluster-autoscaler/sandbox-eks:  ''

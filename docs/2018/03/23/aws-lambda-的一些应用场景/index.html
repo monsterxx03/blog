@@ -97,7 +97,7 @@
         <div class="post_content markdown"><p>这几年吹 serverless 的比较多,  在公司内部也用 lambda , 记录一下, 这东西挺有用, 但远不到万能, 场景比较有限.</p>
 <p>lambda 的代码的部署用的 <a href="https://serverless.com">serverless</a> 框架, 本身支持多种 cloud 平台, 我们就只在 aws lambda 上了.</p>
 <p>我基本上就把 lambda 当成 trigger 和 web hook 用.</p>
-<h2 id="--auto-scaling-group-">和  auto scaling group 一起用</h2>
+<h2 id="和--auto-scaling-group-一起用">和  auto scaling group 一起用</h2>
 <p>线上所有分组的机器都是用 auto scaling group 管理的, 只不过 stateless 的 server 开了自动伸缩, 带状态的 (ElasticSearch cluster, redis cache cluster) 只用来维护固定 size.</p>
 <p>在往一个 group 里加 server 的时候, 要做的事情挺多的, 给新 server 添加组内编号 tag, 添加内网域名, provision, 部署最新代码.</p>
 <p>这些事都用 jenkins 来做, 但怎么触发 jenkins job 呢?</p>
@@ -110,15 +110,15 @@
 <li>因为 jenkins 部署在内网, lambda function 需要设置好相应的 vpc 和安全组 才能访问.</li>
 <li>auto scaling group scale in 时候的关闭策略, 我选的是 newest server, 虽然 provision 的代码每次改动都很小心, 但万一有问题, 需要把新加的 server 销毁, 这样的策略比较方便.</li>
 </ul>
-<h2 id="-log--audit">对 log 做 audit</h2>
+<h2 id="对-log-做-audit">对 log 做 audit</h2>
 <p>Redshift 的 audit log 会被定时上传到 S3, 用 lambda 做了一个 S3 upload object 的 trigger, 每次上传会检测日志内容, 如果有登陆失败, 或账号创建删除等事件的 log 时候, 发邮件出来.</p>
-<h2 id="-webhook">做 webhook</h2>
+<h2 id="做-webhook">做 webhook</h2>
 <p>和第三方服务有一些交互, 他们会定时 post 一些数据过来, 需要把这些数据导入 redshift.</p>
 <p>结合 api gateway 和 lambda, 可以很方便地做 webhook, 收到 post 消息, 后导入 redshift.</p>
 <p>一般一个 lambda function 只处理一件事， 如果有好几个 webhook 举要设置好多个 lambda, 管理起来比较麻烦, 可以用 <a href="https://github.com/logandk/serverless-wsgi">service-wsgi</a>, 这样一个 lambda function 可以做成一个 python wsgi app, 就能直接用 flask 之类的框架来做路由, 内部根据 url path 处理多个 webhook.</p>
-<h2 id="-external-health-check">做 external health check</h2>
+<h2 id="做-external-health-check">做 external health check</h2>
 <p>lambda 支持像 cronjob 一样定时运行, 配合 aws 的多 region, 可以很方便的从全球各个地区对 server 做 health check.</p>
-<h2 id="lambda-">lambda 的一些限制</h2>
+<h2 id="lambda-的一些限制">lambda 的一些限制</h2>
 <ul>
 <li>本地临时目录最多写入 512MB</li>
 <li>单个 function 内存最多分配 3008 MB</li>

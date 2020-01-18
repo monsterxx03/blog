@@ -100,12 +100,12 @@
         <div class="post_content markdown"><p>最近在对公司的 MySQL 服务器做性能优化, 一直对 innodb 的内存使用方式不是很清楚, 乘这机会做点总结.</p>
 <p>在配置 MySQL 的时候, 一般都会需要设置 <em>innodb_buffer_pool_size</em>, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.</p>
 <p>之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?</p>
-<h2 id="buffer-pool--lru-">Buffer Pool 的 LRU 机制</h2>
+<h2 id="buffer-pool-的-lru-机制">Buffer Pool 的 LRU 机制</h2>
 <p>innodb buffer pool 在内存中其实是一个 list, 维护数据的确是用 LRU, 但是做了点优化.</p>
 <p>buffer pool 将数据切割成两块, 头部是 young page list, 尾部是 old page list. 两者的空间比例默认是5: 3, 可以通过 <em>show variables like “innodb_old_blocks_pct”</em> 查看, old block的比例即为 37%.</p>
 <p>当数据第一次被从磁盘上读取, 要加入 buffer pool 时, 会先放在 old page list 的头部, 此时如果 old page list 满了,则会把它尾部的数据踢出去. 当数据在buffer pool中被再次访问的时候, 如果它在 old page list 中, 则会被转移到 young page list 的头部(如果数据已经在 young page list 中, 则只有它和头结点的距离超过一定长度时才会被转移到头部).</p>
 <p>通过这种机制, 可以有效得避免临时的大量数据读取冲刷掉 hot page, 这些一次性的数据如果没有被访问的话,很快会被从old page list 中踢出去.</p>
-<h2 id="-buffer-pool-">查看 buffer pool 的使用状况</h2>
+<h2 id="查看-buffer-pool-的使用状况">查看 buffer pool 的使用状况</h2>
 <p>使用 <em>show engine innodb status</em>, 可以获取 innodb 的运行信息, 查看其中 <em>BUFFER POOL AND MEMORY</em> 一节, 可以看到 innodb buffer的使用情况.</p>
 <p>示例:</p>
 <pre><code>BUFFER POOL AND MEMORY
@@ -136,7 +136,7 @@ I/O sum[374688]:cur[1688], unzip sum[0]:cur[0]
 <p><em>Old database pages</em>: old page list 中的 page 数目.</p>
 <p><em>youngs/s</em>: 每秒对 old page list 的访问次数(不是page的个数), 这种访问会就会把page从 old list 里移动到 new page list 的头部.</p>
 <p><em>evicted without access</em>: 放进 buffer pool 一次都没访问过就被踢出去的 page 数目. 如果发生了全表扫描, 这个数值可能就会临时变高.</p>
-<h2 id="heading">补充</h2>
+<h2 id="补充">补充</h2>
 <p>因为多线程对 buffer pool 进行访问的时候会发生资源竞争, MySQL 支持对 buffer pool 进行 sharding, 从而提高并发性能, 参数是_innodb_buffer_pool_instances_.</p>
 <p>每个 instance 的 size = <em>innodb_buffer_pool_size/innodb_buffer_pool_instances</em></p>
 <p>官方推荐 sharding 后单个 instance 的 size 不要小于 1G*B. 比如我现在 pool 的总 size 是10 GB, 我设置的 instance 个数就是8.</p>

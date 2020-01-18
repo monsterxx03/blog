@@ -247,7 +247,7 @@ else:
 </ol>
 <p>以上2-4过程封装成 <code>migrate.py create</code> 命令. 注意在生成之前要先检查当前的所有 revision 是不是已经在当前数据库中运行过了(检查 db_revisions 表), 如果没有要终止生成, 否则代码和生成的 migration sql 对不上.</p>
 <p>对数据库运行某个 revision 的时候需要检查该 revision 中每个表是否已经在数据库中运行过了, 运行过了就跳过, 没有就执行. 这个操作封装成 <code>migrate.py apply</code> 命令.</p>
-<h2 id="heading">总结</h2>
+<h2 id="总结">总结</h2>
 <p>基于 sqlalchemy 重写后, db 层代码干净了很多, 也保证了 100% 的测试覆盖率, 也有了直接操作 model class 可以生成复杂 sql 的能力, 达到了效果.</p>
 </div>
         <div class="post_footer">
