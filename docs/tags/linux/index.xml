@@ -19,13 +19,13 @@
       
       <guid>https://blog.monsterxx03.com/2018/12/03/debug-skills-on-linux/</guid>
       <description>This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04, some tools are not installed by default, you can installl by sudo apt install xxx. Some commands must be used via sudo.
-System resources can be classified in three main categories: compute, storage, and network. Usually, when you come to a performance issue, it&#39;s always caused by exhaustion of those resources.
-Universal metric: System load There&#39;re several ways to get system load, w, uptime, top, cat /proc/loadavg
+System resources can be classified in three main categories: compute, storage, and network. Usually, when you come to a performance issue, it&amp;rsquo;s always caused by exhaustion of those resources.
+Universal metric: System load There&amp;rsquo;re several ways to get system load, w, uptime, top, cat /proc/loadavg
 uptime example:
 03:34:23 up 20:31, 1 user, load average: 1.02, 0.65, 0.45  Top right corner three values named load average is system load.
 They means: average system load during last minute/last 5 minutes/last 15 minutes periods.
-If load/(# of cpu core) &amp;gt; 1 means there&#39;re tasks pending in cpu queue. Usually, you will feel slow.
-It&#39;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.
+If load/(# of cpu core) &amp;gt; 1 means there&amp;rsquo;re tasks pending in cpu queue. Usually, you will feel slow.
+It&amp;rsquo;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.
 If system load is high, means tasks are pending in CPU queue, maybe a result of:
  High cpu usage. Poor disk performance(disk io). Exhaustion of ram. &amp;hellip;  free free -k/-m/-g show memory usage in KB/MB/GB
 free -h humanize output (automatically show in KB/MB/GB&amp;hellip;)</description>

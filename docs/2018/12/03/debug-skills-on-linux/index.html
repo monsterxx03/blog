@@ -11,13 +11,13 @@
 
   
   <meta name="description" content="This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04, some tools are not installed by default, you can installl by sudo apt install xxx. Some commands must be used via sudo.
-System resources can be classified in three main categories: compute, storage, and network. Usually, when you come to a performance issue, it&#39;s always caused by exhaustion of those resources.
-Universal metric: System load There&#39;re several ways to get system load, w, uptime, top, cat /proc/loadavg
+System resources can be classified in three main categories: compute, storage, and network. Usually, when you come to a performance issue, it&amp;rsquo;s always caused by exhaustion of those resources.
+Universal metric: System load There&amp;rsquo;re several ways to get system load, w, uptime, top, cat /proc/loadavg
 uptime example:
 03:34:23 up 20:31, 1 user, load average: 1.02, 0.65, 0.45  Top right corner three values named load average is system load.
 They means: average system load during last minute/last 5 minutes/last 15 minutes periods.
-If load/(# of cpu core) &amp;gt; 1 means there&#39;re tasks pending in cpu queue. Usually, you will feel slow.
-It&#39;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.
+If load/(# of cpu core) &amp;gt; 1 means there&amp;rsquo;re tasks pending in cpu queue. Usually, you will feel slow.
+It&amp;rsquo;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.
 If system load is high, means tasks are pending in CPU queue, maybe a result of:
  High cpu usage. Poor disk performance(disk io). Exhaustion of ram. &amp;hellip;  free free -k/-m/-g show memory usage in KB/MB/GB
 free -h humanize output (automatically show in KB/MB/GB&amp;hellip;)"/>
@@ -108,17 +108,17 @@ free -h humanize output (automatically show in KB/MB/GB&amp;hellip;)"/>
 some tools are not installed by default, you can installl by <code>sudo apt install xxx</code>.
 Some commands must be used via <code>sudo</code>.</p>
 <p>System resources can be classified in three main categories: compute, storage, and network.
-Usually, when you come to a performance issue, it's always caused by exhaustion of those
+Usually, when you come to a performance issue, it&rsquo;s always caused by exhaustion of those
 resources.</p>
 <h2 id="universal-metric-system-load">Universal metric: System load</h2>
-<p>There're several ways to get system load, <code>w</code>, <code>uptime</code>, <code>top</code>, <code>cat /proc/loadavg</code></p>
+<p>There&rsquo;re several ways to get system load, <code>w</code>, <code>uptime</code>, <code>top</code>, <code>cat /proc/loadavg</code></p>
 <p><code>uptime</code> example:</p>
 <pre><code>03:34:23 up 20:31,  1 user,  load average: 1.02, 0.65, 0.45
 </code></pre>
 <p>Top right corner three values named <code>load average</code> is system load.</p>
 <p>They means: average system load during last minute/last 5 minutes/last 15 minutes periods.</p>
-<p>If <code>load/(# of cpu core) &gt; 1</code>  means there're tasks pending in cpu queue. Usually, you will feel <strong>slow</strong>.</p>
-<p>It's different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.</p>
+<p>If <code>load/(# of cpu core) &gt; 1</code>  means there&rsquo;re tasks pending in cpu queue. Usually, you will feel <strong>slow</strong>.</p>
+<p>It&rsquo;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.</p>
 <p>If system load is high, means tasks are pending in CPU queue, maybe a result of:</p>
 <ul>
 <li>High cpu usage.</li>
@@ -140,12 +140,12 @@ Swap:       4.0G         2.4G        1.6G
 <p><code>shared</code>  memory is potentially shared by other processes.
 eg: tmpfs, shared library(.so file will only be loaded once in memory and shared by all processes).</p>
 <p><code>buff/cache</code> kernel buffer and disk cache, they will be reallocated to processes when needed.</p>
-<p>On some old systems, there's no <code>available</code> column, we think available physical memory = free + buff/cache.</p>
+<p>On some old systems, there&rsquo;s no <code>available</code> column, we think available physical memory = free + buff/cache.</p>
 <p><code>available</code> means estimation of how much memory is available if you start a new program without swapping.
-Since not all space in buffer/cache is reclaimable, it's more accuracy than <code>free + buff/cache</code></p>
+Since not all space in buffer/cache is reclaimable, it&rsquo;s more accuracy than <code>free + buff/cache</code></p>
 <h2 id="top">top</h2>
-<p>There're some light weight tools to debug overall system status, eg: vmstat, mpstat, pidstat, sar &hellip;</p>
-<p>If doing manually debug, <code>top</code> is enough for most case (If you're on a super busy server, be careful to run top, it's heavy).</p>
+<p>There&rsquo;re some light weight tools to debug overall system status, eg: vmstat, mpstat, pidstat, sar &hellip;</p>
+<p>If doing manually debug, <code>top</code> is enough for most case (If you&rsquo;re on a super busy server, be careful to run top, it&rsquo;s heavy).</p>
 <pre><code>    top - 04:23:27 up 21:20,  1 user,  load average: 0.22, 0.44, 0.47
     Tasks: 156 total,   1 running, 111 sleeping,   0 stopped,   0 zombie
     %Cpu(s):  6.6 us,  4.2 sy,  0.0 ni, 88.6 id,  0.0 wa,  0.0 hi,  0.5 si,  0.0 st
@@ -159,7 +159,7 @@ Since not all space in buffer/cache is reclaimable, it's more accuracy than <cod
 </code></pre>
 <p>Explains:</p>
 <ul>
-<li><code>zombie</code> means zombie processes, it's usually caused by parent process exited before waiting child processes <code>exit</code>, mainly caused by bug.</li>
+<li><code>zombie</code> means zombie processes, it&rsquo;s usually caused by parent process exited before waiting child processes <code>exit</code>, mainly caused by bug.</li>
 <li><code>KiB mem</code> is same as output of command <code>free</code>.</li>
 <li><code>VIRT</code> means virtual memory: how much memory the process is able to <strong>access</strong>, ps: not means using. Including: code size, physical ram consumed, swap usage, files on disk <code>mmap</code> to process &hellip;</li>
 <li><code>RES</code> means physical ram consumed by this process.</li>
@@ -234,8 +234,8 @@ tmpfs            998K     5  998K    1% /run/user/1004
 <h3 id="disk-performance">disk performance</h3>
 <p>If you want to test disk performance, you can use tools like <code>dd</code> (simple sequential-write test),
 <code>fio</code> (much powerful, support multi thread and random write).</p>
-<p><code>iostat -y 2</code>, report io usage every 2 second, by default iostat's first line is stats since system boot,
-it's not  useful, <code>-y</code> can discard first report.</p>
+<p><code>iostat -y 2</code>, report io usage every 2 second, by default iostat&rsquo;s first line is stats since system boot,
+it&rsquo;s not  useful, <code>-y</code> can discard first report.</p>
 <pre><code>avg-cpu:  %user   %nice %system %iowait  %steal   %idle
           23.62    0.00    0.00    1.51    0.00   74.87
 
@@ -319,7 +319,7 @@ sudo tcpdump -i any dst host 10.0.0.1 -A # snifff all traffic sent to ip 10.0.0.
 </ul>
 <h2 id="debug-process">Debug process</h2>
 <p>find process pid via name: <code>ps aux | grep nginx</code></p>
-<p>find process's parent process: <code>pstree -aps 3460</code></p>
+<p>find process&rsquo;s parent process: <code>pstree -aps 3460</code></p>
 <pre><code>systemd,1
   └─supervisord,29264 /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
       └─uwsgi,3460 --ini /opt/uwsgi/app.ini
@@ -330,16 +330,16 @@ sudo tcpdump -i any dst host 10.0.0.1 -A # snifff all traffic sent to ip 10.0.0.
 <p>show process summary with  top: <code>top -p 1054</code></p>
 <p>kill process:</p>
 <ul>
-<li><code>sudo kill 1233</code>, send <code>SIGTERM</code> to target process, but <code>SIGTERM</code> can by caught in program(mean to do some cleanup during shutdown), sometimes it doesn't work.</li>
-<li><code>sudo kill -9 1233</code>, send <code>SIGKILL</code> to force kill target process, <code>SIGKILL</code> can't be caught by program.</li>
-<li>sometimes even <code>kill -9</code> can't kill process, check process status by <code>ps aux</code>, maybe stuck in <code>D</code> status, means it's waiting for io finish.
-D status can't by interrupted by signal. Only thing you can do is wait io finish or reboot.</li>
+<li><code>sudo kill 1233</code>, send <code>SIGTERM</code> to target process, but <code>SIGTERM</code> can by caught in program(mean to do some cleanup during shutdown), sometimes it doesn&rsquo;t work.</li>
+<li><code>sudo kill -9 1233</code>, send <code>SIGKILL</code> to force kill target process, <code>SIGKILL</code> can&rsquo;t be caught by program.</li>
+<li>sometimes even <code>kill -9</code> can&rsquo;t kill process, check process status by <code>ps aux</code>, maybe stuck in <code>D</code> status, means it&rsquo;s waiting for io finish.
+D status can&rsquo;t by interrupted by signal. Only thing you can do is wait io finish or reboot.</li>
 </ul>
-<p>If you feel a process seems no response, but not dead, you can use <code>sudo strace -p 1223</code> to see what it's doing, an example from idle nginx master process:</p>
+<p>If you feel a process seems no response, but not dead, you can use <code>sudo strace -p 1223</code> to see what it&rsquo;s doing, an example from idle nginx master process:</p>
 <pre><code>strace: Process 1052 attached
 rt_sigsuspend([], 8
 </code></pre>
-<p>It's calling <code>rt_sigsuspend</code>, from <code>main rt_sigsuspend</code>, you know it's waiting for signal.</p>
+<p>It&rsquo;s calling <code>rt_sigsuspend</code>, from <code>main rt_sigsuspend</code>, you know it&rsquo;s waiting for signal.</p>
 <p>More advanced and complex debug tools including: perf, systemtap, dtrace&hellip;</p>
 </div>
         <div class="post_footer">

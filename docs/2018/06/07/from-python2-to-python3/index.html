@@ -10,10 +10,10 @@
         content="monsterxx03"/>
 
   
-  <meta name="description" content="This article won&#39;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&#39;t finished this project, also I haven&#39;t gave up so far :).
-Won&#39;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
-The codebase I&#39;m working on:
- Only support python2.7, don&#39;t consider python2.6 1X repos, about half a million lines of code in total (calculated by cloc). These repos will import each other, bad design from early days, not easy to resolve, which means I can&#39;t switch to py3 one by one, I need write py2/3 compatiblility code for them, and switch together(I&#39;m also considering solve the import problem first). Test coverage is not good, best is around 80%, lowest is 30%.  Tools 2to3, a command line tools packaged with py2, it&#39;s a oneway porting to convert your code to py3, new code won&#39;t work under py2, since I need be compatible with py2 and py3 for long time, didn&#39;t try it.
+  <meta name="description" content="This article won&amp;rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&amp;rsquo;t finished this project, also I haven&amp;rsquo;t gave up so far :).
+Won&amp;rsquo;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
+The codebase I&amp;rsquo;m working on:
+ Only support python2.7, don&amp;rsquo;t consider python2.6 1X repos, about half a million lines of code in total (calculated by cloc). These repos will import each other, bad design from early days, not easy to resolve, which means I can&amp;rsquo;t switch to py3 one by one, I need write py2/3 compatiblility code for them, and switch together(I&amp;rsquo;m also considering solve the import problem first). Test coverage is not good, best is around 80%, lowest is 30%.  Tools 2to3, a command line tools packaged with py2, it&amp;rsquo;s a oneway porting to convert your code to py3, new code won&amp;rsquo;t work under py2, since I need be compatible with py2 and py3 for long time, didn&amp;rsquo;t try it.
 future, it tries to make you write single clean python3.x code without ugly hack with six. I used it it first, but come to many problems, will explain later."/>
   
 
@@ -98,59 +98,59 @@ future, it tries to make you write single clean python3.x code without ugly hack
           <h2><a href='/2018/06/07/from-python2-to-python3/'>From python2 to python3</a></h2>
           <span class="date">2018.06.07</span>
         </div>
-        <div class="post_content markdown"><p>This article won't provide perfect guide for porting py2 code to py3, just list the solutions I tried, the
-problems I come to, and my choices. I haven't finished this project, also I haven't gave up so far :).</p>
-<p>Won't explain too much about the differences between py2 and py3, will write down some corner
+        <div class="post_content markdown"><p>This article won&rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the
+problems I come to, and my choices. I haven&rsquo;t finished this project, also I haven&rsquo;t gave up so far :).</p>
+<p>Won&rsquo;t explain too much about the differences between py2 and py3, will write down some corner
 cases which are easy to miss.</p>
-<p>The codebase I'm working on:</p>
+<p>The codebase I&rsquo;m working on:</p>
 <ul>
-<li>Only support python2.7, don't consider python2.6</li>
+<li>Only support python2.7, don&rsquo;t consider python2.6</li>
 <li>1X repos, about half a million lines of code in total (calculated by cloc).</li>
-<li>These repos will import each other, bad design from early days, not easy to resolve, which means I can't switch to py3 one by one, I need write
-py2/3 compatiblility code for them, and switch together(I'm also considering solve the import problem first).</li>
+<li>These repos will import each other, bad design from early days, not easy to resolve, which means I can&rsquo;t switch to py3 one by one, I need write
+py2/3 compatiblility code for them, and switch together(I&rsquo;m also considering solve the import problem first).</li>
 <li>Test coverage is not good, best is around 80%, lowest is 30%.</li>
 </ul>
 <h2 id="tools">Tools</h2>
-<p><code>2to3</code>, a command line tools packaged with py2, it's a oneway porting to convert your code to py3, new code won't work under
-py2, since I need be compatible with py2 and py3 for long time, didn't try it.</p>
+<p><code>2to3</code>, a command line tools packaged with py2, it&rsquo;s a oneway porting to convert your code to py3, new code won&rsquo;t work under
+py2, since I need be compatible with py2 and py3 for long time, didn&rsquo;t try it.</p>
 <p><a href="http://python-future.org/">future</a>, it tries to make you write single clean python3.x code without ugly hack with six. I used it it first,
 but come to many problems, will explain later.</p>
-<p><a href="https://python-modernize.readthedocs.io/en/latest/">modernize</a>, rewrite your code with <code>six</code>. I mainly use it, but some code it still can't detect.</p>
+<p><a href="https://python-modernize.readthedocs.io/en/latest/">modernize</a>, rewrite your code with <code>six</code>. I mainly use it, but some code it still can&rsquo;t detect.</p>
 <h2 id="things-out-of-tools">Things out of tools</h2>
 <h3 id="hash-function">hash function</h3>
-<p>Internal implementation of <code>hash</code> has changed in py3, you shouln't rely on result of <code>hash</code> in py2/3, but you need be aware of the difference. Unfortunately,
-old system relies on py2's <code>hash</code> for some reason, so I reimplement it in py3 with a c extension: <a href="https://github.com/monsterxx03/legacyhash,">https://github.com/monsterxx03/legacyhash,</a>  only support bytes and unicode.</p>
-<p>Tools won't check your usage of <code>hash</code>, you need to check it by yourself, maybe consider write a customized <a href="http://python3porting.com/fixers.html">fixer</a> for it?</p>
+<p>Internal implementation of <code>hash</code> has changed in py3, you shouln&rsquo;t rely on result of <code>hash</code> in py2/3, but you need be aware of the difference. Unfortunately,
+old system relies on py2&rsquo;s <code>hash</code> for some reason, so I reimplement it in py3 with a c extension: <a href="https://github.com/monsterxx03/legacyhash,">https://github.com/monsterxx03/legacyhash,</a>  only support bytes and unicode.</p>
+<p>Tools won&rsquo;t check your usage of <code>hash</code>, you need to check it by yourself, maybe consider write a customized <a href="http://python3porting.com/fixers.html">fixer</a> for it?</p>
 <h3 id="json">json</h3>
-<p>Before python3.6, <code>json.loads</code> only accept str(unicode in python3), not bytes. You'd better upgrade to python3.6 directly to avoid this problem.</p>
+<p>Before python3.6, <code>json.loads</code> only accept str(unicode in python3), not bytes. You&rsquo;d better upgrade to python3.6 directly to avoid this problem.</p>
 <p><code>json.dumps</code> output is <code>str</code> in both py2/3, but <code>str</code> is bytes in py2, unicode in py3, other code may be broken.</p>
 <h3 id="redis">redis</h3>
 <p>return value from redis client is always bytes in py3, since boundary of bytes and unicode in py2 is very obscure, it may cause problem.</p>
-<h3 id="list-comprehension-cant-access-class-scope">List comprehension can't access class scope</h3>
+<h3 id="list-comprehension-cant-access-class-scope">List comprehension can&rsquo;t access class scope</h3>
 <pre><code>class A(object):
     test1 = 'a'
     test2 = [test1 for _ in range(10)] 
 </code></pre>
 <p>will report <code>NameError: name 'test1' is not defined</code>.</p>
-<p>In py3 list comprehension's working scope is changed to avoid bleeding variables from local scope. Details can see: <a href="https://stackoverflow.com/questions/13905741/accessing-class-variables-from-a-list-comprehension-in-the-class-definition">https://stackoverflow.com/questions/13905741/accessing-class-variables-from-a-list-comprehension-in-the-class-definition</a></p>
+<p>In py3 list comprehension&rsquo;s working scope is changed to avoid bleeding variables from local scope. Details can see: <a href="https://stackoverflow.com/questions/13905741/accessing-class-variables-from-a-list-comprehension-in-the-class-definition">https://stackoverflow.com/questions/13905741/accessing-class-variables-from-a-list-comprehension-in-the-class-definition</a></p>
 <p>A workaround is:</p>
 <pre><code>class A(object):
     test1 = 'a'
     test2 = (lambda test1=test1: [test1 for _ in range(10)])()
 </code></pre>
 <h3 id="dynamic-generated-code">Dynamic generated code</h3>
-<p>If you have some scripts to generate  python code dynamically like me, don't forget to fix them.</p>
+<p>If you have some scripts to generate  python code dynamically like me, don&rsquo;t forget to fix them.</p>
 <h2 id="problems-with-future">Problems with future</h2>
 <h3 id="standard-lib-changes">standard lib changes</h3>
 <p>Many standard libs have change names or structure in py3, future try to let you import py3 name directly with the hack of <code>future.standard_library.install_aliases()</code>,
 it will modified the <code>sys.modules</code> to make new module name point to a backported version from <code>future.backports</code>, but it maybe break your code in py2.</p>
-<p>One example is <code>urljoin</code>, in py2 it's <code>from urlparse impor urljoin</code>, in py3 <code>from urllib.parse import urljoin</code>, but the internal implementation
+<p>One example is <code>urljoin</code>, in py2 it&rsquo;s <code>from urlparse impor urljoin</code>, in py3 <code>from urllib.parse import urljoin</code>, but the internal implementation
 is different.</p>
-<p>In py2, urljoin can mix bytestring and unicode: <code>urljoin(b'http://localhost', u'a/b')</code> works, but in py3, it will report <code>TypeError: Cannot mix str and non-str arguments</code>, if you use future's backport version, will come to this issue as well. Some third part libs will breake due to this behavior, eg: eventbrite's python sdk.</p>
-<p>raven(sentry's client) also come to problem due to this runtime replacement. To avoid third part libs issue, I didn't use future's <code>install_aliases()</code>.</p>
-<p>For <code>modernize</code>, it will genearate code with <code>six</code>, eg: <code>from six.moves.urllib.parse import urljoin</code>, in py2, it will still use py2's urljoin. I perfer this way.</p>
+<p>In py2, urljoin can mix bytestring and unicode: <code>urljoin(b'http://localhost', u'a/b')</code> works, but in py3, it will report <code>TypeError: Cannot mix str and non-str arguments</code>, if you use future&rsquo;s backport version, will come to this issue as well. Some third part libs will breake due to this behavior, eg: eventbrite&rsquo;s python sdk.</p>
+<p>raven(sentry&rsquo;s client) also come to problem due to this runtime replacement. To avoid third part libs issue, I didn&rsquo;t use future&rsquo;s <code>install_aliases()</code>.</p>
+<p>For <code>modernize</code>, it will genearate code with <code>six</code>, eg: <code>from six.moves.urllib.parse import urljoin</code>, in py2, it will still use py2&rsquo;s urljoin. I perfer this way.</p>
 <h3 id="builtins">builtins</h3>
-<p>future try to backport py3's data type to py2 via <code>builtins</code> modules, but it may break your py2 code due to type check.</p>
+<p>future try to backport py3&rsquo;s data type to py2 via <code>builtins</code> modules, but it may break your py2 code due to type check.</p>
 <pre><code>from builtins import str
 
 isinstance('1', str)  # False, since str is actually unicode type in py3

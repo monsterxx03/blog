@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.62.2" />
+	<meta name="generator" content="Hugo 0.63.2" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,6 +91,48 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2017/04/21/infrastructure-as-code/'>Infrastructure as Code</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.
+You will come to:
+ How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what’s the DHCP option set?), navigate around AWS console is okay, but not convenient. Who did what to which resource at when? AWS have a service called Config, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do.  Ideally, we should manage AWS resources like code, all changes kept in VCS, so called Infrastructure as Code.
+I’ve tried three ways to do it:
+ ansible CloudFormation terraform  In this article, I&rsquo;ll compare them, however, the conclusion is to use terraform 🙂
+Ansible Provision tools, like ansible/chef/puppet, all can be used to create aws resources, but they have some common problems:
+ Hard to track changes after bootstrap. No confident what it will do to existing resources.  For example, I define a security group in ansibble:
+ec2_group: name: &quot;web&quot; description: &quot;security group in web&quot; vpc_id: &quot;vpc-xxx&quot; region: &quot;us-east-1&quot; rules: - proto: tcp from_port: 80 to_port: 80 cidr_ip: 0.......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2017.04.21</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -404,47 +446,6 @@
           <a href="https://blog.monsterxx03.com/tags/database/">Database</a>
           
           <a href="https://blog.monsterxx03.com/tags/mysql/">MySQL</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2016/07/16/redshift-as-data-warehouse/'>Redshift as data warehouse</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>Glow 的 server infrastructure 全部搭建在 AWS 上，一般要选择一些基础服务的时候，总是先看 AWS, 只要功能和成本符合要求，不会特意选择开源方案。</p>
-<p>数据仓库我们选择了 AWS 的 Redshift.</p>
-<p>在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2016.07.16</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/database/">Database</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/redshift/">Redshift</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/glow/">glow</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/data-infra/">data-infra</a>
           
         </span>
         

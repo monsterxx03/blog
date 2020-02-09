@@ -11,16 +11,16 @@
 
   
   <meta name="description" content="Miscellaneous notes when reading &amp;lt;Kubernetes in Action&amp;gt;.
-api group and api version core api group need&#39;t specified in apiVersion field.
+api group and api version core api group need&amp;rsquo;t specified in apiVersion field.
 For example, ReplicationController is on core api group, so only:
 apiVersion: v1 kind: ReplicationController ...  ReplicationSet is added later in app group, v1beta2 version (k8s v1.8):
 apiVersion: apps/v1beta2 1 kind: ReplicaSet  https://kubernetes.io/docs/concepts/overview/kubernetes-api/
 ReplicationController VS ReplicationSet ReplicationController is replaced by ReplicationSet, which has more expressive pod selectors.
-ReplicationController&#39;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
+ReplicationController&amp;rsquo;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
 rs also support operator on key value: In, NotIn, Exists, DoesNotExist
 If migrate from rc to rs, can delete rc with --cascade=false option, it will delete rc only, but left pods running, then we can create a rs with same selector to make pods under management.
 DaemonSet DaemonSet ensures pod run exact one copy on one node, useful for processes like monitor agent and log collector. Use node-selector to make ds only run on specific nodes.
-If node is made unschedulable, normal pods won&#39;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass scheduler.
+If node is made unschedulable, normal pods won&amp;rsquo;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass scheduler.
 Job Job is used to run a single completable task."/>
   
 
@@ -107,7 +107,7 @@ Job Job is used to run a single completable task."/>
         </div>
         <div class="post_content markdown"><p>Miscellaneous notes when reading <code>&lt;Kubernetes in Action&gt;</code>.</p>
 <h2 id="api-group-and-api-version">api group and api version</h2>
-<p>core api group need't specified in <code>apiVersion</code> field.</p>
+<p>core api group need&rsquo;t specified in <code>apiVersion</code> field.</p>
 <p>For example, <code>ReplicationController</code> is on core api group, so only:</p>
 <pre><code>apiVersion: v1
 kind: ReplicationController
@@ -120,7 +120,7 @@ kind: ReplicaSet
 <p><a href="https://kubernetes.io/docs/concepts/overview/kubernetes-api/">https://kubernetes.io/docs/concepts/overview/kubernetes-api/</a></p>
 <h3 id="replicationcontroller-vs-replicationset">ReplicationController VS ReplicationSet</h3>
 <p>ReplicationController is replaced by ReplicationSet, which has more expressive pod selectors.</p>
-<p>ReplicationController's label selector only allows matching pods that include a certain label, ReplicationSet can
+<p>ReplicationController&rsquo;s label selector only allows matching pods that include a certain label, ReplicationSet can
 meet multi labels at same time.</p>
 <p>rs also support operator on key value: <code>In, NotIn, Exists, DoesNotExist</code></p>
 <p>If migrate from rc to rs, can delete rc with <code>--cascade=false</code> option, it will delete
@@ -128,26 +128,26 @@ rc only, but left pods running, then we can create a rs with same selector to ma
 <h3 id="daemonset">DaemonSet</h3>
 <p>DaemonSet ensures pod run exact one copy on one node, useful for processes like monitor agent and log collector. Use <code>node-selector</code>
 to make ds only run on specific nodes.</p>
-<p>If node is made unschedulable, normal pods won't be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass
+<p>If node is made unschedulable, normal pods won&rsquo;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass
 scheduler.</p>
 <h3 id="job">Job</h3>
 <p>Job is used to run a single completable task.</p>
-<p>Use <code>activeDeadlineSeconds</code> to control job timeout. <code>backoffLimit</code> define how many times a job can retry before it's defined as failed, default to 6.</p>
+<p>Use <code>activeDeadlineSeconds</code> to control job timeout. <code>backoffLimit</code> define how many times a job can retry before it&rsquo;s defined as failed, default to 6.</p>
 <h3 id="configmap-and-secret">ConfigMap and Secret</h3>
-<p>If configmap is injected as env variables for container, it can't be modified after prod started.</p>
-<p>If need to refer to a value from configmap  in container's <code>cmd</code> and <code>args</code> fields, need to refer configmap in env, then refer to env value in those fields.</p>
+<p>If configmap is injected as env variables for container, it can&rsquo;t be modified after prod started.</p>
+<p>If need to refer to a value from configmap  in container&rsquo;s <code>cmd</code> and <code>args</code> fields, need to refer configmap in env, then refer to env value in those fields.</p>
 <p>Use configmap and expose it through a volume. If configmap is updated, the file mounted in volume will be updated atomically (through symbolic link), but the update interval is long, up to 1 minute.</p>
 <p>If only mount a sinlge file instead of whole volume, the file will not be updated! one workaround is to mount the whole volume into a different directory and then create a symbolic link pointing to the file.</p>
-<p>The contents of a Secret's entries are shown as Base64-encoded strings, whereas those of a ConfigMap are shown in clear text. Secret entries can contain binary values, size is limited to 1MB. <code>stringData</code> field can be used for non-binary Secret data, it's <code>write-only</code>, if you do <code>kubectl get -o yaml</code>, <code>stringData</code> field will not be shown, they will be base64 encoded and display in <code>data</code> field. <code>secret</code> volume is mounted to container as tmpfs.</p>
+<p>The contents of a Secret&rsquo;s entries are shown as Base64-encoded strings, whereas those of a ConfigMap are shown in clear text. Secret entries can contain binary values, size is limited to 1MB. <code>stringData</code> field can be used for non-binary Secret data, it&rsquo;s <code>write-only</code>, if you do <code>kubectl get -o yaml</code>, <code>stringData</code> field will not be shown, they will be base64 encoded and display in <code>data</code> field. <code>secret</code> volume is mounted to container as tmpfs.</p>
 <h3 id="metadata">metadata</h3>
 <p>Metadata info can be exposed via env variables or <code>downwardAPI</code> volume.</p>
-<p><code>labels</code> and <code>annotations</code> can't be exposed via env variables, since they can be modified during pod run time.</p>
+<p><code>labels</code> and <code>annotations</code> can&rsquo;t be exposed via env variables, since they can be modified during pod run time.</p>
 <h3 id="rolling-update-with-deployment">rolling update with Deployment</h3>
 <p>With old <code>ReplicationController</code>, there is a <code>kubectl rolling-update</code> cmd to do rolling update of pods, but it has problems:</p>
 <ul>
 <li>need client mainten connection to kube api server, if disconnected during updating, pods will be in a mid-way.</li>
 <li>it actually start a new ReplicationController with new image, and rolling shutdown old ones, it violates kubernetes design: declare desired state, not tell it add something or remove something.</li>
-<li>it will modify container's label and rc's label selector.</li>
+<li>it will modify container&rsquo;s label and rc&rsquo;s label selector.</li>
 </ul>
 <h3 id="communication-between-all-components-in-k8s">Communication between all components in k8s</h3>
 <p>etcd is the only persistent store, kubernetes api server is the only component access etcd directly, other components only talk to kubernets api server.</p>
@@ -164,28 +164,28 @@ scheduler.</p>
 <p>K8s api server just manager data stored in etcd, other clients (kubelet, kubeproxy) connect to api server through watch, if data is modified, api server will notify
 those clients(eg: pod creation, service creation), then clients do the real things.</p>
 <h3 id="pause-container">pause container</h3>
-<p>Every pod will have a pause container, it's an infrastructure container to hold all namespaces, all user defined containers of the pod use the namespaces of it.</p>
-<p>If pause container is killed , kubelet will recreate it and all pod's containers.</p>
+<p>Every pod will have a pause container, it&rsquo;s an infrastructure container to hold all namespaces, all user defined containers of the pod use the namespaces of it.</p>
+<p>If pause container is killed , kubelet will recreate it and all pod&rsquo;s containers.</p>
 <h3 id="scheduler-policy">scheduler policy</h3>
-<p>Scheduler doesn't look at how much of each individual resource is being used at the exact time of scheduling but at the sum of resources requested by the existing pods deployed on the node.</p>
+<p>Scheduler doesn&rsquo;t look at how much of each individual resource is being used at the exact time of scheduling but at the sum of resources requested by the existing pods deployed on the node.</p>
 <p><code>LeastRequestedPriority</code>  prefers nodes with fewer requested resources.</p>
 <p><code>MostRequestedPriority</code> prefers nodes that have the most requested resources(to save cost on cloud infra).</p>
 <h2 id="resource-management">resource management</h2>
-<p>Resource requests sum of all pods on a node can't be larger than node's allocatable resource, but resource limits can overcommitted.</p>
-<p>If 100% of node's resources are used up, containers will be killed.</p>
-<p>If container exceeds cpu limit, it won't be killed, and won't get more cpu time than configured.</p>
-<p>If container tries to allocate memory over its limit, process is killed.If pod's restart policy is <code>Always</code> or <code>OnFailure</code>, it will be restarted immediately.If it keeps
+<p>Resource requests sum of all pods on a node can&rsquo;t be larger than node&rsquo;s allocatable resource, but resource limits can overcommitted.</p>
+<p>If 100% of node&rsquo;s resources are used up, containers will be killed.</p>
+<p>If container exceeds cpu limit, it won&rsquo;t be killed, and won&rsquo;t get more cpu time than configured.</p>
+<p>If container tries to allocate memory over its limit, process is killed.If pod&rsquo;s restart policy is <code>Always</code> or <code>OnFailure</code>, it will be restarted immediately.If it keeps
 being killed, restart time delay will be increased(10s, 20s, 40s, 80s, 160s, 300s), pod status will be <code>CrashLoopBackOff</code>.</p>
-<p>Container always see node's memory and cpu, won't be aware of its limit.</p>
+<p>Container always see node&rsquo;s memory and cpu, won&rsquo;t be aware of its limit.</p>
 <p>Problems:</p>
 <ul>
-<li>If you run a java program, jvm will set maximum heap size based on host's total memory instead of memory available for the container, which means it maybe OOM killed.</li>
+<li>If you run a java program, jvm will set maximum heap size based on host&rsquo;s total memory instead of memory available for the container, which means it maybe OOM killed.</li>
 <li>If program looks up cpu numbers to decide spawn how many workers, maybe over spawn too many workers.</li>
 </ul>
 <p>To get real cpu limit, can use downward api to pass in cpu limit, or look <code>/sys/fs/cgroup/cpu/cpu.cfs_quota_us</code> and <code>/sys/fs/cgroup/cpu/cpu.cfs_period_us</code>.</p>
-<p>Pod's QoS classes:</p>
+<p>Pod&rsquo;s QoS classes:</p>
 <ul>
-<li>BestEffort (lowest priority). all containers in pod don't have <code>requests</code> and <code>limits</code> set.</li>
+<li>BestEffort (lowest priority). all containers in pod don&rsquo;t have <code>requests</code> and <code>limits</code> set.</li>
 <li>Burstable. <code>limits</code> not match <code>requests</code>.</li>
 <li>Guaranteed (highest).  <code>requests</code> and <code>limits</code> bot set for all containers in pod and equal. If requests is not set, default to limit.</li>
 </ul>
@@ -216,7 +216,7 @@ kubectl top pod --all--namespaces # get pods runtime metrics from all namespace
 <p>When configure HPA, metrics type can be <code>Pods</code>, <code>Resource</code>, <code>Object</code>.</p>
 <p>If metrics is defined as <code>Object</code>, autoscaler obtains a single metric from the single object.</p>
 <p>Cluster Autoscaler can be used to auto scale nodes on cloud infrastructure: <a href="https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler">https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler</a></p>
-<p>Situations when nodes won't be relinquished:</p>
+<p>Situations when nodes won&rsquo;t be relinquished:</p>
 <ul>
 <li>If system pods are running(only, but except DaemonSet) on the node.</li>
 <li>If an unmanaged pod running on the node.</li>

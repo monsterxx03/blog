@@ -10,11 +10,11 @@
         content="monsterxx03"/>
 
   
-  <meta name="description" content="AWS&#39;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
+  <meta name="description" content="AWS&amp;rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
 It works, but have some concerns. Take some notes when doing this project.
 Prerequisites Source RDS must:
  Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration(&#39;binlog retention hours&#39;, 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT , REPLICATION SLAVE , SELECT on replication target tables  DDL on source table Redshift has some limits on change columns:
- New column only must be added in the end Can&#39;t rename columns  So for DDL on source MySQL, you can&#39;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
+ New column only must be added in the end Can&amp;rsquo;t rename columns  So for DDL on source MySQL, you can&amp;rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
  &amp;quot;ChangeProcessingDdlHandlingPolicy&amp;quot;:{ &amp;quot;HandleSourceTableDropped&amp;quot;:false, &amp;quot;HandleSourceTableTruncated&amp;quot;:false, &amp;quot;HandleSourceTableAltered&amp;quot;:false },  If source table schema changed, I just drop and reload target table on console.
 Control write speed on Redshift Since Redshift is an OLAP database, write operation is slow and concurrency is low, streaming data directly will have big impact on it.
 And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout."/>
@@ -101,7 +101,7 @@ And we have may analysis jobs running on redshift all the time, directly streami
           <h2><a href='/2017/10/14/aws-dms-notes/'>AWS DMS notes</a></h2>
           <span class="date">2017.10.14</span>
         </div>
-        <div class="post_content markdown"><p>AWS's DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.</p>
+        <div class="post_content markdown"><p>AWS&rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.</p>
 <p>It works, but have some concerns. Take some notes when doing this project.</p>
 <h2 id="prerequisites">Prerequisites</h2>
 <p>Source RDS must:</p>
@@ -115,9 +115,9 @@ And we have may analysis jobs running on redshift all the time, directly streami
 <p>Redshift has some limits on change columns:</p>
 <ul>
 <li>New column only must be added in the end</li>
-<li>Can't rename columns</li>
+<li>Can&rsquo;t rename columns</li>
 </ul>
-<p>So for DDL on source MySQL, you can't add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:</p>
+<p>So for DDL on source MySQL, you can&rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:</p>
 <pre><code>    &quot;ChangeProcessingDdlHandlingPolicy&quot;:{  
         &quot;HandleSourceTableDropped&quot;:false,
         &quot;HandleSourceTableTruncated&quot;:false,
@@ -149,13 +149,13 @@ And we have may analysis jobs running on redshift all the time, directly streami
 </code></pre>
 <h2 id="problem-with-table-transform-rules">Problem with table transform rules</h2>
 <p>DMS support transform rules in table mapping, you can <code>add-prefix</code>, <code>remove-prefix</code>&hellip; on a table.</p>
-<p>But it doesn't support multiple transformations on same entity, means you can't add a prefix and a sufix for a same table, and its doc doesn't mention it.</p>
+<p>But it doesn&rsquo;t support multiple transformations on same entity, means you can&rsquo;t add a prefix and a sufix for a same table, and its doc doesn&rsquo;t mention it.</p>
 <p>After contact AWS support engineers, they confirmed it, and saied:</p>
 <pre><code>they are working on implementing the order of transformations(cascading transformations) or validating customer's input (e.g. we can't have more than one transformation for the same table/column).
 </code></pre>
 <h2 id="problem-with-terraform">Problem with terraform</h2>
 <p>I use terraform to manage AWS infrastructure (v0.10.7), one problem is after I created DMS tasks via terraform, do <code>terraform plan</code> again will still see changes on <code>replication_task_settings</code> option,</p>
-<p>Problem is <code>CloudWatchLogGroup</code> and <code>CloudWatchLogStream</code> in task settings json don't work. Even you specific it,
+<p>Problem is <code>CloudWatchLogGroup</code> and <code>CloudWatchLogStream</code> in task settings json don&rsquo;t work. Even you specific it,
 AWS still creates a log stream with random name for you.</p>
 <p>One workaround is go to AWS console, get the <code>CloudWatchLogGroup</code> and <code>CloudWatchLogStream</code> settings, modify your local one.</p>
 <p>Related issue: <a href="https://github.com/terraform-providers/terraform-provider-aws/issues/1513">https://github.com/terraform-providers/terraform-provider-aws/issues/1513</a></p>

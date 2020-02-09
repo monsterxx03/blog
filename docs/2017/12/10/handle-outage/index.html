@@ -10,10 +10,10 @@
         content="monsterxx03"/>
 
   
-  <meta name="description" content="A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&#39;m working on a long term solution. I learned some important things from this accident.
-The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&#39;s health check failed due to high load.
+  <meta name="description" content="A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&amp;rsquo;m working on a long term solution. I learned some important things from this accident.
+The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&amp;rsquo;s health check failed due to high load.
 I did following:
- Check monitor Identify the problem is caused by KV system  Okay, problem is here, I know the problem is KV system&#39;s performance issue. But I can&#39;t figure out the root case right now, I need a temporary solution. Straightward way is redirect traffic to slave instance. But I know it won&#39;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&#39;t work.
+ Check monitor Identify the problem is caused by KV system  Okay, problem is here, I know the problem is KV system&amp;rsquo;s performance issue. But I can&amp;rsquo;t figure out the root case right now, I need a temporary solution. Straightward way is redirect traffic to slave instance. But I know it won&amp;rsquo;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&amp;rsquo;t work.
 The real down time was not long, performance recovered to some degree soon, but latency was still high, not normal. I monitored it for long time, and tried to find out the root case until morning. Since traffic was growing when peak hour coming, performance became problem again."/>
   
 
@@ -98,30 +98,30 @@ The real down time was not long, performance recovered to some degree soon, but 
           <h2><a href='/2017/12/10/handle-outage/'>Handle outage</a></h2>
           <span class="date">2017.12.10</span>
         </div>
-        <div class="post_content markdown"><p>A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I'm working on a long term solution. I learned some important things from this accident.</p>
+        <div class="post_content markdown"><p>A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&rsquo;m working on a long term solution. I learned some important things from this accident.</p>
 <h2 id="the-outage">The outage</h2>
-<p>I received alarms about live performance issue at 3am, first is server latency increaing, soon some service's health check failed due to high load.</p>
+<p>I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&rsquo;s health check failed due to high load.</p>
 <p>I did following:</p>
 <ol>
 <li>Check monitor</li>
 <li>Identify the problem is caused by KV system</li>
 </ol>
-<p>Okay, problem is here, I know the problem is KV system's performance issue. But I can't figure out the root case right now, I need a temporary solution.
-Straightward way is redirect traffic to slave instance. But I know it won't work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn't work.</p>
+<p>Okay, problem is here, I know the problem is KV system&rsquo;s performance issue. But I can&rsquo;t figure out the root case right now, I need a temporary solution.
+Straightward way is redirect traffic to slave instance. But I know it won&rsquo;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&rsquo;t work.</p>
 <p>The real down time was not long, performance recovered to some degree soon, but latency was still high, not normal. I monitored it for long time, and tried to find out the root case until morning. Since traffic was growing when peak hour coming, performance became problem again.</p>
-<p>I decided to upgrade the server to a large tier with more cpu cores, since the problem is caused by high cpu usage. After it, latency back to normal, at least users won't feel anyting unusual, but KV server's cpu usage is still high, so the problem needs more inspectation.</p>
-<p>In the following working day, I worked on investigating the root case. And finally figured out the problem is caused by a lot of keys in KV expired at the same time. And the underlying storage engine can't hanle this condition well. I'm working on migrate KV system to another one(AWS DynamoDB).</p>
+<p>I decided to upgrade the server to a large tier with more cpu cores, since the problem is caused by high cpu usage. After it, latency back to normal, at least users won&rsquo;t feel anyting unusual, but KV server&rsquo;s cpu usage is still high, so the problem needs more inspectation.</p>
+<p>In the following working day, I worked on investigating the root case. And finally figured out the problem is caused by a lot of keys in KV expired at the same time. And the underlying storage engine can&rsquo;t hanle this condition well. I&rsquo;m working on migrate KV system to another one(AWS DynamoDB).</p>
 <h2 id="review">Review</h2>
 <p>There is something I did wrong when reviewing this accident.</p>
-<p>Our campany's original KV system is hosted by redis (with AOF enabled), but the total size is limited by RAM, and data size grows quickly, can't fit in RAM anymore. So I need to migrate to a disk based choice, and I perfer to migrate a system compatible with redis protocol, then I needn't change live code and migrating data will be simple.</p>
-<p>After investigating several choices, I choosed current one, since its compatibility is best. I came to several bugs when testing, reported it to author,he fixed it very quickly (really appreciated). The reason why I didn't migrate to DynamoDB is also migration effort is big, although I must do it now. When running on live, performance is great, but I came to crash issue sometime, the author also fixed it. Looking back today, I feel it's too bugy, and I should consider migratition earlier. The codebase is too large and I'm not familiar with C++, every time came to bug, I can't figure out the root case indenpendently.</p>
-<p>When reviewing my process of handling outage, I'm lack of mitigation solution, most thing I can do is just waiting and monitoring.</p>
+<p>Our campany&rsquo;s original KV system is hosted by redis (with AOF enabled), but the total size is limited by RAM, and data size grows quickly, can&rsquo;t fit in RAM anymore. So I need to migrate to a disk based choice, and I perfer to migrate a system compatible with redis protocol, then I needn&rsquo;t change live code and migrating data will be simple.</p>
+<p>After investigating several choices, I choosed current one, since its compatibility is best. I came to several bugs when testing, reported it to author,he fixed it very quickly (really appreciated). The reason why I didn&rsquo;t migrate to DynamoDB is also migration effort is big, although I must do it now. When running on live, performance is great, but I came to crash issue sometime, the author also fixed it. Looking back today, I feel it&rsquo;s too bugy, and I should consider migratition earlier. The codebase is too large and I&rsquo;m not familiar with C++, every time came to bug, I can&rsquo;t figure out the root case indenpendently.</p>
+<p>When reviewing my process of handling outage, I&rsquo;m lack of mitigation solution, most thing I can do is just waiting and monitoring.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>When choosing core technology, we should be more careful, not only considering the migration effort, but also backup, recovering, monitor and outage handling.</p>
 <p>So the right process if handling outage is:</p>
 <ol>
 <li>Notice the problem (receive alerm).</li>
-<li>Reponse to it quick. (Let team know I'm handling it)</li>
+<li>Reponse to it quick. (Let team know I&rsquo;m handling it)</li>
 <li>Migitation, make business back to normal. (Maybe fail over to slave)</li>
 <li>Cleanup and fix previous workaround.</li>
 <li>Postmortem.</li>

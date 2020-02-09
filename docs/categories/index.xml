@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sat, 18 Jan 2020 15:20:47 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 09 Feb 2020 22:22:30 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/categories/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>life</title>
+      <link>https://blog.monsterxx03.com/categories/life/</link>
+      <pubDate>Sun, 09 Feb 2020 22:22:30 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/categories/life/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>tech</title>
@@ -18,15 +27,6 @@
       <pubDate>Sat, 18 Jan 2020 15:20:47 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/categories/tech/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>life</title>
-      <link>https://blog.monsterxx03.com/categories/life/</link>
-      <pubDate>Thu, 02 Jan 2020 13:04:22 +0800</pubDate>
-      
-      <guid>https://blog.monsterxx03.com/categories/life/</guid>
       <description></description>
     </item>
     
