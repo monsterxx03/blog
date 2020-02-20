@@ -3,22 +3,47 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://blog.monsterxx03.com/categories/</loc>
-    <lastmod>2020-02-09T22:22:30+08:00</lastmod>
+    <loc>https://blog.monsterxx03.com/tags/aws/</loc>
+    <lastmod>2020-02-18T14:38:56+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/categories/life/</loc>
-    <lastmod>2020-02-09T22:22:30+08:00</lastmod>
+    <loc>https://blog.monsterxx03.com/categories/</loc>
+    <lastmod>2020-02-18T14:38:56+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/personalize/</loc>
+    <lastmod>2020-02-18T14:38:56+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://blog.monsterxx03.com/posts/</loc>
-    <lastmod>2020-02-09T22:22:30+08:00</lastmod>
+    <lastmod>2020-02-18T14:38:56+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://blog.monsterxx03.com/</loc>
+    <lastmod>2020-02-18T14:38:56+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/</loc>
+    <lastmod>2020-02-18T14:38:56+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/categories/tech/</loc>
+    <lastmod>2020-02-18T14:38:56+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/2020/02/18/%E7%94%A8-aws-personalize-%E5%81%9A%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/</loc>
+    <lastmod>2020-02-18T14:38:56+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/categories/life/</loc>
     <lastmod>2020-02-09T22:22:30+08:00</lastmod>
   </url>
   
@@ -28,22 +53,7 @@
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/tags/aws/</loc>
-    <lastmod>2020-01-18T15:20:47+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://blog.monsterxx03.com/tags/rds/</loc>
-    <lastmod>2020-01-18T15:20:47+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/tags/</loc>
-    <lastmod>2020-01-18T15:20:47+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/categories/tech/</loc>
     <lastmod>2020-01-18T15:20:47+08:00</lastmod>
   </url>
   

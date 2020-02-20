@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sat, 18 Jan 2020 15:20:47 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 18 Feb 2020 14:38:56 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,9 +15,18 @@
     <item>
       <title>AWS</title>
       <link>https://blog.monsterxx03.com/tags/aws/</link>
-      <pubDate>Sat, 18 Jan 2020 15:20:47 +0800</pubDate>
+      <pubDate>Tue, 18 Feb 2020 14:38:56 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/tags/aws/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>personalize</title>
+      <link>https://blog.monsterxx03.com/tags/personalize/</link>
+      <pubDate>Tue, 18 Feb 2020 14:38:56 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/personalize/</guid>
       <description></description>
     </item>
     

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>personalize on Shining Moon</title>
+    <link>https://blog.monsterxx03.com/tags/personalize/</link>
+    <description>Recent content in personalize on Shining Moon</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>monsterxx03</copyright>
+    <lastBuildDate>Tue, 18 Feb 2020 14:38:56 +0800</lastBuildDate>
+    
+	<atom:link href="https://blog.monsterxx03.com/tags/personalize/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>用 AWS Personalize 做推荐系统</title>
+      <link>https://blog.monsterxx03.com/2020/02/18/%E7%94%A8-aws-personalize-%E5%81%9A%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/</link>
+      <pubDate>Tue, 18 Feb 2020 14:38:56 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2020/02/18/%E7%94%A8-aws-personalize-%E5%81%9A%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/</guid>
+      <description>这几天测试了下 aws 的 personalize service, 看看能不能替换掉产品里现有的一些推荐逻辑. 大致的流程: 导入数据 选择 recipe 进行 training, 得到一个 solution version 选择最佳 solution version 创建 compaign 调用 api, 根据 compaign 得到 recommendations 一些 iam 权限相关的设置就不写了, 具体看文档吧, 这里只记录下主要步骤. 导入数据 首先需要准备用来 training 的数据, 分成三种数据集: User Item User-Item interaction 其中 User-Item interaction 是必须的 dataset, 所有 recipe 都会用到, User 和 Item 被称作 metadata dataset, 只有个别 recipe 会用到. 每个 dataset 创建的时候需要建立一个 schema, 来描述各自的结构(avro 格式).</description>
+    </item>
+    
+  </channel>
+</rss>
