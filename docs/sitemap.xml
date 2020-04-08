@@ -3,7 +3,17 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://blog.monsterxx03.com/categories/</loc>
+    <lastmod>2020-04-07T10:54:12+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://blog.monsterxx03.com/posts/</loc>
+    <lastmod>2020-04-07T10:54:12+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/categories/tech/</loc>
     <lastmod>2020-04-07T10:54:12+08:00</lastmod>
   </url>
   
@@ -18,22 +28,12 @@
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/categories/</loc>
-    <lastmod>2020-02-18T14:38:56+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://blog.monsterxx03.com/tags/personalize/</loc>
     <lastmod>2020-02-18T14:38:56+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/</loc>
-    <lastmod>2020-02-18T14:38:56+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/categories/tech/</loc>
     <lastmod>2020-02-18T14:38:56+08:00</lastmod>
   </url>
   

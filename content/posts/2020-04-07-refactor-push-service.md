@@ -1,7 +1,7 @@
 ---
 title: "重构推送服务"
 date: 2020-04-07T10:54:12+08:00
-category:
+categories:
 - tech
 ---
 
