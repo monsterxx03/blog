@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-cn" >
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  
+  <meta name="author"
+        content="monsterxx03"/>
+
+  
+  <meta name="description" content="最近对业务里发送 apple APNS, google FCM 部分的代码进行了重构, 抽出了一个单独的 service, 本文记录下整个过程. 存在的问题 我们有好几个 mobile app, 每个 app 会有一套对应的 server 端 service 做业务逻辑, 因为历史原因, 每个 service 里面其实有很多重复代码, 大多只是一些配置和错误处理上有差异. 给 app 发推送是个典型, 原来的做法是当要发推送的时候, 往 python 的 celery 队列里扔一个 task, 由 celery 异步得去发. 有如下问题: celery 性能不佳, worker class 用的是 gevent, 但在高峰时候任务队列里还是有大量 pending, 代码上之前做过"/>
+  
+
+  
+
+  
+  <link rel="canonical" href="https://blog.monsterxx03.com/2020/04/07/%E9%87%8D%E6%9E%84%E6%8E%A8%E9%80%81%E6%9C%8D%E5%8A%A1/"/>
+
+  
+
+  <title>重构推送服务 &middot; Shining Moon</title>
+
+  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
+
+  
+  
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/home.css">
+  
+</head>
+
+<body>
+<div class="main animated">
+  <div class="nav_container animated fadeInDown">
+  <div class="site_nav" id="site_nav">
+    <ul>
+      
+      <li>
+        <a href="/">Home</a>
+      </li>
+      
+      <li>
+        <a href="/posts/">Archive</a>
+      </li>
+      
+      <li>
+        <a href="/about/">About</a>
+      </li>
+      
+      <li>
+        <a href="/tags">Tags</a>
+      </li>
+      
+    </ul>
+  </div>
+  <div class="menu_icon">
+    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
+  </div>
+</div>
+
+  <div class="header animated fadeInDown">
+  <div class="site_title_container">
+    <div class="site_title">
+      <h1>
+        <a href="https://blog.monsterxx03.com">
+          <span>Shining Moon</span>
+          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
+        </a>
+      </h1>
+    </div>
+    <div class="description">
+      <p class="sub_title">百种弊病,皆从懒生</p>
+      <div class="my_socials">
+        
+        
+        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
+        
+        
+        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    <div class="post_page">
+      <div class="post animated fadeInDown">
+        <div class="post_title post_detail_title">
+          <h2><a href='/2020/04/07/%E9%87%8D%E6%9E%84%E6%8E%A8%E9%80%81%E6%9C%8D%E5%8A%A1/'>重构推送服务</a></h2>
+          <span class="date">2020.04.07</span>
+        </div>
+        <div class="post_content markdown"><p>最近对业务里发送 apple APNS, google FCM 部分的代码进行了重构, 抽出了一个单独的 service, 本文记录下整个过程.</p>
+<h2 id="存在的问题">存在的问题</h2>
+<p>我们有好几个 mobile app, 每个 app 会有一套对应的 server 端 service 做业务逻辑, 因为历史原因, 每个 service 里面其实有很多重复代码, 大多只是一些配置和错误处理上有差异.
+给 app 发推送是个典型, 原来的做法是当要发推送的时候, 往 python 的 celery 队列里扔一个 task, 由 celery 异步得去发.</p>
+<p>有如下问题:</p>
+<ul>
+<li>celery 性能不佳, worker class 用的是 gevent, 但在高峰时候任务队列里还是有大量 pending, 代码上之前做过多次优化, 但收效甚微.</li>
+<li>当 pending 了大量发推送的 task 之后, 会导致其他异步 task 跟着延时, 造成用户体验上的一些问题.</li>
+<li>历史代码的问题, 每个 app 里对接 APNS/FCM 都有一套单独的代码, 在部分错误处理和统计 metrics 上有差异.</li>
+</ul>
+<h2 id="解决方案">解决方案</h2>
+<ul>
+<li>问题1, 目前已经迁移到 k8s, 其实可以无脑开 HPA, 做 auto scaling, 来提高发送效率. 问题是 python 性能实在太差, 峰值时候估计会 scale 到原先的好多倍, 而 celery 里
+除了发推送还有很多 task 有 db 操作, scale 过多, 会带来其他问题, 那是另一个问题, 不想在当前这个问题里解决.</li>
+<li>问题２, celery 里可以设 routing, 简单说可以用单独的 celery instance 来专门处理推送相关 task, 也可以规避1里的 db 问题.</li>
+<li>问题3, 单纯代码问题, 统一用一套代码重构就行了.</li>
+</ul>
+<p>讲真, 碰到的 celery 的 bug 实在太多了, 存量代码用用就行了, 新做业务实在不想用. 而发推送是个很独立的业务, 最后打算拿 go 来单独跑推送.</p>
+<p>有现成的项目: <a href="https://github.com/appleboy/gorush,">https://github.com/appleboy/gorush,</a> 但不太符合我的需求:</p>
+<ul>
+<li>业务和它交互的时候用的是 rest 或 grpc, 我更倾向中间走个任务队列, 减少业务端的 latency.</li>
+<li>根据 apple/google 的响应, 有些业务代码还是需要的.</li>
+</ul>
+<p>也考察过 <a href="nsq.io">nsq</a>, 问题是, 我的发送端还是 python, nsq 的 python client 又是基于 tornado 的, 而我线上是基于 gevent 的, 不是说不能用, python 的几套异步方案谁都没比谁强多少, 混在一起够你折腾的, 算了吧.</p>
+<p>最后基于 <a href="https://github.com/adjust/rmq">https://github.com/adjust/rmq</a> 这个 lib 单独做了个 service, 原理其实和 celery 用 redis 做 broker 是一样的, 基于 redis 的 list 类型做了个任务队列, 正好也能复用现成的 redis. 发送端就是一个简单的 redis lpush, 任何语言都不用复杂包装.</p>
+<h2 id="上线">上线</h2>
+<p>基于 rmq 的开发过程没什么好讲的, 也就是对接了下 APNS/FCM 的 api, 调试下, 两三天就完事了. 过下在 k8s 上跑一个完整的 stateless service, 除了开发完业务逻辑之外还有那些是需要的, 熟悉 k8s 生态的这些应该都是常规.</p>
+<h3 id="visibility">Visibility</h3>
+<ul>
+<li>error report 发送到 sentry: <a href="https://github.com/getsentry/sentry-go">https://github.com/getsentry/sentry-go</a></li>
+<li>prometheus 的 metrics endpoint. prometheus 我是用 prometheus-operator 建立的, 只需要创建对应的 ServiceMonitor 就能让 prometheus 自动 pull metrics.</li>
+<li>grafana dashboard 可视化 prometheus 中数据.</li>
+<li>通过 <a href="https://github.com/oliver006/redis_exporter">redis-exporter</a> 监控 redis 中 pending task 数目, alert manager 中建立对应报警.</li>
+</ul>
+<h3 id="scalability">Scalability</h3>
+<ul>
+<li>scalability: 根据 CPU 设定好 k8s 的 HPA, 开始上线可以宽松点, 后续看负载调整策略.</li>
+</ul>
+<h3 id="deployment">Deployment</h3>
+<ul>
+<li>编写 Dockerfile(runtime 不需要 golang, 可以用 docker 的 multi-stage builds)</li>
+<li>编写 helm chart, 创建对应的 k8s deployment, hpa, servicemonitor&hellip;</li>
+<li>jenkins pipeline 做后续的镜像更新, 改了代码可以在 jenkins 上部署, 不需要有权限操作 kubectl.</li>
+</ul>
+<h2 id="效果">效果</h2>
+<p>原先 celery 处峰值时候 pending 的 task 减少了一大半. 新上的 go service, 常规内存占用不到 10M, 峰值时候 CPU 占用不过 15%, 基本没来不及发的推送, 效果非常好.</p>
+</div>
+        <div class="post_footer">
+          
+        </div>
+      </div>
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mx03" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      
+      
+    </div>
+  </div>
+  <a id="back_to_top" href="#" class="back_to_top"><span>△</span></a>
+</div>
+<footer class="footer">
+  <div class="powered_by">
+    <a href="https://zeuk.me">Designed by Zeuk,</a>
+    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
+  </div>
+
+  <div class="footer_slogan">
+    <span></span>
+  </div>
+</footer>
+
+
+
+<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
+<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
+<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
+<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
+<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-98667627-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</body>
+</html>

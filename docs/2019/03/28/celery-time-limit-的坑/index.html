@@ -126,11 +126,11 @@ _original_apply_timeout <span style="color:#f92672">=</span> celery_gevent_pool<
 <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">apply_timeout_with_report</span>(target, args<span style="color:#f92672">=</span>(), kwargs<span style="color:#f92672">=</span>{}, callback<span style="color:#f92672">=</span>None,
                   accept_callback<span style="color:#f92672">=</span>None, pid<span style="color:#f92672">=</span>None, timeout<span style="color:#f92672">=</span>None,
                   timeout_callback<span style="color:#f92672">=</span>None, Timeout<span style="color:#f92672">=</span>Timeout,
-                  apply_target<span style="color:#f92672">=</span>celery_apply_target, <span style="color:#f92672">*</span><span style="color:#f92672">*</span>rest):
+                  apply_target<span style="color:#f92672">=</span>celery_apply_target, <span style="color:#f92672">**</span>rest):
     <span style="color:#66d9ef">try</span>:
         <span style="color:#66d9ef">with</span> Timeout(timeout):
             <span style="color:#66d9ef">return</span> apply_target(target, args, kwargs, callback,
-                                accept_callback, pid, propagate<span style="color:#f92672">=</span>(Timeout,), <span style="color:#f92672">*</span><span style="color:#f92672">*</span>rest)
+                                accept_callback, pid, propagate<span style="color:#f92672">=</span>(Timeout,), <span style="color:#f92672">**</span>rest)
     <span style="color:#66d9ef">except</span> Timeout <span style="color:#66d9ef">as</span> e:
         <span style="color:#75715e"># report to sentry</span>
 
@@ -140,7 +140,7 @@ celery_gevent_pool<span style="color:#f92672">.</span>apply_timeout <span style=
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">apply_timeout</span>(target, args<span style="color:#f92672">=</span>(), kwargs<span style="color:#f92672">=</span>{}, callback<span style="color:#f92672">=</span>None,
                   accept_callback<span style="color:#f92672">=</span>None, pid<span style="color:#f92672">=</span>None, timeout<span style="color:#f92672">=</span>None,
                   soft_timeout<span style="color:#f92672">=</span>None, timeout_callback<span style="color:#f92672">=</span>None,
-                  Timeout<span style="color:#f92672">=</span>Timeout, apply_target<span style="color:#f92672">=</span>base<span style="color:#f92672">.</span>apply_target, <span style="color:#f92672">*</span><span style="color:#f92672">*</span>rest):
+                  Timeout<span style="color:#f92672">=</span>Timeout, apply_target<span style="color:#f92672">=</span>base<span style="color:#f92672">.</span>apply_target, <span style="color:#f92672">**</span>rest):
     hard_timeout <span style="color:#f92672">=</span> Timeout(timeout)
     soft_timeout <span style="color:#f92672">=</span> Timeout(soft_timeout, SoftTimeLimitExceeded)
     hard_timeout<span style="color:#f92672">.</span>start()
@@ -148,7 +148,7 @@ celery_gevent_pool<span style="color:#f92672">.</span>apply_timeout <span style=
     <span style="color:#66d9ef">try</span>:
         <span style="color:#66d9ef">return</span> apply_target(target, args, kwargs, callback,
                             accept_callback, pid,
-                            propagate<span style="color:#f92672">=</span>(Timeout,), <span style="color:#f92672">*</span><span style="color:#f92672">*</span>rest)
+                            propagate<span style="color:#f92672">=</span>(Timeout,), <span style="color:#f92672">**</span>rest)
     <span style="color:#66d9ef">except</span> Timeout <span style="color:#66d9ef">as</span> t:
         <span style="color:#66d9ef">if</span> isinstance(t, hard_timeout):
             <span style="color:#75715e"># only catch gevent.Timeout set by us</span>

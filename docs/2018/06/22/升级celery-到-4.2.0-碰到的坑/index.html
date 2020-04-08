@@ -115,8 +115,8 @@ gevent<span style="color:#f92672">.</span>monkey<span style="color:#f92672">.</s
 
 app <span style="color:#f92672">=</span> Celery()
 app<span style="color:#f92672">.</span>conf<span style="color:#f92672">.</span>update(
-    BROKER_URL<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">redis://localhost:6379/1</span><span style="color:#e6db74">&#39;</span>,
-    CELERY_RESULT_BACKEND<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">redis://localhost:6379/1</span><span style="color:#e6db74">&#39;</span>
+    BROKER_URL<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;redis://localhost:6379/1&#39;</span>,
+    CELERY_RESULT_BACKEND<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;redis://localhost:6379/1&#39;</span>
 )
 
 <span style="color:#a6e22e">@app.task</span>
@@ -148,15 +148,15 @@ run()
 <span style="color:#f92672">from</span> celery <span style="color:#f92672">import</span> Celery
 
 app <span style="color:#f92672">=</span> Celery()
-app<span style="color:#f92672">.</span>conf<span style="color:#f92672">.</span>update(BROKER_URL<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">redis://localhost:6379/1</span><span style="color:#e6db74">&#39;</span>)
+app<span style="color:#f92672">.</span>conf<span style="color:#f92672">.</span>update(BROKER_URL<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;redis://localhost:6379/1&#39;</span>)
 
 <span style="color:#a6e22e">@app.task</span>
 <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">dummy</span>():
-    <span style="color:#66d9ef">return</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">1</span><span style="color:#e6db74">&#39;</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;1&#39;</span>
 
 
 <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">print_mem</span>():
-    <span style="color:#66d9ef">print</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">Memory usage: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> (kb)</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> resource<span style="color:#f92672">.</span>getrusage(resource<span style="color:#f92672">.</span>RUSAGE_SELF)<span style="color:#f92672">.</span>ru_maxrss
+    <span style="color:#66d9ef">print</span> <span style="color:#e6db74">&#39;Memory usage: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> (kb)&#39;</span> <span style="color:#f92672">%</span> resource<span style="color:#f92672">.</span>getrusage(resource<span style="color:#f92672">.</span>RUSAGE_SELF)<span style="color:#f92672">.</span>ru_maxrss
 
 <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>():
     <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10000</span>):

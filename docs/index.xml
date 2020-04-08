@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Tue, 18 Feb 2020 14:38:56 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 01 Jan 2016 23:49:46 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>重构推送服务</title>
+      <link>https://blog.monsterxx03.com/2020/04/07/%E9%87%8D%E6%9E%84%E6%8E%A8%E9%80%81%E6%9C%8D%E5%8A%A1/</link>
+      <pubDate>Tue, 07 Apr 2020 10:54:12 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2020/04/07/%E9%87%8D%E6%9E%84%E6%8E%A8%E9%80%81%E6%9C%8D%E5%8A%A1/</guid>
+      <description>最近对业务里发送 apple APNS, google FCM 部分的代码进行了重构, 抽出了一个单独的 service, 本文记录下整个过程. 存在的问题 我们有好几个 mobile app, 每个 app 会有一套对应的 server 端 service 做业务逻辑, 因为历史原因, 每个 service 里面其实有很多重复代码, 大多只是一些配置和错误处理上有差异. 给 app 发推送是个典型, 原来的做法是当要发推送的时候, 往 python 的 celery 队列里扔一个 task, 由 celery 异步得去发. 有如下问题: celery 性能不佳, worker class 用的是 gevent, 但在高峰时候任务队列里还是有大量 pending, 代码上之前做过</description>
+    </item>
     
     <item>
       <title>用 AWS Personalize 做推荐系统</title>

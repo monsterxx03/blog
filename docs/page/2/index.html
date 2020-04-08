@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.64.0" />
+	<meta name="generator" content="Hugo 0.68.3" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,6 +91,39 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2019/09/29/gospy-dev-note/'>gospy dev note</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>前文讲了下 gospy 的大致用法, 这篇记录具体实现和过程中碰到的一些问题. 原理 要从外部获取 golang 进程的 runtime 信息, 需要做得是从进程的 binary 中的 debug 信息里 parse 出需要的一些变量的虚拟内存地址, 读取目标进程的内存, 得到相应的数据, 将两者映射起来就好了.只支持了 linux 上的 ELF 格式 binary, debug 信息是 go 在编译时候弄进去的, 格式是通用的 DWARF. ELF 和 DWARF 格式本身不细究(汗, 文档几百页也实在看不动), go 标准库里自带相应的 parser: debug/elf, debug/dwarf, debug/gosym. 一个基本的读取例子: f, _ := os.Open(path) b, _ :=......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2019.09.29</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/gospy/">gospy</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/golang/">golang</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -354,46 +387,6 @@
           <a href="https://blog.monsterxx03.com/tags/golang/">golang</a>
           
           <a href="https://blog.monsterxx03.com/tags/snet/">snet</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2019/05/30/random-talk/'>Random Talk</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>Just some random complains and notes about server infra management. I think those are my motivations to move to kubernetes.
-Won&rsquo;t explain k8s or docker in detail, and how they solve those problems in this post.
-Infrastructure level(on AWS) We use following services provided by AWS.
- Compute:  EC2 AutoScaling Group Lambda   network:  VPC (SDN network) DNS (route53) CDN (CloudFront)   Loadbalancer:  ELB (L4) NLB (L4, ELB successor, support static IP) ALB (L7)   Storage:  EBS (block storage) EFS (hosted NFS) RDS(MySQl/PostgreSQL &hellip;) Redshift (data warehouse) DynamoDB (KV) S3 (object storage) Glacier (cheap archive storage)   Web Firewall (WAF) Monitor (CloudWatch) DMS (ETL) &hellip;  For infra management, in early days, we just click, click, click&hellip; or write some simple scripts to call AWS api.
-With infra resources growing, management became complex, a concept called Infrastructure as Code rising.
-AWS provides CloudFormation as orchestration tool, but we use terraform (for short: CloudFormation sucks, for long: Infrastructure as Code)
-So far, not bad.(tweak those services internally is another story&hellip; never belive work out of box)
-Application level  configuration management (setup nginx, jenkins, redis, twemproxy, ElasticSearch or WTF..) CI/CD dependency management  They&rsquo;re complicated, people developped bunch of tools to handle: puppet, chef, ansible, saltstack &hellip;......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2019.05.30</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
           
         </span>
         

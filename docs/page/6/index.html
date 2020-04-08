@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.64.0" />
+	<meta name="generator" content="Hugo 0.68.3" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,6 +91,41 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2018/05/20/migrate-to-sqlalchemy/'>Migrate to Sqlalchemy</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些. 原来的 db 层代码历史非常古老(10年以上&hellip;), 最早写代码的人早就不在了, 问题很多: 完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2018.05.20</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/python/">python</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/sqlalchemy/">sqlalchemy</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -404,50 +439,6 @@ The real down time was not long, performance recovered to some degree soon, but 
           <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
           
           <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/10/14/aws-dms-notes/'>AWS DMS notes</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>AWS&rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
-It works, but have some concerns. Take some notes when doing this project.
-Prerequisites Source RDS must:
- Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration('binlog retention hours', 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT , REPLICATION SLAVE , SELECT on replication target tables  DDL on source table Redshift has some limits on change columns:
- New column only must be added in the end Can&rsquo;t rename columns  So for DDL on source MySQL, you can&rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
- &quot;ChangeProcessingDdlHandlingPolicy&quot;:{ &quot;HandleSourceTableDropped&quot;:false, &quot;HandleSourceTableTruncated&quot;:false, &quot;HandleSourceTableAltered&quot;:false },  If source table schema changed, I just drop and reload target table on console.
-Control write speed on Redshift Since Redshift is an OLAP database, write operation is slow and concurrency is low, streaming data directly will have big impact on it.
-And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.10.14</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/dms/">DMS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/data-infra/">data-infra</a>
           
         </span>
         

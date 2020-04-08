@@ -126,20 +126,20 @@
 </code></pre></div><p>py2 / 3 中都打印 9, 原因是 python 中并没有 block 的概念.</p>
 <p>list comprehension 如果作用在 class define 中行为也不太一样, 下面代码在 py2 里是队的， 但在 py3 里就会报错:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>(object):
-        name <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">test</span><span style="color:#e6db74">&#39;</span>
-        d <span style="color:#f92672">=</span> {<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">a</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">1</span><span style="color:#e6db74">&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">2</span><span style="color:#e6db74">&#39;</span>}
+        name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;test&#39;</span>
+        d <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;a&#39;</span>: <span style="color:#e6db74">&#39;1&#39;</span>, <span style="color:#e6db74">&#39;b&#39;</span>: <span style="color:#e6db74">&#39;2&#39;</span>}
         [d<span style="color:#f92672">.</span>update({_k: name}) <span style="color:#66d9ef">for</span> _k <span style="color:#f92672">in</span> d]
 
-    <span style="color:#f92672">&gt;&gt;</span><span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">NameError</span>: name <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">d</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> defined
+    <span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#a6e22e">NameError</span>: name <span style="color:#e6db74">&#39;d&#39;</span> <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> defined
 </code></pre></div><p>解决方法1, 在 class 的定义之外做更改操作:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>(object):
-        name <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">test</span><span style="color:#e6db74">&#39;</span>
-        d <span style="color:#f92672">=</span> {<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">a</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">1</span><span style="color:#e6db74">&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">2</span><span style="color:#e6db74">&#39;</span>}
+        name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;test&#39;</span>
+        d <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;a&#39;</span>: <span style="color:#e6db74">&#39;1&#39;</span>, <span style="color:#e6db74">&#39;b&#39;</span>: <span style="color:#e6db74">&#39;2&#39;</span>}
 
     [A<span style="color:#f92672">.</span>d<span style="color:#f92672">.</span>update({_k: A<span style="color:#f92672">.</span>name}) <span style="color:#66d9ef">for</span> _k <span style="color:#f92672">in</span> A<span style="color:#f92672">.</span>d]
 </code></pre></div><p>方法2, 用一个匿名lambda 函数将 class variable 传进去:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>(object):
-        name <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">test</span><span style="color:#e6db74">&#39;</span>
+        name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;test&#39;</span>
         (<span style="color:#66d9ef">lambda</span> name<span style="color:#f92672">=</span>name, d<span style="color:#f92672">=</span>d: [d<span style="color:#f92672">.</span>update({_k: name}) <span style="color:#66d9ef">for</span> _k <span style="color:#f92672">in</span> d])()
 </code></pre></div><p>方法2 看上去太 trick, 我用 1.</p>
 <h2 id="长整型">长整型</h2>
@@ -189,36 +189,36 @@ raise ValueError(&quot;yahaha&quot;)
 <h3 id="in-py2">in py2</h3>
 <p>你明白下面的语句,哪些会失败,哪些成功, 失败是报 <code>UnicodeDecodeError</code> 还是 <code>UnicodeEncodeError</code>, 成功的话返回值是 <code>str</code> 还是 <code>unicode</code> 呢? 准确说出来你就明白啦.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
-<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊啊</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">yaha</span><span style="color:#e6db74">&#39;</span>
+<span style="color:#e6db74">&#39;啊啊&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;yaha&#39;</span>
 
-<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">yaha</span><span style="color:#e6db74">&#39;</span>
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;yaha&#39;</span>
 
-<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">yaha</span><span style="color:#e6db74">&#39;</span>
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;yaha&#39;</span>
 
-<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">.</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>,  <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">yaha</span><span style="color:#e6db74">&#39;</span>])
+<span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74">&#39;啊&#39;</span>,  <span style="color:#e6db74">&#39;yaha&#39;</span>])
 
-<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">.</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>])
+<span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span>, <span style="color:#e6db74">&#39;啊&#39;</span>])
 
-<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">.</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">abc</span><span style="color:#e6db74">&#39;</span>])
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74">&#39;啊&#39;</span>, <span style="color:#e6db74">&#39;abc&#39;</span>])
 
-<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">.</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">abc</span><span style="color:#e6db74">&#39;</span>])
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span>, <span style="color:#e6db74">&#39;abc&#39;</span>])
 
 
-<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">test {}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>)
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;test {}&#39;</span><span style="color:#f92672">.</span>format(<span style="color:#e6db74">&#39;啊&#39;</span>)
 
-<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">test {}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>)
+<span style="color:#e6db74">&#39;test {}&#39;</span><span style="color:#f92672">.</span>format(<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span>)
 
-<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">test {}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>)
+<span style="color:#e6db74">&#39;test {}&#39;</span><span style="color:#f92672">.</span>format(<span style="color:#e6db74">&#39;啊&#39;</span>)
 
-<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">test {}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>)
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;test {}&#39;</span><span style="color:#f92672">.</span>format(<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span>)
 
-<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">test </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>
+<span style="color:#e6db74">&#39;test </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> <span style="color:#e6db74">&#39;啊&#39;</span>
 
-<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">test </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>
+<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;test </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> <span style="color:#e6db74">&#39;啊&#39;</span>
 
-<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">test </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> <span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>
+<span style="color:#e6db74">&#39;test </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> <span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span>
 
-<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">黑test </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> <span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">啊</span><span style="color:#e6db74">&#39;</span>
+<span style="color:#e6db74">&#39;黑test </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> <span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span>
 </code></pre></div><p>我把规则总结下, <code>%s</code> 格式化, 字符串内置的 <code>join, replace</code>,其实行为和 <code>+</code> 是一样的:</p>
 <ul>
 <li>所有部分都是 <code>str</code>, 结果就是 <code>str</code>, 不会发生 decode, encode</li>

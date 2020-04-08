@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.64.0" />
+	<meta name="generator" content="Hugo 0.68.3" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,6 +91,30 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2020/04/07/%E9%87%8D%E6%9E%84%E6%8E%A8%E9%80%81%E6%9C%8D%E5%8A%A1/'>重构推送服务</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>最近对业务里发送 apple APNS, google FCM 部分的代码进行了重构, 抽出了一个单独的 service, 本文记录下整个过程. 存在的问题 我们有好几个 mobile app, 每个 app 会有一套对应的 server 端 service 做业务逻辑, 因为历史原因, 每个 service 里面其实有很多重复代码, 大多只是一些配置和错误处理上有差异. 给 app 发推送是个典型, 原来的做法是当要发推送的时候, 往 python 的 celery 队列里扔一个 task, 由 celery 异步得去发. 有如下问题: celery 性能不佳, worker class 用的是 gevent, 但在高峰时候任务队列里还是有大量 pending, 代码上之前做过......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2020.04.07</span>
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -352,39 +376,6 @@
           <i class="remixicon-stack-line"></i>
           
           <a href="https://blog.monsterxx03.com/tags/mysql/">mysql</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2019/09/29/gospy-dev-note/'>gospy dev note</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>前文讲了下 gospy 的大致用法, 这篇记录具体实现和过程中碰到的一些问题. 原理 要从外部获取 golang 进程的 runtime 信息, 需要做得是从进程的 binary 中的 debug 信息里 parse 出需要的一些变量的虚拟内存地址, 读取目标进程的内存, 得到相应的数据, 将两者映射起来就好了.只支持了 linux 上的 ELF 格式 binary, debug 信息是 go 在编译时候弄进去的, 格式是通用的 DWARF. ELF 和 DWARF 格式本身不细究(汗, 文档几百页也实在看不动), go 标准库里自带相应的 parser: debug/elf, debug/dwarf, debug/gosym. 一个基本的读取例子: f, _ := os.Open(path) b, _ :=......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2019.09.29</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/gospy/">gospy</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/golang/">golang</a>
           
         </span>
         
