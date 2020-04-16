@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.68.3" />
+	<meta name="generator" content="Hugo 0.69.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,6 +91,39 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2020/04/16/%E5%9C%A8-eks-%E4%B8%AD%E6%AD%A3%E7%A1%AE%E8%AE%BE%E7%BD%AE-iam-%E6%9D%83%E9%99%90/'>在 eks 中正确设置 IAM 权限</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>在代码中调用 aws api 的时候常用两种方法: 直接传入 aws accessKey/secretKey 使用 instance profile 前者一般是创建一个 IAM 用户, 绑定对应权限, 生成 keypair, 在 k8s 环境里, 把 keypair 放在 Secrets 里, 或通过环境变量注入. 好处是可以每个应用单独设置, 但需要自己管理 keypair. 后者创建一个 IAM role, 绑定对应权限, 创建 ec2 的时候选择对应的 role. 跑在该 ec2 instance 上的程序自动能拿到对应的 IAM 权限. 好处是不必自己管理 keypair, 缺点是跑在同一 server 上的程序权限都一样. eks 1.14 里有个两全齐美的办法: serviceaccount role: https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html 可以把 IAM role 绑定在 pod 使用的......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2020.04.16</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -345,37 +378,6 @@
           <a href="https://blog.monsterxx03.com/tags/python/">python</a>
           
           <a href="https://blog.monsterxx03.com/tags/opentracing/">opentracing</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2019/10/31/%E8%80%81%E4%BB%A3%E7%A0%81%E9%87%8C%E5%92%8C-mysql-%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%80%E4%B8%AAbug/'>老代码里和 MySQL 的事务隔离相关的一个bug</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>这两天在调试代码的时候, 发现 db 层的代码在每次把 connection 放回 db pool 的时候,即使之前执行的是 select 语句,也会 rollback 一下, 这代码很古老, 我也不知道为啥, 尝试把 rollback 去掉, 结果单元测试挂了一堆, 大多都是数据不一致的问题, debug 了一下, 最后发现这坑还挺大的. 为什么去掉 select 的 rollback 后会出现数据不一致? pymysql 默认关闭了 autocommit, connection A 进行 select 之后, 其实 MySQL 内部为 select 也开启了一个 transaction(Repeatable Read), 可以通过 SELECT * FROM information_schema.innodb_trx\G 查看. 所以当 connection A 先 select 一次, connection B 在 transaction 内更新数据并 commit, connection A 再次 select (之前......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2019.10.31</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/mysql/">mysql</a>
           
         </span>
         

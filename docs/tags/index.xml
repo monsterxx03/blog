@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Tue, 18 Feb 2020 14:38:56 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 16 Apr 2020 11:03:39 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,9 +15,18 @@
     <item>
       <title>AWS</title>
       <link>https://blog.monsterxx03.com/tags/aws/</link>
-      <pubDate>Tue, 18 Feb 2020 14:38:56 +0800</pubDate>
+      <pubDate>Thu, 16 Apr 2020 11:03:39 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/tags/aws/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>eks</title>
+      <link>https://blog.monsterxx03.com/tags/eks/</link>
+      <pubDate>Thu, 16 Apr 2020 11:03:39 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/eks/</guid>
       <description></description>
     </item>
     
@@ -108,15 +117,6 @@
       <pubDate>Fri, 02 Aug 2019 16:30:10 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/tags/k8s/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>eks</title>
-      <link>https://blog.monsterxx03.com/tags/eks/</link>
-      <pubDate>Tue, 23 Jul 2019 12:32:08 +0800</pubDate>
-      
-      <guid>https://blog.monsterxx03.com/tags/eks/</guid>
       <description></description>
     </item>
     

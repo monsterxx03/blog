@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Tue, 07 Apr 2020 10:54:12 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 16 Apr 2020 11:03:39 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/categories/tech/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>在 eks 中正确设置 IAM 权限</title>
+      <link>https://blog.monsterxx03.com/2020/04/16/%E5%9C%A8-eks-%E4%B8%AD%E6%AD%A3%E7%A1%AE%E8%AE%BE%E7%BD%AE-iam-%E6%9D%83%E9%99%90/</link>
+      <pubDate>Thu, 16 Apr 2020 11:03:39 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2020/04/16/%E5%9C%A8-eks-%E4%B8%AD%E6%AD%A3%E7%A1%AE%E8%AE%BE%E7%BD%AE-iam-%E6%9D%83%E9%99%90/</guid>
+      <description>在代码中调用 aws api 的时候常用两种方法: 直接传入 aws accessKey/secretKey 使用 instance profile 前者一般是创建一个 IAM 用户, 绑定对应权限, 生成 keypair, 在 k8s 环境里, 把 keypair 放在 Secrets 里, 或通过环境变量注入. 好处是可以每个应用单独设置, 但需要自己管理 keypair. 后者创建一个 IAM role, 绑定对应权限, 创建 ec2 的时候选择对应的 role. 跑在该 ec2 instance 上的程序自动能拿到对应的 IAM 权限. 好处是不必自己管理 keypair, 缺点是跑在同一 server 上的程序权限都一样. eks 1.14 里有个两全齐美的办法: serviceaccount role: https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html 可以把 IAM role 绑定在 pod 使用的</description>
+    </item>
     
     <item>
       <title>重构推送服务</title>

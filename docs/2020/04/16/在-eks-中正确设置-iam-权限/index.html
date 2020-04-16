@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-cn" >
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  
+  <meta name="author"
+        content="monsterxx03"/>
+
+  
+  <meta name="description" content="在代码中调用 aws api 的时候常用两种方法: 直接传入 aws accessKey/secretKey 使用 instance profile 前者一般是创建一个 IAM 用户, 绑定对应权限, 生成 keypair, 在 k8s 环境里, 把 keypair 放在 Secrets 里, 或通过环境变量注入. 好处是可以每个应用单独设置, 但需要自己管理 keypair. 后者创建一个 IAM role, 绑定对应权限, 创建 ec2 的时候选择对应的 role. 跑在该 ec2 instance 上的程序自动能拿到对应的 IAM 权限. 好处是不必自己管理 keypair, 缺点是跑在同一 server 上的程序权限都一样. eks 1.14 里有个两全齐美的办法: serviceaccount role: https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html 可以把 IAM role 绑定在 pod 使用的"/>
+  
+
+  
+
+  
+  <link rel="canonical" href="https://blog.monsterxx03.com/2020/04/16/%E5%9C%A8-eks-%E4%B8%AD%E6%AD%A3%E7%A1%AE%E8%AE%BE%E7%BD%AE-iam-%E6%9D%83%E9%99%90/"/>
+
+  
+
+  <title>在 eks 中正确设置 IAM 权限 &middot; Shining Moon</title>
+
+  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
+
+  
+  
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/home.css">
+  
+</head>
+
+<body>
+<div class="main animated">
+  <div class="nav_container animated fadeInDown">
+  <div class="site_nav" id="site_nav">
+    <ul>
+      
+      <li>
+        <a href="/">Home</a>
+      </li>
+      
+      <li>
+        <a href="/posts/">Archive</a>
+      </li>
+      
+      <li>
+        <a href="/about/">About</a>
+      </li>
+      
+      <li>
+        <a href="/tags">Tags</a>
+      </li>
+      
+    </ul>
+  </div>
+  <div class="menu_icon">
+    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
+  </div>
+</div>
+
+  <div class="header animated fadeInDown">
+  <div class="site_title_container">
+    <div class="site_title">
+      <h1>
+        <a href="https://blog.monsterxx03.com">
+          <span>Shining Moon</span>
+          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
+        </a>
+      </h1>
+    </div>
+    <div class="description">
+      <p class="sub_title">百种弊病,皆从懒生</p>
+      <div class="my_socials">
+        
+        
+        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
+        
+        
+        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    <div class="post_page">
+      <div class="post animated fadeInDown">
+        <div class="post_title post_detail_title">
+          <h2><a href='/2020/04/16/%E5%9C%A8-eks-%E4%B8%AD%E6%AD%A3%E7%A1%AE%E8%AE%BE%E7%BD%AE-iam-%E6%9D%83%E9%99%90/'>在 eks 中正确设置 IAM 权限</a></h2>
+          <span class="date">2020.04.16</span>
+        </div>
+        <div class="post_content markdown"><p>在代码中调用 aws api 的时候常用两种方法:</p>
+<ul>
+<li>直接传入 aws accessKey/secretKey</li>
+<li>使用 instance profile</li>
+</ul>
+<p>前者一般是创建一个 IAM 用户, 绑定对应权限, 生成 keypair, 在 k8s 环境里, 把 keypair 放在 Secrets 里, 或通过环境变量注入. 好处是可以每个应用单独设置,
+但需要自己管理 keypair.</p>
+<p>后者创建一个 IAM role, 绑定对应权限, 创建 ec2 的时候选择对应的 role. 跑在该 ec2 instance 上的程序自动能拿到对应的 IAM 权限. 好处是不必自己管理 keypair,
+缺点是跑在同一 server 上的程序权限都一样.</p>
+<p>eks 1.14 里有个两全齐美的办法: serviceaccount role: <a href="https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html">https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html</a></p>
+<p>可以把 IAM role 绑定在 pod 使用的 ServiceAccount 上, 既避免了管理 keypair 的麻烦, 也可以 per 应用得设置权限.</p>
+<h2 id="流程">流程</h2>
+<p>用 terraform 来演示下给<a href="https://github.com/kubernetes-sigs/external-dns">external-dns</a> 设置权限的整个过程.</p>
+<p>创建对应的 iam policy:</p>
+<pre><code>resource &quot;aws_iam_policy&quot; &quot;external_dns&quot; {
+    name = &quot;external-dns&quot;
+    description = &quot;policy for k8s external-dns&quot;
+    policy = &lt;&lt;EOF
+    {
+        &quot;Version&quot;: &quot;2012-10-17&quot;,
+        &quot;Statement&quot;: [
+            {
+                &quot;Effect&quot;: &quot;Allow&quot;,
+                &quot;Action&quot;: [
+                    &quot;route53:ChangeResourceRecordSets&quot;
+                ],
+                &quot;Resource&quot;: [
+                    &quot;arn:aws:route53:::hostedzone/XXXXXXXXXXXXX&quot;,
+                ]
+            },
+            {
+                &quot;Effect&quot;: &quot;Allow&quot;,
+                &quot;Action&quot;: [
+                    &quot;route53:ListHostedZones&quot;,
+                    &quot;route53:ListResourceRecordSets&quot;
+                ],
+                &quot;Resource&quot;: [
+                    &quot;*&quot;
+                ]
+            }
+        ]
+    }
+    EOF
+}
+</code></pre>
+<p>创建 iam role, 为了方便可以用第三方模块 <a href="https://github.com/terraform-aws-modules/terraform-aws-iam/tree/master/modules/iam-assumable-role-with-oidc">terraform-aws-iam/modules/iam-assume-role-with-oidc</a></p>
+<pre><code>module &quot;iam_assumable_role_external_dns&quot; {
+    source = &quot;../modules/aws_iam/modules/iam-assumable-role-with-oidc&quot;
+    create_role = true
+    role_name                     = &quot;external-dns&quot;
+    provider_url                  = replace(module.eks.cluster_oidc_issuer_url, &quot;https://&quot;, &quot;&quot;)
+    role_policy_arns = [aws_iam_policy.external_dns.arn]
+    oidc_fully_qualified_subjects = [&quot;system:serviceaccount:kube-system:external-dns&quot;]  # 这里指向 eks 中对应的 ServiceAccount
+}
+</code></pre>
+<p>创建之后能得到 role 的 arn, 只需要在 ServiceAccount 的 annotation 里标记一下就行了.</p>
+<pre><code>annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::xxxxxxxx:role/external-dns
+</code></pre>
+<p>pod 需要重新创建才能拿到 iam 权限.</p>
+<h2 id="debug">Debug</h2>
+<p>如果不生效, 先检查 iam role 注入是否成功:</p>
+<pre><code>&gt;&gt; kubectl exec -n kube-system external-dns-xxxx-yyyy env | grep AWS
+
+AWS_ROLE_ARN=arn:aws:iam::xxxxxx:role/external-dns
+AWS_WEB_IDENTITY_TOKEN_FILE=/var/run/secrets/eks.amazonaws.com/serviceaccount/token
+</code></pre>
+<p>能看到这两个就说明注入成功了.</p>
+<p>如果注入成功还是没权限, 那有两种可能.</p>
+<p>程序使用的 aws sdk 版本不够, 没有实现 assume role, 检查是否满足最低版本: <a href="https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts-minimum-sdk.html">https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts-minimum-sdk.html</a></p>
+<p>程序运行用户权限不够, 有些 helm chart 默认以 nobody 权限运行, 但挂上去的 aws token file 是 root 权限的.  检查下 deployment 的 securityContext, 是否用了:</p>
+<pre><code>securityContext:
+    runAsUser: 65534
+</code></pre>
+<p>可以直接删掉, 让程序以 root 运行, 或设置 <code>fsGroup: 65534</code>, 让文件系统权限归 nobody 用户.</p>
+</div>
+        <div class="post_footer">
+          
+          <div class="meta">
+            <div class="info">
+              <span class="field tags">
+                <i class="remixicon-stack-line"></i>
+                
+                <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
+                
+                <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
+                
+              </span>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mx03" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      
+      
+    </div>
+  </div>
+  <a id="back_to_top" href="#" class="back_to_top"><span>△</span></a>
+</div>
+<footer class="footer">
+  <div class="powered_by">
+    <a href="https://zeuk.me">Designed by Zeuk,</a>
+    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
+  </div>
+
+  <div class="footer_slogan">
+    <span></span>
+  </div>
+</footer>
+
+
+
+<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
+<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
+<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
+<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
+<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-98667627-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</body>
+</html>
