@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 01 Jan 2016 23:49:46 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 16 Jun 2020 16:02:58 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>解决 k8s 1.16 apiVersion deprecation 造成的 helm revision 冲突</title>
+      <link>https://blog.monsterxx03.com/2020/06/16/%E8%A7%A3%E5%86%B3-k8s-1.16-apiversion-deprecation-%E9%80%A0%E6%88%90%E7%9A%84-helm-revision-%E5%86%B2%E7%AA%81/</link>
+      <pubDate>Tue, 16 Jun 2020 16:02:58 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2020/06/16/%E8%A7%A3%E5%86%B3-k8s-1.16-apiversion-deprecation-%E9%80%A0%E6%88%90%E7%9A%84-helm-revision-%E5%86%B2%E7%AA%81/</guid>
+      <description>最近开始把线上的 k8s 从 1.15 升级到 1.16, 1.16 里有一些 api verison 被彻底废弃, 需要迁移到新的 api version, 具体有: https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.16.md#deprecations-and-removals 有两个问题: 集群中使用的一些第三方 controller(nginx-ingress, external-dns-controller&amp;hellip;), 调用的 apiVersion 需要升级. 已存在集群中的 objects(Deployment/ReplicaSet&amp;hellip;), 是否需要处理, eg: Deployment: extensions/v1beta1 -&amp;gt; apps/v1. 第一个问题好解决, 升级一下对应的 image 版本就行了, 只要还在维护的 controller, 都已经升级到支持 1.16. 自己写的工具链也排查下是否有还在使用老版本 api 的, 因为我用的是 aws eks, 开下 control-plane-logs 里的 audit log, 可以看还有什么在调用老的 api. 第二个问题是不需要改, 已存在的 objects 无法</description>
+    </item>
     
     <item>
       <title>在 eks 中正确设置 IAM 权限</title>

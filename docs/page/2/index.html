@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.69.0" />
+	<meta name="generator" content="Hugo 0.72.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,6 +91,39 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2019/11/15/%E9%9B%86%E6%88%90-opentracing/'>集成 opentracing</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>之前用过 datadog 的 tracing 功能, 非常好用, 但是很贵(单台30$), 迁移到 k8s 后, 监控迁移到了 prometheus, 也把 datadog 的 tracing 去掉了.datadog 的 tracing 也是 opentracing 的一种实现, 索性就换上开源实现. tracing 系统是分布式系统中很好用的 performance tuning 工具, opentracing 只是一个标准，里面定义了 span, scope, tracer 等概念，但不规定 tracing 数据应该怎么 encoding, 怎么存储, 跨进程的 span 数据怎么串起来. 首先要挑选一个开源的 tracer 实现，tracer 用来接受业务系统发出的 encode 过的 span 数据,并存储，提供一个界面供查询. 我选......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2019.11.15</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/python/">python</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/opentracing/">opentracing</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -342,39 +375,6 @@
         <span class="field">
           <i class="remixicon-map-pin-time-line"></i>
           <span class="date">2019.07.23</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2019/06/30/k8s-%E5%89%A9%E4%B8%8B%E7%9A%84%E9%97%AE%E9%A2%98/'>K8S: 剩下的问题</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>准备工作都差不多了, 没意外下周就该开始把线上的服务往 k8s 上迁移了. 记录几个问题，暂时不 block 我的迁移进程, 但需要持续关注. DNS timeout and conntrack 看到有个关于 DNS 的issue: #56903 现象是 k8s cluster 内部 dns 查询间歇性会 5s 超时, 大致原因是 coredns 作为中心 dns 的时候, 要通过 iptables 把 coredns 的 cluster ip, 转化到它真实的可路由 ip, 中间需要 SNAT, DNAT, 并在 conntrack 内记录映射关系. 这可能会带来两个问题: conntrack table 被 udp 的 dns 查询填满 udp 是无连接的, tcp 关闭链接就会清理 conntrack 内记录, udp 不会，只能等超时, 默......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2019.06.30</span>
         </span>
         
         <span class="field tags">

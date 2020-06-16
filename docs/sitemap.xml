@@ -4,32 +4,47 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/aws/</loc>
-    <lastmod>2020-04-16T11:03:39+08:00</lastmod>
+    <lastmod>2020-06-16T16:02:58+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://blog.monsterxx03.com/categories/</loc>
-    <lastmod>2020-04-16T11:03:39+08:00</lastmod>
+    <lastmod>2020-06-16T16:02:58+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/eks/</loc>
-    <lastmod>2020-04-16T11:03:39+08:00</lastmod>
+    <lastmod>2020-06-16T16:02:58+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/k8s/</loc>
+    <lastmod>2020-06-16T16:02:58+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://blog.monsterxx03.com/posts/</loc>
-    <lastmod>2020-04-16T11:03:39+08:00</lastmod>
+    <lastmod>2020-06-16T16:02:58+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/</loc>
+    <lastmod>2020-06-16T16:02:58+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://blog.monsterxx03.com/tags/</loc>
-    <lastmod>2020-04-16T11:03:39+08:00</lastmod>
+    <lastmod>2020-06-16T16:02:58+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://blog.monsterxx03.com/categories/tech/</loc>
-    <lastmod>2020-04-16T11:03:39+08:00</lastmod>
+    <lastmod>2020-06-16T16:02:58+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/2020/06/16/%E8%A7%A3%E5%86%B3-k8s-1.16-apiversion-deprecation-%E9%80%A0%E6%88%90%E7%9A%84-helm-revision-%E5%86%B2%E7%AA%81/</loc>
+    <lastmod>2020-06-16T16:02:58+08:00</lastmod>
   </url>
   
   <url>
@@ -155,11 +170,6 @@
   <url>
     <loc>https://blog.monsterxx03.com/2019/08/16/%E6%9D%82/</loc>
     <lastmod>2019-08-16T15:00:02+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/tags/k8s/</loc>
-    <lastmod>2019-08-02T16:30:10+08:00</lastmod>
   </url>
   
   <url>
@@ -734,11 +744,6 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/about/</loc>
-    <lastmod>2016-01-01T23:49:46+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/</loc>
     <lastmod>2016-01-01T23:49:46+08:00</lastmod>
   </url>
   

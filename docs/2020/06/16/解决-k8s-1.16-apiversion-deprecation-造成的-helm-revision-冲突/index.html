@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-cn" >
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  
+  <meta name="author"
+        content="monsterxx03"/>
+
+  
+  <meta name="description" content="最近开始把线上的 k8s 从 1.15 升级到 1.16, 1.16 里有一些 api verison 被彻底废弃, 需要迁移到新的 api version, 具体有: https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.16.md#deprecations-and-removals 有两个问题: 集群中使用的一些第三方 controller(nginx-ingress, external-dns-controller&amp;hellip;), 调用的 apiVersion 需要升级. 已存在集群中的 objects(Deployment/ReplicaSet&amp;hellip;), 是否需要处理, eg: Deployment: extensions/v1beta1 -&amp;gt; apps/v1. 第一个问题好解决, 升级一下对应的 image 版本就行了, 只要还在维护的 controller, 都已经升级到支持 1.16. 自己写的工具链也排查下是否有还在使用老版本 api 的, 因为我用的是 aws eks, 开下 control-plane-logs 里的 audit log, 可以看还有什么在调用老的 api. 第二个问题是不需要改, 已存在的 objects 无法"/>
+  
+
+  
+
+  
+  <link rel="canonical" href="https://blog.monsterxx03.com/2020/06/16/%E8%A7%A3%E5%86%B3-k8s-1.16-apiversion-deprecation-%E9%80%A0%E6%88%90%E7%9A%84-helm-revision-%E5%86%B2%E7%AA%81/"/>
+
+  
+
+  <title>解决 k8s 1.16 apiVersion deprecation 造成的 helm revision 冲突 &middot; Shining Moon</title>
+
+  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
+
+  
+  
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/home.css">
+  
+</head>
+
+<body>
+<div class="main animated">
+  <div class="nav_container animated fadeInDown">
+  <div class="site_nav" id="site_nav">
+    <ul>
+      
+      <li>
+        <a href="/">Home</a>
+      </li>
+      
+      <li>
+        <a href="/posts/">Archive</a>
+      </li>
+      
+      <li>
+        <a href="/about/">About</a>
+      </li>
+      
+      <li>
+        <a href="/tags">Tags</a>
+      </li>
+      
+    </ul>
+  </div>
+  <div class="menu_icon">
+    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
+  </div>
+</div>
+
+  <div class="header animated fadeInDown">
+  <div class="site_title_container">
+    <div class="site_title">
+      <h1>
+        <a href="https://blog.monsterxx03.com">
+          <span>Shining Moon</span>
+          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
+        </a>
+      </h1>
+    </div>
+    <div class="description">
+      <p class="sub_title">百种弊病,皆从懒生</p>
+      <div class="my_socials">
+        
+        
+        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
+        
+        
+        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    <div class="post_page">
+      <div class="post animated fadeInDown">
+        <div class="post_title post_detail_title">
+          <h2><a href='/2020/06/16/%E8%A7%A3%E5%86%B3-k8s-1.16-apiversion-deprecation-%E9%80%A0%E6%88%90%E7%9A%84-helm-revision-%E5%86%B2%E7%AA%81/'>解决 k8s 1.16 apiVersion deprecation 造成的 helm revision 冲突</a></h2>
+          <span class="date">2020.06.16</span>
+        </div>
+        <div class="post_content markdown"><p>最近开始把线上的 k8s 从 1.15 升级到 1.16, 1.16 里有一些 api verison 被彻底废弃, 需要迁移到新的 api version, 具体有: <a href="https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.16.md#deprecations-and-removals">https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.16.md#deprecations-and-removals</a></p>
+<p>有两个问题:</p>
+<ul>
+<li>集群中使用的一些第三方 controller(nginx-ingress, external-dns-controller&hellip;), 调用的 apiVersion 需要升级.</li>
+<li>已存在集群中的 objects(Deployment/ReplicaSet&hellip;), 是否需要处理, eg: Deployment: extensions/v1beta1 -&gt; apps/v1.</li>
+</ul>
+<p>第一个问题好解决, 升级一下对应的 image 版本就行了, 只要还在维护的 controller, 都已经升级到支持 1.16. 自己写的工具链也排查下是否有还在使用老版本 api 的, 因为我用的是 aws eks, 开下 <a href="https://docs.aws.amazon.com/eks/latest/userguide/control-plane-logs.html">control-plane-logs</a> 里的 audit log, 可以看还有什么在调用老的 api.</p>
+<p>第二个问题是不需要改, 已存在的 objects 无法修改 apiVersion, 集群升级到 1.16 后， 从新的 apiVersion 里能 pull 到之前的数据, apiVersion 字段自动就升级了.</p>
+<p>如果在 1.15 上尝试先删除 objects, 用新 apiVersion 重新创建, 再 get 一次会发现 api 还是老的, 比如创建 <code>apps/v1</code> 的 Deployment, <code>kubectl get deployment -o yaml</code> 看到的
+还是 <code>extensions/v1beta1</code>, 因为 kubectl 会搜索当前 apiserver 支持的所有 api group, 返回最老的那个, 用 <code>kubectl get deployment.v1.apps -o yaml</code> 可以看到新 api.</p>
+<p>但如果用 helm 管理 k8s 上应用的话, 第二个问题会造成 helm 里保存的历史 revision 和 chart 里修改过的新 apiVersion 冲突, helm 总是会尝试执行 upgrade 操作, 然后失败.</p>
+<p>默认情况下, helm 里每次更新的 revision 会保存成 k8s 里的一个 Secrets. 用 <code>kubectl get secret -l owner=helm,status=deployed  -n &lt;namespace&gt;</code> 可以列出.</p>
+<pre><code>    sh.helm.release.v1.jaeger-operator.v1              helm.sh/release.v1   1      180d
+    sh.helm.release.v1.jenkins.v1                      helm.sh/release.v1   1      4d1h
+</code></pre>
+<p>helm upgrade 会找到该 chart 的最新 revision, 和本地要更新的 chart 做比较, 找出 diff, 对 k8s apiserver 做 update 操作(helm2 和 helm3 在这里不太一样, helm3 是 3-way strategic merge patches, 会同时看 k8s 中对应 objects 的当前状态, helm2 只会看 Secrets 里保存的状态).</p>
+<p>所以只要将 helm Secrets 里保存的 apiVersion 修改成最新的, 就可以跳过 apiVersion 的 update.</p>
+<p>导出 revision 内容:</p>
+<pre><code>    kubectl get secrets sh.helm.release.v1.jenkins.v1  -o json  | jq -r  '.data.release'  | base64 -d | base64 -d | gzip -d
+</code></pre>
+<p>手工修改后重新 apply 对应的的 Secrets　就能解决冲突.</p>
+<p>另外还有个 kubectl 插件: <a href="https://github.com/hickeyma/helm-mapkubeapis,">https://github.com/hickeyma/helm-mapkubeapis,</a> 可以自动化得做这事. eg: <code>kubectl mapkubeapis jenkins</code></p>
+<p>具体要映射那些 apiVersion, 它记录在一个 yaml 里: <a href="https://github.com/hickeyma/helm-mapkubeapis/blob/master/config/Map.yaml">https://github.com/hickeyma/helm-mapkubeapis/blob/master/config/Map.yaml</a></p>
+<p>像 rbac 相关 api 在 1.17 才废弃, 如果想在这次升级里一起做了, 可以手工把对应的 deprecatedInVersion 改到 1.15.</p>
+<p>之后只要修改下对应 charts 里的 apiVersion 就好了, 不放心可以用 <a href="https://github.com/databus23/helm-diff">helm-diff</a> 插件看下, 不输出对 apiVersion 的更改就对了.</p>
+</div>
+        <div class="post_footer">
+          
+          <div class="meta">
+            <div class="info">
+              <span class="field tags">
+                <i class="remixicon-stack-line"></i>
+                
+                <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
+                
+                <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
+                
+                <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
+                
+              </span>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mx03" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      
+      
+    </div>
+  </div>
+  <a id="back_to_top" href="#" class="back_to_top"><span>△</span></a>
+</div>
+<footer class="footer">
+  <div class="powered_by">
+    <a href="https://zeuk.me">Designed by Zeuk,</a>
+    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
+  </div>
+
+  <div class="footer_slogan">
+    <span></span>
+  </div>
+</footer>
+
+
+
+<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
+<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
+<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
+<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
+<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-98667627-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</body>
+</html>

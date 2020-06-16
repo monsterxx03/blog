@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.69.0" />
+	<meta name="generator" content="Hugo 0.72.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,6 +91,39 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2019/03/28/celery-time-limit-%E7%9A%84%E5%9D%91/'>Celery Time Limit 的坑</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>之前用 celery 做的 task 都是一些很简单轻量级的 task, 从来没触发过 timeout, 最近加入了一些复杂很耗时的 task, 碰到一些 time limit 的坑. celery 中 time limit 有两种, soft_time_limit 和 hard_time_limit, 区别是 soft_time_limit 会在内部抛一个 Exception, task 可以 catch 自行处理. hard time limit 没法被 catch. 使用如下: from myapp import app from celery.exceptions import SoftTimeLimitExceeded @app.task def mytask(): try: do_work() except SoftTimeLimitExceeded: clean_up_in_a_hurry() 我 celery pool 用的是 gevent, 实际上在现在的实现里 gevent 做 worker pool 的时候会忽略 soft_time_limit, 只有 hard_time_limit 会被触发(通过 gevent.Timeout 实现). 坑爹的是文档里写的是错的: http://docs.celeryproject.org/en/latest/userguide/workers.html#time-limit soft_time_limit 只在 prefork pool 里支持. 我现在想让 celery 把这个 hard timeout 的情况 report 到 sentry, 看了圈代码并没法......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2019.03.28</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/python/">python</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/celery/">celery</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -375,39 +408,6 @@ free -h humanize output (automatically show in KB/MB/GB&hellip;)......</p>
           <i class="remixicon-stack-line"></i>
           
           <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/10/12/%E5%9C%A8-redshift-%E4%B8%AD%E8%AE%A1%E7%AE%97-p95-latency/'>在 redshift 中计算 p95 latency</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>p95 latency 的定义: 把一段时间的 latency 按照从小到大排序, 砍掉最高的 %5, 剩下最大的值就是 p95 latency. p99, p90 同理. p95 latency 表示该时间段内 95% 的 reqeust 都比这个值快. 一般我直接看 CloudWatch, 和 datadog 算好的 p95 值. 这次看看怎么从 access log 里直接计算 p95 latency. 假设在 redshift 中有一张表存储了应用的 access log, 结构如下: CREATE TABLE access_log ( url string, time string, resp_time real ); url time resp_time /test1 2018-10-11T00:10:00.418480Z 0.123 /test2 2018-10-11T00:12:00.512340Z 0.321 要算 p95 很简单, 把 log 按分钟数分组, 用 percentile_cont 在组内按 resp_time 排序计算 就能得到: select date_trunc('minute', time::timestamp) as ts, percentile_cont(0.95) within group(order by resp_time) as p95 from access_log group by 1 order by 1; 得到: ts | p95 ---------------------+------------------- 2018-10-11 00:00:00 | 0.71904999999995 2018-10-11 00:01:00......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.10.12</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/redshift/">redshift</a>
           
         </span>
         

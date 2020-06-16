@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.69.0" />
+	<meta name="generator" content="Hugo 0.72.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,6 +91,45 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2017/06/05/debug-python-performance-issue-with-pyflame/'>Debug python performance issue with pyflame</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>pyflame is an opensource tool developed by uber: https://github.com/uber/pyflame
+It can take snapshots of running python process, combined with flamegraph.pl, can output flamegraph picture of python call stacks. Help analyze bottleneck of python program, needn’t inject any perf code into your application, and overhead is very low.
+Basic Usage sudo pyflame -s 10 -x -r 0.001 $pid | ./flamegraph.pl &gt; perf.svg
+ -s, how many seconds to run -r, sample rate (seconds)  Your output will be something like following:
+Longer bar means more sample points located in it, which means this part code is slower so it has a higher chance seen by pyflame.
+In my case, the output graph has a long IDLE part. Pyflame can detect call stacks who are holding GIL, so if the running code doesn’t hold GIL, pyflame don’t know what it’s doing, it will label them as IDLE. Following cases will be considered as IDLE:
+ Your process is sleeping, do nothing. Waiting for IO.(eg: Your application is calling a very slow RPC server) Call libs written in C.  The right part is real application logic code. You can check this part to get a sense of overview performance of your code.......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2017.06.05</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/python/">python</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -398,41 +437,6 @@ ec2_group: name: &quot;web&quot; description: &quot;security group in web&quot; 
           <a href="https://blog.monsterxx03.com/tags/bigtable/">bigtable</a>
           
           <a href="https://blog.monsterxx03.com/tags/distribute/">distribute</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/paper/">paper</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2016/11/19/gfs-notes/'>GFS notes</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>看了下很久前 google 的 GFS 论文， 做点笔记。</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2016.11.19</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/distribute/">distribute</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/gfs/">gfs</a>
           
           <a href="https://blog.monsterxx03.com/tags/paper/">paper</a>
           

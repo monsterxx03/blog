@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.69.0" />
+	<meta name="generator" content="Hugo 0.72.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,6 +91,43 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2017/12/15/dynamodb/'>DynamoDB</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>DynamoDB 是 AWS 的托管 NoSQL 数据库，可以当作简单的 KV 数据库使用，也可以作为文档数据库使用. Data model 组织数据的单位是 table, 每张 table 必须设置 primary key, 可以设置可选的 sort key 来做索引. 每条数据记作一个 item, 每个 item 含有一个或多个 attribute, 其中必须包括 primary key. attribute 对应的 value 支持以下几种类型: Number, 由于 DynamoDB 的传输协议是 http + json, 为了跨语言的兼容性, number 一律会被转成 string 传输. Binary, 用来表示任意的二进制数据，会用 base64 encode 后传输. Boolean, true or false Null Document 类型包含 List 和 Map, 可以互相嵌套. List, 个数无限制, 总大小......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2017.12.15</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/database/">Database</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/nosql/">NoSQL</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -426,45 +463,6 @@ Notes:
           <a href="https://blog.monsterxx03.com/tags/fpm/">fpm</a>
           
           <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/06/05/debug-python-performance-issue-with-pyflame/'>Debug python performance issue with pyflame</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>pyflame is an opensource tool developed by uber: https://github.com/uber/pyflame
-It can take snapshots of running python process, combined with flamegraph.pl, can output flamegraph picture of python call stacks. Help analyze bottleneck of python program, needn’t inject any perf code into your application, and overhead is very low.
-Basic Usage sudo pyflame -s 10 -x -r 0.001 $pid | ./flamegraph.pl &gt; perf.svg
- -s, how many seconds to run -r, sample rate (seconds)  Your output will be something like following:
-Longer bar means more sample points located in it, which means this part code is slower so it has a higher chance seen by pyflame.
-In my case, the output graph has a long IDLE part. Pyflame can detect call stacks who are holding GIL, so if the running code doesn’t hold GIL, pyflame don’t know what it’s doing, it will label them as IDLE. Following cases will be considered as IDLE:
- Your process is sleeping, do nothing. Waiting for IO.(eg: Your application is calling a very slow RPC server) Call libs written in C.  The right part is real application logic code. You can check this part to get a sense of overview performance of your code.......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.06.05</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/python/">python</a>
           
         </span>
         
