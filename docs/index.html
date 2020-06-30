@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.72.0" />
+	<meta name="generator" content="Hugo 0.73.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,6 +91,41 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2020/06/30/snet-dev-note-stats-api-and-terminal-ui/'>snet dev note: stats api and terminal UI</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>从 0.10.0 版本开始给 snet 加了 stats api 来暴露内部的一些统计数据. 设置 &quot;enable-stats&quot;: true 开启, 默认监听 8810 端口, curl http://localhost:8810/stats { &quot;Uptime&quot;: &quot;26m42s&quot;, &quot;Total&quot;: { &quot;RxSize&quot;: 161539743, &quot;TxSize&quot;: 1960171 }, &quot;Hosts&quot;: [ { &quot;Host&quot;: &quot;112.113.115.113&quot;, &quot;Port&quot;: 443, &quot;RxRate&quot;: 0, &quot;TxRate&quot;: 0, &quot;RxSize&quot;: 840413, &quot;TxSize&quot;: 172528 }, ... ] } 分 host, 统计从该地址接收的字节数(RxSize), 发送字节数(TxSize), 和相应的 rate/s (RxRate, TxRate). 默认只记录 ip, 可以设置 &quot;stats-enable-tls-sni-sniffer&quot;: true, 开启对去往 443 端口的流量进行 sni sniffer, 尝试解析出域名. &quot;stats-enable-http-host-sniffer&quot;: true, 对发往 80 端口流量尝试解析 http host 字段, 两者都会给连接建立过程增加一些 overhead. server 开启 stats api 后, 用 ./snet -top 可以显示一......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2020.06.30</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/snet/">snet</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/network/">network</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/golang/">golang</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -357,30 +392,6 @@
           
           <a href="https://blog.monsterxx03.com/tags/snet/">snet</a>
           
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2019/11/24/11%E6%9C%88/'>11月</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>前两天落枕了, 起床后脖子特别疼, 久坐不动的恶果, 这周末去了附近一家盲人按摩推拿了一下, 舒坦了不少, 这还是第一次近距离接触一个盲人, 感触颇深. 给我推拿的是个大姐, 大我几岁, 刚进门的时候我还没意识到她是个盲人, 动作特别利落, 屋里也收拾得井井有条(惭愧!), 直到看到她用手机才确定是真的看不见. 一般在外面我不太喜欢和店员搭话, 比如理发师话多的话绝对不会去第二次, 这次虽然对盲人的生活有点好奇, 也没多问, 不清......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2019.11.24</span>
         </span>
         
       </div>

@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Tue, 16 Jun 2020 16:02:58 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 30 Jun 2020 14:40:01 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>snet dev note: stats api and terminal UI</title>
+      <link>https://blog.monsterxx03.com/2020/06/30/snet-dev-note-stats-api-and-terminal-ui/</link>
+      <pubDate>Tue, 30 Jun 2020 14:40:01 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2020/06/30/snet-dev-note-stats-api-and-terminal-ui/</guid>
+      <description>从 0.10.0 版本开始给 snet 加了 stats api 来暴露内部的一些统计数据. 设置 &amp;quot;enable-stats&amp;quot;: true 开启, 默认监听 8810 端口, curl http://localhost:8810/stats { &amp;quot;Uptime&amp;quot;: &amp;quot;26m42s&amp;quot;, &amp;quot;Total&amp;quot;: { &amp;quot;RxSize&amp;quot;: 161539743, &amp;quot;TxSize&amp;quot;: 1960171 }, &amp;quot;Hosts&amp;quot;: [ { &amp;quot;Host&amp;quot;: &amp;quot;112.113.115.113&amp;quot;, &amp;quot;Port&amp;quot;: 443, &amp;quot;RxRate&amp;quot;: 0, &amp;quot;TxRate&amp;quot;: 0, &amp;quot;RxSize&amp;quot;: 840413, &amp;quot;TxSize&amp;quot;: 172528 }, ... ] } 分 host, 统计从该地址接收的字节数(RxSize), 发送字节数(TxSize), 和相应的 rate/s (RxRate, TxRate). 默认只记录 ip, 可以设置 &amp;quot;stats-enable-tls-sni-sniffer&amp;quot;: true, 开启对去往 443 端口的流量进行 sni sniffer, 尝试解析出域名. &amp;quot;stats-enable-http-host-sniffer&amp;quot;: true, 对发往 80 端口流量尝试解析 http host 字段, 两者都会给连接建立过程增加一些 overhead. server 开启 stats api 后, 用 ./snet -top 可以显示一</description>
+    </item>
     
     <item>
       <title>解决 k8s 1.16 apiVersion deprecation 造成的 helm revision 冲突</title>

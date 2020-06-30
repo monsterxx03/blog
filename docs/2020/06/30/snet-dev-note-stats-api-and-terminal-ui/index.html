@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-cn" >
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  
+  <meta name="author"
+        content="monsterxx03"/>
+
+  
+  <meta name="description" content="从 0.10.0 版本开始给 snet 加了 stats api 来暴露内部的一些统计数据. 设置 &amp;quot;enable-stats&amp;quot;: true 开启, 默认监听 8810 端口, curl http://localhost:8810/stats { &amp;quot;Uptime&amp;quot;: &amp;quot;26m42s&amp;quot;, &amp;quot;Total&amp;quot;: { &amp;quot;RxSize&amp;quot;: 161539743, &amp;quot;TxSize&amp;quot;: 1960171 }, &amp;quot;Hosts&amp;quot;: [ { &amp;quot;Host&amp;quot;: &amp;quot;112.113.115.113&amp;quot;, &amp;quot;Port&amp;quot;: 443, &amp;quot;RxRate&amp;quot;: 0, &amp;quot;TxRate&amp;quot;: 0, &amp;quot;RxSize&amp;quot;: 840413, &amp;quot;TxSize&amp;quot;: 172528 }, ... ] } 分 host, 统计从该地址接收的字节数(RxSize), 发送字节数(TxSize), 和相应的 rate/s (RxRate, TxRate). 默认只记录 ip, 可以设置 &amp;quot;stats-enable-tls-sni-sniffer&amp;quot;: true, 开启对去往 443 端口的流量进行 sni sniffer, 尝试解析出域名. &amp;quot;stats-enable-http-host-sniffer&amp;quot;: true, 对发往 80 端口流量尝试解析 http host 字段, 两者都会给连接建立过程增加一些 overhead. server 开启 stats api 后, 用 ./snet -top 可以显示一"/>
+  
+
+  
+
+  
+  <link rel="canonical" href="https://blog.monsterxx03.com/2020/06/30/snet-dev-note-stats-api-and-terminal-ui/"/>
+
+  
+
+  <title>snet dev note: stats api and terminal UI &middot; Shining Moon</title>
+
+  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
+
+  
+  
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/home.css">
+  
+</head>
+
+<body>
+<div class="main animated">
+  <div class="nav_container animated fadeInDown">
+  <div class="site_nav" id="site_nav">
+    <ul>
+      
+      <li>
+        <a href="/">Home</a>
+      </li>
+      
+      <li>
+        <a href="/posts/">Archive</a>
+      </li>
+      
+      <li>
+        <a href="/about/">About</a>
+      </li>
+      
+      <li>
+        <a href="/tags">Tags</a>
+      </li>
+      
+    </ul>
+  </div>
+  <div class="menu_icon">
+    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
+  </div>
+</div>
+
+  <div class="header animated fadeInDown">
+  <div class="site_title_container">
+    <div class="site_title">
+      <h1>
+        <a href="https://blog.monsterxx03.com">
+          <span>Shining Moon</span>
+          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
+        </a>
+      </h1>
+    </div>
+    <div class="description">
+      <p class="sub_title">百种弊病,皆从懒生</p>
+      <div class="my_socials">
+        
+        
+        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
+        
+        
+        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    <div class="post_page">
+      <div class="post animated fadeInDown">
+        <div class="post_title post_detail_title">
+          <h2><a href='/2020/06/30/snet-dev-note-stats-api-and-terminal-ui/'>snet dev note: stats api and terminal UI</a></h2>
+          <span class="date">2020.06.30</span>
+        </div>
+        <div class="post_content markdown"><p>从 <a href="https://github.com/monsterxx03/snet/releases">0.10.0</a> 版本开始给 snet 加了 stats api 来暴露内部的一些统计数据.</p>
+<p>设置 <code>&quot;enable-stats&quot;: true</code> 开启, 默认监听 8810 端口, <code>curl http://localhost:8810/stats</code></p>
+<pre><code>    {
+        &quot;Uptime&quot;: &quot;26m42s&quot;,
+        &quot;Total&quot;: {
+            &quot;RxSize&quot;: 161539743,
+            &quot;TxSize&quot;: 1960171
+        },
+        &quot;Hosts&quot;: [
+            {
+                &quot;Host&quot;: &quot;112.113.115.113&quot;,
+                &quot;Port&quot;: 443,
+                &quot;RxRate&quot;: 0,
+                &quot;TxRate&quot;: 0,
+                &quot;RxSize&quot;: 840413,
+                &quot;TxSize&quot;: 172528
+            },
+            ...
+        ]
+    }
+</code></pre>
+<p>分 host, 统计从该地址接收的字节数(RxSize), 发送字节数(TxSize), 和相应的 rate/s (RxRate, TxRate).</p>
+<p>默认只记录 ip, 可以设置 <code>&quot;stats-enable-tls-sni-sniffer&quot;: true</code>, 开启对去往 443 端口的流量进行 sni sniffer, 尝试解析出域名.
+<code>&quot;stats-enable-http-host-sniffer&quot;: true</code>, 对发往 80 端口流量尝试解析 http host 字段, 两者都会给连接建立过程增加一些 overhead.</p>
+<p>server 开启 stats api 后, 用 <code>./snet -top</code> 可以显示一个类似 top 的 terminal UI 作流量监控.</p>
+<p><img src="https://raw.githubusercontent.com/monsterxx03/snet/master/images/top.gif" alt=""></p>
+<p>下载上传速率的计算, 逻辑上很简单,用一段时间内的流量除以时间就可以了, 具体实现的时候讨了个巧, 用了 <code>container/ring</code> 里的环形队列结构, 如果统计速度的范围是N秒,
+就建立一个 size 为 N+1 的 ring, 每秒 tick 一下, 把当前的总流量更新到 ring 上当前节点, 并下移一个节点, 计算 N 秒平均速率即 <code>(node(-1).Val - node(-N-1).Val) / N</code>.
+任何区间小于 N 的范围速率都能用这个结构计算. 用环形队列省了清除 N 秒前数据的逻辑.</p>
+</div>
+        <div class="post_footer">
+          
+          <div class="meta">
+            <div class="info">
+              <span class="field tags">
+                <i class="remixicon-stack-line"></i>
+                
+                <a href="https://blog.monsterxx03.com/tags/snet/">snet</a>
+                
+                <a href="https://blog.monsterxx03.com/tags/network/">network</a>
+                
+                <a href="https://blog.monsterxx03.com/tags/golang/">golang</a>
+                
+              </span>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mx03" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      
+      
+    </div>
+  </div>
+  <a id="back_to_top" href="#" class="back_to_top"><span>△</span></a>
+</div>
+<footer class="footer">
+  <div class="powered_by">
+    <a href="https://zeuk.me">Designed by Zeuk,</a>
+    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
+  </div>
+
+  <div class="footer_slogan">
+    <span></span>
+  </div>
+</footer>
+
+
+
+<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
+<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
+<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
+<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
+<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-98667627-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</body>
+</html>
