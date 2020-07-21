@@ -1,5 +1,5 @@
 ---
-title: "Upgrade Redis From 3 to 6"
+title: "从 twemproxy 迁移到 redis cluster"
 date: 2020-07-08T17:08:40+08:00
 draft: true
 category:
@@ -11,6 +11,38 @@ tags:
 
 线上有个 redis 的缓存集群, 跑的还是 3.0, 前面套 twemproxy 做 sharding. 跑了好几年了都很稳定, 但一直有些很不爽的地方, 最近有点时间,决定
 升级到redis 6, 并迁移到 redis cluster 方案. 
+
+### twemproxy 的工作模式
+
+twemproxy 的原理很简单, 后面运行 N 个 redis 实例, 应用连接到 twemproxy, twemproxy 解析应用发过来的 redis protocol, 根据解析出来的 key 做 hash, 再打散到后面 N 个 redis 实例上.
+
+具体打散的方式可以是简单的 hash%N, 也可以用一致性 hash 算法. hash%N 的问题是, 增减节点的时候所有 cache 必然 miss.
+
+一致性 hash, 在实现的时候会先弄一个 size 很大的 hash ring(eg: 2^32),这里每个节点被叫做一个虚拟节点, 把虚拟节点的数目叫做 X, 然后将 N 个 redis 实例均匀分布到这个环上, 每个 redis 把它叫做实节点吧, 分配 key
+的时候 hash%X, 得到虚拟节点, 然后顺时针找下一个最近的实节点, 就找到了相应的 redis. 因为虚拟节点的数目是不变的, 增减 redis 实例的数目是改变了实节点的分布, 顺时针找下个实节点的时候还是有一定几率落在以前的
+redis 实例上的, 这在一定程度上减少了 cache 的 miss. 可以看作 hash%N 的优化版本,但不解决本质问题.
+
+### redis cluster 的工作模式
+
+twemproxy 的原理比较好理解, 缺点有三:
+
+- 增减节点时候必然会发生 cache miss, 增大数据库压力. 手工做数据迁移也不是不行, 就是非常麻烦...
+- 无法利用 redis sentinel 实现 redis 实例的 HA. 开启 `auto_eject_hosts` 可以自动把挂掉的 redis 实例从 hash ring 里踢出去, 但这个会导致 key 的重分布, 如果 redis 的检测失败是由于间歇性的网络问题造成的, 对于重 cache 的应用, 可能还不如等手工把问题解决了再恢复业务.....
+- twemproxy 还要再想办法做 HA
+
+redis cluster 的工作模式就高端一点, 把整个 key 空间划分到 16384 个 slot 上. 用 crc16(key)%16384, 来决定 key 属于哪个 slot. 每台 redis 实例各分配一段 slot.
+
+开启了 cluster 模式的 redis 实例之间通过 gossip protocol 传递集群信息(谁是master, 谁是 slave, slots的分布情况), 而 master slave 的切换在内部实现了类似 raft 的选举算法(取代单机模式下的 HA 方案 sentinel).
+
+每个节点都知道每个slot当前分配在哪个节点上, 当收到 client 的请求后, 根据 key 算出所处 slot, 如果 slot 分配在自己这, 就直接返回结果, 否则返回一个 `Moved <slot> host port` 的结果, 告诉 client 去对应的节点取值, 
+因为 crc16(key)%16384 这个算法是固定的, 所以 client 可以在发出请求前预先计算出 key 属于哪个节点, 大多数时候并不会请求两次, 只有在发生 failover 的时候会收到 Moved, 此时再拉一次节点信息就好了, 当增减节点的时候 slot 会发生迁移, slot 的迁移过程中会给 client 返回一个 ASK 响应, 表示迁移还没完成, 你去另一个节点再去问问这个 key 的归属, 可以把 Moved 理解成 http 301, slot 已经永久迁移了, client 你可以记着, Ask 是 http 302, 临时重定向, slot的迁移还没完成, 你别急着更新自己的节点映射信息. 这种实现被叫做 smart client.
+
+redis 3.0 刚引入cluster 模式的时候, 反应并不很好, 原因就是这种 smart client 的模式过于复杂, 对 client lib 的实现要求比较高, 在多语言环境下, 各语言 client lib 的成熟度不一样, 比较难整. 但大家又比较想要 redis cluster 的 sharding, failover 功能, 所以也有人会在中间加一层 proxy 来实现 smart client 的功能.  
+
+我这次没在中间加 proxy, 是直接访问的 redis cluster, 大部分情况下都没问题, 因为少了 twemproxy, latency 还能得到改善. 
+
+主要问题在 mget, mset 这样的 multi key 操作上, 只有操作的 key 属于同一个 slot 才可以执行, 否则会得到 CROSSSLOT 的 error, 即使这些 slot 属于同一个 node 也没办法, 因为当发生 slot 的迁移的时候, 一条命令里包含不属于同一 slot 的 key  时,没法给 client 返回正确的 Ask. redis-py-cluster 里对 mget 的实现就是个简单的 for loop get. 另外 pipeline, transaction 的功能也一样. 可以用 hashtag 的功能强制一些 key 归属到同一个 slot, 不过这个场景限制太多了, 很难用得上. 只能说做个 trade offf 吧, 看自己的业务是否能忍受这些情况.
+
 
 ### 动机
 
@@ -32,6 +64,7 @@ kubelet --allowed-unsafe-sysctls 'kernel.msg*,net.core.somaxconn' ...
 
 minikube start --extra-config="kubelet.allowed-unsafe-sysctls=net.core.somaxconn" --kubernetes-version="1.16.10" --driver="virtualbox"
 
+挂 pv 上去, 用来存储 nodes.conf, 当 pod 意外重启或被重建的时候, 需要之前的 nodes.conf,否则无法加入 cluster.
 
 ### Operation
 
@@ -54,3 +87,11 @@ minikube start --extra-config="kubelet.allowed-unsafe-sysctls=net.core.somaxconn
 
     redis-cli --cluster rebalance host:port --cluster-weight  node_id=0 --cluster-pipeline 100
     redis-cli --cluster del-node host:port node-xxxx
+
+node failure(slots unassigned)
+    
+    redis-cli cluster forget old-node-id-xxx   # do it on every exising master node
+    redis-cli cluster meet new_host:new_ip
+    redis-cli --cluster add-node new_host:new_port existing_host:existing_port
+    redis-cli --cluster fix host:port
+
