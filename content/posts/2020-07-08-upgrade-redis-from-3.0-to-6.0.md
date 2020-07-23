@@ -35,7 +35,7 @@ redis cluster 的工作模式就高端一点, 把整个 key 空间划分到 1638
 开启了 cluster 模式的 redis 实例之间通过 gossip protocol 传递集群信息(谁是master, 谁是 slave, slots的分布情况), 而 master slave 的切换在内部实现了类似 raft 的选举算法(取代单机模式下的 HA 方案 sentinel).
 
 每个节点都知道每个slot当前分配在哪个节点上, 当收到 client 的请求后, 根据 key 算出所处 slot, 如果 slot 分配在自己这, 直接返回结果, 否则返回 `Moved <slot> host port` 的结果, 告诉 client 去对应的节点取值, 
-因为 crc16(key)%16384 这个算法是固定的, 所以 client 可以预计算出 key 属于哪个节点, 大多数时候并不会请求两次, 只有在发生 failover 的时候会收到 Moved, 此时再拉一次节点信息就好了, 当增减节点的时候 slot 会发生迁移, slot 的迁移过程中会给 client 返回一个 ASK 响应, 表示迁移还没完成, 你去另一个节点再去问问这个 key 的归属, 可以把 Moved 理解成 http 301, slot 已经永久迁移了, client 你可以记着, Ask 是 http 302, 临时重定向, slot的迁移还没完成, 你别急着更新自己的节点映射信息. 这种实现被叫做 smart client.
+因为 crc16(key)%16384 这个算法是固定的, 所以 client 可以预计算出 key 属于哪个节点, 大多数时候并不会请求两次, 只有在client 缓存的 node slots mapping 过期的时候会收到 Moved(比如做了 resharding), 此时再拉一次节点信息就好了, 当增减节点的时候 slot 会发生迁移, slot 的迁移过程中会给 client 返回一个 ASK 响应, 表示迁移还没完成, 你去另一个节点再去问问这个 key 的归属, 可以把 Moved 理解成 http 301, slot 已经永久迁移了, client 你可以记着, Ask 是 http 302, 临时重定向, slot的迁移还没完成, 你别急着更新自己的节点映射信息. 这种实现被叫做 smart client.
 
 redis 3.0 刚引入cluster 模式的时候, 反应并不很好, 原因就是这种 smart client 的模式过于复杂, 对 client lib 的实现要求比较高, 在多语言环境下, 各语言 client lib 的成熟度不一样, 比较难整. 但大家又比较想要 redis cluster 的 sharding, failover 功能, 所以也有人会在中间加一层 proxy 来实现 smart client 的功能.  
 
@@ -60,10 +60,44 @@ redis 3.0 刚引入cluster 模式的时候, 反应并不很好, 原因就是这�
 
 ### 在 k8s 上部署 redis cluster
 
-redis 启动时候需要修改 net.core.somaxconn 这个内核参数, 在容器环境下 可以通过 securityContext 进行, 但要在 kubelet 的配置里把这个值加进白名单:
+#### 修改内核参数
 
-    kubelet --allowed-unsafe-sysctls 'kernel.msg*,net.core.somaxconn' ...
-    minikube start --extra-config="kubelet.allowed-unsafe-sysctls=net.core.somaxconn" --kubernetes-version="1.16.10" --driver="virtualbox"
+通常 setup redis 的时候会动到三个内核参数, 在 k8s 上配置要注意一些:
+
+- `sysctl vm.overcommit_memory=1`, 在应用申请内存的时候即使内存不够也返回成功, redis 做 bgsave 的时候是 copy-on-write 的模式, 看上去要申请 double 的内存, 但实际上不会使用, 如果已用内存超过物理内存一半, 不开这个选项会让 bgsave 失败. k8s 的 node 基本 setup 一般都会默认设上(为了让 QoS class 来管理 pod 的 eviction, 而不是被系统的 OOM killer 杀死), 一般就不用管了. 比如 aws eks worker node 的 ami 里默认就是设置的: https://github.com/awslabs/amazon-eks-ami/blob/v20200710/scripts/install-worker.sh#L256 
+- 关闭 `transparent_hugepage`, 可以减少内存分配 latency 和 内存占用, 这个值必须设置在 host node 上, 我在 ec2 的 userdata 里加了段: `echo never > /sys/kernel/mm/transparent_hugepage/enabled`
+- 修改 `net.core.somaxconn`, 提高 socket 的 backlog 队列长度, 这个参数是有命名空间的, 可以通过 podSecurityContext 设置, 不过在 k8s 里默认是 unsafe 的.
+
+
+修改 `net.core.somaxconn` 比较麻烦, 具体步骤:
+
+1. 在 kubelet 的启动参数里加进白名单
+
+        kubelet --allowed-unsafe-sysctls 'kernel.msg*,net.core.somaxconn' ...
+        # minikube 的修改方法
+        minikube start --extra-config="kubelet.allowed-unsafe-sysctls=net.core.somaxconn" --kubernetes-version="1.16.10" --driver="virtualbox"
+
+2. 设置 podSecurityPolicy(并把 pod 的 role 关联到此 psp):
+
+        apiVersion: policy/v1beta1
+        kind: PodSecurityPolicy
+        metadata:
+            name: redis-cluster-cache
+        spec:
+          allowedUnsafeSysctls:
+          - net.core.somaxconn
+
+3. 在 pod 的 podSecurityContext 里设置:
+
+        spec:
+            template:
+            spec:
+                securityContext:
+                    sysctls:
+                    - name: net.core.somaxconn
+                      value: "10000"
+
+#### 更新 pod ip 
 
 使用 bitnami 的 helm chart 部署 redis cluster: https://github.com/bitnami/charts/tree/master/bitnami/redis-cluster/
 
@@ -84,7 +118,7 @@ aws eks 上的 pod 重启后 vpc ip 是会变的, 在 redis cluster 里怎么处
 - redis 的镜像里有脚本在启动的时候读取 `REDIS_NODES` 变量, 查询每个 pod 的 headless domain, 得到当前 vpc ip, 生成 `nodes.conf`  https://github.com/bitnami/bitnami-docker-redis-cluster/blob/6.0.6-debian-10-r0/6.0/debian-10/rootfs/opt/bitnami/scripts/librediscluster.sh#L229
     
 
-这样, redis pod 重启后可以自动加入 cluster. 注意必须挂一块 pv 上去存 `nodes.conf`.
+为了让 redis pod 重启后可以自动加入 cluster. 必须挂一块 pv 上去存 `nodes.conf` .
 
 ### Operation
 
