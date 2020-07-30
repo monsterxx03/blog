@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.73.0" />
+	<meta name="generator" content="Hugo 0.74.3" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,6 +91,39 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2017/07/01/python-web-%E5%BA%94%E7%94%A8%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/'>Python Web 应用性能调优</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>Python web 应用性能调优 为了快速上线，早期很多代码基本是怎么方便怎么来，这样就留下了很多隐患，性能也不是很理想，python 因为 GIL 的原因，在性能上有天然劣势，即使用了 gevent/eventlet 这种协程方案，也很容易因为耗时的 CPU 操作阻塞住整个进程。前阵子对基础代码做了些重构，效果显著，记录一些。 设定目标: 性能提高了，最直接的效果当然是能用更少的机器处理相同流量，目标是关闭 20% 的 stateless webserver. 尽量在框架代码上做改动，不动业务逻辑代码。 低风险 (历......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2017.07.01</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/glow/">glow</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -423,31 +456,6 @@ ec2_group: name: &quot;web&quot; description: &quot;security group in web&quot; 
           
           <a href="https://blog.monsterxx03.com/tags/elasticsearch/">elasticsearch</a>
           
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/03/11/matrix-14-years-later/'>Matrix 14 years later</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>心血来潮, 又看了遍黑客帝国三部曲, 当年的沃卓斯基兄弟都变成沃卓斯基姐妹了, 唏嘘啊…</p>
-<p>第一次看的时候, 好像是初中吧, 记得看第三部还是姑父的盗版碟上看的, 那天还拉了个同学和我一起看,然后请他吃了泡面+冰淇淋,结果他回家就拉肚了,抱怨了我好久,所以印象特别深刻,哈哈.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.03.11</span>
         </span>
         
       </div>

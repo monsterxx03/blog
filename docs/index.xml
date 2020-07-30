@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Tue, 30 Jun 2020 14:40:01 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 08 Jul 2020 17:08:40 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>从 twemproxy 迁移到 redis cluster</title>
+      <link>https://blog.monsterxx03.com/2020/07/08/%E4%BB%8E-twemproxy-%E8%BF%81%E7%A7%BB%E5%88%B0-redis-cluster/</link>
+      <pubDate>Wed, 08 Jul 2020 17:08:40 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2020/07/08/%E4%BB%8E-twemproxy-%E8%BF%81%E7%A7%BB%E5%88%B0-redis-cluster/</guid>
+      <description>线上有个 redis 的缓存集群, 跑的还是 3.0, 前面套 twemproxy 做 sharding. 跑了好几年了都很稳定, 但一直有些很不爽的地方, 最近有点时间,决定 升级到redis 6, 并迁移到 redis cluster 方案. twemproxy 的工作模式 twemproxy 的原理很简单, 后面运行 N 个 redis 实例, 应用连到 twemproxy, twemproxy 解析应用发过来的 redis protocol, 根据 key 做 hash, 打散到后面 N 个 redis 实例上. 具体打散的方式可以是简单的 hash%N, 也可以用一致性 hash 算法. hash%N 的问题是, 增减节点的时候所有 cache 必然 miss. 一致性 hash, 在实现的时候会先弄一个 size 很大的 hash ring(eg: 2^32),</description>
+    </item>
     
     <item>
       <title>snet dev note: stats api and terminal UI</title>
