@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.74.3" />
+	<meta name="generator" content="Hugo 0.73.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,6 +91,39 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2020/08/04/kubectl-plugin-for-redis-cluster/'>Kubectl Plugin for Redis Cluster</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>在 k8s 上部署 redis cluster 后, 感觉 redis-cli 管理 redis cluster 非常便扭, 写了个 kubectl 的插件 kubectl-rc 来辅助管理 redis-cluster. redis-cli 难用在哪 不直观 &amp; 不统一 部分 cluster 信息是直接通过 redis protocol 获得的, 比如 cluster nodes, cluster slots, 但部分管理命令又是通过 redis-cli --cluster 执行的. cluster nodes, cluster slots 这些命令输出的又是 ip 和 node id, k8s 环境下我更关心实际的 pod name. 做 failover 的时候又不是通过 --cluster 执行的, 必须连到 slave 上通过 cluster failover 来执行 传参在 k8s 环境下特别麻烦 举个例子, 添加节点: redis-cli --cluster add-node new_host:new_port existing_host:existing_port --cluster-slave --cluster-master-id &lt;arg&gt; 需要知道操作 pod 的 ip, 如果要变成某个指定 pod 的 slave, 又要传 node id. 在......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2020.08.04</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/redis/">redis</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -359,37 +392,6 @@
         <span class="field">
           <i class="remixicon-map-pin-time-line"></i>
           <span class="date">2020.01.02</span>
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2019/12/30/%E8%81%8A%E8%81%8A-aws-%E7%9A%84%E8%AE%A1%E8%B4%B9%E6%A8%A1%E5%BC%8F/'>聊聊 AWS 的计费模式</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>网上经常有人诟病 AWS 的计费模式复杂, 喜欢国内那种打包式的售卖方式, 这个可能受限于每个公司的财务流程, 预算制定方式, 合不合国情,本文不讨论. 仅从开发者的角度介绍下 AWS 部分常用 service 的计费方式. PS: 那些为了蹭一年 free plan 然后抱怨什么偷跑流量, 偷偷扣费的大哥就省省吧, AWS 根本不是给个人用的, 老老实实用 lightsail 得了. EC2 EC2 的价格是最复杂的, 一台 EC2 instance 的价格组成: instance fee, 实际支付的是 CPU+RAM 的费用 EBS fee, server 的根分区都是 EBS volume, 按 EBS 计费(31GB 的 volume 使......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2019.12.30</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
-          
         </span>
         
       </div>

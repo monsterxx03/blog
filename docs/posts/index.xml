@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Wed, 08 Jul 2020 17:08:40 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 04 Aug 2020 22:44:40 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kubectl Plugin for Redis Cluster</title>
+      <link>https://blog.monsterxx03.com/2020/08/04/kubectl-plugin-for-redis-cluster/</link>
+      <pubDate>Tue, 04 Aug 2020 22:44:40 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2020/08/04/kubectl-plugin-for-redis-cluster/</guid>
+      <description>在 k8s 上部署 redis cluster 后, 感觉 redis-cli 管理 redis cluster 非常便扭, 写了个 kubectl 的插件 kubectl-rc 来辅助管理 redis-cluster. redis-cli 难用在哪 不直观 &amp;amp; 不统一 部分 cluster 信息是直接通过 redis protocol 获得的, 比如 cluster nodes, cluster slots, 但部分管理命令又是通过 redis-cli --cluster 执行的. cluster nodes, cluster slots 这些命令输出的又是 ip 和 node id, k8s 环境下我更关心实际的 pod name. 做 failover 的时候又不是通过 --cluster 执行的, 必须连到 slave 上通过 cluster failover 来执行 传参在 k8s 环境下特别麻烦 举个例子, 添加节点: redis-cli --cluster add-node new_host:new_port existing_host:existing_port --cluster-slave --cluster-master-id &amp;lt;arg&amp;gt; 需要知道操作 pod 的 ip, 如果要变成某个指定 pod 的 slave, 又要传 node id. 在</description>
+    </item>
     
     <item>
       <title>从 twemproxy 迁移到 redis cluster</title>

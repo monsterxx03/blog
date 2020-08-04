@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Wed, 08 Jul 2020 17:08:40 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 04 Aug 2020 22:44:40 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,7 +15,7 @@
     <item>
       <title>k8s</title>
       <link>https://blog.monsterxx03.com/tags/k8s/</link>
-      <pubDate>Wed, 08 Jul 2020 17:08:40 +0800</pubDate>
+      <pubDate>Tue, 04 Aug 2020 22:44:40 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/tags/k8s/</guid>
       <description></description>
@@ -24,7 +24,7 @@
     <item>
       <title>redis</title>
       <link>https://blog.monsterxx03.com/tags/redis/</link>
-      <pubDate>Wed, 08 Jul 2020 17:08:40 +0800</pubDate>
+      <pubDate>Tue, 04 Aug 2020 22:44:40 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/tags/redis/</guid>
       <description></description>

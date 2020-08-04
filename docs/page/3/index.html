@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.74.3" />
+	<meta name="generator" content="Hugo 0.73.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,6 +91,39 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2019/07/28/pyflame-%E7%9A%84-kubectl-plugin/'>Pyflame 的 kubectl plugin</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>pyflame 可以比较方便得生成 python 进程的调用函数栈火焰图, 来 debug 一些性能瓶颈, 做了个 kubectl 的小插件, 来方便得对 k8s pod 中的 python 进程进行 debug: https://github.com/monsterxx03/kube-pyflame 直接把 svg 文件下载到本地. 要对 pod 中的 python 进程进行 profiling, 大致思路有两种: 直接在 container 内使用 pyflame, 但这样要把 pyflame 做到所有的 base 镜像里去, 而且目标 container要在 SecurityContext 加上 SYS_PTRACE 在 host 上用 pyflame debug 对应进程, pyflame 自身是能识别跑在 container 里的进程, 自动执行 setns 的. 我希望保持线上环境干净, 最后的做法是, 把 pyflame 单独做一个镜像, 先用 kubectl 找到目......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2019.07.28</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/python/">python</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -383,41 +416,6 @@ Application level  configuration management (setup nginx, jenkins, redis, twempr
           <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
           
           <a href="https://blog.monsterxx03.com/tags/jenkins/">jenkins</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2019/04/12/k8s-volume-resize-on-eks/'>K8s Volume Resize on EKS</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>从 k8s 1.8 开始支持 PersistentVolumeClaimResize. 但 api 是 alpha 状态, 默认不开启, eks launch 的时候版本是 1.10, 因为没法改 control plane, 所以没法直接在 k8s 内做 ebs 扩容. 后来升级到了 1.11, 这个 feature 默认被打开了, 尝试了下直接在 EKS 内做 ebs 的扩容. 注意: 这个 feature 只能对通过 pvc 管理的 volume 做扩容, 如果直接挂的是 pv, 只能自己按传统的 ebs 扩容流程在 eks 之外做. 用来创建 pvc 的 storageclass 上必须设置 allowVolumeExpansion 为 true 在 eks 上使用 pv/pvc, 对于需要 retain 的 volume, 我一般的流程是: 在 eks 之外手工创建 ebs volume. 在 eks 中创建 pv, 指向 ebs 的 volume id 在 eks 中创建 pvc, 指向 pv 示例 yaml:......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2019.04.12</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
           
         </span>
         

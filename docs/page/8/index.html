@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.74.3" />
+	<meta name="generator" content="Hugo 0.73.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,6 +91,49 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2017/07/15/enable-coredump-on-ubuntu-16.04/'>Enable coredump on ubuntu 16.04</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>Coredump file is useful for debuging program crash. This post will show several settings related to coredump.
+Enable coredump If you run program from shell , enable coredump via unlimit -c unlimited， then check unlimit -a | grep core, if it shows unlimited, coredump is enabled for your current session.
+If your program is hosted by systemd, you need to edit your program’s service unit file’s [Service] section, add LimitCORE=infinity to enable coredump.
+coredump location Coredump file’s location is determined by kernerl parameter kernel.core_pattern.
+On ubuntu 16.04 kernel.core_pattern default value is |/usr/share/apport/apport %p %s %c %P. Leading | means pass coredump file to following program. %p %c %P is used to create dump filename, their meaning can check via man core. apport will save dump file in /var/crash
+If your default disk partition don’t have enough space to hold dump file, you can change kernel.core_pattern to another location, eg: /mnt/core/%e-%t.%P. If redis-server crashes, the dump file will be something like /mnt/core/redis-server-1500000000.1452. Also ensure crash process’s running user have write privilege on target location.
+systemd-coredump You can install systemd-coredump to control dump file deeply, like: size, compression….
+Its config file is /etc/systemd/coredump.conf.
+After install, it will change kernel.core_pattern to |/lib/systemd/systemd-coredump %P %u %g %s %t 9223372036854775808 %e.......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2017.07.15</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/coredump/">coredump</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/system/">system</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/ubuntu/">ubuntu</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -418,43 +461,6 @@ ec2_group: name: &quot;web&quot; description: &quot;security group in web&quot; 
           <a href="https://blog.monsterxx03.com/tags/database/">Database</a>
           
           <a href="https://blog.monsterxx03.com/tags/mysql/">MySQL</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/03/22/elasticsearch-cluster/'>ElasticSearch cluster</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>In this article, let’s talk about ElasticSearch’s cluster mode, which means multi nodes ElasticSearch.</p>
-<h2 id="basic-concepts">Basic concepts</h2>
-<p>cluster: A collection of server nodes with same <code>cluster.name</code> settings in elasticsearch.yaml</p>
-<p>primary shards: Divide a index into multi parts(by default 5), shards of an index can be distributed over multi nodes. It enables scale index horizontally and make access to index parallelly(accross multi nodes).</p>
-<p>replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.03.22</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/distribute/">distribute</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/elasticsearch/">elasticsearch</a>
           
         </span>
         
