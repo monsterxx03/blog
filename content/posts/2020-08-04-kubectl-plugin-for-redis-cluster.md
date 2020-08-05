@@ -8,7 +8,7 @@ tags:
 - k8s
 ---
 
-在 k8s 上部署 redis cluster 后, 感觉 redis-cli 管理 redis cluster 非常便扭, 写了个 kubectl 的插件 [kubectl-rc](https://github.com/monsterxx03/kubectl-rc) 来辅助管理 redis-cluster.
+在 k8s 上部署 redis cluster 后, 感觉 redis-cli 管理 redis cluster 非常别扭, 写了个 kubectl 的插件 [kubectl-rc](https://github.com/monsterxx03/kubectl-rc) 来辅助管理 redis-cluster.
 
 ## redis-cli 难用在哪
 
