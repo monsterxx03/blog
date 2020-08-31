@@ -94,6 +94,52 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2017/04/05/mysql-partition-table/'>MySQL partition table</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p><h1 id="overview">Overview</h1>
+<p>MySQL has buildin partition table support, which can help split data accross multi tables,</p>
+<p>and provide a unified query interface as normal tables.</p>
+<p>Benefit:</p>
+<ul>
+<li>Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly.</li>
+<li>Speed up query based on partition key(partitoin pruning)</li>
+</ul>
+<p>Limit:</p>
+<ul>
+<li>For partition table, every unique key must use every column in table’s partition expression(include primary key)</li>
+<li>For innodb engine, paritioned table can’t have foreign key,and can’t have columns referenced by foreign keys.</li>
+<li>For MyISAM engine, mysql version &lt;= 5.6.5, DML operation will lock all partition as a whole.</li>
+</ul>......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2017.04.05</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/database/">Database</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/mysql/">MySQL</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2017/03/22/elasticsearch-cluster/'>ElasticSearch cluster</a></h2>
   </div>
   
@@ -409,33 +455,6 @@
   </div>
 </div>
 
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/about/'>About Me</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>Work with tech, belive in magic, live on fun :)
-Daily work:
- Cloud infrastructure: AWS management, config management/monitoring/alerting/performance tuning. Data infrastructure: data warehouse/lake, ETL. Build CI/CD pipeline for fast deployment flow. Chaos is my friend.  I work with python/golang/js/shell, but always think language is the most trival part in life. Be professional, write robust code and useful doc.
-email: xyj.asmy@gmail.com......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2016.01.01</span>
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
 
 <div class="pagination">
   
@@ -444,6 +463,10 @@ email: xyj.asmy@gmail.com......</p>
     返回上一页
   </a>
   
+  
+  <a href="/page/10/" class="next">
+    阅读更多文章
+  </a>
   
   
 </div>

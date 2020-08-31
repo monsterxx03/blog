@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Tue, 04 Aug 2020 22:44:40 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 26 Aug 2020 23:06:01 +0800</lastBuildDate>
     
 	<atom:link href="https://blog.monsterxx03.com/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Linux 进程虚拟内存分布</title>
+      <link>https://blog.monsterxx03.com/2020/08/26/linux-%E8%BF%9B%E7%A8%8B%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%88%86%E5%B8%83/</link>
+      <pubDate>Wed, 26 Aug 2020 23:06:01 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2020/08/26/linux-%E8%BF%9B%E7%A8%8B%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%88%86%E5%B8%83/</guid>
+      <description>巩固下基础知识. 现代系统都运行在保护模式(protected mode)下, x86_64 下用户态程序启动时候都会被分配一片虚拟内存, 大小是 2^47 (128TiB), 但目前 cpu 只能映射 2^46 (64TiB), 通过 page table 将虚拟内存中的地址(vma)和物理地址映射起来. 以前的 BIOS 跑在 实模式下(real mode), 直接访问物理内存, 不过只能访问前 2^20(1MiB) 的空间. Linux 下 /proc/$pid/maps 文件内容就是进程的虚拟内存分布. 每一列含义通过 man 5 proc 看, 不重复了. 网上的例子都有点过时, 在比较新的 linux 发行版里, 默认</description>
+    </item>
     
     <item>
       <title>Kubectl Plugin for Redis Cluster</title>

@@ -94,6 +94,43 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/'>Use redshift spectrum to do query on s3</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>使用 redshift spectrum 查询 S3 数据 通常使用 redshift 做数据仓库的时候要做大量的 ETL 工作，一般流程是把各种来源的数据捣鼓捣鼓丢到 S3 上去，再从 S3 倒腾进 redshift. 如果你有大量的历史数据要导进 redshift，这个过程就会很痛苦，redshift 对一次倒入大量数据并不友好，你要分批来做。 今年4月的时候， redshift 发布了一个新功能 spectrum, 可以从 redshift 里直接查询 s3 上的结构化数据。最近把部分数据仓库直接迁移到了 spectrum, 正好来讲讲。 动机 Glow 的数据仓库建在 redshift 上， 又分成了两个......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2017.07.21</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/redshift/">Redshift</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/spark/">spark</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/data-infra/">data-infra</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2017/07/15/enable-coredump-on-ubuntu-16.04/'>Enable coredump on ubuntu 16.04</a></h2>
   </div>
   
@@ -415,52 +452,6 @@ ec2_group: name: &quot;web&quot; description: &quot;security group in web&quot; 
           <a href="https://blog.monsterxx03.com/tags/book/">book</a>
           
           <a href="https://blog.monsterxx03.com/tags/golang/">golang</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/04/05/mysql-partition-table/'>MySQL partition table</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><h1 id="overview">Overview</h1>
-<p>MySQL has buildin partition table support, which can help split data accross multi tables,</p>
-<p>and provide a unified query interface as normal tables.</p>
-<p>Benefit:</p>
-<ul>
-<li>Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly.</li>
-<li>Speed up query based on partition key(partitoin pruning)</li>
-</ul>
-<p>Limit:</p>
-<ul>
-<li>For partition table, every unique key must use every column in table’s partition expression(include primary key)</li>
-<li>For innodb engine, paritioned table can’t have foreign key,and can’t have columns referenced by foreign keys.</li>
-<li>For MyISAM engine, mysql version &lt;= 5.6.5, DML operation will lock all partition as a whole.</li>
-</ul>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.04.05</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/database/">Database</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/mysql/">MySQL</a>
           
         </span>
         

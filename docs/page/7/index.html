@@ -94,6 +94,47 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2018/02/28/access-sensitive-variables-on-aws-lambda/'>Access sensitive variables on AWS lambda</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&hellip;
+Usually, we inject secrets as environment variables, but they&rsquo;re still visable on lambda console. I don&rsquo;t use it in aws lambda.
+The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
+Code example:
+client = boto3.client('ssm') resp = client.get_parameter( Name='/redshift/admin/password', WithDecryption=True ) resp: { &quot;Parameter&quot;: { &quot;Name&quot;: &quot;/redshift/admin/password&quot;, &quot;Type&quot;: &quot;SecureString&quot;, &quot;Value&quot;: &quot;password value&quot;, &quot;Version&quot;: 1 } }  Things you need to do to make it work:
+ Create a new KMS key Use new created KMS key to encrypt your data in parameter store. Set a execution role for your lambda function. In the KMS key&rsquo;s setting page, add the lambda execution role to the list which can read this KMS key.  Then your lambda code can access encrypted data at runtime, and you needn&rsquo;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.
+BTW, parameter store support hierarchy(at most 15 levels), splitted by /. You can retrive data under same level in one call, deltails can be found in doc, eg: http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2018.02.28</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/lambda/">lambda</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2018/02/25/%E7%94%A8-google-spreadsheet-%E8%AE%A1%E7%AE%97%E6%88%BF%E8%B4%B7%E7%AD%89%E9%A2%9D%E6%9C%AC%E6%81%AF%E8%BF%98%E6%AC%BE/'>用 google spreadsheet 计算房贷等额本息还款</a></h2>
   </div>
   
@@ -419,43 +460,6 @@ To restrict S3 bucket only available in your VPC, need to set bucket policy (to 
         <span class="field">
           <i class="remixicon-map-pin-time-line"></i>
           <span class="date">2017.08.13</span>
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/'>Use redshift spectrum to do query on s3</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>使用 redshift spectrum 查询 S3 数据 通常使用 redshift 做数据仓库的时候要做大量的 ETL 工作，一般流程是把各种来源的数据捣鼓捣鼓丢到 S3 上去，再从 S3 倒腾进 redshift. 如果你有大量的历史数据要导进 redshift，这个过程就会很痛苦，redshift 对一次倒入大量数据并不友好，你要分批来做。 今年4月的时候， redshift 发布了一个新功能 spectrum, 可以从 redshift 里直接查询 s3 上的结构化数据。最近把部分数据仓库直接迁移到了 spectrum, 正好来讲讲。 动机 Glow 的数据仓库建在 redshift 上， 又分成了两个......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.07.21</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/redshift/">Redshift</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/spark/">spark</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/data-infra/">data-infra</a>
-          
         </span>
         
       </div>

@@ -94,6 +94,39 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2019/04/29/jenkins-on-k8s/'>Jenkins on K8S</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>最近在把 jenkins 迁移到 k8s, 具体怎么 setup 的不赘述了(helm chart, jenkins home 目录挂pvc, jenkins kubernetes-plugin). jenkins 跑 k8s 好处是可以方便得做分布式 build, 每次 trigger 一个 job 的时候自动起一个 pod 作为 jenkins slave agent, 结束了自动删掉. 在 aws 上结合 cluster-autoscaler 可以极大得扩展 ci 的并行能力, 降低成本. 记录一点过程中的坑. 装上 kubernetes-plugin 后,要想让 jenkins 的 job 在 pod 中跑, 必须用 pipeline 的方式编写 job 定义. script 和 declarative 两种方式都支持启动 pod. 如果用 shell 的方式编写, 不会跑在 pod 里，会直接在 master 的 workspace 里 build. declarative 方式的例子: pipeline { agent { kubernetes { label 'test-deploy' yamlFile 'test-deploy.yaml'......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2019.04.29</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/jenkins/">jenkins</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2019/04/12/k8s-volume-resize-on-eks/'>K8s Volume Resize on EKS</a></h2>
   </div>
   
@@ -387,41 +420,6 @@ free -h humanize output (automatically show in KB/MB/GB&hellip;)......</p>
         <span class="field">
           <i class="remixicon-map-pin-time-line"></i>
           <span class="date">2018.11.30</span>
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/11/17/%E7%94%A8-bloom-filter-%E7%BB%99%E6%8E%A8%E8%8D%90%E5%88%97%E8%A1%A8%E5%8E%BB%E9%87%8D/'>用 Bloom filter 给推荐列表去重</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>之前产品里有一个功能是每天给用户推荐一批文章,要保证最后推给用户的文章每天不重复. 原先的实现很直接, 每次推送时候记录下用户 id 和 topic id 的键值对, 拿到新 topic 列表后,取出曾经给该用户推送过的文章列表, 两个 set 去重. 这个实现的问题很明显, 存储空间量太大(M * N), user id (int64) + topic id (int64) = 16 bytes, 1 million 的用户, 每天给用户推送10篇文章, 一年要存储: 16 * 10 * 365 * 1M = 54.4GB. 查询效率也很低,要么一次取所有已读 topic id, 要么把要推送的 topic id 都丢进数据......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.11.17</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/algorithm/">algorithm</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/bloomfilter/">bloomfilter</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
-          
         </span>
         
       </div>

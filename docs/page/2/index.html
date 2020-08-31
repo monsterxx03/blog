@@ -94,6 +94,30 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2020/01/02/%E5%9F%BA%E9%87%91%E5%AE%9A%E6%8A%95%E5%A4%8D%E7%9B%98/'>基金定投复盘</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>新年第一件事是算一下过去几年在基金这块的收益怎么样. 大概在16年的时候才开始接触股市, 但个股一直没怎么买, 基本都买基金, 4年里各种因素导致总投资额很低,在资金总额中占比太低. 这次复盘两只定投时间最长的基金, 天弘沪深300ETF联接A(000961), 嘉实沪港深精选股票(0001878), 前者追踪沪深300指数, 后者主要买上海和香港的股票. 天弘沪深300ETF联接A 嘉实沪港深精选股票 开始日期 2017-02-10 2017-08-22 计算......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2020.01.02</span>
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2019/12/30/%E8%81%8A%E8%81%8A-aws-%E7%9A%84%E8%AE%A1%E8%B4%B9%E6%A8%A1%E5%BC%8F/'>聊聊 AWS 的计费模式</a></h2>
   </div>
   
@@ -353,37 +377,6 @@
         <span class="field">
           <i class="remixicon-map-pin-time-line"></i>
           <span class="date">2019.08.16</span>
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2019/08/02/kube-scheduler-internal/'>kube-scheduler internal</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>追了一下 kube-scheduler 的源码, 记录一点, 基于 tag v1.16.0-alpha.2. 一句话概括 kube-scheduler 的职责是: 找到 pending 的 pod, 挑选一个合适的 node, 将 pod bind 上去. Get pending pod 在 scheduler 的初始化过程中给 pod/node/pv/pvc/service/storageClassInformer 添加回调函数, 功能大致都是在这些资源发生变化时更新本地的 cache 和 ScheduleQueue scheduler.go:New. ScheduleQueue 是关键, 内部实现是一个 PriorityQueue, 它有三个 sub queue: activeQ 用来存放等待 schedule 的 pods, kube-schedule 实际工作时候从这个 queue 中取 pod, 实现上是一个 heap, 如果 pod 定义了 priority, 则按照 priority 由高到低排序, 否则按 pod 到达的时间排序: activeQComp podBackoffQ 存放正在经历 backoff 的 pod, 也是 heap, 按 pod 上次 backoff 的时间排序: podsCompareBackoffCompleted......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2019.08.02</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
-          
         </span>
         
       </div>

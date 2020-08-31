@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-cn" >
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  
+  <meta name="author"
+        content="monsterxx03"/>
+
+  
+  <meta name="description" content="巩固下基础知识. 现代系统都运行在保护模式(protected mode)下, x86_64 下用户态程序启动时候都会被分配一片虚拟内存, 大小是 2^47 (128TiB), 但目前 cpu 只能映射 2^46 (64TiB), 通过 page table 将虚拟内存中的地址(vma)和物理地址映射起来. 以前的 BIOS 跑在 实模式下(real mode), 直接访问物理内存, 不过只能访问前 2^20(1MiB) 的空间. Linux 下 /proc/$pid/maps 文件内容就是进程的虚拟内存分布. 每一列含义通过 man 5 proc 看, 不重复了. 网上的例子都有点过时, 在比较新的 linux 发行版里, 默认"/>
+  
+
+  
+
+  
+  <link rel="canonical" href="https://blog.monsterxx03.com/2020/08/26/linux-%E8%BF%9B%E7%A8%8B%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%88%86%E5%B8%83/"/>
+
+  
+
+  <title>Linux 进程虚拟内存分布 &middot; Shining Moon</title>
+
+  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
+
+  
+  
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/home.css">
+  
+</head>
+
+<body>
+<div class="main animated">
+  <div class="nav_container animated fadeInDown">
+  <div class="site_nav" id="site_nav">
+    <ul>
+      
+      <li>
+        <a href="/">Home</a>
+      </li>
+      
+      <li>
+        <a href="/posts/">Archive</a>
+      </li>
+      
+      <li>
+        <a href="/about/">About</a>
+      </li>
+      
+      <li>
+        <a href="/tags">Tags</a>
+      </li>
+      
+    </ul>
+  </div>
+  <div class="menu_icon">
+    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
+  </div>
+</div>
+
+  <div class="header animated fadeInDown">
+  <div class="site_title_container">
+    <div class="site_title">
+      <h1>
+        <a href="https://blog.monsterxx03.com">
+          <span>Shining Moon</span>
+          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
+        </a>
+      </h1>
+    </div>
+    <div class="description">
+      <p class="sub_title">百种弊病,皆从懒生</p>
+      <div class="my_socials">
+        
+        
+        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
+        
+        
+        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    <div class="post_page">
+      <div class="post animated fadeInDown">
+        <div class="post_title post_detail_title">
+          <h2><a href='/2020/08/26/linux-%E8%BF%9B%E7%A8%8B%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%88%86%E5%B8%83/'>Linux 进程虚拟内存分布</a></h2>
+          <span class="date">2020.08.26</span>
+        </div>
+        <div class="post_content markdown"><p>巩固下基础知识.</p>
+<p>现代系统都运行在保护模式(protected mode)下, x86_64 下用户态程序启动时候都会被分配一片虚拟内存, 大小是 2^47 (128TiB), 但目前 cpu 只能映射 2^46 (64TiB), 通过 page table 将虚拟内存中的地址(vma)和物理地址映射起来.
+以前的 BIOS 跑在 实模式下(real mode), 直接访问物理内存, 不过只能访问前 2^20(1MiB) 的空间.</p>
+<p>Linux 下 /proc/$pid/maps 文件内容就是进程的虚拟内存分布. 每一列含义通过 <code>man 5 proc</code> 看, 不重复了.</p>
+<p>网上的例子都有点过时, 在比较新的 linux 发行版里, 默认开启了ASLR(地址空间随机化), 自带的二进制文件都是 PIE(Position Independent Executable) build 的. 这两结合起来让进程在虚拟内存中的基地址随机化, heap 和 stack 的开始位置也随机化, 目的是为了防止远程注入漏洞猜到一些软件的vma.</p>
+<h2 id="准备工作">准备工作</h2>
+<p>判断一个可执行文件是否是 pie build 的.</p>
+<p><code>readelf -h /usr/bin/ls</code>:</p>
+<pre><code>    ELF Header:
+      Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 
+      Class:                             ELF64
+      Data:                              2's complement, little endian
+      Version:                           1 (current)
+      OS/ABI:                            UNIX - System V
+      ABI Version:                       0
+      Type:                              DYN (Shared object file)
+      Machine:                           Advanced Micro Devices X86-64
+      Version:                           0x1
+      Entry point address:               0x5b20
+      Start of program headers:          64 (bytes into file)
+      Start of section headers:          140208 (bytes into file)
+      Flags:                             0x0
+      Size of this header:               64 (bytes)
+      Size of program headers:           56 (bytes)
+      Number of program headers:         11
+      Size of section headers:           64 (bytes)
+      Number of section headers:         27
+      Section header string table index: 26
+</code></pre>
+<p>看 Type 字段, 如果是EXEC, 就不是 pie build, 是 DYN 就是 pie buid 的.</p>
+<p>或者: <code>file /usr/bin/ls</code>, 看 <code>...ELF 64-bit LSB</code>, LSB 后面的, 取决于 file 命令的版本, 如果是 pie build, 有的会显示 <code>shared object</code>, 有的会显示 <code>pie executable</code>, 只有 <code>executable</code> 表示不是 pie build.</p>
+<p>gcc 7.0 以上编译出来的可执行文件默认会打开 pie, 通过 <code>-no-pie</code> 来关闭, 为了方便看虚拟内存的布局, 测试程序会关闭 pie.</p>
+<p>编写一个简单的 c 程序:</p>
+<pre><code>#include &lt;stdio.h&gt;
+
+int main() {
+    getchar();
+    return 0;
+}
+</code></pre>
+<p>编译: <code>gcc -no-pie test.c</code>, getchar 只是为了让进程停在那, 方便看虚拟内存.</p>
+<h2 id="procpidmaps">/proc/$pid/maps</h2>
+<p>这是我在 manjaro 上的实际结果, gcc 版本10.1.0.</p>
+<pre><code>    00400000-00401000 r--p 00000000 103:02 1051799                           /home/will/a.out
+    00401000-00402000 r-xp 00001000 103:02 1051799                           /home/will/a.out
+    00402000-00403000 r--p 00002000 103:02 1051799                           /home/will/a.out
+    00403000-00404000 r--p 00002000 103:02 1051799                           /home/will/a.out
+    00404000-00405000 rw-p 00003000 103:02 1051799                           /home/will/a.out
+    00e16000-00e37000 rw-p 00000000 00:00 0                                  [heap]
+    7fdda3df3000-7fdda3e18000 r--p 00000000 103:02 11018917                  /usr/lib/libc-2.31.so
+    7fdda3e18000-7fdda3f65000 r-xp 00025000 103:02 11018917                  /usr/lib/libc-2.31.so
+    7fdda3f65000-7fdda3faf000 r--p 00172000 103:02 11018917                  /usr/lib/libc-2.31.so
+    7fdda3faf000-7fdda3fb0000 ---p 001bc000 103:02 11018917                  /usr/lib/libc-2.31.so
+    7fdda3fb0000-7fdda3fb3000 r--p 001bc000 103:02 11018917                  /usr/lib/libc-2.31.so
+    7fdda3fb3000-7fdda3fb6000 rw-p 001bf000 103:02 11018917                  /usr/lib/libc-2.31.so
+    7fdda3fb6000-7fdda3fbc000 rw-p 00000000 00:00 0 
+    7fdda3ffc000-7fdda3ffe000 r--p 00000000 103:02 11018892                  /usr/lib/ld-2.31.so
+    7fdda3ffe000-7fdda401e000 r-xp 00002000 103:02 11018892                  /usr/lib/ld-2.31.so
+    7fdda401e000-7fdda4026000 r--p 00022000 103:02 11018892                  /usr/lib/ld-2.31.so
+    7fdda4027000-7fdda4028000 r--p 0002a000 103:02 11018892                  /usr/lib/ld-2.31.so
+    7fdda4028000-7fdda4029000 rw-p 0002b000 103:02 11018892                  /usr/lib/ld-2.31.so
+    7fdda4029000-7fdda402a000 rw-p 00000000 00:00 0 
+    7ffe8fd00000-7ffe8fd22000 rw-p 00000000 00:00 0                          [stack]
+    7ffe8fd6a000-7ffe8fd6e000 r--p 00000000 00:00 0                          [vvar]
+    7ffe8fd6e000-7ffe8fd70000 r-xp 00000000 00:00 0                          [vdso]
+    ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
+</code></pre>
+<p>vma 上面是低位, 下面是高位.</p>
+<p>先看最下面的 [vsyscall], 只是一个已经被废弃的功能, 用于把一些 syscall 从内核映射到用户空间(eg: gettimeofday), 目的是加快这些函数的访问速度, 无需切换进内核, 速度和访问一个普通 c 函数一样快, 但 vsyscall 的缺点是大小限制是 4KiB, 并且开始地址是固定的 0xffffffffff600000, 有安全隐患.</p>
+<p>[vdso]  (virtual Dynamically linked Shared Object) 就是替代 vsyscall 的, 空间可扩展, 地址可以随 ASLR 变化, [vvar] 用于保存内核映射出来的数据.</p>
+<p>[stack] 是进程的栈空间, 由高位向低位增长.</p>
+<p>[heap] 是进程的堆空间, 由低位向高位增长, 这个简单的程序会有 heap, 是因为 getchar 内部调用了 brk, 可以用 strace 追踪确认.</p>
+<p>如果开启了 ASLR, stack 和 heap 的开始地址每次进程重启都会变化, 比较坑的是 golang, go 没有使用系统的进程堆, 在 64 位 linux 上总是把 heap 从固定地址(0x00c000000000) 开始分配, 所以 go 的 heap 会忽略 ASLR, 相关 issue: <a href="https://github.com/golang/go/issues/27583">https://github.com/golang/go/issues/27583</a></p>
+<p>开始几行映射到了 elf binary. 开始地址是 0x00400000 (4MiB) 是 elf 64 规定的 offset, 前面的空间没分配物理内存, elf 32 offset 是 0x08049000. 如果编译时候开启了 pie, 开始地址就会变成类似 0x55631aea7000 这样的随机地址, pie 模式下没有额外的 offset.</p>
+<p>很多例子里对 elf binary 的映射都只有三行, 表示 .text(指令段, 带 x, 可执行权限), .data(已初始化静态变量段), .bss(未初始化静态变量段, 带w, 可写权限), 我有五行, 可能是gcc 版本比较高的原因, 目的是一样的, 把 elf binary 里包括这三个段的内容映射到内存.</p>
+<p>再找下 binary 真正的执行入口: <code>readelf -e a.out</code>, 找到 <code>Entry point address: 0x401040</code>,  0x401040 这个地址指向了 <code>.text</code> 段, 是程序的真正入口, 在 maps 文件里位于 <code>00401000-00402000 r-xp 00001000 103:02 1051799 /home/will/a.out</code> 范围, 有可执行权限, 这就对上了.</p>
+</div>
+        <div class="post_footer">
+          
+          <div class="meta">
+            <div class="info">
+              <span class="field tags">
+                <i class="remixicon-stack-line"></i>
+                
+                <a href="https://blog.monsterxx03.com/tags/linux/">linux</a>
+                
+              </span>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mx03" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      
+      
+    </div>
+  </div>
+  <a id="back_to_top" href="#" class="back_to_top"><span>△</span></a>
+</div>
+<footer class="footer">
+  <div class="powered_by">
+    <a href="https://zeuk.me">Designed by Zeuk,</a>
+    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
+  </div>
+
+  <div class="footer_slogan">
+    <span></span>
+  </div>
+</footer>
+
+
+
+<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
+<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
+<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
+<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
+<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-98667627-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</body>
+</html>
