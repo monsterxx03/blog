@@ -1,7 +1,6 @@
 ---
 title: "二三事"
 date: 2020-12-02T16:00:13+08:00
-draft: true
 categories:
 - tech
 - life

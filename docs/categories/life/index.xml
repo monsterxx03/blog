@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sun, 09 Feb 2020 22:22:30 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/categories/life/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 02 Dec 2020 16:00:13 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/categories/life/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>二三事</title>
+      <link>https://blog.monsterxx03.com/2020/12/02/%E4%BA%8C%E4%B8%89%E4%BA%8B/</link>
+      <pubDate>Wed, 02 Dec 2020 16:00:13 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2020/12/02/%E4%BA%8C%E4%B8%89%E4%BA%8B/</guid>
+      <description>天气渐凉, 无奈得拿出了秋裤. 偷懒好久没写博客了, 回顾下这阵子做了什么. 工作 年底打算把之前用的 dedicated ec2 instance 全部换掉, 几年前为了 HIPAA 合规做的, 但 AWS 的 BBA 里后来不要求 dedicated instance 了, 换成普通的, 可以省掉每月1400多刀的固定 dedicated fee, 同类型的 ec2 instance 可以再省10%左右. 为了这个, 打算把部分遗留在 vm 上的东西迁移到 k8s 里, 减少之后更换 instance 的工作量. cronjob 尝试用 argo 来调度 cronjob. 还是有不少坑的: cron workflow 到点后有一定几率会 trigger 重复的workflow, 目前还没有</description>
+    </item>
+    
     <item>
       <title>二月</title>
       <link>https://blog.monsterxx03.com/2020/02/09/%E4%BA%8C%E6%9C%88/</link>

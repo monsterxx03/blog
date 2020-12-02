@@ -94,6 +94,30 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2020/12/02/%E4%BA%8C%E4%B8%89%E4%BA%8B/'>二三事</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>天气渐凉, 无奈得拿出了秋裤. 偷懒好久没写博客了, 回顾下这阵子做了什么. 工作 年底打算把之前用的 dedicated ec2 instance 全部换掉, 几年前为了 HIPAA 合规做的, 但 AWS 的 BBA 里后来不要求 dedicated instance 了, 换成普通的, 可以省掉每月1400多刀的固定 dedicated fee, 同类型的 ec2 instance 可以再省10%左右. 为了这个, 打算把部分遗留在 vm 上的东西迁移到 k8s 里, 减少之后更换 instance 的工作量. cronjob 尝试用 argo 来调度 cronjob. 还是有不少坑的: cron workflow 到点后有一定几率会 trigger 重复的workflow, 目前还没有......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2020.12.02</span>
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2020/08/26/linux-%E8%BF%9B%E7%A8%8B%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%88%86%E5%B8%83/'>Linux 进程虚拟内存分布</a></h2>
   </div>
   
@@ -366,39 +390,6 @@
         <span class="field">
           <i class="remixicon-map-pin-time-line"></i>
           <span class="date">2020.02.09</span>
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2020/01/18/%E7%BC%96%E5%86%99-postmortem/'>编写 postmortem</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>成功的经验总是带有点运气成份, 失败则是必然的:). 工作中， 线上环境的问题千奇百怪, 有的来自自己代码 bug, 有的是配置错误, 有时候是第三方的 vendor 成了猪队友. 对于一些排查过程比较困难或具有代表性的问题, 需要记录下来, 一般把这个过程叫做 postmortem(验尸). 这篇写一下自己做 postmortem 的过程, 并记录一个最近处理的故障. Postmortem process 我大体分以下几个部分: 用尽量简练的语句描述清楚在什么时间发生了什么,谁参与了问题的处理(wh......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2020.01.18</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/rds/">rds</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
-          
         </span>
         
       </div>

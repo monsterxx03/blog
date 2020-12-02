@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-cn" >
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  
+  <meta name="author"
+        content="monsterxx03"/>
+
+  
+  <meta name="description" content="天气渐凉, 无奈得拿出了秋裤. 偷懒好久没写博客了, 回顾下这阵子做了什么. 工作 年底打算把之前用的 dedicated ec2 instance 全部换掉, 几年前为了 HIPAA 合规做的, 但 AWS 的 BBA 里后来不要求 dedicated instance 了, 换成普通的, 可以省掉每月1400多刀的固定 dedicated fee, 同类型的 ec2 instance 可以再省10%左右. 为了这个, 打算把部分遗留在 vm 上的东西迁移到 k8s 里, 减少之后更换 instance 的工作量. cronjob 尝试用 argo 来调度 cronjob. 还是有不少坑的: cron workflow 到点后有一定几率会 trigger 重复的workflow, 目前还没有"/>
+  
+
+  
+
+  
+  <link rel="canonical" href="https://blog.monsterxx03.com/2020/12/02/%E4%BA%8C%E4%B8%89%E4%BA%8B/"/>
+
+  
+
+  <title>二三事 &middot; Shining Moon</title>
+
+  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
+
+  
+  
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/home.css">
+  
+</head>
+
+<body>
+<div class="main animated">
+  <div class="nav_container animated fadeInDown">
+  <div class="site_nav" id="site_nav">
+    <ul>
+      
+      <li>
+        <a href="/">Home</a>
+      </li>
+      
+      <li>
+        <a href="/posts/">Archive</a>
+      </li>
+      
+      <li>
+        <a href="/about/">About</a>
+      </li>
+      
+      <li>
+        <a href="/tags">Tags</a>
+      </li>
+      
+    </ul>
+  </div>
+  <div class="menu_icon">
+    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
+  </div>
+</div>
+
+  <div class="header animated fadeInDown">
+  <div class="site_title_container">
+    <div class="site_title">
+      <h1>
+        <a href="https://blog.monsterxx03.com">
+          <span>Shining Moon</span>
+          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
+        </a>
+      </h1>
+    </div>
+    <div class="description">
+      <p class="sub_title">百种弊病,皆从懒生</p>
+      <div class="my_socials">
+        
+        
+        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
+        
+        
+        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    <div class="post_page">
+      <div class="post animated fadeInDown">
+        <div class="post_title post_detail_title">
+          <h2><a href='/2020/12/02/%E4%BA%8C%E4%B8%89%E4%BA%8B/'>二三事</a></h2>
+          <span class="date">2020.12.02</span>
+        </div>
+        <div class="post_content markdown"><p>天气渐凉, 无奈得拿出了秋裤. 偷懒好久没写博客了, 回顾下这阵子做了什么.</p>
+<h2 id="工作">工作</h2>
+<p>年底打算把之前用的 dedicated ec2 instance 全部换掉, 几年前为了 HIPAA 合规做的, 但 AWS 的 BBA 里后来不要求 dedicated instance 了, 换成普通的, 可以省掉每月1400多刀的固定 dedicated fee, 同类型的 ec2 instance 可以再省10%左右. 为了这个, 打算把部分遗留在 vm 上的东西迁移到 k8s 里, 减少之后更换 instance 的工作量.</p>
+<h3 id="cronjob">cronjob</h3>
+<p>尝试用 <a href="https://github.com/argoproj/argo">argo</a> 来调度 cronjob.</p>
+<p>还是有不少坑的:</p>
+<ul>
+<li>cron workflow 到点后有一定几率会 trigger 重复的workflow, 目前还没有修复<a href="https://github.com/argoproj/argo/issues/4558">#4558</a>, 临时在所有 cronjob 的代码里加了个保护, 在 redis 里上个锁, 没抢到锁的 cronjob 直接抛异常失败. 目前看每天还是有 7,8 次重复的 workflow 会触发.</li>
+<li>WorkflowTemplate 可以用来复用 pod 的定义, 但外部往里面传参的方式很搓, 不是所有字段都能直接覆盖, 比如activeDeadlineSeconds, resources 等, 必须用 podSpecPatch 的方式, 文档里又不说清楚, 只能自己去翻issue.</li>
+<li>exit-handler 用来在 workflow 状态改变的时候触发一个 callback, 但没法获取触发它的那个 workflow 的详细信息, 比如一个 workflow 由很多个 step 构成, 失败时我希望能从 exit-handler 里拿到是哪个step 挂了, 现在做不到. 也没法往 exit-handler 里传参(只能取一些global paramaters).</li>
+<li>如果一个 workflow 由多个 step 构成, 当其中一个 step 挂了, 可以设置 continueOn 控制是否继续后面的step, 但如果我选择了继续, 整个 workflow 的最终状态又是 success 的, 导致在 exit-handler 里没法区分, 最好有个 partial success 的状态.</li>
+</ul>
+<h3 id="日志">日志</h3>
+<p>应用里的日志, 之前是打到部署在 vm 上的一台 rsyslog 上. 在 k8s 环境下我用 fluent-bit 做 daemonset 来收集 pod 日志. fluent-bit 在最近的版本里支持了转发到 loki, 我就部署了 loki 来收集pod 日志, 可以方便在 grafana 里进行查看. 问题也很多:</p>
+<ul>
+<li>loki 支持单机版部署, 和分布式部署(consul/etcd 做状态存储, 或者用 gossip 协议进行连接), 官方的 helm chart 只有单机版部署的. 自己从头写分离部署挺花时间的. 我最后只搞了个单机版的, 原因后详.</li>
+<li>fluent-bit 转发 loki 的实现用下来问题很多, 业务日志量比较多, fluent-bit 转发速度追不上日志生产速度. 我猜测是因为 fluent-bit 的 tail 插件监控 <code>/var/log/containers/*.log</code> 的时候, 所有文件的监控是跑在一个 coroutine 里的, 所以我观测即使分配了更多 cpu, 利用率也上不去. 再加上 loki 要求一个 stream 上发送的数据 timestamp 必须是按顺序的, 所以 loki 插件关闭了 multiplex, 效率进一步降低. 因为 fluent-bit 还需要接受一些fluentd 协议的东西，没法去掉, 就没测试官方的 promtail, 不想再加更多 daemonset 了.</li>
+</ul>
+<p>最后我部署了一个 syslog-ng 来接受应用日志, 所有业务 pod 加上 annotation: <code>fluentbit.io/exclude: &quot;true&quot;</code>, 让 fluent-bit 忽略它的日志, fluent-bit 只转发其他的 pod 日志到 loki(主要是各种controller). rsyslog 的配置格式恶心了我好多年, syslog-ng 更清晰. 为了把日志 daily 得归档到 s3, 用 go 写了个 sidecar 程序和 syslog-ng 部署在一个 pod 里.</p>
+<p>也想过用 fluent-bit 来当 中心的 syslog server, 但它局限性还挺大的:</p>
+<ul>
+<li>如果日志打到本地, 无法模板化配置本地日志路径 <a href="https://github.com/fluent/fluent-bit/issues/2786">#2786</a>, 要用 lua 搞一堆 trick, 压缩上传 s3 还是要自己弄</li>
+<li>上传到 s3 倒是支持模板化路径, 但目前又不支持上传前压缩, 有个 pr 进行中: <a href="https://github.com/fluent/fluent-bit/pull/2807">https://github.com/fluent/fluent-bit/pull/2807</a></li>
+</ul>
+<p>还曾经测试过一种方案是用 fluent-bit 的 syslog input 来接应用日志, 转发到 loki, 结果发现 loki 里的日志最后多了一个 \000(NULL), 导致 loki 的一些 parser 语法失败, 追了半天原因原来是 python 的 syslog handler 实现为了兼容一些老的 syslog server, 加上去的: <a href="https://bugs.python.org/issue12168">https://bugs.python.org/issue12168</a> . 可以用 <code>SysLogHandler.append_nul = False</code> 禁掉. syslog-ng 抗得住直接接所有日志, 尽量减少中间层, 就不用 fluent-bit 转发了.</p>
+<h2 id="读书">读书</h2>
+<p>看完了山田宗树的&lt;百年法&gt;, 讲了人类研究出了不老化病毒, 等于实现了永生, 为了缓解人口压力, 各国又实施了百年法限制接种人类不老化病毒后只能活100年, 到期要安乐死, 之后在社会层面引发的一系列问题, 最后结局挺讽刺的. 作者的脑洞还是偏向思维实验, 感觉不够科幻, 如果把故事的时间跨度拉到千年, 那能扯的故事就挺多了. 读下来这调调总让我想起&lt;午夜凶铃&gt;的原作&lt;环界&gt;, 打分7/10.</p>
+<p>读了黄奇帆的&lt;结构性改革&gt;, 对2015年开始政府的一系列动作看得更明白了一点, 比起08年的4万亿, 现在手法精致了不少, 体制内有高人啊, 不管你怎么看未来, 这本书值得一看.</p>
+<p>&lt;剑桥美国史&gt; 看了一半, 刚看完南北战争那段, 只能说中国人对他们那套虚无飘渺的 manifest destiny 真的挺难理解的, 毕竟我们信的是王侯将相宁有种乎. 古人还是高, 早早看穿宗教的本质才有三武灭佛. 不管信不信教, 宗教在美国人的精神体系里都留下了很多烙印, 拜登是从肯尼迪之后第二个信天主教的总统, hmmmm&hellip;. 不知道后面4年会发生什么. 另外, 前几天感恩节, 随手看了下英文版 wikipedia 的词条, 通篇不提和印地安人的关系, 中文版倒是有, 这春秋手法值得国内媒体学习.</p>
+<p>&lt;李宗仁回忆录&gt; 刚看了个开头, 这种自述的东西, 还是要辨证得看, 李宗仁真是变着法得夸自己, 就差出生时天降祥瑞了, 什么驯服烈马, 什么两个军头为了抢他来自己部队炒排骨(当排长)在妓院打起来, 远古龙傲天脚本.</p>
+</div>
+        <div class="post_footer">
+          
+        </div>
+      </div>
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mx03" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      
+      
+    </div>
+  </div>
+  <a id="back_to_top" href="#" class="back_to_top"><span>△</span></a>
+</div>
+<footer class="footer">
+  <div class="powered_by">
+    <a href="https://zeuk.me">Designed by Zeuk,</a>
+    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
+  </div>
+
+  <div class="footer_slogan">
+    <span></span>
+  </div>
+</footer>
+
+
+
+<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
+<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
+<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
+<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
+<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-98667627-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+</body>
+</html>
