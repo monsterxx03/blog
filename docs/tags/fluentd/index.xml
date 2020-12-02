@@ -7,11 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sun, 26 May 2019 14:27:38 +0800</lastBuildDate>
-    
-	<atom:link href="https://blog.monsterxx03.com/tags/fluentd/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 26 May 2019 14:27:38 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/fluentd/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Centralized Logging on K8S</title>
       <link>https://blog.monsterxx03.com/2019/05/26/centralized-logging-on-k8s/</link>

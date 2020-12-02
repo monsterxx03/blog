@@ -7,11 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sat, 18 Jan 2020 15:20:47 +0800</lastBuildDate>
-    
-	<atom:link href="https://blog.monsterxx03.com/tags/rds/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 18 Jan 2020 15:20:47 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/rds/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>编写 postmortem</title>
       <link>https://blog.monsterxx03.com/2020/01/18/%E7%BC%96%E5%86%99-postmortem/</link>

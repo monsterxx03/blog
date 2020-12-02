@@ -7,11 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Wed, 22 Mar 2017 16:22:32 +0000</lastBuildDate>
-    
-	<atom:link href="https://blog.monsterxx03.com/tags/distribute/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Wed, 22 Mar 2017 16:22:32 +0000</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/distribute/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>ElasticSearch cluster</title>
       <link>https://blog.monsterxx03.com/2017/03/22/elasticsearch-cluster/</link>

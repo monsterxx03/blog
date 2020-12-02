@@ -7,11 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sat, 15 Jul 2017 02:35:52 +0000</lastBuildDate>
-    
-	<atom:link href="https://blog.monsterxx03.com/tags/system/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 15 Jul 2017 02:35:52 +0000</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/system/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Enable coredump on ubuntu 16.04</title>
       <link>https://blog.monsterxx03.com/2017/07/15/enable-coredump-on-ubuntu-16.04/</link>

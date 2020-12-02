@@ -7,11 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 23 Jun 2017 09:40:58 +0000</lastBuildDate>
-    
-	<atom:link href="https://blog.monsterxx03.com/tags/fpm/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Fri, 23 Jun 2017 09:40:58 +0000</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/fpm/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Build deb repository with fpm , aptly and s3</title>
       <link>https://blog.monsterxx03.com/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/</link>

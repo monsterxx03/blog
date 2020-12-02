@@ -7,11 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 12 Oct 2018 14:49:13 +0800</lastBuildDate>
-    
-	<atom:link href="https://blog.monsterxx03.com/tags/redshift/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Fri, 12 Oct 2018 14:49:13 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/redshift/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>在 redshift 中计算 p95 latency</title>
       <link>https://blog.monsterxx03.com/2018/10/12/%E5%9C%A8-redshift-%E4%B8%AD%E8%AE%A1%E7%AE%97-p95-latency/</link>

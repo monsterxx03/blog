@@ -7,11 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 29 Sep 2017 08:55:18 +0000</lastBuildDate>
-    
-	<atom:link href="https://blog.monsterxx03.com/tags/route53/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Fri, 29 Sep 2017 08:55:18 +0000</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/route53/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Get all invalid PTR record on  Route53</title>
       <link>https://blog.monsterxx03.com/2017/09/29/get-all-invalid-ptr-record-on-route53/</link>

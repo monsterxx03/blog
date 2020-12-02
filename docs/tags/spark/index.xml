@@ -7,11 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 21 Jul 2017 03:10:58 +0000</lastBuildDate>
-    
-	<atom:link href="https://blog.monsterxx03.com/tags/spark/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Fri, 21 Jul 2017 03:10:58 +0000</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/spark/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Use redshift spectrum to do query on s3</title>
       <link>https://blog.monsterxx03.com/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/</link>

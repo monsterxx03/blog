@@ -7,11 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Tue, 18 Feb 2020 14:38:56 +0800</lastBuildDate>
-    
-	<atom:link href="https://blog.monsterxx03.com/tags/personalize/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Tue, 18 Feb 2020 14:38:56 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/personalize/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>用 AWS Personalize 做推荐系统</title>
       <link>https://blog.monsterxx03.com/2020/02/18/%E7%94%A8-aws-personalize-%E5%81%9A%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/</link>

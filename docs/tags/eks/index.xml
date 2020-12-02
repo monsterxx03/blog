@@ -7,11 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Tue, 16 Jun 2020 16:02:58 +0800</lastBuildDate>
-    
-	<atom:link href="https://blog.monsterxx03.com/tags/eks/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Tue, 16 Jun 2020 16:02:58 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/eks/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>解决 k8s 1.16 apiVersion deprecation 造成的 helm revision 冲突</title>
       <link>https://blog.monsterxx03.com/2020/06/16/%E8%A7%A3%E5%86%B3-k8s-1.16-apiversion-deprecation-%E9%80%A0%E6%88%90%E7%9A%84-helm-revision-%E5%86%B2%E7%AA%81/</link>

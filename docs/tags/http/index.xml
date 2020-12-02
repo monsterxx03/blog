@@ -7,11 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sat, 29 Dec 2018 15:14:46 +0800</lastBuildDate>
-    
-	<atom:link href="https://blog.monsterxx03.com/tags/http/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 29 Dec 2018 15:14:46 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/http/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>从去年的一个patch说起</title>
       <link>https://blog.monsterxx03.com/2018/12/29/%E4%BB%8E%E5%8E%BB%E5%B9%B4%E7%9A%84%E4%B8%80%E4%B8%AApatch%E8%AF%B4%E8%B5%B7/</link>
