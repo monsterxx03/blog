@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Wed, 02 Dec 2020 16:00:13 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 04 Dec 2020 10:49:40 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>从k8s deprecating docker 说起</title>
+      <link>https://blog.monsterxx03.com/2020/12/04/%E4%BB%8Ek8s-deprecating-docker-%E8%AF%B4%E8%B5%B7/</link>
+      <pubDate>Fri, 04 Dec 2020 10:49:40 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2020/12/04/%E4%BB%8Ek8s-deprecating-docker-%E8%AF%B4%E8%B5%B7/</guid>
+      <description>k8s 1.20 的 release note 里说 deprecated docker: https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.20.md#deprecation 对 docker 和 k8s 关系比较了解的人一看就知道是废弃 dockershim, 正常操作, 具体有什么影响, 建议阅读: https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/ https://kubernetes.io/blog/2020/12/02/dockershim-faq/ 但容器圈里那堆名词的确很让人困惑, docker, dockershim, containerd, containerd-shim, runc, cri, oci, csi, cni, cri-o, 或许曾经还听说过 runv, rkt, clear containers, 后来又来了 kata containers, firecracker, gvisor. 论造名词, 造项目, 都快赶上前端圈的脚趾头了. 这篇比较水, 就解释下它们大致的关系, 前提是你大概知道 docker, namespace, cgroup, container, k8s pod 之间的关系, 不做额外解释. 从 docker 说起 在我现在这台机器上的 ubuntu 18.04, 安装 docker, 添加官方源之后, 安装的 deb package(version 19.03) 是</description>
+    </item>
+    
     <item>
       <title>二三事</title>
       <link>https://blog.monsterxx03.com/2020/12/02/%E4%BA%8C%E4%B8%89%E4%BA%8B/</link>

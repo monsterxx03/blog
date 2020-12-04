@@ -4,26 +4,46 @@
   
   <url>
     <loc>https://blog.monsterxx03.com/categories/</loc>
-    <lastmod>2020-12-02T16:00:13+08:00</lastmod>
+    <lastmod>2020-12-04T10:49:40+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://blog.monsterxx03.com/categories/life/</loc>
-    <lastmod>2020-12-02T16:00:13+08:00</lastmod>
+    <loc>https://blog.monsterxx03.com/tags/docker/</loc>
+    <lastmod>2020-12-04T10:49:40+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/k8s/</loc>
+    <lastmod>2020-12-04T10:49:40+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://blog.monsterxx03.com/posts/</loc>
-    <lastmod>2020-12-02T16:00:13+08:00</lastmod>
+    <lastmod>2020-12-04T10:49:40+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://blog.monsterxx03.com/</loc>
-    <lastmod>2020-12-02T16:00:13+08:00</lastmod>
+    <lastmod>2020-12-04T10:49:40+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/tags/</loc>
+    <lastmod>2020-12-04T10:49:40+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://blog.monsterxx03.com/categories/tech/</loc>
+    <lastmod>2020-12-04T10:49:40+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/2020/12/04/%E4%BB%8Ek8s-deprecating-docker-%E8%AF%B4%E8%B5%B7/</loc>
+    <lastmod>2020-12-04T10:49:40+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.monsterxx03.com/categories/life/</loc>
     <lastmod>2020-12-02T16:00:13+08:00</lastmod>
   </url>
   
@@ -40,16 +60,6 @@
   <url>
     <loc>https://blog.monsterxx03.com/2020/08/26/linux-%E8%BF%9B%E7%A8%8B%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%88%86%E5%B8%83/</loc>
     <lastmod>2020-08-26T23:06:01+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/tags/</loc>
-    <lastmod>2020-08-26T23:06:01+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://blog.monsterxx03.com/tags/k8s/</loc>
-    <lastmod>2020-08-04T22:44:40+08:00</lastmod>
   </url>
   
   <url>

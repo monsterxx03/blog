@@ -94,6 +94,39 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2020/12/04/%E4%BB%8Ek8s-deprecating-docker-%E8%AF%B4%E8%B5%B7/'>从k8s deprecating docker 说起</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>k8s 1.20 的 release note 里说 deprecated docker: https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.20.md#deprecation 对 docker 和 k8s 关系比较了解的人一看就知道是废弃 dockershim, 正常操作, 具体有什么影响, 建议阅读: https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/ https://kubernetes.io/blog/2020/12/02/dockershim-faq/ 但容器圈里那堆名词的确很让人困惑, docker, dockershim, containerd, containerd-shim, runc, cri, oci, csi, cni, cri-o, 或许曾经还听说过 runv, rkt, clear containers, 后来又来了 kata containers, firecracker, gvisor. 论造名词, 造项目, 都快赶上前端圈的脚趾头了. 这篇比较水, 就解释下它们大致的关系, 前提是你大概知道 docker, namespace, cgroup, container, k8s pod 之间的关系, 不做额外解释. 从 docker 说起 在我现在这台机器上的 ubuntu 18.04, 安装 docker, 添加官方源之后, 安装的 deb package(version 19.03) 是......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2020.12.04</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/docker/">docker</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2020/12/02/%E4%BA%8C%E4%B8%89%E4%BA%8B/'>二三事</a></h2>
   </div>
   
@@ -366,30 +399,6 @@
           
           <a href="https://blog.monsterxx03.com/tags/personalize/">personalize</a>
           
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2020/02/09/%E4%BA%8C%E6%9C%88/'>二月</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>过了个短暂的春节, 怕之后高铁也停了, 早早回了上海. 算起来到今天，已经有半个月没和人当面说三句以上的话了. 莫名得还挺享受的. 最近怎么过的 一觉睡到八点多起床, 早饭炒两个蛋加一杯牛奶， 偶尔喝粥. 盒马买的米真是巨贵, 煮饭也没多好吃, 煮粥倒不错. 打开电脑, 处理点工作或看看新闻, 恩, 基本没什么好新闻, 微博上要么加油体, 要么撕逼, 都是信息垃圾, 不评论了. 新买的桌子不太行,便宜没好货哦, 打字用力点都会晃, 考虑把餐......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2020.02.09</span>
         </span>
         
       </div>
