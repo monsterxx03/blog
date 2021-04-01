@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.78.2" />
+	<meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,6 +91,37 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2018/12/16/kubernetes-%E4%B8%AD%E7%9A%84-pod-%E8%B0%83%E5%BA%A6/'>Kubernetes 中的 pod 调度</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>定义 pod 的时候通过添加 node selector 可以让 pod 调度到有特定 label 的 node 上去, 这是最简单的调度方式. 其他还有更复杂的调度方式: node-taints/tolerations, node-affinity, pod-affinity, 来达到让某些类型的 pod 调度到一起, 让某些类型的 pod 不跑一起的效果. Taints and Tolerations 如果 node 有 taints, 那只有能 tolerate 这些 taints 的 pod 才能调度到上面. taint 的基本格式是: &lt;key&gt;&lt;operator&gt;&lt;value&gt;:&lt;effect&gt; kubectl describe node xxx 可以看到节点的 taints, 比如 master 节点上会有: Taints: node-role.kubernetes.io/master:NoSchedule 这里 key 是 node-role.kubernetes.io/master, 没有等号和 value, operator 就是 Exists , effect 是 NoSchedule. master 节点上的这条 taint 就定义了只有能 tolerate 它的 pod 能调度到上面, 一般都是些系统 pod. 比如看......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2018.12.16</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -369,41 +400,6 @@ free -h humanize output (automatically show in KB/MB/GB&hellip;)......</p>
         <span class="field">
           <i class="remixicon-map-pin-time-line"></i>
           <span class="date">2018.09.21</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/09/11/eks-%E8%AF%84%E6%B5%8B/'>EKS 评测</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>EKS 正式 launch 还没有正经用过, 最近总算试了一把, 记录一点. Setup AWS 官方的 Guide 只提供了一个 cloudformation template 来设置 worker node, 我喜欢用 terraform, 可以跟着这个文档尝试:https://www.terraform.io/docs/providers/aws/guides/eks-getting-started.html 来设置完整的 eks cluster 和管理 worker node 的 autoscaling group. 设置完 EKS 后需要添加一条 ConfigMap: apiVersion: v1 kind: ConfigMap metadata: name: aws-auth namespace: kube-system data: mapRoles: | - rolearn: arn:aws:iam::&lt;account-id&gt;:role/eksNodeRole username: system:node:{{EC2PrivateDNSName}} groups: - system:bootstrappers - system:nodes 这样 worker node 节点才能加入集群. 网......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.09.11</span>
         </span>
         
         <span class="field tags">

@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Tue, 16 Jun 2020 16:02:58 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/eks/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 01 Apr 2021 14:40:30 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/eks/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Rolling Upgrade Worker Nodes in EKS</title>
+      <link>https://blog.monsterxx03.com/2021/04/01/rolling-upgrade-worker-nodes-in-eks/</link>
+      <pubDate>Thu, 01 Apr 2021 14:40:30 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2021/04/01/rolling-upgrade-worker-nodes-in-eks/</guid>
+      <description>EKS control plane 的升级是比较简单的, 直接在 aws console 上点下就可以了, 但 worker node 是自己用 asg(autoscaling group) 管理的, 升级 worker node 又不想影响业务是有讲究的. 跑在 EKS 里, 且希望不被中断 traffic 的有: stateless 的 api server, queue consumer 被 redis sentinel 监控着的 redis master/slave 用于 cache 的 redis cluster 写了个内部工具, 把下面的流程全部自动化了. 这样升级 eks 版本, 需要更换 worker node 时候就轻松多了. 因为这个工具对部署情况做了很多假设和限制, 开源的价值不是很大. Stateless application stateless 的应用全部用 deployment 部署. 一般建议的流程是: 修改 asg 的 launch configuration, 指向新版本</description>
+    </item>
+    
     <item>
       <title>解决 k8s 1.16 apiVersion deprecation 造成的 helm revision 冲突</title>
       <link>https://blog.monsterxx03.com/2020/06/16/%E8%A7%A3%E5%86%B3-k8s-1.16-apiversion-deprecation-%E9%80%A0%E6%88%90%E7%9A%84-helm-revision-%E5%86%B2%E7%AA%81/</link>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.78.2" />
+	<meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,6 +91,39 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2020/02/18/%E7%94%A8-aws-personalize-%E5%81%9A%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/'>用 AWS Personalize 做推荐系统</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>这几天测试了下 aws 的 personalize service, 看看能不能替换掉产品里现有的一些推荐逻辑. 大致的流程: 导入数据 选择 recipe 进行 training, 得到一个 solution version 选择最佳 solution version 创建 compaign 调用 api, 根据 compaign 得到 recommendations 一些 iam 权限相关的设置就不写了, 具体看文档吧, 这里只记录下主要步骤. 导入数据 首先需要准备用来 training 的数据, 分成三种数据集: User Item User-Item interaction 其中 User-Item interaction 是必须的 dataset, 所有 recipe 都会用到, User 和 Item 被称作 metadata dataset, 只有个别 recipe 会用到. 每个 dataset 创建的时候需要建立一个 schema, 来描述各自的结构(avro 格式).......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2020.02.18</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/personalize/">personalize</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -353,30 +386,6 @@
           
           <a href="https://blog.monsterxx03.com/tags/golang/">golang</a>
           
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2019/09/26/%E5%89%B2%E8%A3%82%E6%84%9F/'>割裂感</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>题文无关. 楼下阿姨 三楼住了一对老夫妻, 丈夫身体不好, 不怎么出门, 阿姨倒是很精神, 天天溜达, 偶尔会上来问我些用手机的事情. 阿姨人挺好, 就是总想着捡些小便宜, 那个年代过来的人都这样, 无可厚非. 某日, 拿着手机给我看某基金的公众号, 说是可以领红包, 意兴阑珊得帮她看了下, 大致意思是在公众号下留言, 记录自己在这个基金的投资故事, 抽取写得好的发红包&hellip;我就告诉她, 这个基本是没啥可能被抽中的(我也不可......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2019.09.26</span>
         </span>
         
       </div>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.78.2" />
+	<meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,6 +91,41 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2019/05/26/centralized-logging-on-k8s/'>Centralized Logging on K8S</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>搞定了监控, 下一步在 k8s 上要做的是中心化日志, 大体看了下, 感兴趣的有两个选择: ELK 套件, 或fluent-bit + fluentd. ELK 那套好处是, 可以把监控和日志一体化, filebeat 收集日志, metricbeat 收集 metrics, 统一存储在 ElasticSearch 里, 通过第三方项目elastalert 可以做报警，也能在 kibana 里集成界面. 坏处是 ElasticSearch 存储成本高, 吃资源. 我们对存储的日志使用需求基本就是 debug, 没有特别复杂的BI需求, 上一整套 ELK 还是太重了. 选择 fluent-bit + fluentd 还有个好处是, 之前内部有套收集 m......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2019.05.26</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/fluentd/">fluentd</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -389,37 +424,6 @@
           <a href="https://blog.monsterxx03.com/tags/http/">http</a>
           
           <a href="https://blog.monsterxx03.com/tags/tcp/">tcp</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/12/16/kubernetes-%E4%B8%AD%E7%9A%84-pod-%E8%B0%83%E5%BA%A6/'>Kubernetes 中的 pod 调度</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>定义 pod 的时候通过添加 node selector 可以让 pod 调度到有特定 label 的 node 上去, 这是最简单的调度方式. 其他还有更复杂的调度方式: node-taints/tolerations, node-affinity, pod-affinity, 来达到让某些类型的 pod 调度到一起, 让某些类型的 pod 不跑一起的效果. Taints and Tolerations 如果 node 有 taints, 那只有能 tolerate 这些 taints 的 pod 才能调度到上面. taint 的基本格式是: &lt;key&gt;&lt;operator&gt;&lt;value&gt;:&lt;effect&gt; kubectl describe node xxx 可以看到节点的 taints, 比如 master 节点上会有: Taints: node-role.kubernetes.io/master:NoSchedule 这里 key 是 node-role.kubernetes.io/master, 没有等号和 value, operator 就是 Exists , effect 是 NoSchedule. master 节点上的这条 taint 就定义了只有能 tolerate 它的 pod 能调度到上面, 一般都是些系统 pod. 比如看......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.12.16</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
           
         </span>
         

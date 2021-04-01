@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.78.2" />
+	<meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,6 +91,43 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2021/04/01/rolling-upgrade-worker-nodes-in-eks/'>Rolling Upgrade Worker Nodes in EKS</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>EKS control plane 的升级是比较简单的, 直接在 aws console 上点下就可以了, 但 worker node 是自己用 asg(autoscaling group) 管理的, 升级 worker node 又不想影响业务是有讲究的. 跑在 EKS 里, 且希望不被中断 traffic 的有: stateless 的 api server, queue consumer 被 redis sentinel 监控着的 redis master/slave 用于 cache 的 redis cluster 写了个内部工具, 把下面的流程全部自动化了. 这样升级 eks 版本, 需要更换 worker node 时候就轻松多了. 因为这个工具对部署情况做了很多假设和限制, 开源的价值不是很大. Stateless application stateless 的应用全部用 deployment 部署. 一般建议的流程是: 修改 asg 的 launch configuration, 指向新版本......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2021.04.01</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/redis/">redis</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -366,39 +403,6 @@
         <span class="field">
           <i class="remixicon-map-pin-time-line"></i>
           <span class="date">2020.04.07</span>
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2020/02/18/%E7%94%A8-aws-personalize-%E5%81%9A%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/'>用 AWS Personalize 做推荐系统</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>这几天测试了下 aws 的 personalize service, 看看能不能替换掉产品里现有的一些推荐逻辑. 大致的流程: 导入数据 选择 recipe 进行 training, 得到一个 solution version 选择最佳 solution version 创建 compaign 调用 api, 根据 compaign 得到 recommendations 一些 iam 权限相关的设置就不写了, 具体看文档吧, 这里只记录下主要步骤. 导入数据 首先需要准备用来 training 的数据, 分成三种数据集: User Item User-Item interaction 其中 User-Item interaction 是必须的 dataset, 所有 recipe 都会用到, User 和 Item 被称作 metadata dataset, 只有个别 recipe 会用到. 每个 dataset 创建的时候需要建立一个 schema, 来描述各自的结构(avro 格式).......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2020.02.18</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/personalize/">personalize</a>
-          
         </span>
         
       </div>

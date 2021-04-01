@@ -7,7 +7,43 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 04 Dec 2020 10:49:40 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 01 Apr 2021 14:40:30 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AWS</title>
+      <link>https://blog.monsterxx03.com/tags/aws/</link>
+      <pubDate>Thu, 01 Apr 2021 14:40:30 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/aws/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>eks</title>
+      <link>https://blog.monsterxx03.com/tags/eks/</link>
+      <pubDate>Thu, 01 Apr 2021 14:40:30 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/eks/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>k8s</title>
+      <link>https://blog.monsterxx03.com/tags/k8s/</link>
+      <pubDate>Thu, 01 Apr 2021 14:40:30 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/k8s/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>redis</title>
+      <link>https://blog.monsterxx03.com/tags/redis/</link>
+      <pubDate>Thu, 01 Apr 2021 14:40:30 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/tags/redis/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>docker</title>
       <link>https://blog.monsterxx03.com/tags/docker/</link>
@@ -18,29 +54,11 @@
     </item>
     
     <item>
-      <title>k8s</title>
-      <link>https://blog.monsterxx03.com/tags/k8s/</link>
-      <pubDate>Fri, 04 Dec 2020 10:49:40 +0800</pubDate>
-      
-      <guid>https://blog.monsterxx03.com/tags/k8s/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>linux</title>
       <link>https://blog.monsterxx03.com/tags/linux/</link>
       <pubDate>Wed, 26 Aug 2020 23:06:01 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/tags/linux/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>redis</title>
-      <link>https://blog.monsterxx03.com/tags/redis/</link>
-      <pubDate>Tue, 04 Aug 2020 22:44:40 +0800</pubDate>
-      
-      <guid>https://blog.monsterxx03.com/tags/redis/</guid>
       <description></description>
     </item>
     
@@ -68,24 +86,6 @@
       <pubDate>Tue, 30 Jun 2020 14:40:01 +0800</pubDate>
       
       <guid>https://blog.monsterxx03.com/tags/snet/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>AWS</title>
-      <link>https://blog.monsterxx03.com/tags/aws/</link>
-      <pubDate>Tue, 16 Jun 2020 16:02:58 +0800</pubDate>
-      
-      <guid>https://blog.monsterxx03.com/tags/aws/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>eks</title>
-      <link>https://blog.monsterxx03.com/tags/eks/</link>
-      <pubDate>Tue, 16 Jun 2020 16:02:58 +0800</pubDate>
-      
-      <guid>https://blog.monsterxx03.com/tags/eks/</guid>
       <description></description>
     </item>
     
