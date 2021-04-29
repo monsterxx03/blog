@@ -27,15 +27,6 @@
     </item>
     
     <item>
-      <title>基金定投复盘</title>
-      <link>https://blog.monsterxx03.com/2020/01/02/%E5%9F%BA%E9%87%91%E5%AE%9A%E6%8A%95%E5%A4%8D%E7%9B%98/</link>
-      <pubDate>Thu, 02 Jan 2020 13:04:22 +0800</pubDate>
-      
-      <guid>https://blog.monsterxx03.com/2020/01/02/%E5%9F%BA%E9%87%91%E5%AE%9A%E6%8A%95%E5%A4%8D%E7%9B%98/</guid>
-      <description>新年第一件事是算一下过去几年在基金这块的收益怎么样. 大概在16年的时候才开始接触股市, 但个股一直没怎么买, 基本都买基金, 4年里各种因素导致总投资额很低,在资金总额中占比太低. 这次复盘两只定投时间最长的基金, 天弘沪深300ETF联接A(000961), 嘉实沪港深精选股票(0001878), 前者追踪沪深300指数, 后者主要买上海和香港的股票. 天弘沪深300ETF联接A 嘉实沪港深精选股票 开始日期 2017-02-10 2017-08-22 计算</description>
-    </item>
-    
-    <item>
       <title>11月</title>
       <link>https://blog.monsterxx03.com/2019/11/24/11%E6%9C%88/</link>
       <pubDate>Sun, 24 Nov 2019 22:31:42 +0800</pubDate>
@@ -105,15 +96,6 @@
       
       <guid>https://blog.monsterxx03.com/2018/06/10/%E6%9D%82%E8%B0%88%E6%9D%BE%E6%9C%AC%E6%B8%85%E5%BC%A0/</guid>
       <description>去年在 kindle 上买了套松本清张的合集, 总共有10本, 断断续续看到现在终于看完了第 9 本&amp;lt;隐花平原&amp;gt;, 随便扯一点(喂，为什么不看完最后一本! 松本清张 (1909 ~ 1992), 社会派推理开创人, 这套书里的作品各个年代都有, 最有名的&amp;lt;砂之器&amp;gt;(貌似仲间姐姐拍过剧?) 和 &amp;lt;点与线&amp;gt; 却没收录. 本格派讲究逻辑的精巧， 整个故事就像在玩密室逃脱一样, 一环扣一环, 最后谜底揭开的时候让人惊呼&amp;quot;卧槽&amp;q</description>
-    </item>
-    
-    <item>
-      <title>用 google spreadsheet 计算房贷等额本息还款</title>
-      <link>https://blog.monsterxx03.com/2018/02/25/%E7%94%A8-google-spreadsheet-%E8%AE%A1%E7%AE%97%E6%88%BF%E8%B4%B7%E7%AD%89%E9%A2%9D%E6%9C%AC%E6%81%AF%E8%BF%98%E6%AC%BE/</link>
-      <pubDate>Sun, 25 Feb 2018 13:59:11 +0800</pubDate>
-      
-      <guid>https://blog.monsterxx03.com/2018/02/25/%E7%94%A8-google-spreadsheet-%E8%AE%A1%E7%AE%97%E6%88%BF%E8%B4%B7%E7%AD%89%E9%A2%9D%E6%9C%AC%E6%81%AF%E8%BF%98%E6%AC%BE/</guid>
-      <description>看房看的眼花缭乱, 网上有很多房贷计算器, 但都没什么方便的比价功能, 能直观得看到首付和月供就好啦, 但也不想注册，不想老收中介的广告,索性用 google spreadsheet 自己做个简单的吧. PMT 公式 可以用 PMT 公式来计算等额本息的月供金额: https://support.google.com/docs/answer/3093185?hl=zh-Hans PMT(rate, number_of_periods, present_value, [future_value, end_or_beginning]) rate 是每期的利率, 如果商贷基准利率是 0.049, 每月还款, rate 就是 0.049/12. number_of_periods 是贷款期数, 年数 * 12. present_value 是贷款数额. PMT 公式算出的值是负数，需要取反. 实际例子: 商贷基准利率=0.049 利率倍数=1 首付百分比=0.3</description>
     </item>
     
     <item>

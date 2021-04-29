@@ -1,6 +1,7 @@
 ---
 title: "基金定投复盘"
 date: 2020-01-02T13:04:22+08:00
+draft: true
 categories:
 - life
 ---

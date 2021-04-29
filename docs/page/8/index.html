@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.80.0" />
+	<meta name="generator" content="Hugo 0.82.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,87 +91,6 @@
   <div class="content">
     
 
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/09/29/get-all-invalid-ptr-record-on-route53/'>Get all invalid PTR record on  Route53</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>I use autoscaling group to manage stateless servers. Servers go up and down every day.
-Once server is up, I will add a PTR record for it’s internal ip. But when it’s down, I didn’t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.
-To cleanup those PTR records realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?
-Straightforward way is write a script to call AWS API to get a PTR list, get ip from record, test whether the ip is live, if not, delete it.
-Since use awscli to delete a Route53 record is very troublesome (involve json format), you’d better write a python script to delete them. I just demo some ideas to collect those records via shell.
-You can do it in a single line, but make things clear and easy to debug, I split it into several steps.
-Get PTR record list aws route53 list-resource-record-sets --hosted-zone-id xxxxx --query &quot;ResourceRecordSets[?Type=='PTR'].Name&quot; | grep -Po '&quot;(.+?)&quot;' | tr -d \&quot; &gt; ptr.txt  ptr.txt will contain lines like:
-1.0.0.10.in-addr.arpa. 2.0.0.10.in-addr.arpa.  Get ip list from PTR records cat ptr.......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.09.29</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/route53/">route53</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/08/19/build-private-staticwebsite-on-s3/'>Build private static website on S3</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>Build static website on S3 is very easy, but by default, it can be accessed by open internet.It will be super helpful if we can build website only available in VPC. Then we can use it to host internal deb repo, doc site…
-Steps are very easy, you only need VPC endpoints and S3 bucket policy.
-AWS api is open to internet, if you need to access S3 in VPC, your requests will pass through VPC’s internet gateway or NAT gateway. With VPC endpoints(can be found in VPC console), your requests to S3 will go through AWS’s internal network. Currently, VPC endpoints only support S3, support for dynamodb is in test.
-To restrict S3 bucket only available in your VPC, need to set bucket policy (to host static website, enable static website support first). At first, I didn’t check doc, try to restrict access by my VPC ip cidr, but it didn’t work, I need to restrict by VPC endpoint id:
-{ &quot;Version&quot;: &quot;2012-10-17&quot;, &quot;Id&quot;: &quot;Policy1415115909152&quot;, &quot;Statement&quot;: [ { &quot;Sid&quot;: &quot;Access-to-specific-VPCE-only&quot;, &quot;Principal&quot;: &quot;*&quot;, &quot;Action&quot;: &quot;s3:GetObject&quot;, &quot;Effect&quot;: &quot;Allow&quot;, &quot;Resource&quot;: [&quot;arn:aws:s3:::my_secure_bucket&quot;, &quot;arn:aws:s3:::my_secure_bucket/*&quot;], &quot;Condition&quot;: { &quot;StringEquals&quot;: { &quot;aws:sourceVpce&quot;: &quot;vpce-1a2b3c4d&quot; } } } ] }  BTW, if you can config bucket policy restrict on VPC directly, with VPC endpoint you can limit to subnets.......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.08.19</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/s3/">S3</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -455,6 +374,73 @@ avro (used in hadoop), have a write schema and a read schema, when store a large
           <a href="https://blog.monsterxx03.com/tags/book/">book</a>
           
           <a href="https://blog.monsterxx03.com/tags/database/">Database</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2017/04/23/4%E6%9C%88%E5%91%A8%E6%9C%AB%E6%9D%82%E8%AE%B0/'>4月周末杂记</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p><p>月初的时候搬了家, 之后的周末一直在忙些琐琐碎碎的事情，嘛，仔细一想，除了去宜家搬了个电视柜回来都不记得干了啥…</p>
+<p>这周末心血来潮去听了两个讲座，一个人文的，一个技术的，还都碰到了点有意思的事情。</p>......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2017.04.23</span>
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2017/04/21/infrastructure-as-code/'>Infrastructure as Code</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.
+You will come to:
+ How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what’s the DHCP option set?), navigate around AWS console is okay, but not convenient. Who did what to which resource at when? AWS have a service called Config, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do.  Ideally, we should manage AWS resources like code, all changes kept in VCS, so called Infrastructure as Code.
+I’ve tried three ways to do it:
+ ansible CloudFormation terraform  In this article, I&rsquo;ll compare them, however, the conclusion is to use terraform 🙂
+Ansible Provision tools, like ansible/chef/puppet, all can be used to create aws resources, but they have some common problems:
+ Hard to track changes after bootstrap. No confident what it will do to existing resources.  For example, I define a security group in ansibble:
+ec2_group: name: &quot;web&quot; description: &quot;security group in web&quot; vpc_id: &quot;vpc-xxx&quot; region: &quot;us-east-1&quot; rules: - proto: tcp from_port: 80 to_port: 80 cidr_ip: 0.......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2017.04.21</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
           
         </span>
         
