@@ -7,6 +7,7 @@ tags:
     - AWS
     - vpc
     - k8s
+    - server-infra
 ---
 
 EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别.

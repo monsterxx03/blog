@@ -7,6 +7,7 @@ tags:
     - fluentd
     - k8s
     - eks
+    - server-infra
 ---
 
 

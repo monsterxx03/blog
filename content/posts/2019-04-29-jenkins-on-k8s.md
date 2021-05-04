@@ -6,6 +6,7 @@ categories:
 tags:
   - k8s
   - jenkins
+  - server-infra
 ---
 
 最近在把 jenkins 迁移到 k8s, 具体怎么 setup 的不赘述了(helm chart, jenkins home 目录挂pvc, jenkins kubernetes-plugin).

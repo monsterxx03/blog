@@ -6,6 +6,7 @@ category:
 tags:
 - redis
 - k8s
+- server-infra
 ---
 
 线上有个 redis 的缓存集群, 跑的还是 3.0, 前面套 twemproxy 做 sharding. 跑了好几年了都很稳定, 但一直有些很不爽的地方, 最近有点时间,决定

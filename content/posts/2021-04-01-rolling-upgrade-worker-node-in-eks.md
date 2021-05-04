@@ -8,6 +8,7 @@ tags:
 - eks
 - k8s
 - redis
+- server-infra
 ---
 
 EKS control plane 的升级是比较简单的, 直接在 aws console 上点下就可以了, 但 worker node 是自己用 asg(autoscaling group) 管理的, 升级 worker node 又不想影响业务是有讲究的.

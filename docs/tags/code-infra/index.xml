@@ -7,7 +7,43 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sat, 17 Nov 2018 13:58:27 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/code-infra/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 07 Apr 2020 10:54:12 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/code-infra/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>重构推送服务</title>
+      <link>https://blog.monsterxx03.com/2020/04/07/%E9%87%8D%E6%9E%84%E6%8E%A8%E9%80%81%E6%9C%8D%E5%8A%A1/</link>
+      <pubDate>Tue, 07 Apr 2020 10:54:12 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2020/04/07/%E9%87%8D%E6%9E%84%E6%8E%A8%E9%80%81%E6%9C%8D%E5%8A%A1/</guid>
+      <description>最近对业务里发送 apple APNS, google FCM 部分的代码进行了重构, 抽出了一个单独的 service, 本文记录下整个过程. 存在的问题 我们有好几个 mobile app, 每个 app 会有一套对应的 server 端 service 做业务逻辑, 因为历史原因, 每个 service 里面其实有很多重复代码, 大多只是一些配置和错误处理上有差异. 给 app 发推送是个典型, 原来的做法是当要发推送的时候, 往 python 的 celery 队列里扔一个 task, 由 celery 异步得去发. 有如下问题: celery 性能不佳, worker class 用的是 gevent, 但在高峰时候任务队列里还是有大量 pending, 代码上之前做过</description>
+    </item>
+    
+    <item>
+      <title>老代码里和 MySQL 的事务隔离相关的一个bug</title>
+      <link>https://blog.monsterxx03.com/2019/10/31/%E8%80%81%E4%BB%A3%E7%A0%81%E9%87%8C%E5%92%8C-mysql-%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%80%E4%B8%AAbug/</link>
+      <pubDate>Thu, 31 Oct 2019 11:45:44 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2019/10/31/%E8%80%81%E4%BB%A3%E7%A0%81%E9%87%8C%E5%92%8C-mysql-%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%80%E4%B8%AAbug/</guid>
+      <description>这两天在调试代码的时候, 发现 db 层的代码在每次把 connection 放回 db pool 的时候,即使之前执行的是 select 语句,也会 rollback 一下, 这代码很古老, 我也不知道为啥, 尝试把 rollback 去掉, 结果单元测试挂了一堆, 大多都是数据不一致的问题, debug 了一下, 最后发现这坑还挺大的. 为什么去掉 select 的 rollback 后会出现数据不一致? pymysql 默认关闭了 autocommit, connection A 进行 select 之后, 其实 MySQL 内部为 select 也开启了一个 transaction(Repeatable Read), 可以通过 SELECT * FROM information_schema.innodb_trx\G 查看. 所以当 connection A 先 select 一次, connection B 在 transaction 内更新数据并 commit, connection A 再次 select (之前</description>
+    </item>
+    
+    <item>
+      <title>Celery Time Limit 的坑</title>
+      <link>https://blog.monsterxx03.com/2019/03/28/celery-time-limit-%E7%9A%84%E5%9D%91/</link>
+      <pubDate>Thu, 28 Mar 2019 17:37:29 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2019/03/28/celery-time-limit-%E7%9A%84%E5%9D%91/</guid>
+      <description>之前用 celery 做的 task 都是一些很简单轻量级的 task, 从来没触发过 timeout, 最近加入了一些复杂很耗时的 task, 碰到一些 time limit 的坑. celery 中 time limit 有两种, soft_time_limit 和 hard_time_limit, 区别是 soft_time_limit 会在内部抛一个 Exception, task 可以 catch 自行处理. hard time limit 没法被 catch. 使用如下: from myapp import app from celery.exceptions import SoftTimeLimitExceeded @app.task def mytask(): try: do_work() except SoftTimeLimitExceeded: clean_up_in_a_hurry() 我 celery pool 用的是 gevent, 实际上在现在的实现里 gevent 做 worker pool 的时候会忽略 soft_time_limit, 只有 hard_time_limit 会被触发(通过 gevent.Timeout 实现). 坑爹的是文档里写的是错的: http://docs.celeryproject.org/en/latest/userguide/workers.html#time-limit soft_time_limit 只在 prefork pool 里支持. 我现在想让 celery 把这个 hard timeout 的情况 report 到 sentry, 看了圈代码并没法</description>
+    </item>
+    
+    <item>
+      <title>从去年的一个patch说起</title>
+      <link>https://blog.monsterxx03.com/2018/12/29/%E4%BB%8E%E5%8E%BB%E5%B9%B4%E7%9A%84%E4%B8%80%E4%B8%AApatch%E8%AF%B4%E8%B5%B7/</link>
+      <pubDate>Sat, 29 Dec 2018 15:14:46 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/12/29/%E4%BB%8E%E5%8E%BB%E5%B9%B4%E7%9A%84%E4%B8%80%E4%B8%AApatch%E8%AF%B4%E8%B5%B7/</guid>
+      <description>去年对线上业务做了一些性能优化, 当时把 http client 从 requests 换成了 geventhttpclient , 上线后发起 rpc 调用的 server 整体负载低了很多, 但 client 端 latency 却高了很多, 经过 debug 觉得问题是 geventhttpclient 把 header 和 body 通过两次 sock send 发出的额外开销造成的, 尝试 修改成一次 send 后 latency 就恢复了: https://github.com/gwik/geventhttpclient/pull/85 最近在调试 gunicorn 的代码时候, 看到它建立 socket 的时候设置了 TCP_NODELAY, 在很多项目里看到过这个 tcp option, 但没细究过, man tcp 得知是用来关闭 tcp 里的 nagle 算法的. nagle 在 linux 的 默认 tcp 协议栈里是开启的, 当发送的数据包 size 小于 mss 的时候会在内存里 buffer</description>
+    </item>
+    
     <item>
       <title>用 Bloom filter 给推荐列表去重</title>
       <link>https://blog.monsterxx03.com/2018/11/17/%E7%94%A8-bloom-filter-%E7%BB%99%E6%8E%A8%E8%8D%90%E5%88%97%E8%A1%A8%E5%8E%BB%E9%87%8D/</link>
@@ -24,6 +60,37 @@
       
       <guid>https://blog.monsterxx03.com/2018/06/22/%E5%8D%87%E7%BA%A7celery-%E5%88%B0-4.2.0-%E7%A2%B0%E5%88%B0%E7%9A%84%E5%9D%91/</guid>
       <description>在把代码往 python3 迁移的过程中需要升级一些第三方库, 升级了 gevent 后发现 celery 有问题, 于是尝试把 celery 从3.1.25 升级到 4.2.0, 中间碰到了很多问题, 记录一点. 配置的变化 CELERY_ACCEPT_CONENT 之前默认是都允许的, 4.0 开始默认值只允许 json, 因为我用的是msgpack, 所以需要修改这个配置让它接受 msgpack. CELERY_RESULT_SERIALIZER 之前默认是pickle, 现在默认也变成了json, 如果task 的返回结果是 binary 的话, json 无法处理,要么把结果 base64 编码, 要么把CELERY_RESULT_SERI</description>
+    </item>
+    
+    <item>
+      <title>编写 python 2/3 兼容代码</title>
+      <link>https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/</link>
+      <pubDate>Sat, 16 Jun 2018 14:38:26 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/</guid>
+      <description>上一篇 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情. _future_ python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件. 首先是几个在 python 2.7 里不用特意写，已经默认开启的特性: from __future__ import nested_scopes 2.2 开始就默认开启了，用于修改嵌套函数内的变量搜索作用域, 在此之前, 全局模块的优先级比被嵌套函数的父函数要高, 现</description>
+    </item>
+    
+    <item>
+      <title>From python2 to python3</title>
+      <link>https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/</link>
+      <pubDate>Thu, 07 Jun 2018 16:41:57 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/</guid>
+      <description>This article won&amp;rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&amp;rsquo;t finished this project, also I haven&amp;rsquo;t gave up so far :).
+Won&amp;rsquo;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
+The codebase I&amp;rsquo;m working on:
+ Only support python2.7, don&amp;rsquo;t consider python2.6 1X repos, about half a million lines of code in total (calculated by cloc). These repos will import each other, bad design from early days, not easy to resolve, which means I can&amp;rsquo;t switch to py3 one by one, I need write py2/3 compatiblility code for them, and switch together(I&amp;rsquo;m also considering solve the import problem first). Test coverage is not good, best is around 80%, lowest is 30%.  Tools 2to3, a command line tools packaged with py2, it&amp;rsquo;s a oneway porting to convert your code to py3, new code won&amp;rsquo;t work under py2, since I need be compatible with py2 and py3 for long time, didn&amp;rsquo;t try it.
+future, it tries to make you write single clean python3.x code without ugly hack with six. I used it it first, but come to many problems, will explain later.</description>
+    </item>
+    
+    <item>
+      <title>在python3.7 中实现python2.7 的内置 hash 函数</title>
+      <link>https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/</link>
+      <pubDate>Fri, 01 Jun 2018 17:03:24 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/</guid>
+      <description>最近着手准备从 python2.7 迁移到 python3.7, 还没开始就碰到一个问题. 老系统里有一部分竟然是将 python 内置 hash 函数的结果存进了数据库, 这个做法绝对是错的, hash 的结果本来就没有保证过在各个版本的 python 中保证一致. 而且 python3 中算法完全变了, 默认在进程初始化的时候会用随机种子加进 hash 过程, 所以python 进程 一重启结果就不一样了. 木已成舟， 目前看将数据库里的值全部改掉是不可能了, 只能在 python3 中重新实现一下这个算法. python2.7 中的hash 算法是 fnv (有修改),</description>
     </item>
     
     <item>

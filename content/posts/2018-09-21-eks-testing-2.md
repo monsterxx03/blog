@@ -7,6 +7,7 @@ tags:
     - k8s
     - eks
     - aws
+    - server-infra
 ---
 
 上文测试了一下 EKS 和 cluster autoscaler, 本文记录对 persisten volume 的测试.

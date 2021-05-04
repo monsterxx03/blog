@@ -6,6 +6,7 @@ categories:
 tags:
 - python
 - opentracing
+- server-infra
 ---
 
 之前用过 datadog 的 tracing 功能, 非常好用, 但是很贵(单台30$), 迁移到 k8s 后, 监控迁移到了 prometheus, 也把 datadog 的 tracing 去掉了.datadog 的 tracing 也是 opentracing 的一种实现, 索性就换上开源实现.

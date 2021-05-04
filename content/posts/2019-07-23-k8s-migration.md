@@ -4,6 +4,7 @@ date: 2019-07-23T12:32:08+08:00
 tags:
     - k8s
     - eks
+    - server-infra
 categories:
     - tech
 ---

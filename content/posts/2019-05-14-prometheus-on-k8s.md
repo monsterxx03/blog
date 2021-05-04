@@ -7,6 +7,7 @@ tags:
     - prometheus
     - k8s
     - eks
+    - server-infra
 ---
 
 # Why move to prometheus?

@@ -3,6 +3,8 @@ title: "重构推送服务"
 date: 2020-04-07T10:54:12+08:00
 categories:
 - tech
+tags:
+- code-infra
 ---
 
 最近对业务里发送 apple APNS, google FCM 部分的代码进行了重构, 抽出了一个单独的 service, 本文记录下整个过程.

@@ -5,6 +5,7 @@ categories:
     - tech
 tags:
     - aws
+    - data-infra
     - redshift
 ---
 

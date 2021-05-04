@@ -6,6 +6,7 @@ categories:
 tags:
     - k8s
     - eks
+    - server-infra
 ---
 
 准备工作都差不多了, 没意外下周就该开始把线上的服务往 k8s 上迁移了. 记录几个问题，暂时不 block 我的迁移进程,

@@ -5,6 +5,7 @@ categories:
 - tech
 tags:
 - mysql
+- code-infra
 ---
 
 这两天在调试代码的时候, 发现 db 层的代码在每次把 connection 放回 db pool 的时候,即使之前执行的是 select 语句,也会 rollback 一下, 

@@ -7,6 +7,7 @@ tags:
     - k8s
     - eks
     - aws
+    - server-infra
 ---
 
 这篇记录对 ingress 的测试.

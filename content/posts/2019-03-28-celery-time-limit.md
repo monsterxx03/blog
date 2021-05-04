@@ -6,6 +6,7 @@ categories:
 tags:
     - python
     - celery
+    - code-infra
 ---
 
 之前用 celery 做的 task 都是一些很简单轻量级的 task, 从来没触发过 timeout, 最近加入了一些复杂很耗时的 task, 碰到一些 time limit 的坑.

@@ -5,6 +5,7 @@ categories:
     - tech
 tags:
     - python
+    - code-infra
 ---
 
 最近着手准备从 python2.7 迁移到 python3.7, 还没开始就碰到一个问题. 老系统里有一部分竟然是将 python 内置 hash 函数的结果存进了数据库, 这个做法绝对是错的,

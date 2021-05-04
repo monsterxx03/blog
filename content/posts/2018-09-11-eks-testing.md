@@ -7,6 +7,7 @@ tags:
     - k8s
     - eks
     - aws
+    - server-infra
 ---
 
 EKS 正式 launch 还没有正经用过, 最近总算试了一把, 记录一点.
