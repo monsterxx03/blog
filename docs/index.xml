@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Thu, 01 Apr 2021 14:40:30 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 26 Jan 2022 14:06:09 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>用 Patroni 来做 PostgreSQL 的 HA</title>
+      <link>https://blog.monsterxx03.com/2022/01/26/%E7%94%A8-patroni-%E6%9D%A5%E5%81%9A-postgresql-%E7%9A%84-ha/</link>
+      <pubDate>Wed, 26 Jan 2022 14:06:09 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2022/01/26/%E7%94%A8-patroni-%E6%9D%A5%E5%81%9A-postgresql-%E7%9A%84-ha/</guid>
+      <description>patroni 的安装跳过, 它只是个 python 包, 把依赖装好就行, 同时要求装好 postgres-server, patroni 运行过程中会调用 pg_ctl 等命令: https://patroni.readthedocs.io/en/latest/README.html 每个 patroni 管理一个 pg 实例, 两者必须部署在同一节点上, patroni 需要能: 访问 pg 的监听端口 读写 pg data dir (patroni 会重写 postgres.conf, pg_hba.conf 等文件) 配置文件 配置文件是yaml 格式, 具体见 https://patroni.readthedocs.io/en/latest/SETTINGS.html 使用 patroni postgres.yaml 命令启动一个 patroni 实例 # 集群名字, 同一集群内的 patroni 必须设置一样, 会成为 postgres.conf 内的 cluster_name参数 scope: xsky-test # patroni 会将一些动态配置存在 DCS 内, namespace 是在 DCS 内的存储路径, eg: 使用</description>
+    </item>
+    
     <item>
       <title>Rolling Upgrade Worker Nodes in EKS</title>
       <link>https://blog.monsterxx03.com/2021/04/01/rolling-upgrade-worker-nodes-in-eks/</link>

@@ -112,7 +112,7 @@
 <li>问题3, 单纯代码问题, 统一用一套代码重构就行了.</li>
 </ul>
 <p>讲真, 碰到的 celery 的 bug 实在太多了, 存量代码用用就行了, 新做业务实在不想用. 而发推送是个很独立的业务, 最后打算拿 go 来单独跑推送.</p>
-<p>有现成的项目: <a href="https://github.com/appleboy/gorush,">https://github.com/appleboy/gorush,</a> 但不太符合我的需求:</p>
+<p>有现成的项目: <a href="https://github.com/appleboy/gorush">https://github.com/appleboy/gorush</a>, 但不太符合我的需求:</p>
 <ul>
 <li>业务和它交互的时候用的是 rest 或 grpc, 我更倾向中间走个任务队列, 减少业务端的 latency.</li>
 <li>根据 apple/google 的响应, 有些业务代码还是需要的.</li>

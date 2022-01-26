@@ -218,7 +218,7 @@ server {
 ## end server k8s.example.com
 </code></pre>
 <p>这里的 <code>upstream_balancer</code> 是由 luna 脚本来选择 upstream:</p>
-<pre><code>    upstream upstream_balancer {
+<pre><code>	upstream upstream_balancer {
         server 0.0.0.1; # placeholder
         balancer_by_lua_block {
             balancer.balance()

@@ -110,7 +110,7 @@ autoscaler 做 scale up/down 决策的数据来源也是它, metrics-server 只�
 <p>metrics-server 通过 k8s aggregator 把接口注册到 k8s apiserver, 访问 k8s apiserver 的 <code>/apis/metrics.k8s.io/v1beta1/</code> 的时候请求会被代理到 metrics-server 的 pod.</p>
 <p>prometheus 并不通过 metrics-server 来获取 cpu/ram 信息.</p>
 <h2 id="kube-state-metrics">kube-state-metrics</h2>
-<p><a href="https://github.com/kubernetes/kube-state-metrics">kube-state-metrics</a> 会监听 k8s apiserver, 获取 cluster 中 object的状态变化(deployment, node, endpoint, pod&hellip;), 完整的列表: <a href="https://github.com/kubernetes/kube-state-metrics/tree/master/docs,">https://github.com/kubernetes/kube-state-metrics/tree/master/docs,</a> 在内存中保存这些 object 的最新状态.</p>
+<p><a href="https://github.com/kubernetes/kube-state-metrics">kube-state-metrics</a> 会监听 k8s apiserver, 获取 cluster 中 object的状态变化(deployment, node, endpoint, pod&hellip;), 完整的列表: <a href="https://github.com/kubernetes/kube-state-metrics/tree/master/docs">https://github.com/kubernetes/kube-state-metrics/tree/master/docs</a>, 在内存中保存这些 object 的最新状态.</p>
 <p>prometheus 可以通过 kube-state-metrics 来获取 k8s 集群信息.</p>
 <h1 id="部署-prometheus">部署 prometheus</h1>
 <p>在 k8s 上部署　prometheus, 我碰到了以下选择:</p>

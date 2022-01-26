@@ -116,7 +116,7 @@
 type: RollingUpdate
 </code></pre>
 <p>和 issue <a href="https://github.com/kubernetes/kubernetes/issues/72775">#72775</a> 是一样的, 原因是 HPA 在计算当前需要维持的 pod 数目的时候, 没有把 rollingUpdate 策略考虑进去, 新起的 pod 需要过一段时间才能被 hpa 拿到 metrics, 而新 pod 一旦 ready, 老 pod 立刻就会被关闭, HPA 只看到 pod 关了却没看到新来的, 就尝试增加 pod 数目, 造成了多余的 pod.</p>
-<p>主干上已经被修复了: <a href="https://github.com/kubernetes/kubernetes/pull/79035,">https://github.com/kubernetes/kubernetes/pull/79035,</a> 并 backport 到了 1.13,1.14, 给 AWS 提了个 ticket, 希望他们下次升级的时候把这个 patch 加进去, 也不知道会不会. workaround 的话, 好像只能更新前先删除 hpa, 更新完成后再把 hpa 加回去, 比较麻烦.</p>
+<p>主干上已经被修复了: <a href="https://github.com/kubernetes/kubernetes/pull/79035">https://github.com/kubernetes/kubernetes/pull/79035</a>, 并 backport 到了 1.13,1.14, 给 AWS 提了个 ticket, 希望他们下次升级的时候把这个 patch 加进去, 也不知道会不会. workaround 的话, 好像只能更新前先删除 hpa, 更新完成后再把 hpa 加回去, 比较麻烦.</p>
 <h3 id="dynamodb">DynamoDB</h3>
 <p>以前 DynamoDB 的计费模式只有Provisioned, 预先设置好需要的 WCU, RCU 个数, 虽然支持 auto scaling, 但对突发的 batch workload 并不友好(scale out 至少要 1m).</p>
 <p>有不少 cronjob 需要 daily 得往 table 里写入大量数据, 以前我的做法是在代码里先提高 WCU, sleep 一段时间, 再写入, 写完再降回去, 比较麻烦.</p>

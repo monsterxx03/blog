@@ -119,7 +119,7 @@ but come to many problems, will explain later.</p>
 <h2 id="things-out-of-tools">Things out of tools</h2>
 <h3 id="hash-function">hash function</h3>
 <p>Internal implementation of <code>hash</code> has changed in py3, you shouln&rsquo;t rely on result of <code>hash</code> in py2/3, but you need be aware of the difference. Unfortunately,
-old system relies on py2&rsquo;s <code>hash</code> for some reason, so I reimplement it in py3 with a c extension: <a href="https://github.com/monsterxx03/legacyhash,">https://github.com/monsterxx03/legacyhash,</a>  only support bytes and unicode.</p>
+old system relies on py2&rsquo;s <code>hash</code> for some reason, so I reimplement it in py3 with a c extension: <a href="https://github.com/monsterxx03/legacyhash">https://github.com/monsterxx03/legacyhash</a>,  only support bytes and unicode.</p>
 <p>Tools won&rsquo;t check your usage of <code>hash</code>, you need to check it by yourself, maybe consider write a customized <a href="http://python3porting.com/fixers.html">fixer</a> for it?</p>
 <h3 id="json">json</h3>
 <p>Before python3.6, <code>json.loads</code> only accept str(unicode in python3), not bytes. You&rsquo;d better upgrade to python3.6 directly to avoid this problem.</p>

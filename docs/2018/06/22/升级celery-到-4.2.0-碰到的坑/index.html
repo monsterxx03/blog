@@ -105,9 +105,9 @@
 redis subscribe channel 的时候出的错, channel list 还很长.</p>
 <p>在 celery 4.0 中, 如果设置了 <code>result_backend</code>, 并且 task 没设置 <code>ignore_result=True</code> 的话, 在将 task 加入队列的时候, 会用 redis 的pubsub
 来监听 <code>celery-meta-{task_uuid}</code> 这个channel, 但 redis client 的 pubsub 不是线程安全的, 也不能跨 greenlet 使用.</p>
-<p>redis client 的 pubsub 在建立socket 后会执行 <code>self.on_connect</code> callback: <a href="https://github.com/andymccurdy/redis-py/blob/master/redis/client.py#L2369,">https://github.com/andymccurdy/redis-py/blob/master/redis/client.py#L2369,</a> 目的是在重连的时候重新 sub 之前的 channnel. 但是 gevent patch 之后, socket 的建立会变成异步的, 并行建立执行redis pubsub 的<code>execute_command</code> 的时候会重复subscribe channel.</p>
+<p>redis client 的 pubsub 在建立socket 后会执行 <code>self.on_connect</code> callback: <a href="https://github.com/andymccurdy/redis-py/blob/master/redis/client.py#L2369">https://github.com/andymccurdy/redis-py/blob/master/redis/client.py#L2369</a>, 目的是在重连的时候重新 sub 之前的 channnel. 但是 gevent patch 之后, socket 的建立会变成异步的, 并行建立执行redis pubsub 的<code>execute_command</code> 的时候会重复subscribe channel.</p>
 <p>原因是猜测, 我也没在开发环境完全复现线上的错误, 但写了个脚本证实 subscribe 的问题:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> gevent
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> gevent
 <span style="color:#f92672">import</span> gevent.monkey
 gevent<span style="color:#f92672">.</span>monkey<span style="color:#f92672">.</span>patch_all()
 
@@ -119,7 +119,7 @@ app<span style="color:#f92672">.</span>conf<span style="color:#f92672">.</span>u
     CELERY_RESULT_BACKEND<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;redis://localhost:6379/1&#39;</span>
 )
 
-<span style="color:#a6e22e">@app.task</span>
+<span style="color:#a6e22e">@app</span><span style="color:#f92672">.</span>task
 <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">wrap</span>():
     <span style="color:#66d9ef">pass</span>
 
@@ -143,20 +143,20 @@ run()
 <p>因为升级了 gevent 和 celery, 开始不太确定问题出在哪. 但是内存异常的 service 并不是 celery 的worker 进程, 但会执行大量的 <code>apply_async</code> 的插入task 的操作.</p>
 <p>所以我猜测问题只出在 <code>apply_async</code> 这个函数上. 开始尝试在本地复现问题.</p>
 <p>写了一个简单脚本测试 <code>apply_async</code>, 因为不涉及执行 task, 所以直接不引入 gevent:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> resource
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> resource
 
 <span style="color:#f92672">from</span> celery <span style="color:#f92672">import</span> Celery
 
 app <span style="color:#f92672">=</span> Celery()
 app<span style="color:#f92672">.</span>conf<span style="color:#f92672">.</span>update(BROKER_URL<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;redis://localhost:6379/1&#39;</span>)
 
-<span style="color:#a6e22e">@app.task</span>
+<span style="color:#a6e22e">@app</span><span style="color:#f92672">.</span>task
 <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">dummy</span>():
     <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;1&#39;</span>
 
 
 <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">print_mem</span>():
-    <span style="color:#66d9ef">print</span> <span style="color:#e6db74">&#39;Memory usage: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> (kb)&#39;</span> <span style="color:#f92672">%</span> resource<span style="color:#f92672">.</span>getrusage(resource<span style="color:#f92672">.</span>RUSAGE_SELF)<span style="color:#f92672">.</span>ru_maxrss
+    print <span style="color:#e6db74">&#39;Memory usage: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> (kb)&#39;</span> <span style="color:#f92672">%</span> resource<span style="color:#f92672">.</span>getrusage(resource<span style="color:#f92672">.</span>RUSAGE_SELF)<span style="color:#f92672">.</span>ru_maxrss
 
 <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>():
     <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10000</span>):
@@ -166,7 +166,7 @@ app<span style="color:#f92672">.</span>conf<span style="color:#f92672">.</span>u
 
 run()
 </code></pre></div><p>每执行 1000 次 task 打印下内存占用, 这个脚本在 celery 3.1.25 下执行内存占用非常平稳, 在 4.2.0 里内存稳步增长.</p>
-<pre><code>Memory usage: 31736 (kb)
+<pre tabindex="0"><code>Memory usage: 31736 (kb)
 Memory usage: 32916 (kb)
 Memory usage: 34628 (kb)
 Memory usage: 36432 (kb)
@@ -179,8 +179,8 @@ Memory usage: 44592 (kb)
 </code></pre><p>好吧, 确定问题出在 celery 4.2.0 的 <code>apply_async</code> 里.</p>
 <p>关于 python 的memory leak perf, 这篇文章 <a href="https://chase-seibert.github.io/blog/2013/08/03/diagnosing-memory-leaks-python.html">https://chase-seibert.github.io/blog/2013/08/03/diagnosing-memory-leaks-python.html</a> 里提到的 <code>objgraph</code>, <code>guppy</code> 还不错.</p>
 <p>我用 <code>objgraph</code> 看到 perf 函数跑完后, 内存里驻留了很多 celery 的<code>AsyncResult</code> 对象, 用 3.1.25 跑是没有的.</p>
-<p>继续debug下去发现问题在这行: <a href="https://github.com/celery/celery/blob/4.2/celery/result.py#L102,">https://github.com/celery/celery/blob/4.2/celery/result.py#L102,</a> 去掉 <code>self.on_ready = promise(self._on_fulfilled)</code> 后内存就能被回收了. 而这个promise 有个 <code>weak</code> 参数, 设置成 True 之后就会创建 <code>self._on_fulfilled</code> 的弱引用, AsyncResult 也能被回收, 那 weak 改成 True 就对了吗?</p>
-<p>并不是, 找到以前的一个 pr: <a href="https://github.com/celery/celery/pull/4131,">https://github.com/celery/celery/pull/4131,</a> 这段代码本来 weak 就是 True 的, 当时为什么要把弱引用去掉呢? 因为传入的 <code>self._on_fulfilled</code> 是一个对象的 bound method, <code>weakref.ref</code> 无法处理, 后续尝试获取引用的时候总会得到 None, 当时的 pr 就是为了解决 <code>self._on_fulfilled</code> 不会被执行的问题. 要对 bound method 做弱引用需要使用 <a href="https://docs.python.org/3/library/weakref.html#weakref.WeakMethod">WeakMethod</a>, 但这个只在 python3.4 才开始有.</p>
+<p>继续debug下去发现问题在这行: <a href="https://github.com/celery/celery/blob/4.2/celery/result.py#L102">https://github.com/celery/celery/blob/4.2/celery/result.py#L102</a>, 去掉 <code>self.on_ready = promise(self._on_fulfilled)</code> 后内存就能被回收了. 而这个promise 有个 <code>weak</code> 参数, 设置成 True 之后就会创建 <code>self._on_fulfilled</code> 的弱引用, AsyncResult 也能被回收, 那 weak 改成 True 就对了吗?</p>
+<p>并不是, 找到以前的一个 pr: <a href="https://github.com/celery/celery/pull/4131">https://github.com/celery/celery/pull/4131</a>, 这段代码本来 weak 就是 True 的, 当时为什么要把弱引用去掉呢? 因为传入的 <code>self._on_fulfilled</code> 是一个对象的 bound method, <code>weakref.ref</code> 无法处理, 后续尝试获取引用的时候总会得到 None, 当时的 pr 就是为了解决 <code>self._on_fulfilled</code> 不会被执行的问题. 要对 bound method 做弱引用需要使用 <a href="https://docs.python.org/3/library/weakref.html#weakref.WeakMethod">WeakMethod</a>, 但这个只在 python3.4 才开始有.</p>
 <p>那内存泄露哪里来的呢，<code>AsyncResult</code> 里的确有循环引用 <code>AsyncResult -&gt; self.on_ready -&gt; promise -&gt; self._on_fulfilled -&gt; self</code>, python 的 内存管理同时使用 reference count 和 mark and sweep, reference count 碰到循环引用的对象时候无法回收对象, mark and sweep 可以, 可是 <code>AsyncResult</code> 这个 class 还定义了 <code>__del__</code> 方法, 这会让 python 的 gc 在处理循环引用的对象时不知道该以什么顺序去运行他们的 <code>__del__</code> 方法, 这些对象就会一直驻留在内存里: <a href="https://docs.python.org/2/library/gc.html#gc.garbage">gc.garbage</a></p>
 <p>我提了一个临时的 pr: <a href="https://github.com/celery/celery/pull/4839">https://github.com/celery/celery/pull/4839</a>  只是删除了 <code>__del__</code> 方法, 这样 python 的 gc 就能正确处理循环引用对象了. 官方打算把 WeakMethod backport 到 celery 用到的异步库 vine 里去: <a href="https://github.com/celery/vine/issues/21">https://github.com/celery/vine/issues/21</a> 这样在 celery 那头设置 <code>weak=True</code> 就能正确处理了.</p>
 </div>

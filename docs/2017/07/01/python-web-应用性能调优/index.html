@@ -110,7 +110,7 @@
 <h2 id="治本">治本</h2>
 <p>我希望能对运行时进程状态打 snapshot，每次快照记录下当前的函数调用栈，叠合多次采样，出现次数多的函数必然就是瓶颈所在. 这思想在其他语言里用的也很多，其实就是 Brendan Gregg 的 flamegraph.</p>
 <p>以前内部做过类似的事情，不过代码是侵入式的，在运行时通过 signal, inspect, traceback 等模块，定期打调用栈的 snapshot, 输出到文件，转成 svg 的 flamegraph 来看，但是 overhead 太高，后来弃用了。</p>
-<p>后来利用了 uber 开源的一个工具: <a href="https://github.com/uber/pyflame,">https://github.com/uber/pyflame,</a> 可以非侵入式得对运行中的 python 进程做 snapshot, 输出成 svg.</p>
+<p>后来利用了 uber 开源的一个工具: <a href="https://github.com/uber/pyflame">https://github.com/uber/pyflame</a>, 可以非侵入式得对运行中的 python 进程做 snapshot, 输出成 svg.</p>
 <p>效果如图:</p>
 <p><img src="https://cloud.githubusercontent.com/assets/2734/17949703/8ef7d08c-6a0b-11e6-8bbd-41f82086d862.png" alt="flamegraph"></p>
 <p>横条越长的部分，表示被采样到的次数越多，从下往上可以看到在每一层上的函数耗时分布。</p>

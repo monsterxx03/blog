@@ -115,7 +115,7 @@
 <pre><code>    kubectl get secrets sh.helm.release.v1.jenkins.v1  -o json  | jq -r  '.data.release'  | base64 -d | base64 -d | gzip -d
 </code></pre>
 <p>手工修改后重新 apply 对应的的 Secrets　就能解决冲突.</p>
-<p>另外还有个 kubectl 插件: <a href="https://github.com/hickeyma/helm-mapkubeapis,">https://github.com/hickeyma/helm-mapkubeapis,</a> 可以自动化得做这事. eg: <code>kubectl mapkubeapis jenkins</code></p>
+<p>另外还有个 kubectl 插件: <a href="https://github.com/hickeyma/helm-mapkubeapis">https://github.com/hickeyma/helm-mapkubeapis</a>, 可以自动化得做这事. eg: <code>kubectl mapkubeapis jenkins</code></p>
 <p>具体要映射那些 apiVersion, 它记录在一个 yaml 里: <a href="https://github.com/hickeyma/helm-mapkubeapis/blob/master/config/Map.yaml">https://github.com/hickeyma/helm-mapkubeapis/blob/master/config/Map.yaml</a></p>
 <p>像 rbac 相关 api 在 1.17 才废弃, 如果想在这次升级里一起做了, 可以手工把对应的 deprecatedInVersion 改到 1.15.</p>
 <p>之后只要修改下对应 charts 里的 apiVersion 就好了, 不放心可以用 <a href="https://github.com/databus23/helm-diff">helm-diff</a> 插件看下, 不输出对 apiVersion 的更改就对了.</p>

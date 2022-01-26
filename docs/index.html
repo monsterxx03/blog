@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.82.0" />
+	<meta name="generator" content="Hugo 0.92.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,6 +91,37 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2022/01/26/%E7%94%A8-patroni-%E6%9D%A5%E5%81%9A-postgresql-%E7%9A%84-ha/'>用 Patroni 来做 PostgreSQL 的 HA</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>patroni 的安装跳过, 它只是个 python 包, 把依赖装好就行, 同时要求装好 postgres-server, patroni 运行过程中会调用 pg_ctl 等命令: https://patroni.readthedocs.io/en/latest/README.html 每个 patroni 管理一个 pg 实例, 两者必须部署在同一节点上, patroni 需要能: 访问 pg 的监听端口 读写 pg data dir (patroni 会重写 postgres.conf, pg_hba.conf 等文件) 配置文件 配置文件是yaml 格式, 具体见 https://patroni.readthedocs.io/en/latest/SETTINGS.html 使用 patroni postgres.yaml 命令启动一个 patroni 实例 # 集群名字, 同一集群内的 patroni 必须设置一样, 会成为 postgres.conf 内的 cluster_name参数 scope: xsky-test # patroni 会将一些动态配置存在 DCS 内, namespace 是在 DCS 内的存储路径, eg: 使用......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2022.01.26</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/database/">Database</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -382,37 +413,6 @@
           <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
           
           <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2020/04/07/%E9%87%8D%E6%9E%84%E6%8E%A8%E9%80%81%E6%9C%8D%E5%8A%A1/'>重构推送服务</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>最近对业务里发送 apple APNS, google FCM 部分的代码进行了重构, 抽出了一个单独的 service, 本文记录下整个过程. 存在的问题 我们有好几个 mobile app, 每个 app 会有一套对应的 server 端 service 做业务逻辑, 因为历史原因, 每个 service 里面其实有很多重复代码, 大多只是一些配置和错误处理上有差异. 给 app 发推送是个典型, 原来的做法是当要发推送的时候, 往 python 的 celery 队列里扔一个 task, 由 celery 异步得去发. 有如下问题: celery 性能不佳, worker class 用的是 gevent, 但在高峰时候任务队列里还是有大量 pending, 代码上之前做过......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2020.04.07</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
           
         </span>
         

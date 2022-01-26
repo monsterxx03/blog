@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.82.0" />
+	<meta name="generator" content="Hugo 0.92.0" />
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -91,6 +91,37 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2020/04/07/%E9%87%8D%E6%9E%84%E6%8E%A8%E9%80%81%E6%9C%8D%E5%8A%A1/'>重构推送服务</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>最近对业务里发送 apple APNS, google FCM 部分的代码进行了重构, 抽出了一个单独的 service, 本文记录下整个过程. 存在的问题 我们有好几个 mobile app, 每个 app 会有一套对应的 server 端 service 做业务逻辑, 因为历史原因, 每个 service 里面其实有很多重复代码, 大多只是一些配置和错误处理上有差异. 给 app 发推送是个典型, 原来的做法是当要发推送的时候, 往 python 的 celery 队列里扔一个 task, 由 celery 异步得去发. 有如下问题: celery 性能不佳, worker class 用的是 gevent, 但在高峰时候任务队列里还是有大量 pending, 代码上之前做过......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2020.04.07</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -370,30 +401,6 @@
           
           <a href="https://blog.monsterxx03.com/tags/golang/">golang</a>
           
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2019/09/26/%E5%89%B2%E8%A3%82%E6%84%9F/'>割裂感</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>题文无关. 楼下阿姨 三楼住了一对老夫妻, 丈夫身体不好, 不怎么出门, 阿姨倒是很精神, 天天溜达, 偶尔会上来问我些用手机的事情. 阿姨人挺好, 就是总想着捡些小便宜, 那个年代过来的人都这样, 无可厚非. 某日, 拿着手机给我看某基金的公众号, 说是可以领红包, 意兴阑珊得帮她看了下, 大致意思是在公众号下留言, 记录自己在这个基金的投资故事, 抽取写得好的发红包&hellip;我就告诉她, 这个基本是没啥可能被抽中的(我也不可......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2019.09.26</span>
         </span>
         
       </div>

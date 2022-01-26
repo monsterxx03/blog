@@ -106,7 +106,7 @@ for each byte_of_data to be hashed
 return hash
 </code></pre>
 <p>FNV_prime 是 1000003, python 实现和标准 fnv 的不同在于, 在进入循环 hash 之前将数据左移了7位, 在最后又和长度做了次XOR, 生成的数据随机性更大一点.</p>
-<p>fnv 的代码在 python3 中还是有的 <a href="https://github.com/python/cpython/blob/3.7/Python/pyhash.c#L242,">https://github.com/python/cpython/blob/3.7/Python/pyhash.c#L242,</a>
+<p>fnv 的代码在 python3 中还是有的 <a href="https://github.com/python/cpython/blob/3.7/Python/pyhash.c#L242">https://github.com/python/cpython/blob/3.7/Python/pyhash.c#L242</a>,
 自己编译 python， 可以通过选项控制使用 fnv 算法, 虽然没打算这么实施, 姑且试了一下, <code>./configure --with-hash-algorithm=fnv</code>, 选择 fnv hash. 并且要在启动 python 的时候禁掉随机种子: <code>PYTHONHASHSEED=0  python3.7</code>. 注意, 这里只是测试，强烈不建议这么做, fnv 面对 hash 碰撞攻击会挂的很惨.</p>
 <p>但试过之后, 只有对少于 8字节的 byte string  的 hash 结果是一致的, 超过8字节 或 unicode 完全不一样, 原因是在 python3 里的 unicode 实现和 python2 里的也是不一样的(python3.3 和 python3.2 又是不一样的 <a href="https://www.python.org/dev/peps/pep-0393/)">https://www.python.org/dev/peps/pep-0393/)</a>.
 主要看下 python2.7 和 3.7 对 unicode hash 的实现有什么不一样.</p>
@@ -134,8 +134,8 @@ return hash
 } PyUnicodeObject;
 </code></pre>
 <p>unicode 的存储取决于字符中处于 unicode 表中最高位的 code point, 是ASCII 或 latin1 字符(U+0000-U+00FF) 每个 code point 会占 1 字节, BMP 字符(U+0000-U+FFFF) 用两字节, 剩下的 (U+10000-U+10FFFF) 用 4 字节.</p>
-<p>python2.7 中的 unicode hash: <a href="https://github.com/python/cpython/blob/2.7/Objects/unicodeobject.c#L6637,">https://github.com/python/cpython/blob/2.7/Objects/unicodeobject.c#L6637,</a> 每次取一个 Py_UNICODE 作为data block 进入hash 过程.</p>
-<p>python3.7 中的 hash <a href="https://github.com/python/cpython/blob/3.7/Python/pyhash.c#L242,">https://github.com/python/cpython/blob/3.7/Python/pyhash.c#L242,</a> 更复杂一点, data block 8 字节, 至少取一个 block 来做单字节 hash, 剩下的一个 block 一个 block 处理, 所以少于 8 字节的 byte string 结果和 python2.7 是一样的.</p>
+<p>python2.7 中的 unicode hash: <a href="https://github.com/python/cpython/blob/2.7/Objects/unicodeobject.c#L6637">https://github.com/python/cpython/blob/2.7/Objects/unicodeobject.c#L6637</a>, 每次取一个 Py_UNICODE 作为data block 进入hash 过程.</p>
+<p>python3.7 中的 hash <a href="https://github.com/python/cpython/blob/3.7/Python/pyhash.c#L242">https://github.com/python/cpython/blob/3.7/Python/pyhash.c#L242</a>, 更复杂一点, data block 8 字节, 至少取一个 block 来做单字节 hash, 剩下的一个 block 一个 block 处理, 所以少于 8 字节的 byte string 结果和 python2.7 是一样的.</p>
 <p>知道了差异, 写了个 c extension, 把 python2.7 的 hash 在 python3 上重新实现了一下: <a href="https://github.com/monsterxx03/legacyhash">https://github.com/monsterxx03/legacyhash</a> , 只能在 python3 上编译, 只支持 byte string 和 unicode.</p>
 </div>
         <div class="post_footer">
