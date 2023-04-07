@@ -80,11 +80,12 @@
       <description>Just some random complains and notes about server infra management. I think those are my motivations to move to kubernetes.
 Won&amp;rsquo;t explain k8s or docker in detail, and how they solve those problems in this post.
 Infrastructure level(on AWS) We use following services provided by AWS.
- Compute:  EC2 AutoScaling Group Lambda   network:  VPC (SDN network) DNS (route53) CDN (CloudFront)   Loadbalancer:  ELB (L4) NLB (L4, ELB successor, support static IP) ALB (L7)   Storage:  EBS (block storage) EFS (hosted NFS) RDS(MySQl/PostgreSQL &amp;hellip;) Redshift (data warehouse) DynamoDB (KV) S3 (object storage) Glacier (cheap archive storage)   Web Firewall (WAF) Monitor (CloudWatch) DMS (ETL) &amp;hellip;  For infra management, in early days, we just click, click, click&amp;hellip; or write some simple scripts to call AWS api.
+Compute: EC2 AutoScaling Group Lambda network: VPC (SDN network) DNS (route53) CDN (CloudFront) Loadbalancer: ELB (L4) NLB (L4, ELB successor, support static IP) ALB (L7) Storage: EBS (block storage) EFS (hosted NFS) RDS(MySQl/PostgreSQL &amp;hellip;) Redshift (data warehouse) DynamoDB (KV) S3 (object storage) Glacier (cheap archive storage) Web Firewall (WAF) Monitor (CloudWatch) DMS (ETL) &amp;hellip; For infra management, in early days, we just click, click, click&amp;hellip; or write some simple scripts to call AWS api.
 With infra resources growing, management became complex, a concept called Infrastructure as Code rising.
 AWS provides CloudFormation as orchestration tool, but we use terraform (for short: CloudFormation sucks, for long: Infrastructure as Code)
 So far, not bad.(tweak those services internally is another story&amp;hellip; never belive work out of box)
-Application level  configuration management (setup nginx, jenkins, redis, twemproxy, ElasticSearch or WTF..) CI/CD dependency management  They&amp;rsquo;re complicated, people developped bunch of tools to handle: puppet, chef, ansible, saltstack &amp;hellip;</description>
+Application level configuration management (setup nginx, jenkins, redis, twemproxy, ElasticSearch or WTF..) CI/CD dependency management They&amp;rsquo;re complicated, people developped bunch of tools to handle: puppet, chef, ansible, saltstack &amp;hellip;
+They&amp;rsquo;re great and working, but writing correct code still a challenge when changes involves:</description>
     </item>
     
     <item>
@@ -195,7 +196,7 @@ Application level  configuration management (setup nginx, jenkins, redis, twempr
       <description>A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&amp;rsquo;m working on a long term solution. I learned some important things from this accident.
 The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&amp;rsquo;s health check failed due to high load.
 I did following:
- Check monitor Identify the problem is caused by KV system  Okay, problem is here, I know the problem is KV system&amp;rsquo;s performance issue. But I can&amp;rsquo;t figure out the root case right now, I need a temporary solution. Straightward way is redirect traffic to slave instance. But I know it won&amp;rsquo;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&amp;rsquo;t work.
+Check monitor Identify the problem is caused by KV system Okay, problem is here, I know the problem is KV system&amp;rsquo;s performance issue. But I can&amp;rsquo;t figure out the root case right now, I need a temporary solution. Straightward way is redirect traffic to slave instance. But I know it won&amp;rsquo;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&amp;rsquo;t work.
 The real down time was not long, performance recovered to some degree soon, but latency was still high, not normal. I monitored it for long time, and tried to find out the root case until morning. Since traffic was growing when peak hour coming, performance became problem again.</description>
     </item>
     
@@ -218,9 +219,9 @@ The real down time was not long, performance recovered to some degree soon, but 
 Combine tools fpm, aptly with aws s3, we can do it.
 Use fpm to convert python package to deb fpm can transform python/gem/npm/dir/… to deb/rpm/solaris/… packages
 Example:
-fpm -s python -t deb -m xyj.asmy@gmail.com --verbose -v 0.10.1 --python-pip /usr/local/pip Flask  It will transform Flask 0.10.1 package to deb. Output package will be python-flask_0.10.1_all.deb
+fpm -s python -t deb -m xyj.asmy@gmail.com --verbose -v 0.10.1 --python-pip /usr/local/pip Flask It will transform Flask 0.10.1 package to deb. Output package will be python-flask_0.10.1_all.deb
 Notes:
- If python packages rely on some c libs like MySQLdb (libmysqlclient-dev), you need to install them on the machine to build deb binary. By default fpm use easy_install to build packages, some packages like httplib2 have permission bug with easy_install, so I use pip By default, msgpack-python will be convert to python-msgpack-python, I don’t like it, so add -n python-msgpack to normalize the package name. Some package’s dependencies’ version number is not valid(eg: celery 3.1.25 deps pytz &amp;gt;= dev), so I replace the dependencies with --python-disable-dependency pytz -d &#39;pytz &amp;gt;= 2016.7&#39; fpm will not dowload package’s dependency automatically, you need to do it by your self  Use aptly to setup deb repository aptly can help build a self host deb repository and publish it on s3.</description>
+If python packages rely on some c libs like MySQLdb (libmysqlclient-dev), you need to install them on the machine to build deb binary. By default fpm use easy_install to build packages, some packages like httplib2 have permission bug with easy_install, so I use pip By default, msgpack-python will be convert to python-msgpack-python, I don’t like it, so add -n python-msgpack to normalize the package name. Some package’s dependencies’ version number is not valid(eg: celery 3.1.25 deps pytz &amp;gt;= dev), so I replace the dependencies with --python-disable-dependency pytz -d &#39;pytz &amp;gt;= 2016.7&#39; fpm will not dowload package’s dependency automatically, you need to do it by your self Use aptly to setup deb repository aptly can help build a self host deb repository and publish it on s3.</description>
     </item>
     
     <item>
@@ -231,11 +232,11 @@ Notes:
       <guid>https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/</guid>
       <description>Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.
 You will come to:
- How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what’s the DHCP option set?), navigate around AWS console is okay, but not convenient. Who did what to which resource at when? AWS have a service called Config, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do.  Ideally, we should manage AWS resources like code, all changes kept in VCS, so called Infrastructure as Code.
+How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what’s the DHCP option set?), navigate around AWS console is okay, but not convenient. Who did what to which resource at when? AWS have a service called Config, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do. Ideally, we should manage AWS resources like code, all changes kept in VCS, so called Infrastructure as Code.
 I’ve tried three ways to do it:
- ansible CloudFormation terraform  In this article, I&amp;rsquo;ll compare them, however, the conclusion is to use terraform 🙂
+ansible CloudFormation terraform In this article, I&amp;rsquo;ll compare them, however, the conclusion is to use terraform 🙂
 Ansible Provision tools, like ansible/chef/puppet, all can be used to create aws resources, but they have some common problems:
- Hard to track changes after bootstrap. No confident what it will do to existing resources.  For example, I define a security group in ansibble:
+Hard to track changes after bootstrap. No confident what it will do to existing resources. For example, I define a security group in ansibble:
 ec2_group: name: &amp;quot;web&amp;quot; description: &amp;quot;security group in web&amp;quot; vpc_id: &amp;quot;vpc-xxx&amp;quot; region: &amp;quot;us-east-1&amp;quot; rules: - proto: tcp from_port: 80 to_port: 80 cidr_ip: 0.</description>
     </item>
     

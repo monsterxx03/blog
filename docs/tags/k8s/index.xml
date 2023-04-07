@@ -179,15 +179,16 @@
       <description>Miscellaneous notes when reading &amp;lt;Kubernetes in Action&amp;gt;.
 api group and api version core api group need&amp;rsquo;t specified in apiVersion field.
 For example, ReplicationController is on core api group, so only:
-apiVersion: v1 kind: ReplicationController ...  ReplicationSet is added later in app group, v1beta2 version (k8s v1.8):
-apiVersion: apps/v1beta2 1 kind: ReplicaSet  https://kubernetes.io/docs/concepts/overview/kubernetes-api/
+apiVersion: v1 kind: ReplicationController ... ReplicationSet is added later in app group, v1beta2 version (k8s v1.8):
+apiVersion: apps/v1beta2 1 kind: ReplicaSet https://kubernetes.io/docs/concepts/overview/kubernetes-api/
 ReplicationController VS ReplicationSet ReplicationController is replaced by ReplicationSet, which has more expressive pod selectors.
 ReplicationController&amp;rsquo;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
 rs also support operator on key value: In, NotIn, Exists, DoesNotExist
 If migrate from rc to rs, can delete rc with --cascade=false option, it will delete rc only, but left pods running, then we can create a rs with same selector to make pods under management.
 DaemonSet DaemonSet ensures pod run exact one copy on one node, useful for processes like monitor agent and log collector. Use node-selector to make ds only run on specific nodes.
 If node is made unschedulable, normal pods won&amp;rsquo;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass scheduler.
-Job Job is used to run a single completable task.</description>
+Job Job is used to run a single completable task.
+Use activeDeadlineSeconds to control job timeout.</description>
     </item>
     
     <item>

@@ -140,7 +140,7 @@ tiller-deploy-78ddf4757c-ljs7p                          1/1       Running   0   
 <li>可以启动一个收集　cni metrics 的 pod, <code>kubectl apply -f https://raw.githubusercontent.com/liwenwu-amazon/amazon-vpc-cni-k8s-1/metrics1/misc/cni_metrics_helper.yaml</code>, 之后 <code>kubectl logs cni-metrics-xxx -n kube-system</code> 可以看到 pod　的一些　metrics 信息.</li>
 </ul>
 <h2 id="metrics-server-的问题">Metrics server 的问题</h2>
-<p>为了测试　auto scaling, 需要在 EKS 中部署 metrics server.  EKS 最早发布的时候不支持　metrics server(因此 HPA 也不支持), EKS　的　PlantformVersion 需要是 &lsquo;eks.2&rsquo;.</p>
+<p>为了测试　auto scaling, 需要在 EKS 中部署 metrics server.  EKS 最早发布的时候不支持　metrics server(因此 HPA 也不支持), EKS　的　PlantformVersion 需要是 &rsquo;eks.2'.</p>
 <p>之前不支持的原因是 metrics server 基于　<code>api aggregation</code> , core api server 只能用 client 证书认证, EKS 为了和 IAM 交互用的是 webhook. 后来　EKS　的人修了下: <a href="https://github.com/kubernetes/kubernetes/pull/66394/files#diff-59f09be65a7ae1feb263f6bce1d856b1">https://github.com/kubernetes/kubernetes/pull/66394/files#diff-59f09be65a7ae1feb263f6bce1d856b1</a></p>
 <p>详情看: <a href="https://aws.amazon.com/cn/blogs/opensource/horizontal-pod-autoscaling-eks/">https://aws.amazon.com/cn/blogs/opensource/horizontal-pod-autoscaling-eks/</a></p>
 <p>用https://github.com/kubernetes-incubator/metrics-server/tree/master/deploy/1.8%2B 提供的配置尝试部署 metrics-server.</p>
@@ -256,7 +256,7 @@ rbac:
       </div>
     <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     

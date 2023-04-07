@@ -128,8 +128,8 @@
 <p>问题出在我实现的 DNS 缓存上, 简单的根据查询域名缓存了查询结果, 实际上我只解析 A 记录, 所以从缓存里取出来的都是 A 记录的结果.</p>
 <p>重现方式:</p>
 <ul>
-<li>dig <a href="http://www.baidu.com">www.baidu.com</a></li>
-<li>dig -t AAAA <a href="http://www.baidu.com">www.baidu.com</a></li>
+<li>dig <a href="https://www.baidu.com">www.baidu.com</a></li>
+<li>dig -t AAAA <a href="https://www.baidu.com">www.baidu.com</a></li>
 </ul>
 <p>第二次 dig 就会报 query result mismatch, 因为返回的是第一次的 A 记录. 比较坑的是 kubectl 报的是 dail timeout, 看上去像连不上 tcp 端口, 比较难看原因.</p>
 <p>修复很简单, cache key 把 query type 也加上就行啦.</p>
@@ -155,7 +155,7 @@
       </div>
     <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     

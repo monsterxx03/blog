@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.92.0" />
+	<meta name="generator" content="Hugo 0.111.3">
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -139,15 +139,16 @@
       <p>Miscellaneous notes when reading &lt;Kubernetes in Action&gt;.
 api group and api version core api group need&rsquo;t specified in apiVersion field.
 For example, ReplicationController is on core api group, so only:
-apiVersion: v1 kind: ReplicationController ...  ReplicationSet is added later in app group, v1beta2 version (k8s v1.8):
-apiVersion: apps/v1beta2 1 kind: ReplicaSet  https://kubernetes.io/docs/concepts/overview/kubernetes-api/
+apiVersion: v1 kind: ReplicationController ... ReplicationSet is added later in app group, v1beta2 version (k8s v1.8):
+apiVersion: apps/v1beta2 1 kind: ReplicaSet https://kubernetes.io/docs/concepts/overview/kubernetes-api/
 ReplicationController VS ReplicationSet ReplicationController is replaced by ReplicationSet, which has more expressive pod selectors.
 ReplicationController&rsquo;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
 rs also support operator on key value: In, NotIn, Exists, DoesNotExist
 If migrate from rc to rs, can delete rc with --cascade=false option, it will delete rc only, but left pods running, then we can create a rs with same selector to make pods under management.
 DaemonSet DaemonSet ensures pod run exact one copy on one node, useful for processes like monitor agent and log collector. Use node-selector to make ds only run on specific nodes.
 If node is made unschedulable, normal pods won&rsquo;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass scheduler.
-Job Job is used to run a single completable task.......</p>
+Job Job is used to run a single completable task.
+Use activeDeadlineSeconds to control job timeout.......</p>
     </div>
   </div>
   
@@ -301,7 +302,7 @@ Job Job is used to run a single completable task.......</p>
       <p>This article won&rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&rsquo;t finished this project, also I haven&rsquo;t gave up so far :).
 Won&rsquo;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
 The codebase I&rsquo;m working on:
- Only support python2.7, don&rsquo;t consider python2.6 1X repos, about half a million lines of code in total (calculated by cloc). These repos will import each other, bad design from early days, not easy to resolve, which means I can&rsquo;t switch to py3 one by one, I need write py2/3 compatiblility code for them, and switch together(I&rsquo;m also considering solve the import problem first). Test coverage is not good, best is around 80%, lowest is 30%.  Tools 2to3, a command line tools packaged with py2, it&rsquo;s a oneway porting to convert your code to py3, new code won&rsquo;t work under py2, since I need be compatible with py2 and py3 for long time, didn&rsquo;t try it.
+Only support python2.7, don&rsquo;t consider python2.6 1X repos, about half a million lines of code in total (calculated by cloc). These repos will import each other, bad design from early days, not easy to resolve, which means I can&rsquo;t switch to py3 one by one, I need write py2/3 compatiblility code for them, and switch together(I&rsquo;m also considering solve the import problem first). Test coverage is not good, best is around 80%, lowest is 30%. Tools 2to3, a command line tools packaged with py2, it&rsquo;s a oneway porting to convert your code to py3, new code won&rsquo;t work under py2, since I need be compatible with py2 and py3 for long time, didn&rsquo;t try it.
 future, it tries to make you write single clean python3.x code without ugly hack with six. I used it it first, but come to many problems, will explain later.......</p>
     </div>
   </div>
@@ -373,11 +374,12 @@ future, it tries to make you write single clean python3.x code without ugly hack
       <p>Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, take some notes.
 Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
 There&rsquo;re three obvious choices in my mind:
- kafka AMQP based system (rabbitmq,activemq &hellip;) SNS + SQS  My demands for this system are:
- Support message persistence. Support topic based message distribution. Easy to manage.  The data volume won&rsquo;t be very large, so performance and throughput won&rsquo;t be critical concerns.
+kafka AMQP based system (rabbitmq,activemq &hellip;) SNS + SQS My demands for this system are:
+Support message persistence. Support topic based message distribution. Easy to manage. The data volume won&rsquo;t be very large, so performance and throughput won&rsquo;t be critical concerns.
 I choose SNS + SQS, main concerns are from operation side:
- kafka need zookeeper to support cluster. rabbitmq need extra configuration for HA, and AMQP model is relatively complex for programming.  So my decision is:
- application publish message to SNS topic Setup multi SQS queues to subscribe SNS topic Let different application processes to subscribe to different queues to finish its logic.  SQS and SNS is very simple, not too much to say, just some notes:......</p>
+kafka need zookeeper to support cluster. rabbitmq need extra configuration for HA, and AMQP model is relatively complex for programming. So my decision is:
+application publish message to SNS topic Setup multi SQS queues to subscribe SNS topic Let different application processes to subscribe to different queues to finish its logic. SQS and SNS is very simple, not too much to say, just some notes:
+SQS queue have two types, FIFO queue and standard queue.......</p>
     </div>
   </div>
   

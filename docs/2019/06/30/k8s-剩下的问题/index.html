@@ -194,7 +194,7 @@ spec:
   topologyKeys: [&quot;host&quot;, &quot;zone&quot;]
 </code></pre>
 <p>优先找同 host 的 pod, 找不到就找同一 zone 的, 还没有就让 connection 失败(hard topology).</p>
-<p>如果 topologyKeys 设置为 [&ldquo;host&rdquo;, &ldquo;&quot;], 就优先找同 host pod, 找不到就找其他节点的， 不让 connection 失败(soft topology).</p>
+<p>如果 topologyKeys 设置为 [&ldquo;host&rdquo;, &ldquo;&rdquo;], 就优先找同 host pod, 找不到就找其他节点的， 不让 connection 失败(soft topology).</p>
 </div>
         <div class="post_footer">
           
@@ -217,7 +217,7 @@ spec:
       </div>
     <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     

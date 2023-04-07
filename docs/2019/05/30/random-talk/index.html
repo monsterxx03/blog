@@ -13,11 +13,12 @@
   <meta name="description" content="Just some random complains and notes about server infra management. I think those are my motivations to move to kubernetes.
 Won&amp;rsquo;t explain k8s or docker in detail, and how they solve those problems in this post.
 Infrastructure level(on AWS) We use following services provided by AWS.
- Compute:  EC2 AutoScaling Group Lambda   network:  VPC (SDN network) DNS (route53) CDN (CloudFront)   Loadbalancer:  ELB (L4) NLB (L4, ELB successor, support static IP) ALB (L7)   Storage:  EBS (block storage) EFS (hosted NFS) RDS(MySQl/PostgreSQL &amp;hellip;) Redshift (data warehouse) DynamoDB (KV) S3 (object storage) Glacier (cheap archive storage)   Web Firewall (WAF) Monitor (CloudWatch) DMS (ETL) &amp;hellip;  For infra management, in early days, we just click, click, click&amp;hellip; or write some simple scripts to call AWS api.
+Compute: EC2 AutoScaling Group Lambda network: VPC (SDN network) DNS (route53) CDN (CloudFront) Loadbalancer: ELB (L4) NLB (L4, ELB successor, support static IP) ALB (L7) Storage: EBS (block storage) EFS (hosted NFS) RDS(MySQl/PostgreSQL &amp;hellip;) Redshift (data warehouse) DynamoDB (KV) S3 (object storage) Glacier (cheap archive storage) Web Firewall (WAF) Monitor (CloudWatch) DMS (ETL) &amp;hellip; For infra management, in early days, we just click, click, click&amp;hellip; or write some simple scripts to call AWS api.
 With infra resources growing, management became complex, a concept called Infrastructure as Code rising.
 AWS provides CloudFormation as orchestration tool, but we use terraform (for short: CloudFormation sucks, for long: Infrastructure as Code)
 So far, not bad.(tweak those services internally is another story&amp;hellip; never belive work out of box)
-Application level  configuration management (setup nginx, jenkins, redis, twemproxy, ElasticSearch or WTF..) CI/CD dependency management  They&amp;rsquo;re complicated, people developped bunch of tools to handle: puppet, chef, ansible, saltstack &amp;hellip;"/>
+Application level configuration management (setup nginx, jenkins, redis, twemproxy, ElasticSearch or WTF..) CI/CD dependency management They&amp;rsquo;re complicated, people developped bunch of tools to handle: puppet, chef, ansible, saltstack &amp;hellip;
+They&amp;rsquo;re great and working, but writing correct code still a challenge when changes involves:"/>
   
 
   
@@ -237,7 +238,7 @@ Application level  configuration management (setup nginx, jenkins, redis, twempr
       </div>
     <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     

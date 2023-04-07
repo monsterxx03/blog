@@ -107,31 +107,31 @@ redis subscribe channel 的时候出的错, channel list 还很长.</p>
 来监听 <code>celery-meta-{task_uuid}</code> 这个channel, 但 redis client 的 pubsub 不是线程安全的, 也不能跨 greenlet 使用.</p>
 <p>redis client 的 pubsub 在建立socket 后会执行 <code>self.on_connect</code> callback: <a href="https://github.com/andymccurdy/redis-py/blob/master/redis/client.py#L2369">https://github.com/andymccurdy/redis-py/blob/master/redis/client.py#L2369</a>, 目的是在重连的时候重新 sub 之前的 channnel. 但是 gevent patch 之后, socket 的建立会变成异步的, 并行建立执行redis pubsub 的<code>execute_command</code> 的时候会重复subscribe channel.</p>
 <p>原因是猜测, 我也没在开发环境完全复现线上的错误, 但写了个脚本证实 subscribe 的问题:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> gevent
-<span style="color:#f92672">import</span> gevent.monkey
-gevent<span style="color:#f92672">.</span>monkey<span style="color:#f92672">.</span>patch_all()
-
-<span style="color:#f92672">from</span> celery <span style="color:#f92672">import</span> Celery
-
-app <span style="color:#f92672">=</span> Celery()
-app<span style="color:#f92672">.</span>conf<span style="color:#f92672">.</span>update(
-    BROKER_URL<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;redis://localhost:6379/1&#39;</span>,
-    CELERY_RESULT_BACKEND<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;redis://localhost:6379/1&#39;</span>
-)
-
-<span style="color:#a6e22e">@app</span><span style="color:#f92672">.</span>task
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">wrap</span>():
-    <span style="color:#66d9ef">pass</span>
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>():
-    gs <span style="color:#f92672">=</span> []
-    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1000</span>):
-        gs<span style="color:#f92672">.</span>append(gevent<span style="color:#f92672">.</span>spawn(wrap<span style="color:#f92672">.</span>delay))
-
-    gevent<span style="color:#f92672">.</span>joinall(gs)
-
-run()
-</code></pre></div><p>脚本并不会报错, 但如果在执行的时候另一边用 redis-cli 连上 redis, 执行 <code>monitor</code> 命令, 能看到在开始建立链接的时候, 的确有重复 subscribe channel 的调用. 没想到简单的修复方法, workaround 有两个:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> gevent
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> gevent.monkey
+</span></span><span style="display:flex;"><span>gevent<span style="color:#f92672">.</span>monkey<span style="color:#f92672">.</span>patch_all()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> celery <span style="color:#f92672">import</span> Celery
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>app <span style="color:#f92672">=</span> Celery()
+</span></span><span style="display:flex;"><span>app<span style="color:#f92672">.</span>conf<span style="color:#f92672">.</span>update(
+</span></span><span style="display:flex;"><span>    BROKER_URL<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;redis://localhost:6379/1&#39;</span>,
+</span></span><span style="display:flex;"><span>    CELERY_RESULT_BACKEND<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;redis://localhost:6379/1&#39;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@app.task</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">wrap</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>():
+</span></span><span style="display:flex;"><span>    gs <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1000</span>):
+</span></span><span style="display:flex;"><span>        gs<span style="color:#f92672">.</span>append(gevent<span style="color:#f92672">.</span>spawn(wrap<span style="color:#f92672">.</span>delay))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    gevent<span style="color:#f92672">.</span>joinall(gs)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>run()
+</span></span></code></pre></div><p>脚本并不会报错, 但如果在执行的时候另一边用 redis-cli 连上 redis, 执行 <code>monitor</code> 命令, 能看到在开始建立链接的时候, 的确有重复 subscribe channel 的调用. 没想到简单的修复方法, workaround 有两个:</p>
 <ol>
 <li>禁掉 <code>result_backend</code>, 所有的执行结果都不会存储, 调用<code>AsyncResult</code> 的 <code>get()</code>, 会报错.</li>
 <li>在task 上加上 <code>ignore_result=True</code> 的 option, 这样单个 task 的结果不会存储, 也不会调用 redis 的 subscribe 了.</li>
@@ -143,29 +143,29 @@ run()
 <p>因为升级了 gevent 和 celery, 开始不太确定问题出在哪. 但是内存异常的 service 并不是 celery 的worker 进程, 但会执行大量的 <code>apply_async</code> 的插入task 的操作.</p>
 <p>所以我猜测问题只出在 <code>apply_async</code> 这个函数上. 开始尝试在本地复现问题.</p>
 <p>写了一个简单脚本测试 <code>apply_async</code>, 因为不涉及执行 task, 所以直接不引入 gevent:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> resource
-
-<span style="color:#f92672">from</span> celery <span style="color:#f92672">import</span> Celery
-
-app <span style="color:#f92672">=</span> Celery()
-app<span style="color:#f92672">.</span>conf<span style="color:#f92672">.</span>update(BROKER_URL<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;redis://localhost:6379/1&#39;</span>)
-
-<span style="color:#a6e22e">@app</span><span style="color:#f92672">.</span>task
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">dummy</span>():
-    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;1&#39;</span>
-
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">print_mem</span>():
-    print <span style="color:#e6db74">&#39;Memory usage: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> (kb)&#39;</span> <span style="color:#f92672">%</span> resource<span style="color:#f92672">.</span>getrusage(resource<span style="color:#f92672">.</span>RUSAGE_SELF)<span style="color:#f92672">.</span>ru_maxrss
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>():
-    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10000</span>):
-        dummy<span style="color:#f92672">.</span>delay()
-        <span style="color:#66d9ef">if</span> i <span style="color:#f92672">%</span> <span style="color:#ae81ff">1000</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
-            print_mem()
-
-run()
-</code></pre></div><p>每执行 1000 次 task 打印下内存占用, 这个脚本在 celery 3.1.25 下执行内存占用非常平稳, 在 4.2.0 里内存稳步增长.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> resource
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> celery <span style="color:#f92672">import</span> Celery
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>app <span style="color:#f92672">=</span> Celery()
+</span></span><span style="display:flex;"><span>app<span style="color:#f92672">.</span>conf<span style="color:#f92672">.</span>update(BROKER_URL<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;redis://localhost:6379/1&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@app.task</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">dummy</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;1&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">print_mem</span>():
+</span></span><span style="display:flex;"><span>    print <span style="color:#e6db74">&#39;Memory usage: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> (kb)&#39;</span> <span style="color:#f92672">%</span> resource<span style="color:#f92672">.</span>getrusage(resource<span style="color:#f92672">.</span>RUSAGE_SELF)<span style="color:#f92672">.</span>ru_maxrss
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10000</span>):
+</span></span><span style="display:flex;"><span>        dummy<span style="color:#f92672">.</span>delay()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> i <span style="color:#f92672">%</span> <span style="color:#ae81ff">1000</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>            print_mem()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>run()
+</span></span></code></pre></div><p>每执行 1000 次 task 打印下内存占用, 这个脚本在 celery 3.1.25 下执行内存占用非常平稳, 在 4.2.0 里内存稳步增长.</p>
 <pre tabindex="0"><code>Memory usage: 31736 (kb)
 Memory usage: 32916 (kb)
 Memory usage: 34628 (kb)
@@ -205,7 +205,7 @@ Memory usage: 44592 (kb)
       </div>
     <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     

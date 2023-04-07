@@ -13,8 +13,8 @@
   <meta name="description" content="Overview MySQL has buildin partition table support, which can help split data accross multi tables,
 and provide a unified query interface as normal tables.
 Benefit:
- Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly. Speed up query based on partition key(partitoin pruning)  Limit:
- For partition table, every unique key must use every column in table’s partition expression(include primary key) For innodb engine, paritioned table can’t have foreign key,and can’t have columns referenced by foreign keys. For MyISAM engine, mysql version &amp;lt;= 5.6.5, DML operation will lock all partition as a whole. "/>
+Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly. Speed up query based on partition key(partitoin pruning) Limit:
+For partition table, every unique key must use every column in table’s partition expression(include primary key) For innodb engine, paritioned table can’t have foreign key,and can’t have columns referenced by foreign keys. For MyISAM engine, mysql version &amp;lt;= 5.6.5, DML operation will lock all partition as a whole. "/>
   
 
   
@@ -178,7 +178,7 @@ Benefit:
       </div>
     <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     

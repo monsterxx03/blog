@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.92.0" />
+	<meta name="generator" content="Hugo 0.111.3">
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -103,7 +103,7 @@
 Steps are very easy, you only need VPC endpoints and S3 bucket policy.
 AWS api is open to internet, if you need to access S3 in VPC, your requests will pass through VPC’s internet gateway or NAT gateway. With VPC endpoints(can be found in VPC console), your requests to S3 will go through AWS’s internal network. Currently, VPC endpoints only support S3, support for dynamodb is in test.
 To restrict S3 bucket only available in your VPC, need to set bucket policy (to host static website, enable static website support first). At first, I didn’t check doc, try to restrict access by my VPC ip cidr, but it didn’t work, I need to restrict by VPC endpoint id:
-{ &quot;Version&quot;: &quot;2012-10-17&quot;, &quot;Id&quot;: &quot;Policy1415115909152&quot;, &quot;Statement&quot;: [ { &quot;Sid&quot;: &quot;Access-to-specific-VPCE-only&quot;, &quot;Principal&quot;: &quot;*&quot;, &quot;Action&quot;: &quot;s3:GetObject&quot;, &quot;Effect&quot;: &quot;Allow&quot;, &quot;Resource&quot;: [&quot;arn:aws:s3:::my_secure_bucket&quot;, &quot;arn:aws:s3:::my_secure_bucket/*&quot;], &quot;Condition&quot;: { &quot;StringEquals&quot;: { &quot;aws:sourceVpce&quot;: &quot;vpce-1a2b3c4d&quot; } } } ] }  BTW, if you can config bucket policy restrict on VPC directly, with VPC endpoint you can limit to subnets.......</p>
+{ &quot;Version&quot;: &quot;2012-10-17&quot;, &quot;Id&quot;: &quot;Policy1415115909152&quot;, &quot;Statement&quot;: [ { &quot;Sid&quot;: &quot;Access-to-specific-VPCE-only&quot;, &quot;Principal&quot;: &quot;*&quot;, &quot;Action&quot;: &quot;s3:GetObject&quot;, &quot;Effect&quot;: &quot;Allow&quot;, &quot;Resource&quot;: [&quot;arn:aws:s3:::my_secure_bucket&quot;, &quot;arn:aws:s3:::my_secure_bucket/*&quot;], &quot;Condition&quot;: { &quot;StringEquals&quot;: { &quot;aws:sourceVpce&quot;: &quot;vpce-1a2b3c4d&quot; } } } ] } BTW, if you can config bucket policy restrict on VPC directly, with VPC endpoint you can limit to subnets.......</p>
     </div>
   </div>
   
@@ -279,9 +279,9 @@ After install, it will change kernel.core_pattern to |/lib/systemd/systemd-cored
 Combine tools fpm, aptly with aws s3, we can do it.
 Use fpm to convert python package to deb fpm can transform python/gem/npm/dir/… to deb/rpm/solaris/… packages
 Example:
-fpm -s python -t deb -m xyj.asmy@gmail.com --verbose -v 0.10.1 --python-pip /usr/local/pip Flask  It will transform Flask 0.10.1 package to deb. Output package will be python-flask_0.10.1_all.deb
+fpm -s python -t deb -m xyj.asmy@gmail.com --verbose -v 0.10.1 --python-pip /usr/local/pip Flask It will transform Flask 0.10.1 package to deb. Output package will be python-flask_0.10.1_all.deb
 Notes:
- If python packages rely on some c libs like MySQLdb (libmysqlclient-dev), you need to install them on the machine to build deb binary. By default fpm use easy_install to build packages, some packages like httplib2 have permission bug with easy_install, so I use pip By default, msgpack-python will be convert to python-msgpack-python, I don’t like it, so add -n python-msgpack to normalize the package name. Some package’s dependencies’ version number is not valid(eg: celery 3.1.25 deps pytz &gt;= dev), so I replace the dependencies with --python-disable-dependency pytz -d 'pytz &gt;= 2016.7' fpm will not dowload package’s dependency automatically, you need to do it by your self  Use aptly to setup deb repository aptly can help build a self host deb repository and publish it on s3.......</p>
+If python packages rely on some c libs like MySQLdb (libmysqlclient-dev), you need to install them on the machine to build deb binary. By default fpm use easy_install to build packages, some packages like httplib2 have permission bug with easy_install, so I use pip By default, msgpack-python will be convert to python-msgpack-python, I don’t like it, so add -n python-msgpack to normalize the package name. Some package’s dependencies’ version number is not valid(eg: celery 3.1.25 deps pytz &gt;= dev), so I replace the dependencies with --python-disable-dependency pytz -d 'pytz &gt;= 2016.7' fpm will not dowload package’s dependency automatically, you need to do it by your self Use aptly to setup deb repository aptly can help build a self host deb repository and publish it on s3.......</p>
     </div>
   </div>
   
@@ -321,10 +321,11 @@ Notes:
       <p>pyflame is an opensource tool developed by uber: https://github.com/uber/pyflame
 It can take snapshots of running python process, combined with flamegraph.pl, can output flamegraph picture of python call stacks. Help analyze bottleneck of python program, needn’t inject any perf code into your application, and overhead is very low.
 Basic Usage sudo pyflame -s 10 -x -r 0.001 $pid | ./flamegraph.pl &gt; perf.svg
- -s, how many seconds to run -r, sample rate (seconds)  Your output will be something like following:
+-s, how many seconds to run -r, sample rate (seconds) Your output will be something like following:
 Longer bar means more sample points located in it, which means this part code is slower so it has a higher chance seen by pyflame.
 In my case, the output graph has a long IDLE part. Pyflame can detect call stacks who are holding GIL, so if the running code doesn’t hold GIL, pyflame don’t know what it’s doing, it will label them as IDLE. Following cases will be considered as IDLE:
- Your process is sleeping, do nothing. Waiting for IO.(eg: Your application is calling a very slow RPC server) Call libs written in C.  The right part is real application logic code. You can check this part to get a sense of overview performance of your code.......</p>
+Your process is sleeping, do nothing. Waiting for IO.(eg: Your application is calling a very slow RPC server) Call libs written in C. The right part is real application logic code. You can check this part to get a sense of overview performance of your code.
+Also you can exclude the IDLE part from graph if you don’t care about them, just apply -x......</p>
     </div>
   </div>
   

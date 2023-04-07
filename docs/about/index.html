@@ -11,9 +11,12 @@
 
   
   <meta name="description" content="Work with tech, belive in magic, live on fun :)
-Daily work:
- Cloud infrastructure: AWS management, config management/monitoring/alerting/performance tuning. Data infrastructure: data warehouse/lake, ETL. Build CI/CD pipeline for fast deployment flow. Chaos is my friend.  I work with python/golang/js/shell, but always think language is the most trival part in life. Be professional, write robust code and useful doc.
-email: xyj.asmy@gmail.com"/>
+Side projects https://github.com/monsterxx03/gospy non-Invasive goroutine inspector https://github.com/monsterxx03/snet transparent tcp proxy(mainly used in China), works on Linux &amp;amp; MacOS Work expenrience 2021.6 ~ Now XSky Ltd (https://www.xsky.com/) Work as senior architect, participated in the design and development of HCI(Hyperconverged infrastructure) system from 0 to 1.
+It&amp;rsquo;s a vm scheduling and management system.
+Main tech stack:
+Postgresql as DB, use logical replication as msg queue. VictoriaMetrics for monitoring. Etcd for leader election. code in golang Major achievements:
+Designed and developed a HA solution for Postgresql based on Patroni(by client side service discovering) Build alerting system based on VictoriaMetrics, support both metrics &amp;amp; event based alerting. Design and implement the upgrade path for the product. 2014.11 ~ 2021.5 Glow Inc (https://glowing.com) Work as company&amp;rsquo;s infrastructure architect:
+Responsible for AWS-based infrastructure design, selection, maintenance, and refactoring. System capacity planning, cost management. Identify bottlenecks in system performance and architecture scalability, refactor existing code, increase user base by 10X while keeping IT cost increase to only two times. Regular team training and technical sharing, as well as code quality control. Server Infra Develop and achieve SLOs for the business, including: Availability: service uptime &amp;gt;=99.99% Quality: p95 latency &amp;lt; 200ms Core service p95 latency &amp;lt; 50ms."/>
   
 
   
@@ -98,15 +101,73 @@ email: xyj.asmy@gmail.com"/>
           <span class="date">2016.01.01</span>
         </div>
         <div class="post_content markdown"><p>Work with tech, belive in magic, live on fun :)</p>
-<p>Daily work:</p>
+<h3 id="side-projects">Side projects</h3>
 <ul>
-<li>Cloud infrastructure: AWS management, config management/monitoring/alerting/performance tuning.</li>
-<li>Data infrastructure: data warehouse/lake, ETL.</li>
-<li>Build CI/CD pipeline for fast deployment flow.</li>
-<li>Chaos is my friend.</li>
+<li><a href="https://github.com/monsterxx03/gospy">https://github.com/monsterxx03/gospy</a>  non-Invasive goroutine inspector</li>
+<li><a href="https://github.com/monsterxx03/snet">https://github.com/monsterxx03/snet</a>  transparent tcp proxy(mainly used in China), works on Linux &amp; MacOS</li>
 </ul>
-<p>I work with python/golang/js/shell, but always think language is the most trival part in life.
-Be professional, write robust code and useful doc.</p>
+<h2 id="work-expenrience">Work expenrience</h2>
+<h3 id="20216--now--xsky-ltd-httpswwwxskycom">2021.6 ~ Now  XSky Ltd (<a href="https://www.xsky.com/">https://www.xsky.com/</a>)</h3>
+<p>Work as senior architect, participated in the design and development of HCI(Hyperconverged infrastructure) system from 0 to 1.</p>
+<p>It&rsquo;s a vm scheduling and management system.</p>
+<p>Main tech stack:</p>
+<ul>
+<li>Postgresql as DB, use logical replication as msg queue.</li>
+<li>VictoriaMetrics for monitoring.</li>
+<li>Etcd for leader election.</li>
+<li>code in golang</li>
+</ul>
+<p>Major achievements:</p>
+<ul>
+<li>Designed and developed a HA solution for Postgresql based on Patroni(by client side service discovering)</li>
+<li>Build alerting system based on VictoriaMetrics, support both metrics &amp; event based alerting.</li>
+<li>Design and implement the upgrade path for the product.</li>
+</ul>
+<h3 id="201411--20215-glow-inc-httpsglowingcom">2014.11 ~ 2021.5 Glow Inc (<a href="https://glowing.com">https://glowing.com</a>)</h3>
+<p>Work as company&rsquo;s infrastructure architect:</p>
+<ul>
+<li>Responsible for AWS-based infrastructure design, selection, maintenance, and refactoring. System capacity planning, cost management.</li>
+<li>Identify bottlenecks in system performance and architecture scalability, refactor existing code, increase user base by 10X while keeping IT cost increase to only two times.</li>
+<li>Regular team training and technical sharing, as well as code quality control.</li>
+</ul>
+<h4 id="server-infra">Server Infra</h4>
+<ul>
+<li>Develop and achieve SLOs for the business, including:
+<ul>
+<li>Availability: service uptime &gt;=99.99%</li>
+<li>Quality: p95 latency &lt; 200ms</li>
+<li>Core service p95 latency &lt; 50ms.</li>
+</ul>
+</li>
+<li>Implement infrastructure as code and use Terraform to codify the management of AWS infrastructure components such as VPC, Autoscaling Group, IAM permissions, DMS tasks, RDS, etc. All historical changes should be tracking.</li>
+<li>Fully migrating the architecture to EKS (AWS-managed Kubernetes) and upgrading it from version 1.10 to 1.18 without any downtime, such as containerizing the business applications and refactoring the monitoring and alerting solution from Datadog to Prometheus+Grafana.</li>
+<li>Based on Jenkins, using Groovy to write pipelines, achieve self-service deployment and rollback of business, and integrate SonarQube to ensure code quality control for the team.</li>
+<li>Database selection and optimization, e.g., using MySQL on RDS or AWS Aurora for relational databases, DynamoDB for key-value databases, Sentinel Redis for message queue brokers, Redis Cluster for caching, and ElasticSearch for search and analytics</li>
+<li>Performing daily troubleshooting and performance tuning in the production environment, and improving related toolchains, such as using Sentry for bug reporting, Jaeger for OpenTracing, and FluentBit + Loki + Syslog-ng for logging.</li>
+<li>Developing a management tool for EKS worker node groups using Golang, enabling seamless migration of stateless applications (such as web services and some message queue consumers) and stateful applications (such as Redis Sentinel HA and Redis Cluster).</li>
+<li>Assisting the company in achieving HIPAA compliance, which primarily involves implementing technical measures such as data-at-rest encryption, log anonymization, and access control for internal data.</li>
+</ul>
+<h3 id="code-framework-design-and-refactor">Code framework design and refactor</h3>
+<ul>
+<li>Upgrading a Python project with over 600,000 lines of code from Python 2.7 to Python 3.6, performing a gradual rollout to production within three months without any downtime and without adding extra burden to business development. This was achieved by using SonarQube to perform syntax checks in the CI phase to prevent developers from submitting Python 2.7 incompatible code.</li>
+<li>Splitting a code repository was necessary as the early codebase consisted of over a dozen Python repositories that imported each other, leading to significant deployment and troubleshooting issues. To address this, the API frontend layer and business RPC layer were cleanly separated, and the RPC client was generated through code to synchronize with each repository (using AST traversal for syntax checks).</li>
+<li>Refactor the deduplication module in the business with Bloom filter to reduce the latency and storage of related business to around 1/10 of the original.</li>
+</ul>
+<h3 id="data-warehourse">Data warehourse</h3>
+<ul>
+<li>Build a data warehouse based on Redshift/Spectrum and S3</li>
+<li>Design and implement ETL process using DMS, fluentd, argo-workflow, and Spark.</li>
+<li>Refactor an early complex reporting system (with over 10,000 lines of Python code) by separating the definition and calculation logic of metrics. After the transformation, the core Python code was reduced to 1,000 lines, and the rest was written in YAML. The system had not been significantly modified for five years. The purpose of the refactoring was to enable PAs (Product Analysts) who are not proficient in Python to define and launch business metrics independently.</li>
+</ul>
+<h3 id="20131--201410--unitedstackprevious-ustackcom-current-tfcloudcom">2013.1 ~ 2014.10  UnitedStack(previous ustack.com, current tfcloud.com)</h3>
+<p>Main work is build a privatized OpenStack distribution, including:</p>
+<ul>
+<li>Rebuild openstack console to replace official horizon project (angular + django)</li>
+<li>Add multi region support for keystone</li>
+<li>Union event bus based on rabbitmq (pipeline event in openstack to third part system)</li>
+</ul>
+<h3 id="201201--201212-sina-sinacomcn">2012.01 ~ 2012.12 Sina (sina.com.cn)</h3>
+<p>Custom development based on OpenStack projects, e.g: keystone, swift, keystone</p>
 <p><em>email</em>: <a href="mailto:xyj.asmy@gmail.com">xyj.asmy@gmail.com</a></p>
 </div>
         <div class="post_footer">
@@ -115,7 +176,7 @@ Be professional, write robust code and useful doc.</p>
       </div>
     <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     

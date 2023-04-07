@@ -20,8 +20,8 @@ To cleanup those PTR records realtime, you can write a lambda function, use serv
 Straightforward way is write a script to call AWS API to get a PTR list, get ip from record, test whether the ip is live, if not, delete it.
 Since use awscli to delete a Route53 record is very troublesome (involve json format), you’d better write a python script to delete them. I just demo some ideas to collect those records via shell.
 You can do it in a single line, but make things clear and easy to debug, I split it into several steps.
-Get PTR record list aws route53 list-resource-record-sets --hosted-zone-id xxxxx --query &amp;quot;ResourceRecordSets[?Type==&#39;PTR&#39;].Name&amp;quot; | grep -Po &#39;&amp;quot;(.+?)&amp;quot;&#39; | tr -d \&amp;quot; &amp;gt; ptr.txt  ptr.txt will contain lines like:
-1.0.0.10.in-addr.arpa. 2.0.0.10.in-addr.arpa.  Get ip list from PTR records cat ptr.</description>
+Get PTR record list aws route53 list-resource-record-sets --hosted-zone-id xxxxx --query &amp;quot;ResourceRecordSets[?Type==&#39;PTR&#39;].Name&amp;quot; | grep -Po &#39;&amp;quot;(.+?)&amp;quot;&#39; | tr -d \&amp;quot; &amp;gt; ptr.txt ptr.txt will contain lines like:
+1.0.0.10.in-addr.arpa. 2.0.0.10.in-addr.arpa. Get ip list from PTR records cat ptr.txt | while read -r line ; do echo -n $line | tac -s.</description>
     </item>
     
   </channel>

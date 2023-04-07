@@ -104,194 +104,194 @@
 <h2 id="配置文件">配置文件</h2>
 <p>配置文件是yaml 格式, 具体见 <a href="https://patroni.readthedocs.io/en/latest/SETTINGS.html">https://patroni.readthedocs.io/en/latest/SETTINGS.html</a><br>
 使用 patroni postgres.yaml 命令启动一个 patroni 实例</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e"># 集群名字, 同一集群内的 patroni 必须设置一样, 会成为 postgres.conf 内的 cluster_name参数</span>
-<span style="color:#f92672">scope</span>: <span style="color:#ae81ff">xsky-test</span>
-<span style="color:#75715e"># patroni 会将一些动态配置存在 DCS 内, namespace 是在 DCS 内的存储路径, eg: 使用 etcdv3 作为 DCS, 可以通过 etdctl get /service --prefix 看到 patroni 在 DCS 内存了什么</span>
-<span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">/service  </span>
-<span style="color:#75715e"># 管理的 pg 的实例名, 同一集群内每个实例必须都不同, eg: pg0, pg1, pg2</span>
-<span style="color:#f92672">name</span>: <span style="color:#ae81ff">pg0</span>
-<span style="color:#75715e">#  日志相关配置</span>
-<span style="color:#f92672">log</span>:  
-  <span style="color:#f92672">level</span>: <span style="color:#ae81ff">INFO </span>
-  <span style="color:#ae81ff">...</span>
-<span style="color:#75715e"># patroni restapi 相关配置</span>
-<span style="color:#f92672">restapi</span>:
-  <span style="color:#f92672">listen</span>: <span style="color:#ae81ff">0.0.0.0</span>:<span style="color:#ae81ff">8008</span>
-  <span style="color:#ae81ff">...</span>
-
-<span style="color:#75715e"># 用创建 pg 实例, 生成 pg 的 data dir, postgres.conf, pg_hba.conf 等文件</span>
-<span style="color:#f92672">bootstrap</span>:
-  <span style="color:#75715e"># dcs 下内容会写入 DCS 的 {namespace}/{scope}/config key 中,只有在初始化集群的时候被使用一次, 后续修改不会生效, 可以通过 patrionctl edit-config 或 rest api 来修改存在 dcs 中的值</span>
-  <span style="color:#f92672">dcs</span>:
-    <span style="color:#f92672">loop_wait</span>: <span style="color:#ae81ff">10</span>
-    <span style="color:#f92672">ttl</span>: <span style="color:#ae81ff">30</span>
-    <span style="color:#ae81ff">...</span>
-  <span style="color:#75715e"># 初始化集群时生成 pg_bha.conf, 后续改动不会生效</span>
-  <span style="color:#f92672">pg_hba</span>:
-   - <span style="color:#ae81ff">host replication replicator 127.0.0.1/32 md5</span>
-  <span style="color:#75715e"># 在初始化集群时需要创建的用户, 后续改动不会生效</span>
-  <span style="color:#f92672">users</span>:
-  <span style="color:#ae81ff">...</span>
-<span style="color:#75715e"># 使用 etcd v2 api 作为 dcs</span>
-<span style="color:#f92672">etcd</span>:
-  <span style="color:#ae81ff">...</span>
-<span style="color:#75715e"># 使用 etcd v3 api 作为 dcs</span>
-<span style="color:#f92672">etcd3</span>:
-  <span style="color:#ae81ff">...</span>
-<span style="color:#75715e"># 用于 patroni 运行时连接 pg</span>
-<span style="color:#f92672">postgresql</span>:
-  <span style="color:#f92672">listen</span>: <span style="color:#ae81ff">0.0.0.0</span>:<span style="color:#ae81ff">5432</span>
-  <span style="color:#ae81ff">...</span>
-<span style="color:#75715e"># patronictl.py 连接 restapi 时 http参数(ssl相关)</span>
-<span style="color:#f92672">ctl</span>:
-  <span style="color:#ae81ff">...</span>
-<span style="color:#75715e"># 通过 linux 的 softdog 模块, 在 patroni 控制的 pg 挂掉时重启 server</span>
-<span style="color:#f92672">watchdog</span>:
-  <span style="color:#ae81ff">...</span>
-<span style="color:#75715e"># 通过nofailover 等 tag 可以控制行为(eg: 不允许某个 patrion 实例成为 leader, 也可以添加自定义tag作为元数据</span>
-<span style="color:#f92672">tags</span>:
-   <span style="color:#ae81ff">...</span>
-</code></pre></div><h2 id="用-patroni-bootstrap-pg-集群">用 patroni bootstrap pg 集群</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># 集群名字, 同一集群内的 patroni 必须设置一样, 会成为 postgres.conf 内的 cluster_name参数</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">scope</span>: <span style="color:#ae81ff">xsky-test</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># patroni 会将一些动态配置存在 DCS 内, namespace 是在 DCS 内的存储路径, eg: 使用 etcdv3 作为 DCS, 可以通过 etdctl get /service --prefix 看到 patroni 在 DCS 内存了什么</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">/service  </span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 管理的 pg 的实例名, 同一集群内每个实例必须都不同, eg: pg0, pg1, pg2</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">name</span>: <span style="color:#ae81ff">pg0</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  日志相关配置</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">log</span>:  
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">level</span>: <span style="color:#ae81ff">INFO </span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># patroni restapi 相关配置</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">restapi</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">listen</span>: <span style="color:#ae81ff">0.0.0.0</span>:<span style="color:#ae81ff">8008</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用创建 pg 实例, 生成 pg 的 data dir, postgres.conf, pg_hba.conf 等文件</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">bootstrap</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># dcs 下内容会写入 DCS 的 {namespace}/{scope}/config key 中,只有在初始化集群的时候被使用一次, 后续修改不会生效, 可以通过 patrionctl edit-config 或 rest api 来修改存在 dcs 中的值</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">dcs</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">loop_wait</span>: <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ttl</span>: <span style="color:#ae81ff">30</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 初始化集群时生成 pg_bha.conf, 后续改动不会生效</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">pg_hba</span>:
+</span></span><span style="display:flex;"><span>   - <span style="color:#ae81ff">host replication replicator 127.0.0.1/32 md5</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 在初始化集群时需要创建的用户, 后续改动不会生效</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">users</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 使用 etcd v2 api 作为 dcs</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">etcd</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 使用 etcd v3 api 作为 dcs</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">etcd3</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用于 patroni 运行时连接 pg</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">postgresql</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">listen</span>: <span style="color:#ae81ff">0.0.0.0</span>:<span style="color:#ae81ff">5432</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># patronictl.py 连接 restapi 时 http参数(ssl相关)</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">ctl</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 通过 linux 的 softdog 模块, 在 patroni 控制的 pg 挂掉时重启 server</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">watchdog</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 通过nofailover 等 tag 可以控制行为(eg: 不允许某个 patrion 实例成为 leader, 也可以添加自定义tag作为元数据</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">tags</span>:
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">...</span>
+</span></span></code></pre></div><h2 id="用-patroni-bootstrap-pg-集群">用 patroni bootstrap pg 集群</h2>
 <p>假设有三节点, 上面已经部署好 etcd(v3) 作为 dcs, 三节点 ip为: 10.252.90.217, 10.252.90.218, 10.252.90.219
 217 节点上 patroni 的 postgres.yml 配置, 其他节点类似, 把 ip 改下:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">scope</span>: <span style="color:#ae81ff">xsky-test</span>
-<span style="color:#f92672">name</span>: <span style="color:#ae81ff">pg0</span>
-<span style="color:#f92672">log</span>:
-  <span style="color:#f92672">level</span>: <span style="color:#ae81ff">DEBUG</span>
-<span style="color:#f92672">restapi</span>:
-  <span style="color:#f92672">listen</span>: <span style="color:#ae81ff">0.0.0.0</span>:<span style="color:#ae81ff">8008</span>
-  <span style="color:#75715e"># 必须设置成非 loopback 地址, 这个地址会存在 etcd 中, 其他 patroni 节点会从 etcd 中获取后连接该节点</span>
-  <span style="color:#f92672">connect_address</span>: <span style="color:#ae81ff">10.252.90.217</span>:<span style="color:#ae81ff">8008</span>  
-<span style="color:#f92672">etcd3</span>:
-  <span style="color:#f92672">hosts</span>:
-  - <span style="color:#ae81ff">10.252.90.217</span>:<span style="color:#ae81ff">2379</span>
-  - <span style="color:#ae81ff">10.252.90.218</span>:<span style="color:#ae81ff">2379</span>
-  - <span style="color:#ae81ff">10.252.90.219</span>:<span style="color:#ae81ff">2379</span>
-<span style="color:#f92672">bootstrap</span>:
-  <span style="color:#f92672">dcs</span>:
-    <span style="color:#f92672">ttl</span>: <span style="color:#ae81ff">30</span>
-    <span style="color:#f92672">loop_wait</span>: <span style="color:#ae81ff">10</span>
-    <span style="color:#f92672">retry_timeout</span>: <span style="color:#ae81ff">10</span>
-    <span style="color:#f92672">postgresql</span>:
-      <span style="color:#75715e"># 当 failover 发生后, old leader 需要成为 new leader 的replica, 设置 true， 就会通过 pg_rewind 来同步 offset, 否则会用 pg_basebackup 全量重建备库</span>
-      <span style="color:#f92672">use_pg_rewind</span>: <span style="color:#66d9ef">true</span>
-      <span style="color:#75715e"># 开启后会同步 pg 的 replication slots(通过 db conn)</span>
-      <span style="color:#f92672">use_slots</span>: <span style="color:#66d9ef">true</span>
-      <span style="color:#75715e"># 启用 pg 的同步赋值模式, 后面演示脑裂状态时会用到</span>
-      <span style="color:#f92672">parameters</span>:
-        <span style="color:#f92672">synchronous_commit</span>: <span style="color:#e6db74">&#34;on&#34;</span>
-        <span style="color:#f92672">synchronous_standby_names</span>: <span style="color:#e6db74">&#34;*&#34;</span>
-  <span style="color:#f92672">initdb</span>:
-  - <span style="color:#f92672">encoding</span>: <span style="color:#ae81ff">UTF8</span>
-  - <span style="color:#ae81ff">data-checksums </span>
-  <span style="color:#f92672">pg_hba</span>:
-  <span style="color:#75715e"># 允许其他节点的 replicator 用户连接过来进行日志同步 </span>
-  - <span style="color:#ae81ff">host replication replicator 0.0.0.0/0 md5</span>
-  <span style="color:#75715e"># 允许常规 db 连接</span>
-  - <span style="color:#ae81ff">host all all 0.0.0.0/0 md5 </span>
-<span style="color:#f92672">postgresql</span>:                
-  <span style="color:#f92672">listen</span>: <span style="color:#ae81ff">0.0.0.0</span>:<span style="color:#ae81ff">5432</span>         
-  <span style="color:#f92672">connect_address</span>: <span style="color:#ae81ff">10.252.90.217</span>:<span style="color:#ae81ff">5432</span>
-  <span style="color:#f92672">data_dir</span>: <span style="color:#ae81ff">data/postgresql0</span>
-  <span style="color:#f92672">pgpass</span>: <span style="color:#ae81ff">/tmp/pgpass0</span>
-</code></pre></div><h3 id="初始化第一个节点">初始化第一个节点</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">scope</span>: <span style="color:#ae81ff">xsky-test</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">name</span>: <span style="color:#ae81ff">pg0</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">log</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">level</span>: <span style="color:#ae81ff">DEBUG</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">restapi</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">listen</span>: <span style="color:#ae81ff">0.0.0.0</span>:<span style="color:#ae81ff">8008</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 必须设置成非 loopback 地址, 这个地址会存在 etcd 中, 其他 patroni 节点会从 etcd 中获取后连接该节点</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">connect_address</span>: <span style="color:#ae81ff">10.252.90.217</span>:<span style="color:#ae81ff">8008</span>  
+</span></span><span style="display:flex;"><span><span style="color:#f92672">etcd3</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">hosts</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">10.252.90.217</span>:<span style="color:#ae81ff">2379</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">10.252.90.218</span>:<span style="color:#ae81ff">2379</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">10.252.90.219</span>:<span style="color:#ae81ff">2379</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">bootstrap</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">dcs</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ttl</span>: <span style="color:#ae81ff">30</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">loop_wait</span>: <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">retry_timeout</span>: <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">postgresql</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># 当 failover 发生后, old leader 需要成为 new leader 的replica, 设置 true， 就会通过 pg_rewind 来同步 offset, 否则会用 pg_basebackup 全量重建备库</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">use_pg_rewind</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># 开启后会同步 pg 的 replication slots(通过 db conn)</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">use_slots</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># 启用 pg 的同步赋值模式, 后面演示脑裂状态时会用到</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">parameters</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">synchronous_commit</span>: <span style="color:#e6db74">&#34;on&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">synchronous_standby_names</span>: <span style="color:#e6db74">&#34;*&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">initdb</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">encoding</span>: <span style="color:#ae81ff">UTF8</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">data-checksums </span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">pg_hba</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 允许其他节点的 replicator 用户连接过来进行日志同步 </span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">host replication replicator 0.0.0.0/0 md5</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 允许常规 db 连接</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">host all all 0.0.0.0/0 md5 </span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">postgresql</span>:                
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">listen</span>: <span style="color:#ae81ff">0.0.0.0</span>:<span style="color:#ae81ff">5432</span>         
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">connect_address</span>: <span style="color:#ae81ff">10.252.90.217</span>:<span style="color:#ae81ff">5432</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">data_dir</span>: <span style="color:#ae81ff">data/postgresql0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">pgpass</span>: <span style="color:#ae81ff">/tmp/pgpass0</span>
+</span></span></code></pre></div><h3 id="初始化第一个节点">初始化第一个节点</h3>
 <p>patroni 会调用 pg_ctl 初始化数据库, pg 不能以 root 用户跑(pg 的限制), 所以新建个 user, 用 su 切过去 来跑下面的命令</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">patroni postgres.yml
-</code></pre></div><p>想查看 patroni 初始化过程具体干了啥可以, 安装 bcc-tools, 用里面的 execsnoop 工具追踪 patroni 的shell 调用:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#f92672">[</span>root@node-217 tools<span style="color:#f92672">]</span><span style="color:#75715e"># execsnoop -U</span>
-UID   PCOMM            PID    PPID   RET ARGS
-<span style="color:#ae81ff">1000</span>  python3          <span style="color:#ae81ff">27506</span>  <span style="color:#ae81ff">27057</span>    <span style="color:#ae81ff">0</span> /usr/bin/python3 patroni.py postgres0.yml
-<span style="color:#ae81ff">1000</span>  sh               <span style="color:#ae81ff">27507</span>  <span style="color:#ae81ff">27506</span>    <span style="color:#ae81ff">0</span> /bin/sh -c uname -p 2&gt; /dev/null
-<span style="color:#ae81ff">1000</span>  uname            <span style="color:#ae81ff">27508</span>  <span style="color:#ae81ff">27507</span>    <span style="color:#ae81ff">0</span> /usr/bin/uname -p
-<span style="color:#ae81ff">1000</span>  ldconfig         <span style="color:#ae81ff">27509</span>  <span style="color:#ae81ff">27506</span>    <span style="color:#ae81ff">0</span> /sbin/ldconfig -p
-<span style="color:#75715e"># 调用 pg_ctl 初始化数据库--encoding=UTF8 --data-checksums 是配置文件中 initdb 项传入</span>
-<span style="color:#ae81ff">1000</span>  pg_ctl           <span style="color:#ae81ff">27516</span>  <span style="color:#ae81ff">27506</span>    <span style="color:#ae81ff">0</span> /usr/bin/pg_ctl initdb -D data/postgresql0 -o --encoding<span style="color:#f92672">=</span>UTF8 --data-checksums --username<span style="color:#f92672">=</span>postgres --pwfile<span style="color:#f92672">=</span>/tmp/tmp68bda8l8
-<span style="color:#ae81ff">1000</span>  sh               <span style="color:#ae81ff">27517</span>  <span style="color:#ae81ff">27516</span>    <span style="color:#ae81ff">0</span>   <span style="color:#e6db74">&#34;/usr/bin/initdb&#34;</span> -V
-<span style="color:#ae81ff">1000</span>  initdb           <span style="color:#ae81ff">27517</span>  <span style="color:#ae81ff">27516</span>    <span style="color:#ae81ff">0</span> /usr/bin/initdb -V
-<span style="color:#ae81ff">1000</span>  sh               <span style="color:#ae81ff">27518</span>  <span style="color:#ae81ff">27516</span>    <span style="color:#ae81ff">0</span>   <span style="color:#e6db74">&#34;/usr/bin/initdb&#34;</span> -D <span style="color:#e6db74">&#34;data/postgresql0&#34;</span> --encoding<span style="color:#f92672">=</span>UTF8 --data-checksums --username<span style="color:#f92672">=</span>postgres --pwfile<span style="color:#f92672">=</span>/tmp/tmp68bda8l8
-<span style="color:#ae81ff">1000</span>  initdb           <span style="color:#ae81ff">27518</span>  <span style="color:#ae81ff">27516</span>    <span style="color:#ae81ff">0</span> /usr/bin/initdb -D data/postgresql0 --encoding<span style="color:#f92672">=</span>UTF8 --data-checksums --username<span style="color:#f92672">=</span>postgres --pwfile<span style="color:#f92672">=</span>/tmp/tmp68bda8l8
-<span style="color:#ae81ff">1000</span>  sh               <span style="color:#ae81ff">27519</span>  <span style="color:#ae81ff">27518</span>    <span style="color:#ae81ff">0</span>   <span style="color:#e6db74">&#34;/usr/bin/postgres&#34;</span> -V
-<span style="color:#ae81ff">1000</span>  postgres         <span style="color:#ae81ff">27519</span>  <span style="color:#ae81ff">27518</span>    <span style="color:#ae81ff">0</span> /usr/bin/postgres -V
-<span style="color:#ae81ff">1000</span>  sh               <span style="color:#ae81ff">27520</span>  <span style="color:#ae81ff">27518</span>    <span style="color:#ae81ff">0</span>   <span style="color:#e6db74">&#34;/usr/bin/postgres&#34;</span> --boot -x0 -F -c max_connections<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span> -c shared_buffers<span style="color:#f92672">=</span><span style="color:#ae81ff">1000</span> -c dynamic_shared_memory_type<span style="color:#f92672">=</span>none &lt; <span style="color:#e6db74">&#34;/dev/null&#34;</span>
-<span style="color:#ae81ff">1000</span>  postgres         <span style="color:#ae81ff">27521</span>  <span style="color:#ae81ff">27520</span>    <span style="color:#ae81ff">0</span> /usr/bin/postgres --boot -x0 -F -c max_connections<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span> -c shared_buffers<span style="color:#f92672">=</span><span style="color:#ae81ff">1000</span> -c dynamic_shared_memory_type<span style="color:#f92672">=</span>none
-<span style="color:#ae81ff">1000</span>  sh               <span style="color:#ae81ff">27522</span>  <span style="color:#ae81ff">27518</span>    <span style="color:#ae81ff">0</span>   <span style="color:#e6db74">&#34;/usr/bin/postgres&#34;</span> --boot -x0 -F -c max_connections<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span> -c shared_buffers<span style="color:#f92672">=</span><span style="color:#ae81ff">16384</span> -c dynamic_shared_memory_type<span style="color:#f92672">=</span>none &lt; <span style="color:#e6db74">&#34;/dev/null
-</span><span style="color:#e6db74">1000  postgres         27523  27522    0 /usr/bin/postgres --boot -x0 -F -c max_connections=100 -c shared_buffers=16384 -c dynamic_shared_memory_type=none
-</span><span style="color:#e6db74">1000  sh               27524  27518    0   &#34;</span>/usr/bin/postgres<span style="color:#e6db74">&#34; --boot -x1 -k -F 
-</span><span style="color:#e6db74">1000  postgres         27524  27518    0 /usr/bin/postgres --boot -x1 -k -F
-</span><span style="color:#e6db74">1000  sh               27525  27518    0   &#34;</span>/usr/bin/postgres<span style="color:#e6db74">&#34; --single -F -O -j -c search_path=pg_catalog -c exit_on_error=true template1 &gt;/dev/null
-</span><span style="color:#e6db74">1000  postgres         27526  27525    0 /usr/bin/postgres --single -F -O -j -c search_path=pg_catalog -c exit_on_error=true template1
-</span><span style="color:#e6db74">1000  sh               27527  27526    0   
-</span><span style="color:#e6db74">1000  locale           27527  27526    0 /usr/bin/locale -a
-</span><span style="color:#e6db74"># 到上一行为止都是 pg_ctl initdb 过程中做的事
-</span><span style="color:#e6db74"># pg_controldata 命令用于从data目录获取数据库信息
-</span><span style="color:#e6db74">1000  pg_controldata   27529  27506    0 /usr/bin/pg_controldata data/postgresql0
-</span><span style="color:#e6db74">1000  python3          27530  27506    0 /usr/bin/python3 -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=0, pipe_handle=11) --multiprocessing-fork
-</span><span style="color:#e6db74">1000  sh               27531  27530    0 /bin/sh -c uname -p 2&gt; /dev/null
-</span><span style="color:#e6db74">1000  uname            27532  27531    0 /usr/bin/uname -p
-</span><span style="color:#e6db74"># 启动 pg 进程
-</span><span style="color:#e6db74">1000  postgres         27533  27530    0 /usr/bin/postgres -D data/postgresql0 --config-file=/home/will/patroni/data/postgresql0/postgresql.conf --listen_addresses=0.0.0.0 --port=5432 --cluster_name=xsky-test --wal_level=replica --hot_standby=on --max_connections=100 --max_wal_senders=10 --max_prepared_transactions=0 --max_locks_per_transaction=64 --track_commit_timestamp=off --max_replication_slots=10 --max_worker_processes=8 --wal_log_hints=on
-</span><span style="color:#e6db74"># 等待 pg server ready
-</span><span style="color:#e6db74">1000  pg_isready       27536  27506    0 /usr/bin/pg_isready -p 5432 -d postgres -h localhost -U postgres
-</span><span style="color:#e6db74">1000  pg_isready       27544  27506    0 /usr/bin/pg_isready -p 5432 -d postgres -h localhost -U postgres
-</span><span style="color:#e6db74">1000  pg_controldata   27548  27506    0 /usr/bin/pg_controldata data/postgresql0
-</span><span style="color:#e6db74">1000  pg_controldata   27549  27506    0 /usr/bin/pg_controldata data/postgresql0
-</span></code></pre></div><p>查看 patroni 在 etcd 中写入了什么内容</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">etcdctl get /service --prefix
-
-<span style="color:#75715e"># 该key 由配置文件中的 bootstrap.dcs 一节构成,可以通过 patronictl edit-config 命令修改</span>
-/service/xsky-test/config
-<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;ttl&#34;</span>:30,<span style="color:#e6db74">&#34;loop_wait&#34;</span>:10,<span style="color:#e6db74">&#34;retry_timeout&#34;</span>:10,<span style="color:#e6db74">&#34;maximum_lag_on_failover&#34;</span>:1048576,<span style="color:#e6db74">&#34;postgresql&#34;</span>:<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;use_pg_rewind&#34;</span>:true,<span style="color:#e6db74">&#34;use_slots&#34;</span>:true,<span style="color:#e6db74">&#34;parameters&#34;</span>:null<span style="color:#f92672">}}</span>
-<span style="color:#75715e"># db 初始化完成后写入该key, 值是通过 pg_controldata 命令获取的`Database system identifier` 字段</span>
-/service/xsky-test/initialize
-<span style="color:#ae81ff">7054455725282492035</span>
-<span style="color:#75715e"># 第一个节点抢到主, 写入自己的 name, 这个key会绑定一个 lease(default: 30s), </span>
-<span style="color:#75715e"># patroni 存活期间每隔 loop_time(10s) 会刷新下这个 lease</span>
-/service/xsky-test/leader
-pg0
-<span style="color:#75715e"># members 路径下是当前集群所有成员</span>
-/service/xsky-test/members/pg0
-<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;conn_url&#34;</span>:<span style="color:#e6db74">&#34;postgres://10.252.90.217:5432/postgres&#34;</span>,<span style="color:#e6db74">&#34;api_url&#34;</span>:<span style="color:#e6db74">&#34;http://10.252.90.217:8008/patroni&#34;</span>,<span style="color:#e6db74">&#34;state&#34;</span>:<span style="color:#e6db74">&#34;running&#34;</span>,<span style="color:#e6db74">&#34;role&#34;</span>:<span style="color:#e6db74">&#34;master&#34;</span>,<span style="color:#e6db74">&#34;version&#34;</span>:<span style="color:#e6db74">&#34;2.1.2&#34;</span>,<span style="color:#e6db74">&#34;xlog_location&#34;</span>:24988528,<span style="color:#e6db74">&#34;timeline&#34;</span>:1<span style="color:#f92672">}</span>
-<span style="color:#75715e"># status 的值是当前 leader 的 wal lsn write location, 通过`select pg_current_wal_lsn()` 确认</span>
-/service/xsky-test/status
-<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;optime&#34;</span>:24988528<span style="color:#f92672">}</span>
-</code></pre></div><h3 id="加入第二个节点">加入第二个节点</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>patroni postgres.yml
+</span></span></code></pre></div><p>想查看 patroni 初始化过程具体干了啥可以, 安装 bcc-tools, 用里面的 execsnoop 工具追踪 patroni 的shell 调用:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#f92672">[</span>root@node-217 tools<span style="color:#f92672">]</span><span style="color:#75715e"># execsnoop -U</span>
+</span></span><span style="display:flex;"><span>UID   PCOMM            PID    PPID   RET ARGS
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  python3          <span style="color:#ae81ff">27506</span>  <span style="color:#ae81ff">27057</span>    <span style="color:#ae81ff">0</span> /usr/bin/python3 patroni.py postgres0.yml
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  sh               <span style="color:#ae81ff">27507</span>  <span style="color:#ae81ff">27506</span>    <span style="color:#ae81ff">0</span> /bin/sh -c uname -p 2&gt; /dev/null
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  uname            <span style="color:#ae81ff">27508</span>  <span style="color:#ae81ff">27507</span>    <span style="color:#ae81ff">0</span> /usr/bin/uname -p
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  ldconfig         <span style="color:#ae81ff">27509</span>  <span style="color:#ae81ff">27506</span>    <span style="color:#ae81ff">0</span> /sbin/ldconfig -p
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 调用 pg_ctl 初始化数据库--encoding=UTF8 --data-checksums 是配置文件中 initdb 项传入</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  pg_ctl           <span style="color:#ae81ff">27516</span>  <span style="color:#ae81ff">27506</span>    <span style="color:#ae81ff">0</span> /usr/bin/pg_ctl initdb -D data/postgresql0 -o --encoding<span style="color:#f92672">=</span>UTF8 --data-checksums --username<span style="color:#f92672">=</span>postgres --pwfile<span style="color:#f92672">=</span>/tmp/tmp68bda8l8
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  sh               <span style="color:#ae81ff">27517</span>  <span style="color:#ae81ff">27516</span>    <span style="color:#ae81ff">0</span>   <span style="color:#e6db74">&#34;/usr/bin/initdb&#34;</span> -V
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  initdb           <span style="color:#ae81ff">27517</span>  <span style="color:#ae81ff">27516</span>    <span style="color:#ae81ff">0</span> /usr/bin/initdb -V
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  sh               <span style="color:#ae81ff">27518</span>  <span style="color:#ae81ff">27516</span>    <span style="color:#ae81ff">0</span>   <span style="color:#e6db74">&#34;/usr/bin/initdb&#34;</span> -D <span style="color:#e6db74">&#34;data/postgresql0&#34;</span> --encoding<span style="color:#f92672">=</span>UTF8 --data-checksums --username<span style="color:#f92672">=</span>postgres --pwfile<span style="color:#f92672">=</span>/tmp/tmp68bda8l8
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  initdb           <span style="color:#ae81ff">27518</span>  <span style="color:#ae81ff">27516</span>    <span style="color:#ae81ff">0</span> /usr/bin/initdb -D data/postgresql0 --encoding<span style="color:#f92672">=</span>UTF8 --data-checksums --username<span style="color:#f92672">=</span>postgres --pwfile<span style="color:#f92672">=</span>/tmp/tmp68bda8l8
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  sh               <span style="color:#ae81ff">27519</span>  <span style="color:#ae81ff">27518</span>    <span style="color:#ae81ff">0</span>   <span style="color:#e6db74">&#34;/usr/bin/postgres&#34;</span> -V
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  postgres         <span style="color:#ae81ff">27519</span>  <span style="color:#ae81ff">27518</span>    <span style="color:#ae81ff">0</span> /usr/bin/postgres -V
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  sh               <span style="color:#ae81ff">27520</span>  <span style="color:#ae81ff">27518</span>    <span style="color:#ae81ff">0</span>   <span style="color:#e6db74">&#34;/usr/bin/postgres&#34;</span> --boot -x0 -F -c max_connections<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span> -c shared_buffers<span style="color:#f92672">=</span><span style="color:#ae81ff">1000</span> -c dynamic_shared_memory_type<span style="color:#f92672">=</span>none &lt; <span style="color:#e6db74">&#34;/dev/null&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  postgres         <span style="color:#ae81ff">27521</span>  <span style="color:#ae81ff">27520</span>    <span style="color:#ae81ff">0</span> /usr/bin/postgres --boot -x0 -F -c max_connections<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span> -c shared_buffers<span style="color:#f92672">=</span><span style="color:#ae81ff">1000</span> -c dynamic_shared_memory_type<span style="color:#f92672">=</span>none
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  sh               <span style="color:#ae81ff">27522</span>  <span style="color:#ae81ff">27518</span>    <span style="color:#ae81ff">0</span>   <span style="color:#e6db74">&#34;/usr/bin/postgres&#34;</span> --boot -x0 -F -c max_connections<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span> -c shared_buffers<span style="color:#f92672">=</span><span style="color:#ae81ff">16384</span> -c dynamic_shared_memory_type<span style="color:#f92672">=</span>none &lt; <span style="color:#e6db74">&#34;/dev/null
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">1000  postgres         27523  27522    0 /usr/bin/postgres --boot -x0 -F -c max_connections=100 -c shared_buffers=16384 -c dynamic_shared_memory_type=none
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">1000  sh               27524  27518    0   &#34;</span>/usr/bin/postgres<span style="color:#e6db74">&#34; --boot -x1 -k -F 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">1000  postgres         27524  27518    0 /usr/bin/postgres --boot -x1 -k -F
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">1000  sh               27525  27518    0   &#34;</span>/usr/bin/postgres<span style="color:#e6db74">&#34; --single -F -O -j -c search_path=pg_catalog -c exit_on_error=true template1 &gt;/dev/null
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">1000  postgres         27526  27525    0 /usr/bin/postgres --single -F -O -j -c search_path=pg_catalog -c exit_on_error=true template1
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">1000  sh               27527  27526    0   
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">1000  locale           27527  27526    0 /usr/bin/locale -a
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"># 到上一行为止都是 pg_ctl initdb 过程中做的事
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"># pg_controldata 命令用于从data目录获取数据库信息
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">1000  pg_controldata   27529  27506    0 /usr/bin/pg_controldata data/postgresql0
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">1000  python3          27530  27506    0 /usr/bin/python3 -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=0, pipe_handle=11) --multiprocessing-fork
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">1000  sh               27531  27530    0 /bin/sh -c uname -p 2&gt; /dev/null
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">1000  uname            27532  27531    0 /usr/bin/uname -p
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"># 启动 pg 进程
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">1000  postgres         27533  27530    0 /usr/bin/postgres -D data/postgresql0 --config-file=/home/will/patroni/data/postgresql0/postgresql.conf --listen_addresses=0.0.0.0 --port=5432 --cluster_name=xsky-test --wal_level=replica --hot_standby=on --max_connections=100 --max_wal_senders=10 --max_prepared_transactions=0 --max_locks_per_transaction=64 --track_commit_timestamp=off --max_replication_slots=10 --max_worker_processes=8 --wal_log_hints=on
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"># 等待 pg server ready
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">1000  pg_isready       27536  27506    0 /usr/bin/pg_isready -p 5432 -d postgres -h localhost -U postgres
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">1000  pg_isready       27544  27506    0 /usr/bin/pg_isready -p 5432 -d postgres -h localhost -U postgres
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">1000  pg_controldata   27548  27506    0 /usr/bin/pg_controldata data/postgresql0
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">1000  pg_controldata   27549  27506    0 /usr/bin/pg_controldata data/postgresql0
+</span></span></span></code></pre></div><p>查看 patroni 在 etcd 中写入了什么内容</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>etcdctl get /service --prefix
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 该key 由配置文件中的 bootstrap.dcs 一节构成,可以通过 patronictl edit-config 命令修改</span>
+</span></span><span style="display:flex;"><span>/service/xsky-test/config
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;ttl&#34;</span>:30,<span style="color:#e6db74">&#34;loop_wait&#34;</span>:10,<span style="color:#e6db74">&#34;retry_timeout&#34;</span>:10,<span style="color:#e6db74">&#34;maximum_lag_on_failover&#34;</span>:1048576,<span style="color:#e6db74">&#34;postgresql&#34;</span>:<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;use_pg_rewind&#34;</span>:true,<span style="color:#e6db74">&#34;use_slots&#34;</span>:true,<span style="color:#e6db74">&#34;parameters&#34;</span>:null<span style="color:#f92672">}}</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># db 初始化完成后写入该key, 值是通过 pg_controldata 命令获取的`Database system identifier` 字段</span>
+</span></span><span style="display:flex;"><span>/service/xsky-test/initialize
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">7054455725282492035</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 第一个节点抢到主, 写入自己的 name, 这个key会绑定一个 lease(default: 30s), </span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># patroni 存活期间每隔 loop_time(10s) 会刷新下这个 lease</span>
+</span></span><span style="display:flex;"><span>/service/xsky-test/leader
+</span></span><span style="display:flex;"><span>pg0
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># members 路径下是当前集群所有成员</span>
+</span></span><span style="display:flex;"><span>/service/xsky-test/members/pg0
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;conn_url&#34;</span>:<span style="color:#e6db74">&#34;postgres://10.252.90.217:5432/postgres&#34;</span>,<span style="color:#e6db74">&#34;api_url&#34;</span>:<span style="color:#e6db74">&#34;http://10.252.90.217:8008/patroni&#34;</span>,<span style="color:#e6db74">&#34;state&#34;</span>:<span style="color:#e6db74">&#34;running&#34;</span>,<span style="color:#e6db74">&#34;role&#34;</span>:<span style="color:#e6db74">&#34;master&#34;</span>,<span style="color:#e6db74">&#34;version&#34;</span>:<span style="color:#e6db74">&#34;2.1.2&#34;</span>,<span style="color:#e6db74">&#34;xlog_location&#34;</span>:24988528,<span style="color:#e6db74">&#34;timeline&#34;</span>:1<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># status 的值是当前 leader 的 wal lsn write location, 通过`select pg_current_wal_lsn()` 确认</span>
+</span></span><span style="display:flex;"><span>/service/xsky-test/status
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;optime&#34;</span>:24988528<span style="color:#f92672">}</span>
+</span></span></code></pre></div><h3 id="加入第二个节点">加入第二个节点</h3>
 <p>在 218 节点上执行</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">patroni postgres.yml
-</code></pre></div><p>exesnoop 观察:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#f92672">[</span>root@node-218 tools<span style="color:#f92672">]</span><span style="color:#75715e"># execsnoop -U</span>
-UID   PCOMM            PID    PPID   RET ARGS
-<span style="color:#ae81ff">1000</span>  python3          <span style="color:#ae81ff">237755</span> <span style="color:#ae81ff">237631</span>   <span style="color:#ae81ff">0</span> /usr/bin/python3 patroni.py postgres1.yml
-<span style="color:#ae81ff">1000</span>  sh               <span style="color:#ae81ff">237756</span> <span style="color:#ae81ff">237755</span>   <span style="color:#ae81ff">0</span> /bin/sh -c uname -p 2&gt; /dev/null
-<span style="color:#ae81ff">1000</span>  uname            <span style="color:#ae81ff">237757</span> <span style="color:#ae81ff">237756</span>   <span style="color:#ae81ff">0</span> /usr/bin/uname -p
-<span style="color:#ae81ff">1000</span>  ldconfig         <span style="color:#ae81ff">237758</span> <span style="color:#ae81ff">237755</span>   <span style="color:#ae81ff">0</span> /sbin/ldconfig -p
-<span style="color:#75715e"># 通过 pg_basebackup 从当前 leader 节点上复制数据库到 data 目录</span>
-<span style="color:#ae81ff">1000</span>  pg_basebackup    <span style="color:#ae81ff">237765</span> <span style="color:#ae81ff">237755</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_basebackup --pgdata<span style="color:#f92672">=</span>data/postgresql1 -X stream --dbname<span style="color:#f92672">=</span>dbname<span style="color:#f92672">=</span>postgres user<span style="color:#f92672">=</span>replicator host<span style="color:#f92672">=</span>10.252.90.217 port<span style="color:#f92672">=</span><span style="color:#ae81ff">5432</span> --verbose --max-rate<span style="color:#f92672">=</span>100M
-<span style="color:#ae81ff">1000</span>  pg_controldata   <span style="color:#ae81ff">237767</span> <span style="color:#ae81ff">237755</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_controldata data/postgresql1
-<span style="color:#ae81ff">1000</span>  python3          <span style="color:#ae81ff">237768</span> <span style="color:#ae81ff">237755</span>   <span style="color:#ae81ff">0</span> /usr/bin/python3 -c from multiprocessing.spawn import spawn_main; spawn_main<span style="color:#f92672">(</span>tracker_fd<span style="color:#f92672">=</span>0, pipe_handle<span style="color:#f92672">=</span>11<span style="color:#f92672">)</span> --multiprocessing-fork
-<span style="color:#ae81ff">1000</span>  sh               <span style="color:#ae81ff">237769</span> <span style="color:#ae81ff">237768</span>   <span style="color:#ae81ff">0</span> /bin/sh -c uname -p 2&gt; /dev/null
-<span style="color:#ae81ff">1000</span>  uname            <span style="color:#ae81ff">237770</span> <span style="color:#ae81ff">237769</span>   <span style="color:#ae81ff">0</span> /usr/bin/uname -p
-<span style="color:#75715e"># 启动 replica server 进程</span>
-<span style="color:#ae81ff">1000</span>  postgres         <span style="color:#ae81ff">237771</span> <span style="color:#ae81ff">237768</span>   <span style="color:#ae81ff">0</span> /usr/bin/postgres -D data/postgresql1 --config-file<span style="color:#f92672">=</span>/home/will/patroni/data/postgresql1/postgresql.conf --listen_addresses<span style="color:#f92672">=</span>0.0.0.0 --port<span style="color:#f92672">=</span><span style="color:#ae81ff">5432</span> --cluster_name<span style="color:#f92672">=</span>xsky-test --wal_level<span style="color:#f92672">=</span>replica --hot_standby<span style="color:#f92672">=</span>on --max_connections<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span> --max_wal_senders<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> --max_prepared_transactions<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> --max_locks_per_transaction<span style="color:#f92672">=</span><span style="color:#ae81ff">64</span> --track_commit_timestamp<span style="color:#f92672">=</span>off --max_replication_slots<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> --max_worker_processes<span style="color:#f92672">=</span><span style="color:#ae81ff">8</span> --wal_log_hints<span style="color:#f92672">=</span>on
-<span style="color:#75715e"># 等待 server ready</span>
-<span style="color:#ae81ff">1000</span>  pg_isready       <span style="color:#ae81ff">237774</span> <span style="color:#ae81ff">237755</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_isready -p <span style="color:#ae81ff">5432</span> -d postgres -h localhost -U postgres
-<span style="color:#ae81ff">1000</span>  pg_isready       <span style="color:#ae81ff">237780</span> <span style="color:#ae81ff">237755</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_isready -p <span style="color:#ae81ff">5432</span> -d postgres -h localhost -U postgres
-<span style="color:#ae81ff">1000</span>  pg_controldata   <span style="color:#ae81ff">237782</span> <span style="color:#ae81ff">237755</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_controldata data/postgresql1
-</code></pre></div><p>查看replica 节点加入后, etcd 内变多了什么, 主要是下面两个 key</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">
-<span style="color:#75715e"># 该 key 是 leader 节点的 pg_wal/xxx.history 文件内容, 每发生一次 failover, timeline就+1, 追加一条新 history, 可以通过 patronictl.py history 命令读取</span>
-/service/xsky-test/history
-<span style="color:#f92672">[[</span>1,24988864,<span style="color:#e6db74">&#34;no recovery target specified&#34;</span>,<span style="color:#e6db74">&#34;2022-01-18T16:32:51.891714+08:00&#34;</span>,<span style="color:#e6db74">&#34;pg0&#34;</span><span style="color:#f92672">]]</span>
-<span style="color:#75715e"># 新加入节点信息, role 是 replica</span>
-/service/xsky-test/members/pg1
-<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;conn_url&#34;</span>:<span style="color:#e6db74">&#34;postgres://10.252.90.218:5432/postgres&#34;</span>,<span style="color:#e6db74">&#34;api_url&#34;</span>:<span style="color:#e6db74">&#34;http://10.252.90.218:8008/patroni&#34;</span>,<span style="color:#e6db74">&#34;state&#34;</span>:<span style="color:#e6db74">&#34;running&#34;</span>,<span style="color:#e6db74">&#34;role&#34;</span>:<span style="color:#e6db74">&#34;replica&#34;</span>,<span style="color:#e6db74">&#34;version&#34;</span>:<span style="color:#e6db74">&#34;2.1.2&#34;</span>,<span style="color:#e6db74">&#34;xlog_location&#34;</span>:83886400,<span style="color:#e6db74">&#34;timeline&#34;</span>:2<span style="color:#f92672">}</span>
-</code></pre></div><p>同时, patroni 会在第二个节点上生成 recovery.conf</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e"># Do not edit this file manually!</span>
-<span style="color:#75715e"># It will be overwritten by Patroni!</span>
-primary_conninfo <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;user=replicator passfile=/tmp/pgpass1 host=10.252.90.217 port=5432 sslmode=prefer application_name=pg1&#39;</span>
-primary_slot_name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;pg1&#39;</span>
-recovery_target_timeline <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;latest&#39;</span>
-standby_mode <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;on&#39;</span>
-</code></pre></div><p>在第三个节点上启动patroni 加入集群过程类似</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>patroni postgres.yml
+</span></span></code></pre></div><p>exesnoop 观察:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#f92672">[</span>root@node-218 tools<span style="color:#f92672">]</span><span style="color:#75715e"># execsnoop -U</span>
+</span></span><span style="display:flex;"><span>UID   PCOMM            PID    PPID   RET ARGS
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  python3          <span style="color:#ae81ff">237755</span> <span style="color:#ae81ff">237631</span>   <span style="color:#ae81ff">0</span> /usr/bin/python3 patroni.py postgres1.yml
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  sh               <span style="color:#ae81ff">237756</span> <span style="color:#ae81ff">237755</span>   <span style="color:#ae81ff">0</span> /bin/sh -c uname -p 2&gt; /dev/null
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  uname            <span style="color:#ae81ff">237757</span> <span style="color:#ae81ff">237756</span>   <span style="color:#ae81ff">0</span> /usr/bin/uname -p
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  ldconfig         <span style="color:#ae81ff">237758</span> <span style="color:#ae81ff">237755</span>   <span style="color:#ae81ff">0</span> /sbin/ldconfig -p
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 通过 pg_basebackup 从当前 leader 节点上复制数据库到 data 目录</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  pg_basebackup    <span style="color:#ae81ff">237765</span> <span style="color:#ae81ff">237755</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_basebackup --pgdata<span style="color:#f92672">=</span>data/postgresql1 -X stream --dbname<span style="color:#f92672">=</span>dbname<span style="color:#f92672">=</span>postgres user<span style="color:#f92672">=</span>replicator host<span style="color:#f92672">=</span>10.252.90.217 port<span style="color:#f92672">=</span><span style="color:#ae81ff">5432</span> --verbose --max-rate<span style="color:#f92672">=</span>100M
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  pg_controldata   <span style="color:#ae81ff">237767</span> <span style="color:#ae81ff">237755</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_controldata data/postgresql1
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  python3          <span style="color:#ae81ff">237768</span> <span style="color:#ae81ff">237755</span>   <span style="color:#ae81ff">0</span> /usr/bin/python3 -c from multiprocessing.spawn import spawn_main; spawn_main<span style="color:#f92672">(</span>tracker_fd<span style="color:#f92672">=</span>0, pipe_handle<span style="color:#f92672">=</span>11<span style="color:#f92672">)</span> --multiprocessing-fork
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  sh               <span style="color:#ae81ff">237769</span> <span style="color:#ae81ff">237768</span>   <span style="color:#ae81ff">0</span> /bin/sh -c uname -p 2&gt; /dev/null
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  uname            <span style="color:#ae81ff">237770</span> <span style="color:#ae81ff">237769</span>   <span style="color:#ae81ff">0</span> /usr/bin/uname -p
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 启动 replica server 进程</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  postgres         <span style="color:#ae81ff">237771</span> <span style="color:#ae81ff">237768</span>   <span style="color:#ae81ff">0</span> /usr/bin/postgres -D data/postgresql1 --config-file<span style="color:#f92672">=</span>/home/will/patroni/data/postgresql1/postgresql.conf --listen_addresses<span style="color:#f92672">=</span>0.0.0.0 --port<span style="color:#f92672">=</span><span style="color:#ae81ff">5432</span> --cluster_name<span style="color:#f92672">=</span>xsky-test --wal_level<span style="color:#f92672">=</span>replica --hot_standby<span style="color:#f92672">=</span>on --max_connections<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span> --max_wal_senders<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> --max_prepared_transactions<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> --max_locks_per_transaction<span style="color:#f92672">=</span><span style="color:#ae81ff">64</span> --track_commit_timestamp<span style="color:#f92672">=</span>off --max_replication_slots<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> --max_worker_processes<span style="color:#f92672">=</span><span style="color:#ae81ff">8</span> --wal_log_hints<span style="color:#f92672">=</span>on
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 等待 server ready</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  pg_isready       <span style="color:#ae81ff">237774</span> <span style="color:#ae81ff">237755</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_isready -p <span style="color:#ae81ff">5432</span> -d postgres -h localhost -U postgres
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  pg_isready       <span style="color:#ae81ff">237780</span> <span style="color:#ae81ff">237755</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_isready -p <span style="color:#ae81ff">5432</span> -d postgres -h localhost -U postgres
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  pg_controldata   <span style="color:#ae81ff">237782</span> <span style="color:#ae81ff">237755</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_controldata data/postgresql1
+</span></span></code></pre></div><p>查看replica 节点加入后, etcd 内变多了什么, 主要是下面两个 key</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 该 key 是 leader 节点的 pg_wal/xxx.history 文件内容, 每发生一次 failover, timeline就+1, 追加一条新 history, 可以通过 patronictl.py history 命令读取</span>
+</span></span><span style="display:flex;"><span>/service/xsky-test/history
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[[</span>1,24988864,<span style="color:#e6db74">&#34;no recovery target specified&#34;</span>,<span style="color:#e6db74">&#34;2022-01-18T16:32:51.891714+08:00&#34;</span>,<span style="color:#e6db74">&#34;pg0&#34;</span><span style="color:#f92672">]]</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 新加入节点信息, role 是 replica</span>
+</span></span><span style="display:flex;"><span>/service/xsky-test/members/pg1
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;conn_url&#34;</span>:<span style="color:#e6db74">&#34;postgres://10.252.90.218:5432/postgres&#34;</span>,<span style="color:#e6db74">&#34;api_url&#34;</span>:<span style="color:#e6db74">&#34;http://10.252.90.218:8008/patroni&#34;</span>,<span style="color:#e6db74">&#34;state&#34;</span>:<span style="color:#e6db74">&#34;running&#34;</span>,<span style="color:#e6db74">&#34;role&#34;</span>:<span style="color:#e6db74">&#34;replica&#34;</span>,<span style="color:#e6db74">&#34;version&#34;</span>:<span style="color:#e6db74">&#34;2.1.2&#34;</span>,<span style="color:#e6db74">&#34;xlog_location&#34;</span>:83886400,<span style="color:#e6db74">&#34;timeline&#34;</span>:2<span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>同时, patroni 会在第二个节点上生成 recovery.conf</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># Do not edit this file manually!</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># It will be overwritten by Patroni!</span>
+</span></span><span style="display:flex;"><span>primary_conninfo <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;user=replicator passfile=/tmp/pgpass1 host=10.252.90.217 port=5432 sslmode=prefer application_name=pg1&#39;</span>
+</span></span><span style="display:flex;"><span>primary_slot_name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;pg1&#39;</span>
+</span></span><span style="display:flex;"><span>recovery_target_timeline <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;latest&#39;</span>
+</span></span><span style="display:flex;"><span>standby_mode <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;on&#39;</span>
+</span></span></code></pre></div><p>在第三个节点上启动patroni 加入集群过程类似</p>
 <h3 id="配置haproxy">配置HAProxy</h3>
 <pre tabindex="0"><code>listen cluster-a-leader                                                        
     bind *:5000                                                                
@@ -314,104 +314,104 @@ listen cluster-a-replicas
 cluster-a-replicas 会指向 replica pg,  :8008/replica 返回 200, leader 节点返回503.</p>
 <h3 id="手动触发-failover">手动触发 failover</h3>
 <p>先查看当前集群情况, 在任意一个节点上执行(现在假设在217上跑)</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">patronictl topology
-
- + Cluster: xsky-test <span style="color:#f92672">(</span>7054455725282492035<span style="color:#f92672">)</span> -------+----+-----------+----------------------------+
-| Member | Host               | Role    | State   | TL | Lag in MB | Tags                       |
-+--------+--------------------+---------+---------+----+-----------+----------------------------+
-| pg0    | 10.252.90.217:5432 | Leader  | running |  <span style="color:#ae81ff">2</span> |           |                            |
-| + pg1  | 10.252.90.218:5432 | Replica | running |  <span style="color:#ae81ff">2</span> |         <span style="color:#ae81ff">0</span> |                            |
-| + pg2  | 10.252.90.219:5434 | Replica | running |  <span style="color:#ae81ff">2</span> |         <span style="color:#ae81ff">0</span> | <span style="color:#f92672">{</span>replicatefrom: postgres1<span style="color:#f92672">}</span> |
-+--------+--------------------+---------+---------+----+-----------+----------------------------+ 
-</code></pre></div><p>手工触发 failover</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#f92672">[</span>will@node-217 patroni<span style="color:#f92672">]</span>$ patronictl failover
-Candidate <span style="color:#f92672">[</span><span style="color:#e6db74">&#39;pg1&#39;</span>, <span style="color:#e6db74">&#39;pg2&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">[]</span>: pg1
-Current cluster topology
-+ Cluster: xsky-test <span style="color:#f92672">(</span>7054455725282492035<span style="color:#f92672">)</span> -------+----+-----------+--------------------------+
-| Member | Host               | Role    | State   | TL | Lag in MB | Tags                     |
-+--------+--------------------+---------+---------+----+-----------+--------------------------+
-| pg0    | 10.252.90.217:5432 | Leader  | running |  <span style="color:#ae81ff">5</span> |           |                          |
-| pg1    | 10.252.90.218:5432 | Replica | running |  <span style="color:#ae81ff">5</span> |         <span style="color:#ae81ff">0</span> |                          |
-| pg2    | 10.252.90.219:5434 | Replica | running |  <span style="color:#ae81ff">5</span> |         <span style="color:#ae81ff">0</span> | replicatefrom: postgres1 |
-+--------+--------------------+---------+---------+----+-----------+--------------------------+
-Are you sure you want to failover cluster xsky-test, demoting current master pg0? <span style="color:#f92672">[</span>y/N<span style="color:#f92672">]</span>: y
-2022-01-18 17:56:02.04583 Successfully failed over to <span style="color:#e6db74">&#34;pg1&#34;</span>
-+ Cluster: xsky-test <span style="color:#f92672">(</span>7054455725282492035<span style="color:#f92672">)</span> -------+----+-----------+--------------------------+
-| Member | Host               | Role    | State   | TL | Lag in MB | Tags                     |
-+--------+--------------------+---------+---------+----+-----------+--------------------------+
-| pg0    | 10.252.90.217:5432 | Replica | stopped |    |   unknown |                          |
-| pg1    | 10.252.90.218:5432 | Leader  | running |  <span style="color:#ae81ff">5</span> |           |                          |
-| pg2    | 10.252.90.219:5434 | Replica | running |  <span style="color:#ae81ff">5</span> |         <span style="color:#ae81ff">0</span> | replicatefrom: postgres1 |
-+--------+--------------------+---------+---------+----+-----------+--------------------------+
-</code></pre></div><p>failover 命令运行过程中需要手工指定能提升为 leader 的 replica, 这里我们选择 pg1
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>patronictl topology
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> + Cluster: xsky-test <span style="color:#f92672">(</span>7054455725282492035<span style="color:#f92672">)</span> -------+----+-----------+----------------------------+
+</span></span><span style="display:flex;"><span>| Member | Host               | Role    | State   | TL | Lag in MB | Tags                       |
+</span></span><span style="display:flex;"><span>+--------+--------------------+---------+---------+----+-----------+----------------------------+
+</span></span><span style="display:flex;"><span>| pg0    | 10.252.90.217:5432 | Leader  | running |  <span style="color:#ae81ff">2</span> |           |                            |
+</span></span><span style="display:flex;"><span>| + pg1  | 10.252.90.218:5432 | Replica | running |  <span style="color:#ae81ff">2</span> |         <span style="color:#ae81ff">0</span> |                            |
+</span></span><span style="display:flex;"><span>| + pg2  | 10.252.90.219:5434 | Replica | running |  <span style="color:#ae81ff">2</span> |         <span style="color:#ae81ff">0</span> | <span style="color:#f92672">{</span>replicatefrom: postgres1<span style="color:#f92672">}</span> |
+</span></span><span style="display:flex;"><span>+--------+--------------------+---------+---------+----+-----------+----------------------------+ 
+</span></span></code></pre></div><p>手工触发 failover</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#f92672">[</span>will@node-217 patroni<span style="color:#f92672">]</span>$ patronictl failover
+</span></span><span style="display:flex;"><span>Candidate <span style="color:#f92672">[</span><span style="color:#e6db74">&#39;pg1&#39;</span>, <span style="color:#e6db74">&#39;pg2&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">[]</span>: pg1
+</span></span><span style="display:flex;"><span>Current cluster topology
+</span></span><span style="display:flex;"><span>+ Cluster: xsky-test <span style="color:#f92672">(</span>7054455725282492035<span style="color:#f92672">)</span> -------+----+-----------+--------------------------+
+</span></span><span style="display:flex;"><span>| Member | Host               | Role    | State   | TL | Lag in MB | Tags                     |
+</span></span><span style="display:flex;"><span>+--------+--------------------+---------+---------+----+-----------+--------------------------+
+</span></span><span style="display:flex;"><span>| pg0    | 10.252.90.217:5432 | Leader  | running |  <span style="color:#ae81ff">5</span> |           |                          |
+</span></span><span style="display:flex;"><span>| pg1    | 10.252.90.218:5432 | Replica | running |  <span style="color:#ae81ff">5</span> |         <span style="color:#ae81ff">0</span> |                          |
+</span></span><span style="display:flex;"><span>| pg2    | 10.252.90.219:5434 | Replica | running |  <span style="color:#ae81ff">5</span> |         <span style="color:#ae81ff">0</span> | replicatefrom: postgres1 |
+</span></span><span style="display:flex;"><span>+--------+--------------------+---------+---------+----+-----------+--------------------------+
+</span></span><span style="display:flex;"><span>Are you sure you want to failover cluster xsky-test, demoting current master pg0? <span style="color:#f92672">[</span>y/N<span style="color:#f92672">]</span>: y
+</span></span><span style="display:flex;"><span>2022-01-18 17:56:02.04583 Successfully failed over to <span style="color:#e6db74">&#34;pg1&#34;</span>
+</span></span><span style="display:flex;"><span>+ Cluster: xsky-test <span style="color:#f92672">(</span>7054455725282492035<span style="color:#f92672">)</span> -------+----+-----------+--------------------------+
+</span></span><span style="display:flex;"><span>| Member | Host               | Role    | State   | TL | Lag in MB | Tags                     |
+</span></span><span style="display:flex;"><span>+--------+--------------------+---------+---------+----+-----------+--------------------------+
+</span></span><span style="display:flex;"><span>| pg0    | 10.252.90.217:5432 | Replica | stopped |    |   unknown |                          |
+</span></span><span style="display:flex;"><span>| pg1    | 10.252.90.218:5432 | Leader  | running |  <span style="color:#ae81ff">5</span> |           |                          |
+</span></span><span style="display:flex;"><span>| pg2    | 10.252.90.219:5434 | Replica | running |  <span style="color:#ae81ff">5</span> |         <span style="color:#ae81ff">0</span> | replicatefrom: postgres1 |
+</span></span><span style="display:flex;"><span>+--------+--------------------+---------+---------+----+-----------+--------------------------+
+</span></span></code></pre></div><p>failover 命令运行过程中需要手工指定能提升为 leader 的 replica, 这里我们选择 pg1
 运行完后 pg1 变成了 leader, pg0 变成 replica
 看下三个节点各做了什么, 以下为设置 use_rewind 为 true 的情况下:
 new leader(pg1):</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e"># 用 pg_ctl promote 提升为主</span>
-<span style="color:#ae81ff">1000</span>  pg_ctl           <span style="color:#ae81ff">239361</span> <span style="color:#ae81ff">239125</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_ctl promote -D data/postgresql1 -W
-</code></pre></div><p>old leader(pg0):</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e"># 用 pg_rewind 从 新 leader 取 diff 的 wal </span>
-<span style="color:#ae81ff">1000</span>  pg_rewind        <span style="color:#ae81ff">31194</span>  <span style="color:#ae81ff">30785</span>    <span style="color:#ae81ff">0</span> /usr/bin/pg_rewind -D data/postgresql0 --source-server dbname<span style="color:#f92672">=</span>postgres user<span style="color:#f92672">=</span>postgres host<span style="color:#f92672">=</span>10.252.90.218 port<span style="color:#f92672">=</span><span style="color:#ae81ff">5432</span>
-<span style="color:#ae81ff">1000</span>  pg_controldata   <span style="color:#ae81ff">31195</span>  <span style="color:#ae81ff">30785</span>    <span style="color:#ae81ff">0</span> /usr/bin/pg_controldata data/postgresql0
-<span style="color:#ae81ff">1000</span>  pg_controldata   <span style="color:#ae81ff">31197</span>  <span style="color:#ae81ff">30785</span>    <span style="color:#ae81ff">0</span> /usr/bin/pg_controldata data/postgresql0
-<span style="color:#75715e"># 启动 pg server</span>
-<span style="color:#ae81ff">1000</span>  postgres         <span style="color:#ae81ff">31201</span>  <span style="color:#ae81ff">31198</span>    <span style="color:#ae81ff">0</span> /usr/bin/postgres -D data/postgresql0 --config-file<span style="color:#f92672">=</span>/home/will/patroni/data/postgresql0/postgresql.conf --listen_addresses<span style="color:#f92672">=</span>0.0.0.0 --port<span style="color:#f92672">=</span><span style="color:#ae81ff">5432</span> --cluster_name<span style="color:#f92672">=</span>xsky-test --wal_level<span style="color:#f92672">=</span>replica --hot_standby<span style="color:#f92672">=</span>on --max_connections<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span> --max_wal_senders<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> --max_prepared_transactions<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> --max_locks_per_transaction<span style="color:#f92672">=</span><span style="color:#ae81ff">64</span> --track_commit_timestamp<span style="color:#f92672">=</span>off --max_replication_slots<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> --max_worker_processes<span style="color:#f92672">=</span><span style="color:#ae81ff">8</span> --wal_log_hints<span style="color:#f92672">=</span>on
-<span style="color:#ae81ff">1000</span>  pg_isready       <span style="color:#ae81ff">31208</span>  <span style="color:#ae81ff">30785</span>    <span style="color:#ae81ff">0</span> /usr/bin/pg_isready -p <span style="color:#ae81ff">5432</span> -d postgres -h localhost -U postgres
-<span style="color:#ae81ff">1000</span>  pg_isready       <span style="color:#ae81ff">31210</span>  <span style="color:#ae81ff">30785</span>    <span style="color:#ae81ff">0</span> /usr/bin/pg_isready -p <span style="color:#ae81ff">5432</span> -d postgres -h localhost -U postgres
-</code></pre></div><p>pg2:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e"># 从 new leader(pg1) 处同步数据</span>
-<span style="color:#ae81ff">1000</span>  pg_rewind        <span style="color:#ae81ff">242064</span> <span style="color:#ae81ff">241235</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_rewind -D data/postgresql2 --source-server dbname<span style="color:#f92672">=</span>postgres user<span style="color:#f92672">=</span>postgres host<span style="color:#f92672">=</span>10.252.90.218 port<span style="color:#f92672">=</span><span style="color:#ae81ff">5432</span>
-<span style="color:#ae81ff">1000</span>  pg_controldata   <span style="color:#ae81ff">242065</span> <span style="color:#ae81ff">241235</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_controldata data/postgresql2
-<span style="color:#ae81ff">1000</span>  pg_controldata   <span style="color:#ae81ff">242067</span> <span style="color:#ae81ff">241235</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_controldata data/postgresql2
-<span style="color:#ae81ff">1000</span>  python3          <span style="color:#ae81ff">242068</span> <span style="color:#ae81ff">241235</span>   <span style="color:#ae81ff">0</span> /usr/bin/python3 -c from multiprocessing.spawn import spawn_main; spawn_main<span style="color:#f92672">(</span>tracker_fd<span style="color:#f92672">=</span>0, pipe_handle<span style="color:#f92672">=</span>11<span style="color:#f92672">)</span> --multiprocessing-fork
-<span style="color:#ae81ff">1000</span>  sh               <span style="color:#ae81ff">242069</span> <span style="color:#ae81ff">242068</span>   <span style="color:#ae81ff">0</span> /bin/sh -c uname -p 2&gt; /dev/null
-<span style="color:#ae81ff">1000</span>  uname            <span style="color:#ae81ff">242070</span> <span style="color:#ae81ff">242069</span>   <span style="color:#ae81ff">0</span> /usr/bin/uname -p
-<span style="color:#75715e"># 启动 pg server</span>
-<span style="color:#ae81ff">1000</span>  postgres         <span style="color:#ae81ff">242071</span> <span style="color:#ae81ff">242068</span>   <span style="color:#ae81ff">0</span> /usr/bin/postgres -D data/postgresql2 --config-file<span style="color:#f92672">=</span>/home/will/patroni/data/postgresql2/postgresql.conf --listen_addresses<span style="color:#f92672">=</span>0.0.0.0 --port<span style="color:#f92672">=</span><span style="color:#ae81ff">5434</span> --cluster_name<span style="color:#f92672">=</span>xsky-test --wal_level<span style="color:#f92672">=</span>replica --hot_standby<span style="color:#f92672">=</span>on --max_connections<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span> --max_wal_senders<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> --max_prepared_transactions<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> --max_locks_per_transaction<span style="color:#f92672">=</span><span style="color:#ae81ff">64</span> --track_commit_timestamp<span style="color:#f92672">=</span>off --max_replication_slots<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> --max_worker_processes<span style="color:#f92672">=</span><span style="color:#ae81ff">8</span> --wal_log_hints<span style="color:#f92672">=</span>on
-<span style="color:#ae81ff">1000</span>  pg_isready       <span style="color:#ae81ff">242078</span> <span style="color:#ae81ff">241235</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_isready -p <span style="color:#ae81ff">5434</span> -d postgres -h localhost -U postgres
-<span style="color:#ae81ff">1000</span>  pg_isready       <span style="color:#ae81ff">242080</span> <span style="color:#ae81ff">241235</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_isready -p <span style="color:#ae81ff">5434</span> -d postgres -h localhost -U postgres
-</code></pre></div><h3 id="测试-failover-过程中-db-可用性">测试 failover 过程中 db 可用性</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#!/bin/bash
-</span><span style="color:#75715e"></span>
-patronictl failover --master pg0 --candidate pg1 --force &amp;
-<span style="color:#66d9ef">while</span> <span style="color:#f92672">[[</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">do</span>
-        echo <span style="color:#e6db74">`</span>date<span style="color:#e6db74">`</span>
-        psql -h localhost -p <span style="color:#ae81ff">5000</span> -U admin -t postgres -c <span style="color:#e6db74">&#39;insert into test1 values(1)&#39;</span>
-sleep 0.5
-<span style="color:#66d9ef">done</span>
-
-
-Fri Jan <span style="color:#ae81ff">21</span> 10:49:10 CST <span style="color:#ae81ff">2022</span>                                
-INSERT <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span>
-Fri Jan <span style="color:#ae81ff">21</span> 10:49:11 CST <span style="color:#ae81ff">2022</span>                                                              
-INSERT <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span>                                                                           
-Fri Jan <span style="color:#ae81ff">21</span> 10:49:12 CST <span style="color:#ae81ff">2022</span>
-psql: server closed the connection unexpectedly             
-        This probably means the server terminated abnormally
-        before or <span style="color:#66d9ef">while</span> processing the request.         
-Fri Jan <span style="color:#ae81ff">21</span> 10:49:15 CST <span style="color:#ae81ff">2022</span>                                
-ERROR:  cannot execute INSERT in a read-only transaction    
-Fri Jan <span style="color:#ae81ff">21</span> 10:49:16 CST <span style="color:#ae81ff">2022</span>                                
-ERROR:  cannot execute INSERT in a read-only transaction
-Fri Jan <span style="color:#ae81ff">21</span> 10:49:17 CST <span style="color:#ae81ff">2022</span>                                
-ERROR:  cannot execute INSERT in a read-only transaction                                  
-Fri Jan <span style="color:#ae81ff">21</span> 10:49:18 CST <span style="color:#ae81ff">2022</span>                                                              
-INSERT <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span>                                                                                
-Fri Jan <span style="color:#ae81ff">21</span> 10:49:19 CST <span style="color:#ae81ff">2022</span>                                                              
-INSERT <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span>                                                                                
-Fri Jan <span style="color:#ae81ff">21</span> 10:49:20 CST <span style="color:#ae81ff">2022</span>                                                              
-INSERT <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span>  
-</code></pre></div><h3 id="如何防止脑裂">如何防止脑裂</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># 用 pg_ctl promote 提升为主</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  pg_ctl           <span style="color:#ae81ff">239361</span> <span style="color:#ae81ff">239125</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_ctl promote -D data/postgresql1 -W
+</span></span></code></pre></div><p>old leader(pg0):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># 用 pg_rewind 从 新 leader 取 diff 的 wal </span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  pg_rewind        <span style="color:#ae81ff">31194</span>  <span style="color:#ae81ff">30785</span>    <span style="color:#ae81ff">0</span> /usr/bin/pg_rewind -D data/postgresql0 --source-server dbname<span style="color:#f92672">=</span>postgres user<span style="color:#f92672">=</span>postgres host<span style="color:#f92672">=</span>10.252.90.218 port<span style="color:#f92672">=</span><span style="color:#ae81ff">5432</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  pg_controldata   <span style="color:#ae81ff">31195</span>  <span style="color:#ae81ff">30785</span>    <span style="color:#ae81ff">0</span> /usr/bin/pg_controldata data/postgresql0
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  pg_controldata   <span style="color:#ae81ff">31197</span>  <span style="color:#ae81ff">30785</span>    <span style="color:#ae81ff">0</span> /usr/bin/pg_controldata data/postgresql0
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 启动 pg server</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  postgres         <span style="color:#ae81ff">31201</span>  <span style="color:#ae81ff">31198</span>    <span style="color:#ae81ff">0</span> /usr/bin/postgres -D data/postgresql0 --config-file<span style="color:#f92672">=</span>/home/will/patroni/data/postgresql0/postgresql.conf --listen_addresses<span style="color:#f92672">=</span>0.0.0.0 --port<span style="color:#f92672">=</span><span style="color:#ae81ff">5432</span> --cluster_name<span style="color:#f92672">=</span>xsky-test --wal_level<span style="color:#f92672">=</span>replica --hot_standby<span style="color:#f92672">=</span>on --max_connections<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span> --max_wal_senders<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> --max_prepared_transactions<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> --max_locks_per_transaction<span style="color:#f92672">=</span><span style="color:#ae81ff">64</span> --track_commit_timestamp<span style="color:#f92672">=</span>off --max_replication_slots<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> --max_worker_processes<span style="color:#f92672">=</span><span style="color:#ae81ff">8</span> --wal_log_hints<span style="color:#f92672">=</span>on
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  pg_isready       <span style="color:#ae81ff">31208</span>  <span style="color:#ae81ff">30785</span>    <span style="color:#ae81ff">0</span> /usr/bin/pg_isready -p <span style="color:#ae81ff">5432</span> -d postgres -h localhost -U postgres
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  pg_isready       <span style="color:#ae81ff">31210</span>  <span style="color:#ae81ff">30785</span>    <span style="color:#ae81ff">0</span> /usr/bin/pg_isready -p <span style="color:#ae81ff">5432</span> -d postgres -h localhost -U postgres
+</span></span></code></pre></div><p>pg2:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># 从 new leader(pg1) 处同步数据</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  pg_rewind        <span style="color:#ae81ff">242064</span> <span style="color:#ae81ff">241235</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_rewind -D data/postgresql2 --source-server dbname<span style="color:#f92672">=</span>postgres user<span style="color:#f92672">=</span>postgres host<span style="color:#f92672">=</span>10.252.90.218 port<span style="color:#f92672">=</span><span style="color:#ae81ff">5432</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  pg_controldata   <span style="color:#ae81ff">242065</span> <span style="color:#ae81ff">241235</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_controldata data/postgresql2
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  pg_controldata   <span style="color:#ae81ff">242067</span> <span style="color:#ae81ff">241235</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_controldata data/postgresql2
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  python3          <span style="color:#ae81ff">242068</span> <span style="color:#ae81ff">241235</span>   <span style="color:#ae81ff">0</span> /usr/bin/python3 -c from multiprocessing.spawn import spawn_main; spawn_main<span style="color:#f92672">(</span>tracker_fd<span style="color:#f92672">=</span>0, pipe_handle<span style="color:#f92672">=</span>11<span style="color:#f92672">)</span> --multiprocessing-fork
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  sh               <span style="color:#ae81ff">242069</span> <span style="color:#ae81ff">242068</span>   <span style="color:#ae81ff">0</span> /bin/sh -c uname -p 2&gt; /dev/null
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  uname            <span style="color:#ae81ff">242070</span> <span style="color:#ae81ff">242069</span>   <span style="color:#ae81ff">0</span> /usr/bin/uname -p
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 启动 pg server</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  postgres         <span style="color:#ae81ff">242071</span> <span style="color:#ae81ff">242068</span>   <span style="color:#ae81ff">0</span> /usr/bin/postgres -D data/postgresql2 --config-file<span style="color:#f92672">=</span>/home/will/patroni/data/postgresql2/postgresql.conf --listen_addresses<span style="color:#f92672">=</span>0.0.0.0 --port<span style="color:#f92672">=</span><span style="color:#ae81ff">5434</span> --cluster_name<span style="color:#f92672">=</span>xsky-test --wal_level<span style="color:#f92672">=</span>replica --hot_standby<span style="color:#f92672">=</span>on --max_connections<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span> --max_wal_senders<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> --max_prepared_transactions<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> --max_locks_per_transaction<span style="color:#f92672">=</span><span style="color:#ae81ff">64</span> --track_commit_timestamp<span style="color:#f92672">=</span>off --max_replication_slots<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> --max_worker_processes<span style="color:#f92672">=</span><span style="color:#ae81ff">8</span> --wal_log_hints<span style="color:#f92672">=</span>on
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  pg_isready       <span style="color:#ae81ff">242078</span> <span style="color:#ae81ff">241235</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_isready -p <span style="color:#ae81ff">5434</span> -d postgres -h localhost -U postgres
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1000</span>  pg_isready       <span style="color:#ae81ff">242080</span> <span style="color:#ae81ff">241235</span>   <span style="color:#ae81ff">0</span> /usr/bin/pg_isready -p <span style="color:#ae81ff">5434</span> -d postgres -h localhost -U postgres
+</span></span></code></pre></div><h3 id="测试-failover-过程中-db-可用性">测试 failover 过程中 db 可用性</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e">#!/bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>patronictl failover --master pg0 --candidate pg1 --force &amp;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#f92672">[[</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>        echo <span style="color:#e6db74">`</span>date<span style="color:#e6db74">`</span>
+</span></span><span style="display:flex;"><span>        psql -h localhost -p <span style="color:#ae81ff">5000</span> -U admin -t postgres -c <span style="color:#e6db74">&#39;insert into test1 values(1)&#39;</span>
+</span></span><span style="display:flex;"><span>sleep 0.5
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">done</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Fri Jan <span style="color:#ae81ff">21</span> 10:49:10 CST <span style="color:#ae81ff">2022</span>                                
+</span></span><span style="display:flex;"><span>INSERT <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>Fri Jan <span style="color:#ae81ff">21</span> 10:49:11 CST <span style="color:#ae81ff">2022</span>                                                              
+</span></span><span style="display:flex;"><span>INSERT <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span>                                                                           
+</span></span><span style="display:flex;"><span>Fri Jan <span style="color:#ae81ff">21</span> 10:49:12 CST <span style="color:#ae81ff">2022</span>
+</span></span><span style="display:flex;"><span>psql: server closed the connection unexpectedly             
+</span></span><span style="display:flex;"><span>        This probably means the server terminated abnormally
+</span></span><span style="display:flex;"><span>        before or <span style="color:#66d9ef">while</span> processing the request.         
+</span></span><span style="display:flex;"><span>Fri Jan <span style="color:#ae81ff">21</span> 10:49:15 CST <span style="color:#ae81ff">2022</span>                                
+</span></span><span style="display:flex;"><span>ERROR:  cannot execute INSERT in a read-only transaction    
+</span></span><span style="display:flex;"><span>Fri Jan <span style="color:#ae81ff">21</span> 10:49:16 CST <span style="color:#ae81ff">2022</span>                                
+</span></span><span style="display:flex;"><span>ERROR:  cannot execute INSERT in a read-only transaction
+</span></span><span style="display:flex;"><span>Fri Jan <span style="color:#ae81ff">21</span> 10:49:17 CST <span style="color:#ae81ff">2022</span>                                
+</span></span><span style="display:flex;"><span>ERROR:  cannot execute INSERT in a read-only transaction                                  
+</span></span><span style="display:flex;"><span>Fri Jan <span style="color:#ae81ff">21</span> 10:49:18 CST <span style="color:#ae81ff">2022</span>                                                              
+</span></span><span style="display:flex;"><span>INSERT <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span>                                                                                
+</span></span><span style="display:flex;"><span>Fri Jan <span style="color:#ae81ff">21</span> 10:49:19 CST <span style="color:#ae81ff">2022</span>                                                              
+</span></span><span style="display:flex;"><span>INSERT <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span>                                                                                
+</span></span><span style="display:flex;"><span>Fri Jan <span style="color:#ae81ff">21</span> 10:49:20 CST <span style="color:#ae81ff">2022</span>                                                              
+</span></span><span style="display:flex;"><span>INSERT <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span>  
+</span></span></code></pre></div><h3 id="如何防止脑裂">如何防止脑裂</h3>
 <p>假设当前 topology</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#f92672">[</span>will@node-217 ~<span style="color:#f92672">]</span>$ patronictl topology
-+ Cluster: xsky-test <span style="color:#f92672">(</span>7054740837533385088<span style="color:#f92672">)</span> --+----+-----------+----------------------------+
-| Member | Host          | Role    | State   | TL | Lag in MB | Tags                       |
-+--------+---------------+---------+---------+----+-----------+----------------------------+
-| pg0    | 10.252.90.217 | Leader  | running |  <span style="color:#ae81ff">8</span> |           |                            |
-| + pg1  | 10.252.90.218 | Replica | running |  <span style="color:#ae81ff">8</span> |         <span style="color:#ae81ff">0</span> |                            |
-| + pg2  | 10.252.90.219 | Replica | running |  <span style="color:#ae81ff">8</span> |         <span style="color:#ae81ff">0</span> | <span style="color:#f92672">{</span>replicatefrom: postgres1<span style="color:#f92672">}</span> |
-+--------+---------------+---------+---------+----+-----------+----------------------------+
-</code></pre></div><h4 id="关闭-leader-pg">关闭 leader pg</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#f92672">[</span>will@node-217 ~<span style="color:#f92672">]</span>$ patronictl topology
+</span></span><span style="display:flex;"><span>+ Cluster: xsky-test <span style="color:#f92672">(</span>7054740837533385088<span style="color:#f92672">)</span> --+----+-----------+----------------------------+
+</span></span><span style="display:flex;"><span>| Member | Host          | Role    | State   | TL | Lag in MB | Tags                       |
+</span></span><span style="display:flex;"><span>+--------+---------------+---------+---------+----+-----------+----------------------------+
+</span></span><span style="display:flex;"><span>| pg0    | 10.252.90.217 | Leader  | running |  <span style="color:#ae81ff">8</span> |           |                            |
+</span></span><span style="display:flex;"><span>| + pg1  | 10.252.90.218 | Replica | running |  <span style="color:#ae81ff">8</span> |         <span style="color:#ae81ff">0</span> |                            |
+</span></span><span style="display:flex;"><span>| + pg2  | 10.252.90.219 | Replica | running |  <span style="color:#ae81ff">8</span> |         <span style="color:#ae81ff">0</span> | <span style="color:#f92672">{</span>replicatefrom: postgres1<span style="color:#f92672">}</span> |
+</span></span><span style="display:flex;"><span>+--------+---------------+---------+---------+----+-----------+----------------------------+
+</span></span></code></pre></div><h4 id="关闭-leader-pg">关闭 leader pg</h4>
 <p>pg_ctl stop  -D data/postgresql -m  immediate</p>
 <p>patroni 会把 pg 重新拉起:</p>
 <ul>
@@ -425,14 +425,14 @@ INSERT <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span>
 etcd 中的 /service/xsky-test/leader key ttl 是30s, patroni 每隔10s会刷新一下 ttl, 所以该key 会在 20s~30s  之后失效, 此时 pg1/pg2 去抢主
 等 pg1/2 完成选主, 此时集群中已经有两个 leader 了.
 在 pg1 上执行查看当前 topology</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">
-+ Cluster: xsky-test <span style="color:#f92672">(</span>7054740837533385088<span style="color:#f92672">)</span> --+----+-----------+----------------------------+
-| Member | Host          | Role    | State   | TL | Lag in MB | Tags                       |
-+--------+---------------+---------+---------+----+-----------+----------------------------+
-| pg2    | 10.252.90.219 | Leader  | running |  <span style="color:#ae81ff">9</span> |           | <span style="color:#f92672">{</span>replicatefrom: postgres1<span style="color:#f92672">}</span> |
-| + pg1  | 10.252.90.218 | Replica | running |  <span style="color:#ae81ff">9</span> |         <span style="color:#ae81ff">0</span> |                            |
-+--------+---------------+---------+---------+----+-----------+----------------------------+
-</code></pre></div><p>pg2 成了主, 那原来 pg0 上的 postgres 就成了 orphan leader, 会发生脑裂, 怎么处理?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>+ Cluster: xsky-test <span style="color:#f92672">(</span>7054740837533385088<span style="color:#f92672">)</span> --+----+-----------+----------------------------+
+</span></span><span style="display:flex;"><span>| Member | Host          | Role    | State   | TL | Lag in MB | Tags                       |
+</span></span><span style="display:flex;"><span>+--------+---------------+---------+---------+----+-----------+----------------------------+
+</span></span><span style="display:flex;"><span>| pg2    | 10.252.90.219 | Leader  | running |  <span style="color:#ae81ff">9</span> |           | <span style="color:#f92672">{</span>replicatefrom: postgres1<span style="color:#f92672">}</span> |
+</span></span><span style="display:flex;"><span>| + pg1  | 10.252.90.218 | Replica | running |  <span style="color:#ae81ff">9</span> |         <span style="color:#ae81ff">0</span> |                            |
+</span></span><span style="display:flex;"><span>+--------+---------------+---------+---------+----+-----------+----------------------------+
+</span></span></code></pre></div><p>pg2 成了主, 那原来 pg0 上的 postgres 就成了 orphan leader, 会发生脑裂, 怎么处理?</p>
 <p>前面放置 haproxy 做代理</p>
 <pre tabindex="0"><code>listen cluster-a-master                                                        
     bind *:5011                                                                
@@ -459,16 +459,16 @@ etcd 中的 /service/xsky-test/leader key ttl 是30s, patroni 每隔10s会刷新
 <p>PS: pg 的同步复制模式类似 MySQL 的半同步复制, 通过参数调整也可以模拟 MySQL 的全同步复制</p>
 <h4 id="pg-的同步复制模式">pg 的同步复制模式</h4>
 <p>可以直接修改 postgresql.conf 开启同步复制的方式:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">bootstrap</span>:
-  <span style="color:#f92672">dcs</span>:
-    <span style="color:#f92672">postgresql</span>:
-      <span style="color:#f92672">parameters</span>:
-       <span style="color:#ae81ff">// pg 的默认值就是on, 只是不配置synchronous_standby_names 的话不会生效</span>
-        <span style="color:#f92672">synchronous_commit</span>: <span style="color:#e6db74">&#34;on&#34;</span>  
-        <span style="color:#ae81ff">// * 表示任意一台,  即, 保证必须有一台 replica 在线, 否则 leader 节点会拒绝写入.</span>
-        <span style="color:#f92672">synchronous_standby_names</span>: <span style="color:#e6db74">&#34;*&#34;</span>
-        <span style="color:#f92672">// synchronous_commit</span>: <span style="color:#ae81ff">remote_apply</span>
-</code></pre></div><p>同步复制的缺点是影响写入性能.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">bootstrap</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">dcs</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">postgresql</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">parameters</span>:
+</span></span><span style="display:flex;"><span>       <span style="color:#ae81ff">// pg 的默认值就是on, 只是不配置synchronous_standby_names 的话不会生效</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">synchronous_commit</span>: <span style="color:#e6db74">&#34;on&#34;</span>  
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">// * 表示任意一台,  即, 保证必须有一台 replica 在线, 否则 leader 节点会拒绝写入.</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">synchronous_standby_names</span>: <span style="color:#e6db74">&#34;*&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">// synchronous_commit</span>: <span style="color:#ae81ff">remote_apply</span>
+</span></span></code></pre></div><p>同步复制的缺点是影响写入性能.
 直接修改 postgresql.parameters 的方式缺点是我们没法知道哪台replica 是当前的 sync replica.</p>
 <h4 id="patroni-的-synchronous_mode-封装">patroni 的 synchronous_mode 封装</h4>
 <p>patroni 把 postgresql.conf 中的 synchronous_standy_names 这个参数封装了一下, 由三个参数控制:</p>
@@ -517,7 +517,7 @@ etcd 中的 /service/xsky-test/leader key ttl 是30s, patroni 每隔10s会刷新
       </div>
     <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     

@@ -13,10 +13,11 @@
   <meta name="description" content="pyflame is an opensource tool developed by uber: https://github.com/uber/pyflame
 It can take snapshots of running python process, combined with flamegraph.pl, can output flamegraph picture of python call stacks. Help analyze bottleneck of python program, needn’t inject any perf code into your application, and overhead is very low.
 Basic Usage sudo pyflame -s 10 -x -r 0.001 $pid | ./flamegraph.pl &amp;gt; perf.svg
- -s, how many seconds to run -r, sample rate (seconds)  Your output will be something like following:
+-s, how many seconds to run -r, sample rate (seconds) Your output will be something like following:
 Longer bar means more sample points located in it, which means this part code is slower so it has a higher chance seen by pyflame.
 In my case, the output graph has a long IDLE part. Pyflame can detect call stacks who are holding GIL, so if the running code doesn’t hold GIL, pyflame don’t know what it’s doing, it will label them as IDLE. Following cases will be considered as IDLE:
- Your process is sleeping, do nothing. Waiting for IO.(eg: Your application is calling a very slow RPC server) Call libs written in C.  The right part is real application logic code. You can check this part to get a sense of overview performance of your code."/>
+Your process is sleeping, do nothing. Waiting for IO.(eg: Your application is calling a very slow RPC server) Call libs written in C. The right part is real application logic code. You can check this part to get a sense of overview performance of your code.
+Also you can exclude the IDLE part from graph if you don’t care about them, just apply -x"/>
   
 
   
@@ -141,7 +142,7 @@ In my case, the output graph has a long IDLE part. Pyflame can detect call stack
       </div>
     <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     

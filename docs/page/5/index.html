@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.92.0" />
+	<meta name="generator" content="Hugo 0.111.3">
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -134,12 +134,12 @@
 System resources can be classified in three main categories: compute, storage, and network. Usually, when you come to a performance issue, it&rsquo;s always caused by exhaustion of those resources.
 Universal metric: System load There&rsquo;re several ways to get system load, w, uptime, top, cat /proc/loadavg
 uptime example:
-03:34:23 up 20:31, 1 user, load average: 1.02, 0.65, 0.45  Top right corner three values named load average is system load.
+03:34:23 up 20:31, 1 user, load average: 1.02, 0.65, 0.45 Top right corner three values named load average is system load.
 They means: average system load during last minute/last 5 minutes/last 15 minutes periods.
 If load/(# of cpu core) &gt; 1 means there&rsquo;re tasks pending in cpu queue. Usually, you will feel slow.
 It&rsquo;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.
 If system load is high, means tasks are pending in CPU queue, maybe a result of:
- High cpu usage. Poor disk performance(disk io). Exhaustion of ram. &hellip;  free free -k/-m/-g show memory usage in KB/MB/GB
+High cpu usage. Poor disk performance(disk io). Exhaustion of ram. &hellip; free free -k/-m/-g show memory usage in KB/MB/GB
 free -h humanize output (automatically show in KB/MB/GB&hellip;)......</p>
     </div>
   </div>

@@ -147,39 +147,38 @@ server 在等 client 发完整数据包. 最后就到了超时时间 40ms.</p>
 <li>server 端 socket 设置 TCP_QUICKACK, 就会关闭 delayed ack. server 端的返回 ack 包会变多.</li>
 </ul>
 <p>写个测试程序验证一下这个 40ms 问题, server 端用的是默认配置的 nginx(没有设置 TCP_QUICKACK):</p>
-<pre><code>    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        <span style="color:#f92672">import</span> socket
-        <span style="color:#f92672">import</span> time
-
-        host <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;192.168.33.10&#39;</span>
-        port <span style="color:#f92672">=</span> <span style="color:#ae81ff">80</span>
-
-        TOTAL_TIME <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-        count <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
-
-
-        <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_func</span>(s, together<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>):
-            <span style="color:#66d9ef">global</span> TOTAL_TIME
-
-            header <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;POST / HTTP/1.1</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">Host: 192.168.33.10</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">Connection: keep-alive</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">User-Agent: curl/7.58.0</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">Content-Length: 3</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">Content-Type: application/x-www-form-urlencoded</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">Accept: */*</span><span style="color:#ae81ff">\r\n\r\n</span><span style="color:#e6db74">&#39;</span>
-            body <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;abc&#39;</span>
-            _all <span style="color:#f92672">=</span> header <span style="color:#f92672">+</span> body
-            <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(count):
-                start <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time()
-                <span style="color:#66d9ef">if</span> together:
-                    s<span style="color:#f92672">.</span>send(_all)
-                <span style="color:#66d9ef">else</span>:
-                    s<span style="color:#f92672">.</span>send(header)
-                    s<span style="color:#f92672">.</span>send(body)
-                s<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">1024</span>)
-                TOTAL_TIME <span style="color:#f92672">+=</span> time<span style="color:#f92672">.</span>time() <span style="color:#f92672">-</span> start
-                print(TOTAL_TIME <span style="color:#f92672">*</span> <span style="color:#ae81ff">1000</span>)
-
-
-        <span style="color:#66d9ef">with</span> socket<span style="color:#f92672">.</span>socket(socket<span style="color:#f92672">.</span>AF_INET, socket<span style="color:#f92672">.</span>SOCK_STREAM) <span style="color:#66d9ef">as</span> s:
-            s<span style="color:#f92672">.</span>connect((host, port))
-            <span style="color:#75715e">#s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)</span>
-            test_func(s)
-        </code></pre></div>
+<pre><code>    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> socket
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>host <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;192.168.33.10&#39;</span>
+</span></span><span style="display:flex;"><span>port <span style="color:#f92672">=</span> <span style="color:#ae81ff">80</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>TOTAL_TIME <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>count <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_func</span>(s, together<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">global</span> TOTAL_TIME
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    header <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;POST / HTTP/1.1</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">Host: 192.168.33.10</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">Connection: keep-alive</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">User-Agent: curl/7.58.0</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">Content-Length: 3</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">Content-Type: application/x-www-form-urlencoded</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">Accept: */*</span><span style="color:#ae81ff">\r\n\r\n</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>    body <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;abc&#39;</span>
+</span></span><span style="display:flex;"><span>    _all <span style="color:#f92672">=</span> header <span style="color:#f92672">+</span> body
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(count):
+</span></span><span style="display:flex;"><span>        start <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> together:
+</span></span><span style="display:flex;"><span>            s<span style="color:#f92672">.</span>send(_all)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            s<span style="color:#f92672">.</span>send(header)
+</span></span><span style="display:flex;"><span>            s<span style="color:#f92672">.</span>send(body)
+</span></span><span style="display:flex;"><span>        s<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">1024</span>)
+</span></span><span style="display:flex;"><span>        TOTAL_TIME <span style="color:#f92672">+=</span> time<span style="color:#f92672">.</span>time() <span style="color:#f92672">-</span> start
+</span></span><span style="display:flex;"><span>        print(TOTAL_TIME <span style="color:#f92672">*</span> <span style="color:#ae81ff">1000</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> socket<span style="color:#f92672">.</span>socket(socket<span style="color:#f92672">.</span>AF_INET, socket<span style="color:#f92672">.</span>SOCK_STREAM) <span style="color:#66d9ef">as</span> s:
+</span></span><span style="display:flex;"><span>    s<span style="color:#f92672">.</span>connect((host, port))
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)</span>
+</span></span><span style="display:flex;"><span>    test_func(s)</span></span></code></pre></div>
 </code></pre>
 <p>不设置 TCP_NODELAY, 并且分开发送 header, body, 耗时结果如下, 很明显出现了 40ms,:</p>
 <pre><code>    0.15425682067871094
@@ -248,7 +247,7 @@ server 在等 client 发完整数据包. 最后就到了超时时间 40ms.</p>
       </div>
     <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     

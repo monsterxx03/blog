@@ -134,11 +134,12 @@
       <description>Recently, we build pub/sub system based on AWS&amp;rsquo;s SNS &amp;amp; SQS service, take some notes.
 Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&amp;rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&amp;rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
 There&amp;rsquo;re three obvious choices in my mind:
- kafka AMQP based system (rabbitmq,activemq &amp;hellip;) SNS + SQS  My demands for this system are:
- Support message persistence. Support topic based message distribution. Easy to manage.  The data volume won&amp;rsquo;t be very large, so performance and throughput won&amp;rsquo;t be critical concerns.
+kafka AMQP based system (rabbitmq,activemq &amp;hellip;) SNS + SQS My demands for this system are:
+Support message persistence. Support topic based message distribution. Easy to manage. The data volume won&amp;rsquo;t be very large, so performance and throughput won&amp;rsquo;t be critical concerns.
 I choose SNS + SQS, main concerns are from operation side:
- kafka need zookeeper to support cluster. rabbitmq need extra configuration for HA, and AMQP model is relatively complex for programming.  So my decision is:
- application publish message to SNS topic Setup multi SQS queues to subscribe SNS topic Let different application processes to subscribe to different queues to finish its logic.  SQS and SNS is very simple, not too much to say, just some notes:</description>
+kafka need zookeeper to support cluster. rabbitmq need extra configuration for HA, and AMQP model is relatively complex for programming. So my decision is:
+application publish message to SNS topic Setup multi SQS queues to subscribe SNS topic Let different application processes to subscribe to different queues to finish its logic. SQS and SNS is very simple, not too much to say, just some notes:
+SQS queue have two types, FIFO queue and standard queue.</description>
     </item>
     
     <item>
@@ -169,8 +170,8 @@ I choose SNS + SQS, main concerns are from operation side:
 Usually, we inject secrets as environment variables, but they&amp;rsquo;re still visable on lambda console. I don&amp;rsquo;t use it in aws lambda.
 The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
 Code example:
-client = boto3.client(&#39;ssm&#39;) resp = client.get_parameter( Name=&#39;/redshift/admin/password&#39;, WithDecryption=True ) resp: { &amp;quot;Parameter&amp;quot;: { &amp;quot;Name&amp;quot;: &amp;quot;/redshift/admin/password&amp;quot;, &amp;quot;Type&amp;quot;: &amp;quot;SecureString&amp;quot;, &amp;quot;Value&amp;quot;: &amp;quot;password value&amp;quot;, &amp;quot;Version&amp;quot;: 1 } }  Things you need to do to make it work:
- Create a new KMS key Use new created KMS key to encrypt your data in parameter store. Set a execution role for your lambda function. In the KMS key&amp;rsquo;s setting page, add the lambda execution role to the list which can read this KMS key.  Then your lambda code can access encrypted data at runtime, and you needn&amp;rsquo;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.
+client = boto3.client(&#39;ssm&#39;) resp = client.get_parameter( Name=&#39;/redshift/admin/password&#39;, WithDecryption=True ) resp: { &amp;quot;Parameter&amp;quot;: { &amp;quot;Name&amp;quot;: &amp;quot;/redshift/admin/password&amp;quot;, &amp;quot;Type&amp;quot;: &amp;quot;SecureString&amp;quot;, &amp;quot;Value&amp;quot;: &amp;quot;password value&amp;quot;, &amp;quot;Version&amp;quot;: 1 } } Things you need to do to make it work:
+Create a new KMS key Use new created KMS key to encrypt your data in parameter store. Set a execution role for your lambda function. In the KMS key&amp;rsquo;s setting page, add the lambda execution role to the list which can read this KMS key. Then your lambda code can access encrypted data at runtime, and you needn&amp;rsquo;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.
 BTW, parameter store support hierarchy(at most 15 levels), splitted by /. You can retrive data under same level in one call, deltails can be found in doc, eg: http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path</description>
     </item>
     
@@ -182,13 +183,13 @@ BTW, parameter store support hierarchy(at most 15 levels), splitted by /. You ca
       <guid>https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/</guid>
       <description>If you run a webserver on AWS, get real client ip will be tricky if you didn&amp;rsquo;t configure server right and write code correctly.
 Things related to client real ip:
- CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application).  Request sequence diagram will be like following:
+CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application). Request sequence diagram will be like following:
 User&amp;rsquo;s real client ip is forwarded by front proxies one by one in head X-Forwarded-For.
 For CloudFront:
- If user&amp;rsquo;s req header don&amp;rsquo;t have X-Forwarded-For, it will set user&amp;rsquo;s ip(from tcp connection) in X-Forwarded-For If user&amp;rsquo;s req already have X-Forwarded-For, it will append user&amp;rsquo;s ip(from tcp connection) to the end of X-Forwarded-For  For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront&amp;rsquo;s ip.
+If user&amp;rsquo;s req header don&amp;rsquo;t have X-Forwarded-For, it will set user&amp;rsquo;s ip(from tcp connection) in X-Forwarded-For If user&amp;rsquo;s req already have X-Forwarded-For, it will append user&amp;rsquo;s ip(from tcp connection) to the end of X-Forwarded-For For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront&amp;rsquo;s ip.
 For nginx, things will be tricky depends on your config.
 Things maybe involved in nginx:
- real ip module proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;  If you didn&amp;rsquo;t use real ip module, you need to pass X-Forwarded-For head explictly.
+real ip module proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; If you didn&amp;rsquo;t use real ip module, you need to pass X-Forwarded-For head explictly.
 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; will append ALB&amp;rsquo;s ip to the end of X-Forwarded-For header received from ALB.
 So X-Forwarded-For header your webserver received will be user ip,cloudfront ip, alb ip
 Or you can use real ip module to trust the value passed from ALB.</description>
@@ -212,11 +213,12 @@ Or you can use real ip module to trust the value passed from ALB.</description>
       <description>AWS&amp;rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
 It works, but have some concerns. Take some notes when doing this project.
 Prerequisites Source RDS must:
- Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration(&#39;binlog retention hours&#39;, 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT , REPLICATION SLAVE , SELECT on replication target tables  DDL on source table Redshift has some limits on change columns:
- New column only must be added in the end Can&amp;rsquo;t rename columns  So for DDL on source MySQL, you can&amp;rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
- &amp;quot;ChangeProcessingDdlHandlingPolicy&amp;quot;:{ &amp;quot;HandleSourceTableDropped&amp;quot;:false, &amp;quot;HandleSourceTableTruncated&amp;quot;:false, &amp;quot;HandleSourceTableAltered&amp;quot;:false },  If source table schema changed, I just drop and reload target table on console.
+Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration(&#39;binlog retention hours&#39;, 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT , REPLICATION SLAVE , SELECT on replication target tables DDL on source table Redshift has some limits on change columns:
+New column only must be added in the end Can&amp;rsquo;t rename columns So for DDL on source MySQL, you can&amp;rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
+&amp;quot;ChangeProcessingDdlHandlingPolicy&amp;quot;:{ &amp;quot;HandleSourceTableDropped&amp;quot;:false, &amp;quot;HandleSourceTableTruncated&amp;quot;:false, &amp;quot;HandleSourceTableAltered&amp;quot;:false }, If source table schema changed, I just drop and reload target table on console.
 Control write speed on Redshift Since Redshift is an OLAP database, write operation is slow and concurrency is low, streaming data directly will have big impact on it.
-And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.</description>
+And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.
+So I need to batch apply changes on DMS.</description>
     </item>
     
     <item>
@@ -231,8 +233,8 @@ To cleanup those PTR records realtime, you can write a lambda function, use serv
 Straightforward way is write a script to call AWS API to get a PTR list, get ip from record, test whether the ip is live, if not, delete it.
 Since use awscli to delete a Route53 record is very troublesome (involve json format), you’d better write a python script to delete them. I just demo some ideas to collect those records via shell.
 You can do it in a single line, but make things clear and easy to debug, I split it into several steps.
-Get PTR record list aws route53 list-resource-record-sets --hosted-zone-id xxxxx --query &amp;quot;ResourceRecordSets[?Type==&#39;PTR&#39;].Name&amp;quot; | grep -Po &#39;&amp;quot;(.+?)&amp;quot;&#39; | tr -d \&amp;quot; &amp;gt; ptr.txt  ptr.txt will contain lines like:
-1.0.0.10.in-addr.arpa. 2.0.0.10.in-addr.arpa.  Get ip list from PTR records cat ptr.</description>
+Get PTR record list aws route53 list-resource-record-sets --hosted-zone-id xxxxx --query &amp;quot;ResourceRecordSets[?Type==&#39;PTR&#39;].Name&amp;quot; | grep -Po &#39;&amp;quot;(.+?)&amp;quot;&#39; | tr -d \&amp;quot; &amp;gt; ptr.txt ptr.txt will contain lines like:
+1.0.0.10.in-addr.arpa. 2.0.0.10.in-addr.arpa. Get ip list from PTR records cat ptr.txt | while read -r line ; do echo -n $line | tac -s.</description>
     </item>
     
     <item>
@@ -245,7 +247,7 @@ Get PTR record list aws route53 list-resource-record-sets --hosted-zone-id xxxxx
 Steps are very easy, you only need VPC endpoints and S3 bucket policy.
 AWS api is open to internet, if you need to access S3 in VPC, your requests will pass through VPC’s internet gateway or NAT gateway. With VPC endpoints(can be found in VPC console), your requests to S3 will go through AWS’s internal network. Currently, VPC endpoints only support S3, support for dynamodb is in test.
 To restrict S3 bucket only available in your VPC, need to set bucket policy (to host static website, enable static website support first). At first, I didn’t check doc, try to restrict access by my VPC ip cidr, but it didn’t work, I need to restrict by VPC endpoint id:
-{ &amp;quot;Version&amp;quot;: &amp;quot;2012-10-17&amp;quot;, &amp;quot;Id&amp;quot;: &amp;quot;Policy1415115909152&amp;quot;, &amp;quot;Statement&amp;quot;: [ { &amp;quot;Sid&amp;quot;: &amp;quot;Access-to-specific-VPCE-only&amp;quot;, &amp;quot;Principal&amp;quot;: &amp;quot;*&amp;quot;, &amp;quot;Action&amp;quot;: &amp;quot;s3:GetObject&amp;quot;, &amp;quot;Effect&amp;quot;: &amp;quot;Allow&amp;quot;, &amp;quot;Resource&amp;quot;: [&amp;quot;arn:aws:s3:::my_secure_bucket&amp;quot;, &amp;quot;arn:aws:s3:::my_secure_bucket/*&amp;quot;], &amp;quot;Condition&amp;quot;: { &amp;quot;StringEquals&amp;quot;: { &amp;quot;aws:sourceVpce&amp;quot;: &amp;quot;vpce-1a2b3c4d&amp;quot; } } } ] }  BTW, if you can config bucket policy restrict on VPC directly, with VPC endpoint you can limit to subnets.</description>
+{ &amp;quot;Version&amp;quot;: &amp;quot;2012-10-17&amp;quot;, &amp;quot;Id&amp;quot;: &amp;quot;Policy1415115909152&amp;quot;, &amp;quot;Statement&amp;quot;: [ { &amp;quot;Sid&amp;quot;: &amp;quot;Access-to-specific-VPCE-only&amp;quot;, &amp;quot;Principal&amp;quot;: &amp;quot;*&amp;quot;, &amp;quot;Action&amp;quot;: &amp;quot;s3:GetObject&amp;quot;, &amp;quot;Effect&amp;quot;: &amp;quot;Allow&amp;quot;, &amp;quot;Resource&amp;quot;: [&amp;quot;arn:aws:s3:::my_secure_bucket&amp;quot;, &amp;quot;arn:aws:s3:::my_secure_bucket/*&amp;quot;], &amp;quot;Condition&amp;quot;: { &amp;quot;StringEquals&amp;quot;: { &amp;quot;aws:sourceVpce&amp;quot;: &amp;quot;vpce-1a2b3c4d&amp;quot; } } } ] } BTW, if you can config bucket policy restrict on VPC directly, with VPC endpoint you can limit to subnets.</description>
     </item>
     
     <item>
@@ -265,11 +267,11 @@ To restrict S3 bucket only available in your VPC, need to set bucket policy (to 
       <guid>https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/</guid>
       <description>Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.
 You will come to:
- How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what’s the DHCP option set?), navigate around AWS console is okay, but not convenient. Who did what to which resource at when? AWS have a service called Config, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do.  Ideally, we should manage AWS resources like code, all changes kept in VCS, so called Infrastructure as Code.
+How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what’s the DHCP option set?), navigate around AWS console is okay, but not convenient. Who did what to which resource at when? AWS have a service called Config, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do. Ideally, we should manage AWS resources like code, all changes kept in VCS, so called Infrastructure as Code.
 I’ve tried three ways to do it:
- ansible CloudFormation terraform  In this article, I&amp;rsquo;ll compare them, however, the conclusion is to use terraform 🙂
+ansible CloudFormation terraform In this article, I&amp;rsquo;ll compare them, however, the conclusion is to use terraform 🙂
 Ansible Provision tools, like ansible/chef/puppet, all can be used to create aws resources, but they have some common problems:
- Hard to track changes after bootstrap. No confident what it will do to existing resources.  For example, I define a security group in ansibble:
+Hard to track changes after bootstrap. No confident what it will do to existing resources. For example, I define a security group in ansibble:
 ec2_group: name: &amp;quot;web&amp;quot; description: &amp;quot;security group in web&amp;quot; vpc_id: &amp;quot;vpc-xxx&amp;quot; region: &amp;quot;us-east-1&amp;quot; rules: - proto: tcp from_port: 80 to_port: 80 cidr_ip: 0.</description>
     </item>
     

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.92.0" />
+	<meta name="generator" content="Hugo 0.111.3">
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -199,8 +199,8 @@
 Usually, we inject secrets as environment variables, but they&rsquo;re still visable on lambda console. I don&rsquo;t use it in aws lambda.
 The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
 Code example:
-client = boto3.client('ssm') resp = client.get_parameter( Name='/redshift/admin/password', WithDecryption=True ) resp: { &quot;Parameter&quot;: { &quot;Name&quot;: &quot;/redshift/admin/password&quot;, &quot;Type&quot;: &quot;SecureString&quot;, &quot;Value&quot;: &quot;password value&quot;, &quot;Version&quot;: 1 } }  Things you need to do to make it work:
- Create a new KMS key Use new created KMS key to encrypt your data in parameter store. Set a execution role for your lambda function. In the KMS key&rsquo;s setting page, add the lambda execution role to the list which can read this KMS key.  Then your lambda code can access encrypted data at runtime, and you needn&rsquo;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.
+client = boto3.client('ssm') resp = client.get_parameter( Name='/redshift/admin/password', WithDecryption=True ) resp: { &quot;Parameter&quot;: { &quot;Name&quot;: &quot;/redshift/admin/password&quot;, &quot;Type&quot;: &quot;SecureString&quot;, &quot;Value&quot;: &quot;password value&quot;, &quot;Version&quot;: 1 } } Things you need to do to make it work:
+Create a new KMS key Use new created KMS key to encrypt your data in parameter store. Set a execution role for your lambda function. In the KMS key&rsquo;s setting page, add the lambda execution role to the list which can read this KMS key. Then your lambda code can access encrypted data at runtime, and you needn&rsquo;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.
 BTW, parameter store support hierarchy(at most 15 levels), splitted by /. You can retrive data under same level in one call, deltails can be found in doc, eg: http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path......</p>
     </div>
   </div>
@@ -277,13 +277,13 @@ BTW, parameter store support hierarchy(at most 15 levels), splitted by /. You ca
     <div class="post_content markdown">
       <p>If you run a webserver on AWS, get real client ip will be tricky if you didn&rsquo;t configure server right and write code correctly.
 Things related to client real ip:
- CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application).  Request sequence diagram will be like following:
+CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application). Request sequence diagram will be like following:
 User&rsquo;s real client ip is forwarded by front proxies one by one in head X-Forwarded-For.
 For CloudFront:
- If user&rsquo;s req header don&rsquo;t have X-Forwarded-For, it will set user&rsquo;s ip(from tcp connection) in X-Forwarded-For If user&rsquo;s req already have X-Forwarded-For, it will append user&rsquo;s ip(from tcp connection) to the end of X-Forwarded-For  For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront&rsquo;s ip.
+If user&rsquo;s req header don&rsquo;t have X-Forwarded-For, it will set user&rsquo;s ip(from tcp connection) in X-Forwarded-For If user&rsquo;s req already have X-Forwarded-For, it will append user&rsquo;s ip(from tcp connection) to the end of X-Forwarded-For For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront&rsquo;s ip.
 For nginx, things will be tricky depends on your config.
 Things maybe involved in nginx:
- real ip module proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;  If you didn&rsquo;t use real ip module, you need to pass X-Forwarded-For head explictly.
+real ip module proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; If you didn&rsquo;t use real ip module, you need to pass X-Forwarded-For head explictly.
 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; will append ALB&rsquo;s ip to the end of X-Forwarded-For header received from ALB.
 So X-Forwarded-For header your webserver received will be user ip,cloudfront ip, alb ip
 Or you can use real ip module to trust the value passed from ALB.......</p>
@@ -363,7 +363,7 @@ Or you can use real ip module to trust the value passed from ALB.......</p>
       <p>A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&rsquo;m working on a long term solution. I learned some important things from this accident.
 The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&rsquo;s health check failed due to high load.
 I did following:
- Check monitor Identify the problem is caused by KV system  Okay, problem is here, I know the problem is KV system&rsquo;s performance issue. But I can&rsquo;t figure out the root case right now, I need a temporary solution. Straightward way is redirect traffic to slave instance. But I know it won&rsquo;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&rsquo;t work.
+Check monitor Identify the problem is caused by KV system Okay, problem is here, I know the problem is KV system&rsquo;s performance issue. But I can&rsquo;t figure out the root case right now, I need a temporary solution. Straightward way is redirect traffic to slave instance. But I know it won&rsquo;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&rsquo;t work.
 The real down time was not long, performance recovered to some degree soon, but latency was still high, not normal. I monitored it for long time, and tried to find out the root case until morning. Since traffic was growing when peak hour coming, performance became problem again.......</p>
     </div>
   </div>
@@ -400,11 +400,12 @@ The real down time was not long, performance recovered to some degree soon, but 
       <p>AWS&rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
 It works, but have some concerns. Take some notes when doing this project.
 Prerequisites Source RDS must:
- Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration('binlog retention hours', 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT , REPLICATION SLAVE , SELECT on replication target tables  DDL on source table Redshift has some limits on change columns:
- New column only must be added in the end Can&rsquo;t rename columns  So for DDL on source MySQL, you can&rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
- &quot;ChangeProcessingDdlHandlingPolicy&quot;:{ &quot;HandleSourceTableDropped&quot;:false, &quot;HandleSourceTableTruncated&quot;:false, &quot;HandleSourceTableAltered&quot;:false },  If source table schema changed, I just drop and reload target table on console.
+Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration('binlog retention hours', 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT , REPLICATION SLAVE , SELECT on replication target tables DDL on source table Redshift has some limits on change columns:
+New column only must be added in the end Can&rsquo;t rename columns So for DDL on source MySQL, you can&rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
+&quot;ChangeProcessingDdlHandlingPolicy&quot;:{ &quot;HandleSourceTableDropped&quot;:false, &quot;HandleSourceTableTruncated&quot;:false, &quot;HandleSourceTableAltered&quot;:false }, If source table schema changed, I just drop and reload target table on console.
 Control write speed on Redshift Since Redshift is an OLAP database, write operation is slow and concurrency is low, streaming data directly will have big impact on it.
-And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.......</p>
+And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.
+So I need to batch apply changes on DMS.......</p>
     </div>
   </div>
   
@@ -447,8 +448,8 @@ To cleanup those PTR records realtime, you can write a lambda function, use serv
 Straightforward way is write a script to call AWS API to get a PTR list, get ip from record, test whether the ip is live, if not, delete it.
 Since use awscli to delete a Route53 record is very troublesome (involve json format), you’d better write a python script to delete them. I just demo some ideas to collect those records via shell.
 You can do it in a single line, but make things clear and easy to debug, I split it into several steps.
-Get PTR record list aws route53 list-resource-record-sets --hosted-zone-id xxxxx --query &quot;ResourceRecordSets[?Type=='PTR'].Name&quot; | grep -Po '&quot;(.+?)&quot;' | tr -d \&quot; &gt; ptr.txt  ptr.txt will contain lines like:
-1.0.0.10.in-addr.arpa. 2.0.0.10.in-addr.arpa.  Get ip list from PTR records cat ptr.......</p>
+Get PTR record list aws route53 list-resource-record-sets --hosted-zone-id xxxxx --query &quot;ResourceRecordSets[?Type=='PTR'].Name&quot; | grep -Po '&quot;(.+?)&quot;' | tr -d \&quot; &gt; ptr.txt ptr.txt will contain lines like:
+1.0.0.10.in-addr.arpa. 2.0.0.10.in-addr.arpa. Get ip list from PTR records cat ptr.txt | while read -r line ; do echo -n $line | tac -s.......</p>
     </div>
   </div>
   

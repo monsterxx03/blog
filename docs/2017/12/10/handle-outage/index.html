@@ -13,7 +13,7 @@
   <meta name="description" content="A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&amp;rsquo;m working on a long term solution. I learned some important things from this accident.
 The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&amp;rsquo;s health check failed due to high load.
 I did following:
- Check monitor Identify the problem is caused by KV system  Okay, problem is here, I know the problem is KV system&amp;rsquo;s performance issue. But I can&amp;rsquo;t figure out the root case right now, I need a temporary solution. Straightward way is redirect traffic to slave instance. But I know it won&amp;rsquo;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&amp;rsquo;t work.
+Check monitor Identify the problem is caused by KV system Okay, problem is here, I know the problem is KV system&amp;rsquo;s performance issue. But I can&amp;rsquo;t figure out the root case right now, I need a temporary solution. Straightward way is redirect traffic to slave instance. But I know it won&amp;rsquo;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&amp;rsquo;t work.
 The real down time was not long, performance recovered to some degree soon, but latency was still high, not normal. I monitored it for long time, and tried to find out the root case until morning. Since traffic was growing when peak hour coming, performance became problem again."/>
   
 
@@ -146,7 +146,7 @@ Straightward way is redirect traffic to slave instance. But I know it won&rsquo;
       </div>
     <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
