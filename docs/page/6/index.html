@@ -94,6 +94,43 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2018/09/21/eks-%E8%AF%84%E6%B5%8B-part-2/'>eks 评测 part-2</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>上文测试了一下 EKS 和 cluster autoscaler, 本文记录对 persisten volume 的测试. PersistentVolume 创建 gp2 类型的 storageclass, 并用 annotations 设置为默认 sc, dynamic volume provision 会用到: kind: StorageClass apiVersion: storage.k8s.io/v1 metadata: name: gp2 annotations: storageclass.kubernetes.io/is-default-class: &quot;true&quot; provisioner: kubernetes.io/aws-ebs reclaimPolicy: Retain parameters: type: gp2 fsType: ext4 encrypted: &quot;true&quot; 因为 eks 是基于 1.10.3 的, volume expansion 还是 alpha 状态, 没法自动开启(没法改 api server 配置), 所以 storageclass 的 allowVolumeExpansion, 设置了也没用. 这里 encrypted 的值必须是字符串, 否则会创建失败, 而且报错莫名其妙. 创建 pod 的时候指定一个已存在的 ebs volume apiVersion: v1 kind: Pod metadata: name: test spec: volumes: - name: test awsElasticBlockStore: fsType: ext4 volumeID: vol-03670d6294ccf29fd containers: - image: nginx name: nginx volumeMounts: - name: test mountPath: /mnt kubectl -it test -- /bin/bash 进去看一下: root@test:/# df -h......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2018.09.21</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2018/09/11/eks-%E8%AF%84%E6%B5%8B/'>EKS 评测</a></h2>
   </div>
   
@@ -401,41 +438,6 @@ SQS queue have two types, FIFO queue and standard queue.......</p>
           <a href="https://blog.monsterxx03.com/tags/sns/">SNS</a>
           
           <a href="https://blog.monsterxx03.com/tags/sqs/">SQS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/05/20/migrate-to-sqlalchemy/'>Migrate to Sqlalchemy</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些. 原来的 db 层代码历史非常古老(10年以上&hellip;), 最早写代码的人早就不在了, 问题很多: 完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.05.20</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/python/">python</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/sqlalchemy/">sqlalchemy</a>
           
           <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
           

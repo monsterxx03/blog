@@ -94,6 +94,39 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2020/04/16/%E5%9C%A8-eks-%E4%B8%AD%E6%AD%A3%E7%A1%AE%E8%AE%BE%E7%BD%AE-iam-%E6%9D%83%E9%99%90/'>在 eks 中正确设置 IAM 权限</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p>在代码中调用 aws api 的时候常用两种方法: 直接传入 aws accessKey/secretKey 使用 instance profile 前者一般是创建一个 IAM 用户, 绑定对应权限, 生成 keypair, 在 k8s 环境里, 把 keypair 放在 Secrets 里, 或通过环境变量注入. 好处是可以每个应用单独设置, 但需要自己管理 keypair. 后者创建一个 IAM role, 绑定对应权限, 创建 ec2 的时候选择对应的 role. 跑在该 ec2 instance 上的程序自动能拿到对应的 IAM 权限. 好处是不必自己管理 keypair, 缺点是跑在同一 server 上的程序权限都一样. eks 1.14 里有个两全齐美的办法: serviceaccount role: https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html 可以把 IAM role 绑定在 pod 使用的......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2020.04.16</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2020/04/07/%E9%87%8D%E6%9E%84%E6%8E%A8%E9%80%81%E6%9C%8D%E5%8A%A1/'>重构推送服务</a></h2>
   </div>
   
@@ -367,39 +400,6 @@
           <a href="https://blog.monsterxx03.com/tags/mysql/">mysql</a>
           
           <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2019/09/29/gospy-dev-note/'>gospy dev note</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>前文讲了下 gospy 的大致用法, 这篇记录具体实现和过程中碰到的一些问题. 原理 要从外部获取 golang 进程的 runtime 信息, 需要做得是从进程的 binary 中的 debug 信息里 parse 出需要的一些变量的虚拟内存地址, 读取目标进程的内存, 得到相应的数据, 将两者映射起来就好了.只支持了 linux 上的 ELF 格式 binary, debug 信息是 go 在编译时候弄进去的, 格式是通用的 DWARF. ELF 和 DWARF 格式本身不细究(汗, 文档几百页也实在看不动), go 标准库里自带相应的 parser: debug/elf, debug/dwarf, debug/gosym. 一个基本的读取例子: f, _ := os.Open(path) b, _ :=......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2019.09.29</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/gospy/">gospy</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/golang/">golang</a>
           
         </span>
         

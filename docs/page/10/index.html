@@ -94,6 +94,44 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2016/07/26/mysql-index-optimization/'>MySQL 索引优化</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p><p>什么是索引,索引怎么建这些基本的就跳过不谈了,整理一些前段时间优化线上 SQL 查询时碰到的一些问题. 主要解决下面几个问题:</p>
+<ul>
+<li>建立索引怎样选择合适的列.</li>
+<li>怎样让 SQL 能有效利用索引.</li>
+<li>如果对 SQL 效率进行评估(即设置索引前后是否真的有性能提升).</li>
+</ul>......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2016.07.26</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/database/">Database</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/mysql/">MySQL</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2016/07/16/redshift-as-data-warehouse/'>Redshift as data warehouse</a></h2>
   </div>
   
@@ -182,8 +220,8 @@ Side projects https://github.com/monsterxx03/gospy non-Invasive goroutine inspec
 It&rsquo;s a vm scheduling and management system.
 Main tech stack:
 Postgresql as DB, use logical replication as msg queue. VictoriaMetrics for monitoring. Etcd for leader election. code in golang Major achievements:
-Designed and developed a HA solution for Postgresql based on Patroni(by client side service discovering) Build alerting system based on VictoriaMetrics, support both metrics &amp; event based alerting. Design and implement the upgrade path for the product. 2014.11 ~ 2021.5 Glow Inc (https://glowing.com) Work as company&rsquo;s infrastructure architect:
-Responsible for AWS-based infrastructure design, selection, maintenance, and refactoring. System capacity planning, cost management. Identify bottlenecks in system performance and architecture scalability, refactor existing code, increase user base by 10X while keeping IT cost increase to only two times. Regular team training and technical sharing, as well as code quality control. Server Infra Develop and achieve SLOs for the business, including: Availability: service uptime &gt;=99.99% Quality: p95 latency &lt; 200ms Core service p95 latency &lt; 50ms.......</p>
+Write a terraform provider for the product, which generates the terraform schema definition from an OpenAPI spec using code generation, uses reflection to implement generic Terraform CRUD. Designed and developed a HA solution for Postgresql based on Patroni(by client side service discovering) Build alerting system based on VictoriaMetrics, support both metrics &amp; event based alerting. Design and implement the upgrade path for the product. 2014.11 ~ 2021.5 Glow Inc (https://glowing.com) Work as company&rsquo;s infrastructure architect:
+Responsible for AWS-based infrastructure design, selection, maintenance, and refactoring. System capacity planning, cost management. Identify bottlenecks in system performance and architecture scalability, refactor existing code, increase user base by 10X while keeping IT cost increase to only two times. Regular team training and technical sharing, as well as code quality control.......</p>
     </div>
   </div>
   
