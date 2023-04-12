@@ -9,7 +9,7 @@ paginate = 10
 copyright = "monsterxx03"
 enableRobotsTXT = true # generate robots.txt
 enableEmoji = true
-googleAnalytics = "UA-98667627-1"
+googleAnalytics = "G-P32CTT1G2G"
 disqusShortname = "mx03"
 
 publishDir="docs"
