@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Wed, 26 Jan 2022 14:06:09 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/categories/tech/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 12 Apr 2023 09:25:34 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/categories/tech/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>整理几个碰到的 etcd bug</title>
+      <link>https://blog.monsterxx03.com/2023/04/12/%E6%95%B4%E7%90%86%E5%87%A0%E4%B8%AA%E7%A2%B0%E5%88%B0%E7%9A%84-etcd-bug/</link>
+      <pubDate>Wed, 12 Apr 2023 09:25:34 +0800</pubDate>
+      
+      <guid>https://blog.monsterxx03.com/2023/04/12/%E6%95%B4%E7%90%86%E5%87%A0%E4%B8%AA%E7%A2%B0%E5%88%B0%E7%9A%84-etcd-bug/</guid>
+      <description>产品里用了一年多的 etcd, 碰到过一些 bug, 整理下，其中用些在最新版本里已经修复了, 会标注下. 添加 etcd 节点相关 bug 添加 etcd 节点的过程一般是先 member add, 然后启动新节点上的 etcd，这样的问题是在 member add 和新 etcd 启动 之间整个 etcd 集群处于 quorum - 1 的状态, 此过程增加了集群的不稳定性，如果新节点由于配置错误起不来，现存节点再挂一个 就可能导致整个集群不可用. 从 3.4 开始 etcd 引入了 learner 的概念, member add &amp;ndash;learner, 可以将新节点添加成 leaner 角色，只同步 raft log, 不参与 quorum vote, 即现有集</description>
+    </item>
+    
     <item>
       <title>用 Patroni 来做 PostgreSQL 的 HA</title>
       <link>https://blog.monsterxx03.com/2022/01/26/%E7%94%A8-patroni-%E6%9D%A5%E5%81%9A-postgresql-%E7%9A%84-ha/</link>
