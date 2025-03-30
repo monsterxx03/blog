@@ -1,863 +1,573 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>tech on Shining Moon</title>
+    <title>Tech on Shining Moon</title>
     <link>https://blog.monsterxx03.com/categories/tech/</link>
-    <description>Recent content in tech on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Tech on Shining Moon</description>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Wed, 12 Apr 2023 09:25:34 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/categories/tech/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 30 Mar 2025 19:05:11 +0800</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/categories/tech/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>gospy dev note2 (rewrite with aider)</title>
+      <link>https://blog.monsterxx03.com/2025/03/30/gospy-dev-note2-rewrite-with-aider/</link>
+      <pubDate>Sun, 30 Mar 2025 19:05:11 +0800</pubDate>
+      <guid>https://blog.monsterxx03.com/2025/03/30/gospy-dev-note2-rewrite-with-aider/</guid>
+      <description>&lt;p&gt;几年前写过个工具 &lt;a href=&#34;https://github.com/monsterxx03/gospy&#34;&gt;gospy&lt;/a&gt;, 用于从旁路 dump 一个 golang 进程的 runtime 信息(包括 goroutine, memory 等), 大致原理见以前的&lt;a href=&#34;https://blog.monsterxx03.com/tags/gospy/&#34;&gt;文章&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;基本功能能用, 但没继续做下去, 除了没时间外, 其他还有几个问题:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;不支持 MacOS (主要是没搞懂 MacOS 下怎么读取进程内存).&lt;/li&gt;&#xA;&lt;li&gt;DWARF 解析写的过于繁琐, golang 版本更新时, 解析逻辑很难调整.&lt;/li&gt;&#xA;&lt;li&gt;对写 UI (包括 terminal UI 和前端) 实在没兴趣, 不写又没法暴露功能, 也懒得去做通过 http 接口暴露数据.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;前阵子试了下通过 &lt;a href=&#34;https://aider.chat/&#34;&gt;aider&lt;/a&gt; 来写代码, 效果非常惊艳, 对我来说, 比 curosr 还顺手. 于是花了两个周末的时间, 把 gospy 整个重写了.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>整理几个碰到的 etcd bug</title>
       <link>https://blog.monsterxx03.com/2023/04/12/%E6%95%B4%E7%90%86%E5%87%A0%E4%B8%AA%E7%A2%B0%E5%88%B0%E7%9A%84-etcd-bug/</link>
       <pubDate>Wed, 12 Apr 2023 09:25:34 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2023/04/12/%E6%95%B4%E7%90%86%E5%87%A0%E4%B8%AA%E7%A2%B0%E5%88%B0%E7%9A%84-etcd-bug/</guid>
-      <description>产品里用了一年多的 etcd, 碰到过一些 bug, 整理下，其中用些在最新版本里已经修复了, 会标注下. 添加 etcd 节点相关 bug 添加 etcd 节点的过程一般是先 member add, 然后启动新节点上的 etcd，这样的问题是在 member add 和新 etcd 启动 之间整个 etcd 集群处于 quorum - 1 的状态, 此过程增加了集群的不稳定性，如果新节点由于配置错误起不来，现存节点再挂一个 就可能导致整个集群不可用. 从 3.4 开始 etcd 引入了 learner 的概念, member add &amp;ndash;learner, 可以将新节点添加成 leaner 角色，只同步 raft log, 不参与 quorum vote, 即现有集</description>
+      <description>&lt;p&gt;产品里用了一年多的 etcd, 碰到过一些 bug, 整理下，其中用些在最新版本里已经修复了, 会标注下.&lt;/p&gt;&#xA;&lt;h2 id=&#34;添加-etcd-节点相关-bug&#34;&gt;添加 etcd 节点相关 bug&lt;/h2&gt;&#xA;&lt;p&gt;添加 etcd 节点的过程一般是先 member add, 然后启动新节点上的 etcd，这样的问题是在 member add 和新 etcd 启动&#xA;之间整个 etcd 集群处于 quorum - 1 的状态, 此过程增加了集群的不稳定性，如果新节点由于配置错误起不来，现存节点再挂一个&#xA;就可能导致整个集群不可用.&lt;/p&gt;&#xA;&lt;p&gt;从 3.4 开始 etcd 引入了 learner 的概念, member add &amp;ndash;learner, 可以将新节点添加成 leaner 角色，只同步 raft log, 不参与 quorum vote,&#xA;即现有集群的 quorum size 不会变化. 等新节点起来后再通过 member promote 将新节点提升为正常节点，参与 quorum vote.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>用 Patroni 来做 PostgreSQL 的 HA</title>
       <link>https://blog.monsterxx03.com/2022/01/26/%E7%94%A8-patroni-%E6%9D%A5%E5%81%9A-postgresql-%E7%9A%84-ha/</link>
       <pubDate>Wed, 26 Jan 2022 14:06:09 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2022/01/26/%E7%94%A8-patroni-%E6%9D%A5%E5%81%9A-postgresql-%E7%9A%84-ha/</guid>
-      <description>patroni 的安装跳过, 它只是个 python 包, 把依赖装好就行, 同时要求装好 postgres-server, patroni 运行过程中会调用 pg_ctl 等命令: https://patroni.readthedocs.io/en/latest/README.html 每个 patroni 管理一个 pg 实例, 两者必须部署在同一节点上, patroni 需要能: 访问 pg 的监听端口 读写 pg data dir (patroni 会重写 postgres.conf, pg_hba.conf 等文件) 配置文件 配置文件是yaml 格式, 具体见 https://patroni.readthedocs.io/en/latest/SETTINGS.html 使用 patroni postgres.yaml 命令启动一个 patroni 实例 # 集群名字, 同一集群内的 patroni 必须设置一样, 会成为 postgres.conf 内的 cluster_name参数 scope: xsky-test # patroni 会将一些动态配置存在 DCS 内, namespace 是在 DCS 内的存储路径, eg: 使用</description>
+      <description>&lt;p&gt;patroni 的安装跳过, 它只是个 python 包, 把依赖装好就行, 同时要求装好 postgres-server, patroni 运行过程中会调用 pg_ctl 等命令: &lt;a href=&#34;https://patroni.readthedocs.io/en/latest/README.html&#34;&gt;https://patroni.readthedocs.io/en/latest/README.html&lt;/a&gt;&#xA;每个 patroni 管理一个 pg 实例, 两者必须部署在同一节点上, patroni 需要能:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;访问 pg 的监听端口&lt;/li&gt;&#xA;&lt;li&gt;读写 pg data dir (patroni 会重写 postgres.conf, pg_hba.conf 等文件)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://blog.monsterxx03.com/posts/images/patroni-ha.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;配置文件&#34;&gt;配置文件&lt;/h2&gt;&#xA;&lt;p&gt;配置文件是yaml 格式, 具体见 &lt;a href=&#34;https://patroni.readthedocs.io/en/latest/SETTINGS.html&#34;&gt;https://patroni.readthedocs.io/en/latest/SETTINGS.html&lt;/a&gt;&lt;br&gt;&#xA;使用 patroni postgres.yaml 命令启动一个 patroni 实例&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 集群名字, 同一集群内的 patroni 必须设置一样, 会成为 postgres.conf 内的 cluster_name参数&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;scope&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;xsky-test&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# patroni 会将一些动态配置存在 DCS 内, namespace 是在 DCS 内的存储路径, eg: 使用 etcdv3 作为 DCS, 可以通过 etdctl get /service --prefix 看到 patroni 在 DCS 内存了什么&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;/service  &lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 管理的 pg 的实例名, 同一集群内每个实例必须都不同, eg: pg0, pg1, pg2&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;pg0&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#  日志相关配置&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;log&lt;/span&gt;:  &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;level&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;INFO &lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# patroni restapi 相关配置&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;restapi&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;listen&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;0.0.0.0&lt;/span&gt;:&lt;span style=&#34;color:#ae81ff&#34;&gt;8008&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 用创建 pg 实例, 生成 pg 的 data dir, postgres.conf, pg_hba.conf 等文件&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;bootstrap&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#75715e&#34;&gt;# dcs 下内容会写入 DCS 的 {namespace}/{scope}/config key 中,只有在初始化集群的时候被使用一次, 后续修改不会生效, 可以通过 patrionctl edit-config 或 rest api 来修改存在 dcs 中的值&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;dcs&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;loop_wait&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;ttl&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;30&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#75715e&#34;&gt;# 初始化集群时生成 pg_bha.conf, 后续改动不会生效&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;pg_hba&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   - &lt;span style=&#34;color:#ae81ff&#34;&gt;host replication replicator 127.0.0.1/32 md5&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#75715e&#34;&gt;# 在初始化集群时需要创建的用户, 后续改动不会生效&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;users&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 使用 etcd v2 api 作为 dcs&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;etcd&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 使用 etcd v3 api 作为 dcs&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;etcd3&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 用于 patroni 运行时连接 pg&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;postgresql&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;listen&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;0.0.0.0&lt;/span&gt;:&lt;span style=&#34;color:#ae81ff&#34;&gt;5432&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# patronictl.py 连接 restapi 时 http参数(ssl相关)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;ctl&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 通过 linux 的 softdog 模块, 在 patroni 控制的 pg 挂掉时重启 server&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;watchdog&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 通过nofailover 等 tag 可以控制行为(eg: 不允许某个 patrion 实例成为 leader, 也可以添加自定义tag作为元数据&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;tags&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;用-patroni-bootstrap-pg-集群&#34;&gt;用 patroni bootstrap pg 集群&lt;/h2&gt;&#xA;&lt;p&gt;假设有三节点, 上面已经部署好 etcd(v3) 作为 dcs, 三节点 ip为: 10.252.90.217, 10.252.90.218, 10.252.90.219&#xA;217 节点上 patroni 的 postgres.yml 配置, 其他节点类似, 把 ip 改下:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Rolling Upgrade Worker Nodes in EKS</title>
       <link>https://blog.monsterxx03.com/2021/04/01/rolling-upgrade-worker-nodes-in-eks/</link>
       <pubDate>Thu, 01 Apr 2021 14:40:30 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2021/04/01/rolling-upgrade-worker-nodes-in-eks/</guid>
-      <description>EKS control plane 的升级是比较简单的, 直接在 aws console 上点下就可以了, 但 worker node 是自己用 asg(autoscaling group) 管理的, 升级 worker node 又不想影响业务是有讲究的. 跑在 EKS 里, 且希望不被中断 traffic 的有: stateless 的 api server, queue consumer 被 redis sentinel 监控着的 redis master/slave 用于 cache 的 redis cluster 写了个内部工具, 把下面的流程全部自动化了. 这样升级 eks 版本, 需要更换 worker node 时候就轻松多了. 因为这个工具对部署情况做了很多假设和限制, 开源的价值不是很大. Stateless application stateless 的应用全部用 deployment 部署. 一般建议的流程是: 修改 asg 的 launch configuration, 指向新版本</description>
+      <description>&lt;p&gt;EKS control plane 的升级是比较简单的, 直接在 aws console 上点下就可以了, 但 worker node 是自己用 asg(autoscaling group) 管理的, 升级 worker node 又不想影响业务是有讲究的.&lt;/p&gt;&#xA;&lt;p&gt;跑在 EKS 里, 且希望不被中断 traffic 的有:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;stateless 的 api server, queue consumer&lt;/li&gt;&#xA;&lt;li&gt;被 redis sentinel 监控着的 redis master/slave&lt;/li&gt;&#xA;&lt;li&gt;用于 cache 的 redis cluster&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;写了个内部工具, 把下面的流程全部自动化了. 这样升级 eks 版本, 需要更换 worker node 时候就轻松多了. 因为这个工具对部署情况做了很多假设和限制, 开源的价值不是很大.&lt;/p&gt;&#xA;&lt;h2 id=&#34;stateless-application&#34;&gt;Stateless application&lt;/h2&gt;&#xA;&lt;p&gt;stateless 的应用全部用 deployment 部署.&lt;/p&gt;&#xA;&lt;p&gt;一般建议的流程是:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;修改 asg 的 launch configuration, 指向新版本的 ami&lt;/li&gt;&#xA;&lt;li&gt;把所有老的 worker node 用 kubectl cordon 标记成 unschedulable&lt;/li&gt;&#xA;&lt;li&gt;关闭 cluster-autoscaler&lt;/li&gt;&#xA;&lt;li&gt;修改 asg 的 desired count, 让 asg 用新 ami 启动新的 worker node&lt;/li&gt;&#xA;&lt;li&gt;用 kubectl drain 把老 worker node 上的 pod evict 掉, 让它们 schedule 到新的 worker node 上.&lt;/li&gt;&#xA;&lt;li&gt;重新开启 cluster autoscaler, 等它把老的闲置 worker node 关闭.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;这里有些问题:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>从k8s deprecating docker 说起</title>
       <link>https://blog.monsterxx03.com/2020/12/04/%E4%BB%8Ek8s-deprecating-docker-%E8%AF%B4%E8%B5%B7/</link>
       <pubDate>Fri, 04 Dec 2020 10:49:40 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2020/12/04/%E4%BB%8Ek8s-deprecating-docker-%E8%AF%B4%E8%B5%B7/</guid>
-      <description>k8s 1.20 的 release note 里说 deprecated docker: https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.20.md#deprecation 对 docker 和 k8s 关系比较了解的人一看就知道是废弃 dockershim, 正常操作, 具体有什么影响, 建议阅读: https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/ https://kubernetes.io/blog/2020/12/02/dockershim-faq/ 但容器圈里那堆名词的确很让人困惑, docker, dockershim, containerd, containerd-shim, runc, cri, oci, csi, cni, cri-o, 或许曾经还听说过 runv, rkt, clear containers, 后来又来了 kata containers, firecracker, gvisor. 论造名词, 造项目, 都快赶上前端圈的脚趾头了. 这篇比较水, 就解释下它们大致的关系, 前提是你大概知道 docker, namespace, cgroup, container, k8s pod 之间的关系, 不做额外解释. 从 docker 说起 在我现在这台机器上的 ubuntu 18.04, 安装 docker, 添加官方源之后, 安装的 deb package(version 19.03) 是</description>
+      <description>&lt;p&gt;k8s 1.20 的 release note 里说 deprecated docker: &lt;a href=&#34;https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.20.md#deprecation&#34;&gt;https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.20.md#deprecation&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;对 docker 和 k8s 关系比较了解的人一看就知道是废弃 dockershim, 正常操作, 具体有什么影响, 建议阅读:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/&#34;&gt;https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://kubernetes.io/blog/2020/12/02/dockershim-faq/&#34;&gt;https://kubernetes.io/blog/2020/12/02/dockershim-faq/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;但容器圈里那堆名词的确很让人困惑, docker, dockershim, containerd, containerd-shim, runc, cri, oci, csi, cni, cri-o, 或许曾经还听说过 runv, rkt, clear containers, 后来又来了 kata containers, firecracker, gvisor. 论造名词, 造项目, 都快赶上前端圈的脚趾头了.&lt;/p&gt;&#xA;&lt;p&gt;这篇比较水, 就解释下它们大致的关系, 前提是你大概知道 docker, namespace, cgroup, container, k8s pod 之间的关系, 不做额外解释.&lt;/p&gt;&#xA;&lt;h2 id=&#34;从-docker-说起&#34;&gt;从 docker 说起&lt;/h2&gt;&#xA;&lt;p&gt;在我现在这台机器上的 ubuntu 18.04, 安装 docker, 添加官方源之后, 安装的 deb package(version 19.03) 是 docker-ce&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;apt show docker-ce&lt;/code&gt;  看依赖:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>二三事</title>
       <link>https://blog.monsterxx03.com/2020/12/02/%E4%BA%8C%E4%B8%89%E4%BA%8B/</link>
       <pubDate>Wed, 02 Dec 2020 16:00:13 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2020/12/02/%E4%BA%8C%E4%B8%89%E4%BA%8B/</guid>
-      <description>天气渐凉, 无奈得拿出了秋裤. 偷懒好久没写博客了, 回顾下这阵子做了什么. 工作 年底打算把之前用的 dedicated ec2 instance 全部换掉, 几年前为了 HIPAA 合规做的, 但 AWS 的 BBA 里后来不要求 dedicated instance 了, 换成普通的, 可以省掉每月1400多刀的固定 dedicated fee, 同类型的 ec2 instance 可以再省10%左右. 为了这个, 打算把部分遗留在 vm 上的东西迁移到 k8s 里, 减少之后更换 instance 的工作量. cronjob 尝试用 argo 来调度 cronjob. 还是有不少坑的: cron workflow 到点后有一定几率会 trigger 重复的workflow, 目前还没有</description>
+      <description>&lt;p&gt;天气渐凉, 无奈得拿出了秋裤. 偷懒好久没写博客了, 回顾下这阵子做了什么.&lt;/p&gt;&#xA;&lt;h2 id=&#34;工作&#34;&gt;工作&lt;/h2&gt;&#xA;&lt;p&gt;年底打算把之前用的 dedicated ec2 instance 全部换掉, 几年前为了 HIPAA 合规做的, 但 AWS 的 BBA 里后来不要求 dedicated instance 了, 换成普通的, 可以省掉每月1400多刀的固定 dedicated fee, 同类型的 ec2 instance 可以再省10%左右. 为了这个, 打算把部分遗留在 vm 上的东西迁移到 k8s 里, 减少之后更换 instance 的工作量.&lt;/p&gt;&#xA;&lt;h3 id=&#34;cronjob&#34;&gt;cronjob&lt;/h3&gt;&#xA;&lt;p&gt;尝试用 &lt;a href=&#34;https://github.com/argoproj/argo&#34;&gt;argo&lt;/a&gt; 来调度 cronjob.&lt;/p&gt;&#xA;&lt;p&gt;还是有不少坑的:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;cron workflow 到点后有一定几率会 trigger 重复的workflow, 目前还没有修复&lt;a href=&#34;https://github.com/argoproj/argo/issues/4558&#34;&gt;#4558&lt;/a&gt;, 临时在所有 cronjob 的代码里加了个保护, 在 redis 里上个锁, 没抢到锁的 cronjob 直接抛异常失败. 目前看每天还是有 7,8 次重复的 workflow 会触发.&lt;/li&gt;&#xA;&lt;li&gt;WorkflowTemplate 可以用来复用 pod 的定义, 但外部往里面传参的方式很搓, 不是所有字段都能直接覆盖, 比如activeDeadlineSeconds, resources 等, 必须用 podSpecPatch 的方式, 文档里又不说清楚, 只能自己去翻issue.&lt;/li&gt;&#xA;&lt;li&gt;exit-handler 用来在 workflow 状态改变的时候触发一个 callback, 但没法获取触发它的那个 workflow 的详细信息, 比如一个 workflow 由很多个 step 构成, 失败时我希望能从 exit-handler 里拿到是哪个step 挂了, 现在做不到. 也没法往 exit-handler 里传参(只能取一些global paramaters).&lt;/li&gt;&#xA;&lt;li&gt;如果一个 workflow 由多个 step 构成, 当其中一个 step 挂了, 可以设置 continueOn 控制是否继续后面的step, 但如果我选择了继续, 整个 workflow 的最终状态又是 success 的, 导致在 exit-handler 里没法区分, 最好有个 partial success 的状态.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;日志&#34;&gt;日志&lt;/h3&gt;&#xA;&lt;p&gt;应用里的日志, 之前是打到部署在 vm 上的一台 rsyslog 上. 在 k8s 环境下我用 fluent-bit 做 daemonset 来收集 pod 日志. fluent-bit 在最近的版本里支持了转发到 loki, 我就部署了 loki 来收集pod 日志, 可以方便在 grafana 里进行查看. 问题也很多:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Kubectl Plugin for Redis Cluster</title>
       <link>https://blog.monsterxx03.com/2020/08/04/kubectl-plugin-for-redis-cluster/</link>
       <pubDate>Tue, 04 Aug 2020 22:44:40 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2020/08/04/kubectl-plugin-for-redis-cluster/</guid>
-      <description>在 k8s 上部署 redis cluster 后, 感觉 redis-cli 管理 redis cluster 非常别扭, 写了个 kubectl 的插件 kubectl-rc 来辅助管理 redis-cluster. redis-cli 难用在哪 不直观 &amp;amp; 不统一 部分 cluster 信息是直接通过 redis protocol 获得的, 比如 cluster nodes, cluster slots, 但部分管理命令又是通过 redis-cli --cluster 执行的. cluster nodes, cluster slots 这些命令输出的又是 ip 和 node id, k8s 环境下我更关心实际的 pod name. 做 failover 的时候又不是通过 --cluster 执行的, 必须连到 slave 上通过 cluster failover 来执行 传参在 k8s 环境下特别麻烦 举个例子, 添加节点: redis-cli --cluster add-node new_host:new_port existing_host:existing_port --cluster-slave --cluster-master-id &amp;lt;arg&amp;gt; 需要知道操作 pod 的 ip, 如果要变成某个指定 pod 的 slave, 又要传 node id. 在</description>
+      <description>&lt;p&gt;在 k8s 上部署 redis cluster 后, 感觉 redis-cli 管理 redis cluster 非常别扭, 写了个 kubectl 的插件 &lt;a href=&#34;https://github.com/monsterxx03/kubectl-rc&#34;&gt;kubectl-rc&lt;/a&gt; 来辅助管理 redis-cluster.&lt;/p&gt;&#xA;&lt;h2 id=&#34;redis-cli-难用在哪&#34;&gt;redis-cli 难用在哪&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;不直观 &amp;amp; 不统一&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;部分 cluster 信息是直接通过 redis protocol 获得的, 比如 &lt;code&gt;cluster nodes&lt;/code&gt;, &lt;code&gt;cluster slots&lt;/code&gt;, 但部分管理命令又是通过 &lt;code&gt;redis-cli --cluster&lt;/code&gt; 执行的.&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;cluster nodes&lt;/code&gt;, &lt;code&gt;cluster slots&lt;/code&gt; 这些命令输出的又是 ip 和 node id, k8s 环境下我更关心实际的 pod name.&lt;/p&gt;&#xA;&lt;p&gt;做 failover 的时候又不是通过 &lt;code&gt;--cluster&lt;/code&gt; 执行的, 必须连到 slave 上通过 &lt;code&gt;cluster failover&lt;/code&gt; 来执行&lt;/p&gt;&#xA;&lt;ol start=&#34;2&#34;&gt;&#xA;&lt;li&gt;传参在 k8s 环境下特别麻烦&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;举个例子, 添加节点:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;redis-cli --cluster add-node new_host:new_port existing_host:existing_port&#xA;    --cluster-slave --cluster-master-id &amp;lt;arg&amp;gt;&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;需要知道操作 pod 的 ip, 如果要变成某个指定 pod 的 slave, 又要传 node id.&lt;/p&gt;&#xA;&lt;p&gt;在 k8s 环境下实际操作的时候流程就会变成:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>snet dev note: stats api and terminal UI</title>
       <link>https://blog.monsterxx03.com/2020/06/30/snet-dev-note-stats-api-and-terminal-ui/</link>
       <pubDate>Tue, 30 Jun 2020 14:40:01 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2020/06/30/snet-dev-note-stats-api-and-terminal-ui/</guid>
-      <description>从 0.10.0 版本开始给 snet 加了 stats api 来暴露内部的一些统计数据. 设置 &amp;quot;enable-stats&amp;quot;: true 开启, 默认监听 8810 端口, curl http://localhost:8810/stats { &amp;quot;Uptime&amp;quot;: &amp;quot;26m42s&amp;quot;, &amp;quot;Total&amp;quot;: { &amp;quot;RxSize&amp;quot;: 161539743, &amp;quot;TxSize&amp;quot;: 1960171 }, &amp;quot;Hosts&amp;quot;: [ { &amp;quot;Host&amp;quot;: &amp;quot;112.113.115.113&amp;quot;, &amp;quot;Port&amp;quot;: 443, &amp;quot;RxRate&amp;quot;: 0, &amp;quot;TxRate&amp;quot;: 0, &amp;quot;RxSize&amp;quot;: 840413, &amp;quot;TxSize&amp;quot;: 172528 }, ... ] } 分 host, 统计从该地址接收的字节数(RxSize), 发送字节数(TxSize), 和相应的 rate/s (RxRate, TxRate). 默认只记录 ip, 可以设置 &amp;quot;stats-enable-tls-sni-sniffer&amp;quot;: true, 开启对去往 443 端口的流量进行 sni sniffer, 尝试解析出域名. &amp;quot;stats-enable-http-host-sniffer&amp;quot;: true, 对发往 80 端口流量尝试解析 http host 字段, 两者都会给连接建立过程增加一些 overhead. server 开启 stats api 后, 用 ./snet -top 可以显示一</description>
+      <description>&lt;p&gt;从 &lt;a href=&#34;https://github.com/monsterxx03/snet/releases&#34;&gt;0.10.0&lt;/a&gt; 版本开始给 snet 加了 stats api 来暴露内部的一些统计数据.&lt;/p&gt;&#xA;&lt;p&gt;设置 &lt;code&gt;&amp;quot;enable-stats&amp;quot;: true&lt;/code&gt; 开启, 默认监听 8810 端口, &lt;code&gt;curl http://localhost:8810/stats&lt;/code&gt;&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;    {&#xA;        &amp;quot;Uptime&amp;quot;: &amp;quot;26m42s&amp;quot;,&#xA;        &amp;quot;Total&amp;quot;: {&#xA;            &amp;quot;RxSize&amp;quot;: 161539743,&#xA;            &amp;quot;TxSize&amp;quot;: 1960171&#xA;        },&#xA;        &amp;quot;Hosts&amp;quot;: [&#xA;            {&#xA;                &amp;quot;Host&amp;quot;: &amp;quot;112.113.115.113&amp;quot;,&#xA;                &amp;quot;Port&amp;quot;: 443,&#xA;                &amp;quot;RxRate&amp;quot;: 0,&#xA;                &amp;quot;TxRate&amp;quot;: 0,&#xA;                &amp;quot;RxSize&amp;quot;: 840413,&#xA;                &amp;quot;TxSize&amp;quot;: 172528&#xA;            },&#xA;            ...&#xA;        ]&#xA;    }&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;分 host, 统计从该地址接收的字节数(RxSize), 发送字节数(TxSize), 和相应的 rate/s (RxRate, TxRate).&lt;/p&gt;&#xA;&lt;p&gt;默认只记录 ip, 可以设置 &lt;code&gt;&amp;quot;stats-enable-tls-sni-sniffer&amp;quot;: true&lt;/code&gt;, 开启对去往 443 端口的流量进行 sni sniffer, 尝试解析出域名.&#xA;&lt;code&gt;&amp;quot;stats-enable-http-host-sniffer&amp;quot;: true&lt;/code&gt;, 对发往 80 端口流量尝试解析 http host 字段, 两者都会给连接建立过程增加一些 overhead.&lt;/p&gt;&#xA;&lt;p&gt;server 开启 stats api 后, 用 &lt;code&gt;./snet -top&lt;/code&gt; 可以显示一个类似 top 的 terminal UI 作流量监控.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>解决 k8s 1.16 apiVersion deprecation 造成的 helm revision 冲突</title>
       <link>https://blog.monsterxx03.com/2020/06/16/%E8%A7%A3%E5%86%B3-k8s-1.16-apiversion-deprecation-%E9%80%A0%E6%88%90%E7%9A%84-helm-revision-%E5%86%B2%E7%AA%81/</link>
       <pubDate>Tue, 16 Jun 2020 16:02:58 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2020/06/16/%E8%A7%A3%E5%86%B3-k8s-1.16-apiversion-deprecation-%E9%80%A0%E6%88%90%E7%9A%84-helm-revision-%E5%86%B2%E7%AA%81/</guid>
-      <description>最近开始把线上的 k8s 从 1.15 升级到 1.16, 1.16 里有一些 api verison 被彻底废弃, 需要迁移到新的 api version, 具体有: https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.16.md#deprecations-and-removals 有两个问题: 集群中使用的一些第三方 controller(nginx-ingress, external-dns-controller&amp;hellip;), 调用的 apiVersion 需要升级. 已存在集群中的 objects(Deployment/ReplicaSet&amp;hellip;), 是否需要处理, eg: Deployment: extensions/v1beta1 -&amp;gt; apps/v1. 第一个问题好解决, 升级一下对应的 image 版本就行了, 只要还在维护的 controller, 都已经升级到支持 1.16. 自己写的工具链也排查下是否有还在使用老版本 api 的, 因为我用的是 aws eks, 开下 control-plane-logs 里的 audit log, 可以看还有什么在调用老的 api. 第二个问题是不需要改, 已存在的 objects 无法</description>
+      <description>&lt;p&gt;最近开始把线上的 k8s 从 1.15 升级到 1.16, 1.16 里有一些 api verison 被彻底废弃, 需要迁移到新的 api version, 具体有: &lt;a href=&#34;https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.16.md#deprecations-and-removals&#34;&gt;https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.16.md#deprecations-and-removals&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;有两个问题:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;集群中使用的一些第三方 controller(nginx-ingress, external-dns-controller&amp;hellip;), 调用的 apiVersion 需要升级.&lt;/li&gt;&#xA;&lt;li&gt;已存在集群中的 objects(Deployment/ReplicaSet&amp;hellip;), 是否需要处理, eg: Deployment: extensions/v1beta1 -&amp;gt; apps/v1.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;第一个问题好解决, 升级一下对应的 image 版本就行了, 只要还在维护的 controller, 都已经升级到支持 1.16. 自己写的工具链也排查下是否有还在使用老版本 api 的, 因为我用的是 aws eks, 开下 &lt;a href=&#34;https://docs.aws.amazon.com/eks/latest/userguide/control-plane-logs.html&#34;&gt;control-plane-logs&lt;/a&gt; 里的 audit log, 可以看还有什么在调用老的 api.&lt;/p&gt;&#xA;&lt;p&gt;第二个问题是不需要改, 已存在的 objects 无法修改 apiVersion, 集群升级到 1.16 后， 从新的 apiVersion 里能 pull 到之前的数据, apiVersion 字段自动就升级了.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>在 eks 中正确设置 IAM 权限</title>
       <link>https://blog.monsterxx03.com/2020/04/16/%E5%9C%A8-eks-%E4%B8%AD%E6%AD%A3%E7%A1%AE%E8%AE%BE%E7%BD%AE-iam-%E6%9D%83%E9%99%90/</link>
       <pubDate>Thu, 16 Apr 2020 11:03:39 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2020/04/16/%E5%9C%A8-eks-%E4%B8%AD%E6%AD%A3%E7%A1%AE%E8%AE%BE%E7%BD%AE-iam-%E6%9D%83%E9%99%90/</guid>
-      <description>在代码中调用 aws api 的时候常用两种方法: 直接传入 aws accessKey/secretKey 使用 instance profile 前者一般是创建一个 IAM 用户, 绑定对应权限, 生成 keypair, 在 k8s 环境里, 把 keypair 放在 Secrets 里, 或通过环境变量注入. 好处是可以每个应用单独设置, 但需要自己管理 keypair. 后者创建一个 IAM role, 绑定对应权限, 创建 ec2 的时候选择对应的 role. 跑在该 ec2 instance 上的程序自动能拿到对应的 IAM 权限. 好处是不必自己管理 keypair, 缺点是跑在同一 server 上的程序权限都一样. eks 1.14 里有个两全齐美的办法: serviceaccount role: https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html 可以把 IAM role 绑定在 pod 使用的</description>
+      <description>&lt;p&gt;在代码中调用 aws api 的时候常用两种方法:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;直接传入 aws accessKey/secretKey&lt;/li&gt;&#xA;&lt;li&gt;使用 instance profile&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;前者一般是创建一个 IAM 用户, 绑定对应权限, 生成 keypair, 在 k8s 环境里, 把 keypair 放在 Secrets 里, 或通过环境变量注入. 好处是可以每个应用单独设置,&#xA;但需要自己管理 keypair.&lt;/p&gt;&#xA;&lt;p&gt;后者创建一个 IAM role, 绑定对应权限, 创建 ec2 的时候选择对应的 role. 跑在该 ec2 instance 上的程序自动能拿到对应的 IAM 权限. 好处是不必自己管理 keypair,&#xA;缺点是跑在同一 server 上的程序权限都一样.&lt;/p&gt;&#xA;&lt;p&gt;eks 1.14 里有个两全齐美的办法: serviceaccount role: &lt;a href=&#34;https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html&#34;&gt;https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;可以把 IAM role 绑定在 pod 使用的 ServiceAccount 上, 既避免了管理 keypair 的麻烦, 也可以 per 应用得设置权限.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>重构推送服务</title>
       <link>https://blog.monsterxx03.com/2020/04/07/%E9%87%8D%E6%9E%84%E6%8E%A8%E9%80%81%E6%9C%8D%E5%8A%A1/</link>
       <pubDate>Tue, 07 Apr 2020 10:54:12 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2020/04/07/%E9%87%8D%E6%9E%84%E6%8E%A8%E9%80%81%E6%9C%8D%E5%8A%A1/</guid>
-      <description>最近对业务里发送 apple APNS, google FCM 部分的代码进行了重构, 抽出了一个单独的 service, 本文记录下整个过程. 存在的问题 我们有好几个 mobile app, 每个 app 会有一套对应的 server 端 service 做业务逻辑, 因为历史原因, 每个 service 里面其实有很多重复代码, 大多只是一些配置和错误处理上有差异. 给 app 发推送是个典型, 原来的做法是当要发推送的时候, 往 python 的 celery 队列里扔一个 task, 由 celery 异步得去发. 有如下问题: celery 性能不佳, worker class 用的是 gevent, 但在高峰时候任务队列里还是有大量 pending, 代码上之前做过</description>
+      <description>&lt;p&gt;最近对业务里发送 apple APNS, google FCM 部分的代码进行了重构, 抽出了一个单独的 service, 本文记录下整个过程.&lt;/p&gt;&#xA;&lt;h2 id=&#34;存在的问题&#34;&gt;存在的问题&lt;/h2&gt;&#xA;&lt;p&gt;我们有好几个 mobile app, 每个 app 会有一套对应的 server 端 service 做业务逻辑, 因为历史原因, 每个 service 里面其实有很多重复代码, 大多只是一些配置和错误处理上有差异.&#xA;给 app 发推送是个典型, 原来的做法是当要发推送的时候, 往 python 的 celery 队列里扔一个 task, 由 celery 异步得去发.&lt;/p&gt;&#xA;&lt;p&gt;有如下问题:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;celery 性能不佳, worker class 用的是 gevent, 但在高峰时候任务队列里还是有大量 pending, 代码上之前做过多次优化, 但收效甚微.&lt;/li&gt;&#xA;&lt;li&gt;当 pending 了大量发推送的 task 之后, 会导致其他异步 task 跟着延时, 造成用户体验上的一些问题.&lt;/li&gt;&#xA;&lt;li&gt;历史代码的问题, 每个 app 里对接 APNS/FCM 都有一套单独的代码, 在部分错误处理和统计 metrics 上有差异.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;问题1, 目前已经迁移到 k8s, 其实可以无脑开 HPA, 做 auto scaling, 来提高发送效率. 问题是 python 性能实在太差, 峰值时候估计会 scale 到原先的好多倍, 而 celery 里&#xA;除了发推送还有很多 task 有 db 操作, scale 过多, 会带来其他问题, 那是另一个问题, 不想在当前这个问题里解决.&lt;/li&gt;&#xA;&lt;li&gt;问题２, celery 里可以设 routing, 简单说可以用单独的 celery instance 来专门处理推送相关 task, 也可以规避1里的 db 问题.&lt;/li&gt;&#xA;&lt;li&gt;问题3, 单纯代码问题, 统一用一套代码重构就行了.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;讲真, 碰到的 celery 的 bug 实在太多了, 存量代码用用就行了, 新做业务实在不想用. 而发推送是个很独立的业务, 最后打算拿 go 来单独跑推送.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>用 AWS Personalize 做推荐系统</title>
       <link>https://blog.monsterxx03.com/2020/02/18/%E7%94%A8-aws-personalize-%E5%81%9A%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/</link>
       <pubDate>Tue, 18 Feb 2020 14:38:56 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2020/02/18/%E7%94%A8-aws-personalize-%E5%81%9A%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/</guid>
-      <description>这几天测试了下 aws 的 personalize service, 看看能不能替换掉产品里现有的一些推荐逻辑. 大致的流程: 导入数据 选择 recipe 进行 training, 得到一个 solution version 选择最佳 solution version 创建 compaign 调用 api, 根据 compaign 得到 recommendations 一些 iam 权限相关的设置就不写了, 具体看文档吧, 这里只记录下主要步骤. 导入数据 首先需要准备用来 training 的数据, 分成三种数据集: User Item User-Item interaction 其中 User-Item interaction 是必须的 dataset, 所有 recipe 都会用到, User 和 Item 被称作 metadata dataset, 只有个别 recipe 会用到. 每个 dataset 创建的时候需要建立一个 schema, 来描述各自的结构(avro 格式).</description>
+      <description>&lt;p&gt;这几天测试了下 aws 的 personalize service, 看看能不能替换掉产品里现有的一些推荐逻辑.&lt;/p&gt;&#xA;&lt;p&gt;大致的流程:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;导入数据&lt;/li&gt;&#xA;&lt;li&gt;选择 recipe 进行 training, 得到一个 solution version&lt;/li&gt;&#xA;&lt;li&gt;选择最佳 solution version 创建 compaign&lt;/li&gt;&#xA;&lt;li&gt;调用 api, 根据 compaign 得到 recommendations&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;一些 iam 权限相关的设置就不写了, 具体看文档吧, 这里只记录下主要步骤.&lt;/p&gt;&#xA;&lt;h2 id=&#34;导入数据&#34;&gt;导入数据&lt;/h2&gt;&#xA;&lt;p&gt;首先需要准备用来 training 的数据, 分成三种数据集:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;User&lt;/li&gt;&#xA;&lt;li&gt;Item&lt;/li&gt;&#xA;&lt;li&gt;User-Item interaction&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;其中 User-Item interaction 是必须的 dataset, 所有 recipe 都会用到, User 和 Item 被称作 metadata dataset, 只有个别 recipe 会用到.&lt;/p&gt;&#xA;&lt;p&gt;每个 dataset 创建的时候需要建立一个 schema, 来描述各自的结构(avro 格式).&lt;/p&gt;&#xA;&lt;p&gt;example User schema:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;{&#xA;    &amp;quot;type&amp;quot;: &amp;quot;record&amp;quot;,&#xA;    &amp;quot;name&amp;quot;: &amp;quot;Users&amp;quot;,与与&#xA;    &amp;quot;namespace&amp;quot;: &amp;quot;com.amazonaws.personalize.schema&amp;quot;,&#xA;    &amp;quot;fields&amp;quot;: [&#xA;        {&#xA;            &amp;quot;name&amp;quot;: &amp;quot;user_id&amp;quot;,&#xA;            &amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;&#xA;        },&#xA;        {&#xA;            &amp;quot;name&amp;quot;: &amp;quot;birthday&amp;quot;,&#xA;            &amp;quot;type&amp;quot;: &amp;quot;int与&#xA;        },&#xA;        {&#xA;            &amp;quot;name&amp;quot;: &amp;quot;gender&amp;quot;,&#xA;            &amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;,&#xA;            &amp;quot;categorical&amp;quot;: true&#xA;        },&#xA;        {&#xA;            &amp;quot;name&amp;quot;: &amp;quot;location&amp;quot;,&#xA;            &amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;,&#xA;            &amp;quot;categorical&amp;quot;: true&#xA;        }&#xA;    ],&#xA;    &amp;quot;version&amp;quot;: &amp;quot;1.0&amp;quot;&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;其中 &lt;code&gt;user_id&lt;/code&gt; 是必填字段, 其他都是可选的自定义字段, 其他字段如果是 string, 必须加上&lt;code&gt;&amp;quot;categorical&amp;quot;: true&lt;/code&gt;, 表示它是用来分类的.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>编写 postmortem</title>
       <link>https://blog.monsterxx03.com/2020/01/18/%E7%BC%96%E5%86%99-postmortem/</link>
       <pubDate>Sat, 18 Jan 2020 15:20:47 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2020/01/18/%E7%BC%96%E5%86%99-postmortem/</guid>
-      <description>成功的经验总是带有点运气成份, 失败则是必然的:). 工作中， 线上环境的问题千奇百怪, 有的来自自己代码 bug, 有的是配置错误, 有时候是第三方的 vendor 成了猪队友. 对于一些排查过程比较困难或具有代表性的问题, 需要记录下来, 一般把这个过程叫做 postmortem(验尸). 这篇写一下自己做 postmortem 的过程, 并记录一个最近处理的故障. Postmortem process 我大体分以下几个部分: 用尽量简练的语句描述清楚在什么时间发生了什么,谁参与了问题的处理(wh</description>
+      <description>&lt;p&gt;成功的经验总是带有点运气成份, 失败则是必然的:). 工作中， 线上环境的问题千奇百怪, 有的来自自己代码 bug, 有的是配置错误, 有时候是第三方的 vendor 成了猪队友. 对于一些排查过程比较困难或具有代表性的问题, 需要记录下来, 一般把这个过程叫做 postmortem(验尸).&lt;/p&gt;&#xA;&lt;p&gt;这篇写一下自己做 postmortem 的过程, 并记录一个最近处理的故障.&lt;/p&gt;&#xA;&lt;h2 id=&#34;postmortem-process&#34;&gt;Postmortem process&lt;/h2&gt;&#xA;&lt;p&gt;我大体分以下几个部分:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;用尽量简练的语句描述清楚在什么时间发生了什么,谁参与了问题的处理(when, what, who)?&lt;/li&gt;&#xA;&lt;li&gt;详细描述解决问题的过程, 包括但不限于:  debug 的过程, 中间的推测, 用到的工具&amp;hellip; (How)&lt;/li&gt;&#xA;&lt;li&gt;如果找到了 root case, 记录下来, 没找到, 记录下当时的 workaround, 有什么副作用. (Why)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;postmortem-case&#34;&gt;Postmortem case&lt;/h2&gt;&#xA;&lt;p&gt;实际的 postmorten 写得更简单一点, 这里把过程中的一些思考也记下来.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>聊聊 AWS 的计费模式</title>
       <link>https://blog.monsterxx03.com/2019/12/30/%E8%81%8A%E8%81%8A-aws-%E7%9A%84%E8%AE%A1%E8%B4%B9%E6%A8%A1%E5%BC%8F/</link>
       <pubDate>Mon, 30 Dec 2019 12:08:47 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/12/30/%E8%81%8A%E8%81%8A-aws-%E7%9A%84%E8%AE%A1%E8%B4%B9%E6%A8%A1%E5%BC%8F/</guid>
-      <description>网上经常有人诟病 AWS 的计费模式复杂, 喜欢国内那种打包式的售卖方式, 这个可能受限于每个公司的财务流程, 预算制定方式, 合不合国情,本文不讨论. 仅从开发者的角度介绍下 AWS 部分常用 service 的计费方式. PS: 那些为了蹭一年 free plan 然后抱怨什么偷跑流量, 偷偷扣费的大哥就省省吧, AWS 根本不是给个人用的, 老老实实用 lightsail 得了. EC2 EC2 的价格是最复杂的, 一台 EC2 instance 的价格组成: instance fee, 实际支付的是 CPU+RAM 的费用 EBS fee, server 的根分区都是 EBS volume, 按 EBS 计费(31GB 的 volume 使</description>
+      <description>&lt;p&gt;网上经常有人诟病 AWS 的计费模式复杂, 喜欢国内那种打包式的售卖方式, 这个可能受限于每个公司的财务流程, 预算制定方式, 合不合国情,本文不讨论.&#xA;仅从开发者的角度介绍下 AWS 部分常用 service 的计费方式.&lt;/p&gt;&#xA;&lt;p&gt;PS: 那些为了蹭一年 free plan 然后抱怨什么偷跑流量, 偷偷扣费的大哥就省省吧, AWS 根本不是给个人用的, 老老实实用 lightsail 得了.&lt;/p&gt;&#xA;&lt;h2 id=&#34;ec2&#34;&gt;EC2&lt;/h2&gt;&#xA;&lt;p&gt;EC2 的价格是最复杂的, 一台 EC2 instance 的价格组成:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;instance fee, 实际支付的是 CPU+RAM 的费用&lt;/li&gt;&#xA;&lt;li&gt;EBS fee, server 的根分区都是 EBS volume, 按 EBS 计费(31GB 的 volume 使用 1 小时, 和 1GB 的volume 使用 744 小时价格相同).&lt;/li&gt;&#xA;&lt;li&gt;data transfer fee, 这部分组成比较复杂，简单讲, 入流量免费, 出流量按 GiB 计费, 如果出流量是到 AWS 其他 region, 价格比一般公网便宜, 在内网传输流量, 同一个 available zone 是免费的,&#xA;跨 az 收费.&lt;/li&gt;&#xA;&lt;li&gt;EIP fee, 每台 instance 挂一个 EIP 是免费的(eip 使用状态不收费, 闲置收费), 超过一个 eip, 每个按小时再收费.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;instance fee 又分 on-demand/resersed/spot instance.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>snet dev note</title>
       <link>https://blog.monsterxx03.com/2019/11/29/snet-dev-note/</link>
       <pubDate>Fri, 29 Nov 2019 12:00:01 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/11/29/snet-dev-note/</guid>
-      <description>snet: 0.5 ~ 0.6.1, 整理从上一篇以来的一些更新. 新增选项 proxy-scope, 默认 bypassCN, 可选 global. bypassCN 会做国内外分流, global 直接让所有流量去往国外. host-map, 为域名指定 ip. 之前在测试一个功能的时候需要在内网让手机对某个域名的解析切换到我的测试 ip 上, 坑爹的是公司的路由器竟然没这功能, 索性在 snet 里写了这个功能, 让我的台式机发射 wifi, 手机连上来, snet 的 mode 切换成 router, listen-host 改为 0.0.0.0 就好了. block-hosts, 因为 block-host-file 里的域名是从一个现成的列表生成出来的, 不好支持通配符, 所以加了这个, 比如 [&amp;quot;*.hpplay.cn&amp;quot;], 就能把电</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/monsterxx03/snet&#34;&gt;snet&lt;/a&gt;: 0.5 ~ 0.6.1, 整理从&lt;a href=&#34;https://blog.monsterxx03.com/2019/06/20/snet-dev-note-support-macos/&#34;&gt;上一篇&lt;/a&gt;以来的一些更新.&lt;/p&gt;&#xA;&lt;h2 id=&#34;新增选项&#34;&gt;新增选项&lt;/h2&gt;&#xA;&lt;p&gt;&lt;code&gt;proxy-scope&lt;/code&gt;, 默认 &lt;code&gt;bypassCN&lt;/code&gt;, 可选 &lt;code&gt;global&lt;/code&gt;. &lt;code&gt;bypassCN&lt;/code&gt; 会做国内外分流, &lt;code&gt;global&lt;/code&gt; 直接让所有流量去往国外.&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;host-map&lt;/code&gt;, 为域名指定 ip. 之前在测试一个功能的时候需要在内网让手机对某个域名的解析切换到我的测试 ip 上, 坑爹的是公司的路由器竟然没这功能, 索性在 snet 里写了这个功能, 让我的台式机发射 wifi, 手机连上来, snet 的 &lt;code&gt;mode&lt;/code&gt; 切换成 &lt;code&gt;router&lt;/code&gt;, &lt;code&gt;listen-host&lt;/code&gt; 改为 &lt;code&gt;0.0.0.0&lt;/code&gt; 就好了.&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;block-hosts&lt;/code&gt;, 因为 &lt;code&gt;block-host-file&lt;/code&gt; 里的域名是从一个现成的列表生成出来的, 不好支持通配符, 所以加了这个, 比如 &lt;code&gt;[&amp;quot;*.hpplay.cn&amp;quot;]&lt;/code&gt;, 就能把电视上所有乐播投屏的广告干掉.&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;proxy-type&lt;/code&gt; 新增 &lt;code&gt;tls&lt;/code&gt;, 一个基于 tls 的简单自定义协议, 使用这个需要部署一个 snet 的 server 端, 详细看 README 吧.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>集成 opentracing</title>
       <link>https://blog.monsterxx03.com/2019/11/15/%E9%9B%86%E6%88%90-opentracing/</link>
       <pubDate>Fri, 15 Nov 2019 14:05:59 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/11/15/%E9%9B%86%E6%88%90-opentracing/</guid>
-      <description>之前用过 datadog 的 tracing 功能, 非常好用, 但是很贵(单台30$), 迁移到 k8s 后, 监控迁移到了 prometheus, 也把 datadog 的 tracing 去掉了.datadog 的 tracing 也是 opentracing 的一种实现, 索性就换上开源实现. tracing 系统是分布式系统中很好用的 performance tuning 工具, opentracing 只是一个标准，里面定义了 span, scope, tracer 等概念，但不规定 tracing 数据应该怎么 encoding, 怎么存储, 跨进程的 span 数据怎么串起来. 首先要挑选一个开源的 tracer 实现，tracer 用来接受业务系统发出的 encode 过的 span 数据,并存储，提供一个界面供查询. 我选</description>
+      <description>&lt;p&gt;之前用过 datadog 的 tracing 功能, 非常好用, 但是很贵(单台30$), 迁移到 k8s 后, 监控迁移到了 prometheus, 也把 datadog 的 tracing 去掉了.datadog 的 tracing 也是 opentracing 的一种实现, 索性就换上开源实现.&lt;/p&gt;&#xA;&lt;p&gt;tracing 系统是分布式系统中很好用的 performance tuning 工具, opentracing 只是一个标准，里面定义了 span, scope, tracer 等概念，但不规定 tracing&#xA;数据应该怎么 encoding, 怎么存储, 跨进程的 span 数据怎么串起来.&lt;/p&gt;&#xA;&lt;p&gt;首先要挑选一个开源的 tracer 实现，tracer 用来接受业务系统发出的 encode 过的 span 数据,并存储，提供一个界面供查询. 我选的是 jaeger, go实现的,部署起来比较轻量级,&#xA;也是 cncf 的项目, 还有个 jaeger-operator 方便部署.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>老代码里和 MySQL 的事务隔离相关的一个bug</title>
       <link>https://blog.monsterxx03.com/2019/10/31/%E8%80%81%E4%BB%A3%E7%A0%81%E9%87%8C%E5%92%8C-mysql-%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%80%E4%B8%AAbug/</link>
       <pubDate>Thu, 31 Oct 2019 11:45:44 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/10/31/%E8%80%81%E4%BB%A3%E7%A0%81%E9%87%8C%E5%92%8C-mysql-%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%80%E4%B8%AAbug/</guid>
-      <description>这两天在调试代码的时候, 发现 db 层的代码在每次把 connection 放回 db pool 的时候,即使之前执行的是 select 语句,也会 rollback 一下, 这代码很古老, 我也不知道为啥, 尝试把 rollback 去掉, 结果单元测试挂了一堆, 大多都是数据不一致的问题, debug 了一下, 最后发现这坑还挺大的. 为什么去掉 select 的 rollback 后会出现数据不一致? pymysql 默认关闭了 autocommit, connection A 进行 select 之后, 其实 MySQL 内部为 select 也开启了一个 transaction(Repeatable Read), 可以通过 SELECT * FROM information_schema.innodb_trx\G 查看. 所以当 connection A 先 select 一次, connection B 在 transaction 内更新数据并 commit, connection A 再次 select (之前</description>
+      <description>&lt;p&gt;这两天在调试代码的时候, 发现 db 层的代码在每次把 connection 放回 db pool 的时候,即使之前执行的是 select 语句,也会 rollback 一下,&#xA;这代码很古老, 我也不知道为啥, 尝试把 rollback 去掉, 结果单元测试挂了一堆, 大多都是数据不一致的问题, debug 了一下, 最后发现这坑还挺大的.&lt;/p&gt;&#xA;&lt;p&gt;为什么去掉 select 的 rollback 后会出现数据不一致?&lt;/p&gt;&#xA;&lt;p&gt;pymysql 默认关闭了 autocommit, connection A 进行 select 之后, 其实 MySQL 内部为 select 也开启了一个 transaction(Repeatable Read),&#xA;可以通过 &lt;code&gt;SELECT * FROM information_schema.innodb_trx\G&lt;/code&gt;  查看.&lt;/p&gt;&#xA;&lt;p&gt;所以当 connection A 先 select 一次, connection B 在 transaction 内更新数据并 commit, connection A 再次 select (之前的 transaction 并没 rollback 或 commit),&#xA;得到了老的数据. MySQL 在 repeatable read 下, 为了 consistent read 会使用一个 snapshot, 时间是第一次 read 发生的时间: &lt;a href=&#34;https://dev.mysql.com/doc/refman/5.7/en/glossary.html#glos_consistent_read&#34;&gt;https://dev.mysql.com/doc/refman/5.7/en/glossary.html#glos_consistent_read&lt;/a&gt;&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>gospy dev note</title>
       <link>https://blog.monsterxx03.com/2019/09/29/gospy-dev-note/</link>
       <pubDate>Sun, 29 Sep 2019 15:07:11 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/09/29/gospy-dev-note/</guid>
-      <description>前文讲了下 gospy 的大致用法, 这篇记录具体实现和过程中碰到的一些问题. 原理 要从外部获取 golang 进程的 runtime 信息, 需要做得是从进程的 binary 中的 debug 信息里 parse 出需要的一些变量的虚拟内存地址, 读取目标进程的内存, 得到相应的数据, 将两者映射起来就好了.只支持了 linux 上的 ELF 格式 binary, debug 信息是 go 在编译时候弄进去的, 格式是通用的 DWARF. ELF 和 DWARF 格式本身不细究(汗, 文档几百页也实在看不动), go 标准库里自带相应的 parser: debug/elf, debug/dwarf, debug/gosym. 一个基本的读取例子: f, _ := os.Open(path) b, _ :=</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://blog.monsterxx03.com/2019/09/20/gospy-non-invasive-goroutine-inspector/&#34;&gt;前文&lt;/a&gt;讲了下 gospy 的大致用法, 这篇记录具体实现和过程中碰到的一些问题.&lt;/p&gt;&#xA;&lt;h2 id=&#34;原理&#34;&gt;原理&lt;/h2&gt;&#xA;&lt;p&gt;要从外部获取 golang 进程的 runtime 信息, 需要做得是从进程的 binary 中的 debug 信息里 parse 出需要的一些变量的虚拟内存地址, 读取目标进程的内存, 得到相应的数据,&#xA;将两者映射起来就好了.只支持了 linux 上的 ELF 格式 binary, debug 信息是 go 在编译时候弄进去的, 格式是通用的 DWARF.&lt;/p&gt;&#xA;&lt;p&gt;ELF 和 DWARF 格式本身不细究(汗, 文档几百页也实在看不动), go 标准库里自带相应的 parser: &lt;code&gt;debug/elf, debug/dwarf, debug/gosym&lt;/code&gt;. 一个基本的读取例子:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;f, _ := os.Open(path)&#xA;b, _ := elf.NewFile(f)&#xA;lndata, _ := b.Section(&amp;quot;.gopclntab&amp;quot;).Data()&#xA;ln := gosym.NewLineTable(lndata, b.Section(&amp;quot;.text&amp;quot;).Addr)&#xA;symtab, _ := gosym.NewTable([]byte{}, ln)&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;在 go 1.3 之前, elf binary 里有一节 session: &lt;code&gt;.gosymtab&lt;/code&gt;, 1.3 开始不需要了,　为了 api 兼容, &lt;code&gt;gosym.NewTable&lt;/code&gt; 还需要这个参数,传个空　byte slice 进去就行.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>gospy: Non-invasive goroutine inspector</title>
       <link>https://blog.monsterxx03.com/2019/09/20/gospy-non-invasive-goroutine-inspector/</link>
       <pubDate>Fri, 20 Sep 2019 14:07:12 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/09/20/gospy-non-invasive-goroutine-inspector/</guid>
-      <description>go 自带的 profiling 工具很强大(pprof, trace, GODEBUG &amp;hellip;), 但有时我还是想不修改目标进程的源码获取它的一些 runtime 信息, 最近研究了一下 py-spy 和 delve, 发现还是可实现的, 就做了个小东西gospy. 用法 目前就两个命令: gospy summary 和 gospy top sudo ./gospy summary --pid 1234, 可以 dump 目标进程的一些信息和当前活动 goroutine 正在执行的函数信息, 比如对一个 prometheus 进程做一次 snapshot: bin: /home/will/Downloads/prometheus-2.12.0.linux-amd64/prometheus, goVer: 1.12.8, gomaxprocs: 6 P0 idle, schedtick: 642, syscalltick: 81 P1 idle, schedtick: 959, syscalltick: 67 P2 idle, schedtick: 992, syscalltick: 32 P3 idle, schedtick: 581, syscalltick: 17 P4 idle, schedtick: 89, syscalltick: 8 P5 idle, schedtick: 231, syscalltick: 5 Threads: 14 total, 0 running, 14 sleeping, 0 stopped, 0 zombie Goroutines: 44 total, 0 idle, 0 running, 5</description>
+      <description>&lt;p&gt;go 自带的 profiling 工具很强大(pprof, trace, GODEBUG &amp;hellip;), 但有时我还是想不修改目标进程的源码获取它的一些&#xA;runtime 信息, 最近研究了一下 py-spy 和 delve, 发现还是可实现的, 就做了个小东西&lt;a href=&#34;https://github.com/monsterxx03/gospy&#34;&gt;gospy&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;h2 id=&#34;用法&#34;&gt;用法&lt;/h2&gt;&#xA;&lt;p&gt;目前就两个命令: &lt;code&gt;gospy summary&lt;/code&gt; 和 &lt;code&gt;gospy top&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;sudo ./gospy summary --pid 1234&lt;/code&gt;, 可以 dump 目标进程的一些信息和当前活动 goroutine 正在执行的函数信息,&#xA;比如对一个 prometheus 进程做一次 snapshot:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;bin: /home/will/Downloads/prometheus-2.12.0.linux-amd64/prometheus, goVer: 1.12.8, gomaxprocs: 6&#xA;P0 idle, schedtick: 642, syscalltick: 81&#xA;P1 idle, schedtick: 959, syscalltick: 67&#xA;P2 idle, schedtick: 992, syscalltick: 32&#xA;P3 idle, schedtick: 581, syscalltick: 17&#xA;P4 idle, schedtick: 89, syscalltick: 8&#xA;P5 idle, schedtick: 231, syscalltick: 5&#xA;Threads: 14 total, 0 running, 14 sleeping, 0 stopped, 0 zombie&#xA;Goroutines: 44 total, 0 idle, 0 running, 5 syscall, 39 waiting&#xA;&#xA;goroutines:&#xA;&#xA;1 - waiting for chan receive: rt0_go (/usr/local/go/src/runtime/asm_amd64.s:202) &#xA;2 - waiting for force gc (idle): 5 (/usr/local/go/src/runtime/proc.go:240) &#xA;3 - waiting for GC sweep wait: gcenable (/usr/local/go/src/runtime/mgc.go:209) &#xA;8 - syscall: addtimerLocked (/usr/local/go/src/runtime/time.go:169) &#xA;9 - waiting for select: 0 (/app/vendor/go.opencensus.io/stats/view/worker.go:33) &#xA;16 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) &#xA;17 - waiting for finalizer wait: createfing (/usr/local/go/src/runtime/mfinal.go:156) &#xA;19 - syscall: 0 (/usr/local/go/src/os/signal/signal_unix.go:30) &#xA;22 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) &#xA;23 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) &#xA;38 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) &#xA;49 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) &#xA;50 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) &#xA;74 - waiting for select: sync (/app/scrape/scrape.go:408) &#xA;75 - syscall: addtimerLocked (/usr/local/go/src/runtime/time.go:169) &#xA;84 - syscall: addtimerLocked (/usr/local/go/src/runtime/time.go:169) &#xA;85 - waiting for select: Run (/app/vendor/github.com/oklog/run/group.go:36) &#xA;...&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;P0, P1 &amp;hellip;, 是 go 的 GMP schedule 模型里的 P, 可以简单理解成对一个物理核心的逻辑抽象. 个数可由环境变量 GOMAXPROCS 控制,&#xA;默认是机器核心数.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>杂</title>
       <link>https://blog.monsterxx03.com/2019/08/16/%E6%9D%82/</link>
       <pubDate>Fri, 16 Aug 2019 15:00:02 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/08/16/%E6%9D%82/</guid>
-      <description>随记. Life &amp;lt;火焰文章-风花雪月&amp;gt; 流程过半, 这一作难度确实低, 怂如我玩的又是不死人模式, 即使是困难难度, 到后面也是切菜. 流程里学生们 seisei 得喊, 想到后面要把他们一个个干掉, 心情挺复杂得&amp;hellip; 风花雪月这个副标题, 玩着玩着也有点明白意思了, 美版竟然叫 &amp;lt;Three houses&amp;gt;, 老外神经果然傻大粗啊&amp;hellip; 西泽保彦的高千和千晓系列看完了好几本, 还剩下&amp;lt;依存&amp;gt; 和 &amp;lt;啤酒之家的冒险&amp;gt;. 昨</description>
+      <description>&lt;p&gt;随记.&lt;/p&gt;&#xA;&lt;h2 id=&#34;life&#34;&gt;Life&lt;/h2&gt;&#xA;&lt;p&gt;&lt;code&gt;&amp;lt;火焰文章-风花雪月&amp;gt;&lt;/code&gt; 流程过半, 这一作难度确实低, 怂如我玩的又是不死人模式, 即使是困难难度, 到后面也是切菜. 流程里学生们 seisei 得喊, 想到后面要把他们一个个干掉, 心情挺复杂得&amp;hellip;&#xA;风花雪月这个副标题, 玩着玩着也有点明白意思了, 美版竟然叫 &lt;code&gt;&amp;lt;Three houses&amp;gt;&lt;/code&gt;, 老外神经果然傻大粗啊&amp;hellip;&lt;/p&gt;&#xA;&lt;p&gt;西泽保彦的高千和千晓系列看完了好几本, 还剩下&lt;code&gt;&amp;lt;依存&amp;gt;&lt;/code&gt; 和 &lt;code&gt;&amp;lt;啤酒之家的冒险&amp;gt;&lt;/code&gt;. 昨晚读完了 &lt;code&gt;&amp;lt;苏格兰游戏&amp;gt;&lt;/code&gt;, 剧情高开低走, 前半段的迷题和悬念设置堪称系列之最, 我都想大吹特吹这本了, 结果最后的凶手犯罪动机特别无语, 怪不得豆瓣上评分不高. 但仍旧非常推荐, 毕竟是高千的故事嘛.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>kube-scheduler internal</title>
       <link>https://blog.monsterxx03.com/2019/08/02/kube-scheduler-internal/</link>
       <pubDate>Fri, 02 Aug 2019 16:30:10 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/08/02/kube-scheduler-internal/</guid>
-      <description>追了一下 kube-scheduler 的源码, 记录一点, 基于 tag v1.16.0-alpha.2. 一句话概括 kube-scheduler 的职责是: 找到 pending 的 pod, 挑选一个合适的 node, 将 pod bind 上去. Get pending pod 在 scheduler 的初始化过程中给 pod/node/pv/pvc/service/storageClassInformer 添加回调函数, 功能大致都是在这些资源发生变化时更新本地的 cache 和 ScheduleQueue scheduler.go:New. ScheduleQueue 是关键, 内部实现是一个 PriorityQueue, 它有三个 sub queue: activeQ 用来存放等待 schedule 的 pods, kube-schedule 实际工作时候从这个 queue 中取 pod, 实现上是一个 heap, 如果 pod 定义了 priority, 则按照 priority 由高到低排序, 否则按 pod 到达的时间排序: activeQComp podBackoffQ 存放正在经历 backoff 的 pod, 也是 heap, 按 pod 上次 backoff 的时间排序: podsCompareBackoffCompleted</description>
+      <description>&lt;p&gt;追了一下 kube-scheduler 的源码, 记录一点, 基于 tag &lt;code&gt;v1.16.0-alpha.2&lt;/code&gt;.&lt;/p&gt;&#xA;&lt;p&gt;一句话概括 kube-scheduler 的职责是: 找到 pending 的 pod, 挑选一个合适的 node, 将 pod bind 上去.&lt;/p&gt;&#xA;&lt;h2 id=&#34;get-pending-pod&#34;&gt;Get pending pod&lt;/h2&gt;&#xA;&lt;p&gt;在 scheduler 的初始化过程中给 &lt;code&gt;pod/node/pv/pvc/service/storageClassInformer&lt;/code&gt; 添加回调函数, 功能大致都是在这些资源发生变化时更新本地的 cache 和 ScheduleQueue &lt;a href=&#34;https://github.com/kubernetes/kubernetes/blob/v1.16.0-alpha.2/pkg/scheduler/scheduler.go#L207&#34;&gt;scheduler.go:New&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;ScheduleQueue 是关键, 内部实现是一个 PriorityQueue, 它有三个 sub queue:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;activeQ 用来存放等待 schedule 的 pods, kube-schedule 实际工作时候从这个 queue 中取 pod, 实现上是一个 heap, 如果 pod 定义了 priority, 则按照 priority 由高到低排序, 否则按 pod 到达的时间排序: &lt;a href=&#34;https://github.com/kubernetes/kubernetes/blob/v1.16.0-alpha.2/pkg/scheduler/internal/queue/scheduling_queue.go#L154&#34;&gt;activeQComp&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;podBackoffQ 存放正在经历 backoff 的 pod, 也是 heap, 按 pod 上次 backoff 的时间排序: &lt;a href=&#34;https://github.com/kubernetes/kubernetes/blob/v1.16.0-alpha.2/pkg/scheduler/internal/queue/scheduling_queue.go#L651&#34;&gt;podsCompareBackoffCompleted&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;unschedulableQ 存放 schedule 失败的 pod, 只需要能根据 pod 的 identity (&lt;code&gt;podName_namespace&lt;/code&gt;) 找到 pod 就行, 不需要排序, 内部是个 map.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;由 podInformer 的 eventHandler 将新的 pod 加到 activeQ 中.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Pyflame 的 kubectl plugin</title>
       <link>https://blog.monsterxx03.com/2019/07/28/pyflame-%E7%9A%84-kubectl-plugin/</link>
       <pubDate>Sun, 28 Jul 2019 12:47:23 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/07/28/pyflame-%E7%9A%84-kubectl-plugin/</guid>
-      <description>pyflame 可以比较方便得生成 python 进程的调用函数栈火焰图, 来 debug 一些性能瓶颈, 做了个 kubectl 的小插件, 来方便得对 k8s pod 中的 python 进程进行 debug: https://github.com/monsterxx03/kube-pyflame 直接把 svg 文件下载到本地. 要对 pod 中的 python 进程进行 profiling, 大致思路有两种: 直接在 container 内使用 pyflame, 但这样要把 pyflame 做到所有的 base 镜像里去, 而且目标 container要在 SecurityContext 加上 SYS_PTRACE 在 host 上用 pyflame debug 对应进程, pyflame 自身是能识别跑在 container 里的进程, 自动执行 setns 的. 我希望保持线上环境干净, 最后的做法是, 把 pyflame 单独做一个镜像, 先用 kubectl 找到目</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/uber/pyflame&#34;&gt;pyflame&lt;/a&gt; 可以比较方便得生成 python 进程的调用函数栈火焰图, 来 debug&#xA;一些性能瓶颈, 做了个 kubectl 的小插件, 来方便得对 k8s pod 中的 python 进程进行 debug: &lt;a href=&#34;https://github.com/monsterxx03/kube-pyflame&#34;&gt;https://github.com/monsterxx03/kube-pyflame&lt;/a&gt;&#xA;直接把 svg 文件下载到本地.&lt;/p&gt;&#xA;&lt;p&gt;要对 pod 中的 python 进程进行 profiling, 大致思路有两种:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;直接在 container 内使用 pyflame, 但这样要把 pyflame 做到所有的 base 镜像里去, 而且目标 container要在 SecurityContext 加上 &lt;code&gt;SYS_PTRACE&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;在 host 上用 pyflame debug 对应进程, pyflame 自身是能识别跑在 container 里的进程, 自动执行 &lt;code&gt;setns&lt;/code&gt; 的.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;我希望保持线上环境干净, 最后的做法是, 把 pyflame 单独做一个镜像, 先用 kubectl 找到目标 pod 所在节点, 然后用 nodeSelector 在对应节点上起一个&#xA;pyflame 的 pod, 因为要能看到其他 namespace 的进程, 需要设置 &lt;code&gt;hostPID: true&lt;/code&gt;, pyflame 要能执行 &lt;code&gt;setns&lt;/code&gt;, 这个 debug pod 要设置 &lt;code&gt;privileged: true&lt;/code&gt;.&#xA;执行完成后把 svg 下载下来, 并删除 debug pod.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title> 迁移到 k8s 过程中碰到的问题</title>
       <link>https://blog.monsterxx03.com/2019/07/23/%E8%BF%81%E7%A7%BB%E5%88%B0-k8s-%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%A2%B0%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/</link>
       <pubDate>Tue, 23 Jul 2019 12:32:08 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/07/23/%E8%BF%81%E7%A7%BB%E5%88%B0-k8s-%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%A2%B0%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/</guid>
-      <description>开始把线上流量往 k8s 集群里面导了, 中间碰到了茫茫多的问题 &amp;hellip;&amp;hellip; 记录一下(大多都不是 k8s 的问题). nginx ingress controller 的问题 zero-downtime pods upgrade 默认配置下, nginx ingress controller 的 upstream 是 service 的 endpoints, 在 eks 里, 就是 vpc cni plugin 分配给 pod 的 vpc ip(不是 cluster ip), 和直接使用 service cluster ip 比, 好处是: 可以支持 sticky session 可以用 round robin 之外的负载均衡算法 具体实现是, 当 service 的 endpoint 列表发生变化时, nginx ingress controller 收到通知, 对它管理的 nginx 进程发起一个 http request, 更新 endpoint ip list(nginx 内置的 lua 来修改内存中的 ip list) 这样的问题是, 从 pod 被干掉到 nginx 更新之间</description>
+      <description>&lt;p&gt;开始把线上流量往 k8s 集群里面导了, 中间碰到了茫茫多的问题 &amp;hellip;&amp;hellip; 记录一下(大多都不是 k8s 的问题).&lt;/p&gt;&#xA;&lt;h2 id=&#34;nginx-ingress-controller-的问题&#34;&gt;nginx ingress controller 的问题&lt;/h2&gt;&#xA;&lt;h3 id=&#34;zero-downtime-pods-upgrade&#34;&gt;zero-downtime pods upgrade&lt;/h3&gt;&#xA;&lt;p&gt;默认配置下, nginx ingress controller 的 upstream 是 service 的 endpoints, 在 eks 里, 就是 vpc cni plugin 分配给 pod 的 vpc ip(不是 cluster ip),&#xA;和直接使用 service cluster ip 比, 好处是:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;可以支持 sticky session&lt;/li&gt;&#xA;&lt;li&gt;可以用 round robin 之外的负载均衡算法&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;具体实现是, 当 service 的 endpoint 列表发生变化时, nginx ingress controller 收到通知, 对它管理的 nginx 进程发起一个 http request, 更新 endpoint ip&#xA;list(nginx 内置的 lua 来修改内存中的 ip list)&lt;/p&gt;&#xA;&lt;p&gt;这样的问题是, 从 pod 被干掉到 nginx 更新之间有个时间差, 部分请求会挂掉, 解决方法可以给 pod 设置一个 preStop hook, sleep 几秒, 等 nginx ingress controller&#xA;更新完成.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>K8S: 剩下的问题</title>
       <link>https://blog.monsterxx03.com/2019/06/30/k8s-%E5%89%A9%E4%B8%8B%E7%9A%84%E9%97%AE%E9%A2%98/</link>
       <pubDate>Sun, 30 Jun 2019 16:11:06 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/06/30/k8s-%E5%89%A9%E4%B8%8B%E7%9A%84%E9%97%AE%E9%A2%98/</guid>
-      <description>准备工作都差不多了, 没意外下周就该开始把线上的服务往 k8s 上迁移了. 记录几个问题，暂时不 block 我的迁移进程, 但需要持续关注. DNS timeout and conntrack 看到有个关于 DNS 的issue: #56903 现象是 k8s cluster 内部 dns 查询间歇性会 5s 超时, 大致原因是 coredns 作为中心 dns 的时候, 要通过 iptables 把 coredns 的 cluster ip, 转化到它真实的可路由 ip, 中间需要 SNAT, DNAT, 并在 conntrack 内记录映射关系. 这可能会带来两个问题: conntrack table 被 udp 的 dns 查询填满 udp 是无连接的, tcp 关闭链接就会清理 conntrack 内记录, udp 不会，只能等超时, 默</description>
+      <description>&lt;p&gt;准备工作都差不多了, 没意外下周就该开始把线上的服务往 k8s 上迁移了. 记录几个问题，暂时不 block 我的迁移进程,&#xA;但需要持续关注.&lt;/p&gt;&#xA;&lt;h2 id=&#34;dns-timeout-and-conntrack&#34;&gt;DNS timeout and conntrack&lt;/h2&gt;&#xA;&lt;p&gt;看到有个关于 DNS 的issue: &lt;a href=&#34;https://github.com/kubernetes/kubernetes/issues/56903&#34;&gt;#56903&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;现象是 k8s cluster 内部 dns 查询间歇性会 5s 超时, 大致原因是 coredns 作为中心 dns 的时候,&#xA;要通过 iptables 把　coredns 的 cluster ip, 转化到它真实的可路由 ip, 中间需要 SNAT, DNAT, 并在&#xA;conntrack 内记录映射关系.&lt;/p&gt;&#xA;&lt;p&gt;这可能会带来两个问题:&lt;/p&gt;&#xA;&lt;h3 id=&#34;conntrack-table-被-udp-的-dns-查询填满&#34;&gt;conntrack table 被 udp 的 dns 查询填满&lt;/h3&gt;&#xA;&lt;p&gt;udp 是无连接的, tcp 关闭链接就会清理 conntrack 内记录, udp 不会，只能等超时, 默认 30s(&lt;code&gt;net.netfilter.nf_conntrack_udp_timeout&lt;/code&gt;)&#xA;短时间内大量 udp 查询可能填满 conntrack, 导致丢包.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>snet dev note: support MacOS</title>
       <link>https://blog.monsterxx03.com/2019/06/20/snet-dev-note-support-macos/</link>
       <pubDate>Thu, 20 Jun 2019 16:03:56 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/06/20/snet-dev-note-support-macos/</guid>
-      <description>这两天得了空, 让 snet 支持了下 MacOS. snet 的大致原理是通过系统防火墙的流量重定向功能,将所有去往国外的流量导到 snet 监听的端口, 在程序内部 将流量传递给上游的 proxy server(ss, http), 拿到响应后再回给客户端. 实现关键是要在 snet 内部获取到流量的原目标地址, 因为重定向之后 tcp connnection 的目标地址变成了 snet 监听 的地址. Linux 上的实现，以前讲过: https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/ 是通过 SO_ORIGINAL_DST 这个 socket option 实现的. MacOS 上没有 iptables, 类似的工具是系统自带的 pfctl, 捣鼓了一下也能实现一样的功能. 用 pfctl 做流量重定向 pfctl 的文档可</description>
+      <description>&lt;p&gt;这两天得了空, 让 snet 支持了下 MacOS.&lt;/p&gt;&#xA;&lt;p&gt;snet 的大致原理是通过系统防火墙的流量重定向功能,将所有去往国外的流量导到 snet 监听的端口, 在程序内部&#xA;将流量传递给上游的 proxy server(ss, http), 拿到响应后再回给客户端.&lt;/p&gt;&#xA;&lt;p&gt;实现关键是要在 snet 内部获取到流量的原目标地址, 因为重定向之后 tcp connnection 的目标地址变成了 snet 监听&#xA;的地址.&lt;/p&gt;&#xA;&lt;p&gt;Linux 上的实现，以前讲过: &lt;a href=&#34;https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/&#34;&gt;https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/&lt;/a&gt;&#xA;是通过 &lt;code&gt;SO_ORIGINAL_DST&lt;/code&gt; 这个 socket option 实现的.&lt;/p&gt;&#xA;&lt;p&gt;MacOS 上没有 iptables, 类似的工具是系统自带的 pfctl, 捣鼓了一下也能实现一样的功能.&lt;/p&gt;&#xA;&lt;h2 id=&#34;用-pfctl-做流量重定向&#34;&gt;用 pfctl 做流量重定向&lt;/h2&gt;&#xA;&lt;p&gt;pfctl 的文档可以通过 &lt;code&gt;man pfctl&lt;/code&gt;, &lt;code&gt;man pf.conf&lt;/code&gt; 查看. 我也只是看了个大概, 细节并不清楚.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Random Talk</title>
       <link>https://blog.monsterxx03.com/2019/05/30/random-talk/</link>
       <pubDate>Thu, 30 May 2019 18:48:23 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/05/30/random-talk/</guid>
-      <description>Just some random complains and notes about server infra management. I think those are my motivations to move to kubernetes.
-Won&amp;rsquo;t explain k8s or docker in detail, and how they solve those problems in this post.
-Infrastructure level(on AWS) We use following services provided by AWS.
-Compute: EC2 AutoScaling Group Lambda network: VPC (SDN network) DNS (route53) CDN (CloudFront) Loadbalancer: ELB (L4) NLB (L4, ELB successor, support static IP) ALB (L7) Storage: EBS (block storage) EFS (hosted NFS) RDS(MySQl/PostgreSQL &amp;hellip;) Redshift (data warehouse) DynamoDB (KV) S3 (object storage) Glacier (cheap archive storage) Web Firewall (WAF) Monitor (CloudWatch) DMS (ETL) &amp;hellip; For infra management, in early days, we just click, click, click&amp;hellip; or write some simple scripts to call AWS api.
-With infra resources growing, management became complex, a concept called Infrastructure as Code rising.
-AWS provides CloudFormation as orchestration tool, but we use terraform (for short: CloudFormation sucks, for long: Infrastructure as Code)
-So far, not bad.(tweak those services internally is another story&amp;hellip; never belive work out of box)
-Application level configuration management (setup nginx, jenkins, redis, twemproxy, ElasticSearch or WTF..) CI/CD dependency management They&amp;rsquo;re complicated, people developped bunch of tools to handle: puppet, chef, ansible, saltstack &amp;hellip;
-They&amp;rsquo;re great and working, but writing correct code still a challenge when changes involves:</description>
+      <description>&lt;p&gt;Just some random complains and notes about server infra management. I think those are my motivations to move to kubernetes.&lt;/p&gt;&#xA;&lt;p&gt;Won&amp;rsquo;t explain k8s or docker in detail, and how they solve those problems in this post.&lt;/p&gt;&#xA;&lt;h2 id=&#34;infrastructure-levelon-aws&#34;&gt;Infrastructure level(on AWS)&lt;/h2&gt;&#xA;&lt;p&gt;We use following services provided by AWS.&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Compute:&#xA;&lt;ul&gt;&#xA;&lt;li&gt;EC2&lt;/li&gt;&#xA;&lt;li&gt;AutoScaling Group&lt;/li&gt;&#xA;&lt;li&gt;Lambda&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;network:&#xA;&lt;ul&gt;&#xA;&lt;li&gt;VPC (SDN network)&lt;/li&gt;&#xA;&lt;li&gt;DNS (route53)&lt;/li&gt;&#xA;&lt;li&gt;CDN (CloudFront)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;Loadbalancer:&#xA;&lt;ul&gt;&#xA;&lt;li&gt;ELB (L4)&lt;/li&gt;&#xA;&lt;li&gt;NLB (L4, ELB successor, support static IP)&lt;/li&gt;&#xA;&lt;li&gt;ALB (L7)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;Storage:&#xA;&lt;ul&gt;&#xA;&lt;li&gt;EBS (block storage)&lt;/li&gt;&#xA;&lt;li&gt;EFS (hosted NFS)&lt;/li&gt;&#xA;&lt;li&gt;RDS(MySQl/PostgreSQL &amp;hellip;)&lt;/li&gt;&#xA;&lt;li&gt;Redshift (data warehouse)&lt;/li&gt;&#xA;&lt;li&gt;DynamoDB (KV)&lt;/li&gt;&#xA;&lt;li&gt;S3 (object storage)&lt;/li&gt;&#xA;&lt;li&gt;Glacier (cheap archive storage)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;Web Firewall (WAF)&lt;/li&gt;&#xA;&lt;li&gt;Monitor (CloudWatch)&lt;/li&gt;&#xA;&lt;li&gt;DMS (ETL)&#xA;&amp;hellip;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;For infra management, in early days, we just click, click, click&amp;hellip; or write some simple scripts to call AWS api.&lt;/p&gt;&#xA;&lt;p&gt;With infra resources growing, management became complex, a concept called &lt;code&gt;Infrastructure as Code&lt;/code&gt; rising.&lt;/p&gt;&#xA;&lt;p&gt;AWS provides CloudFormation as orchestration tool, but we use &lt;a href=&#34;https://www.terraform.io/&#34;&gt;terraform&lt;/a&gt; (for short: CloudFormation sucks, for long: &lt;a href=&#34;https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/&#34;&gt;Infrastructure as Code&lt;/a&gt;)&lt;/p&gt;&#xA;&lt;p&gt;So far, not bad.(tweak those services internally is another story&amp;hellip; never belive &lt;code&gt;work out of box&lt;/code&gt;)&lt;/p&gt;&#xA;&lt;h2 id=&#34;application-level&#34;&gt;Application level&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;configuration management (setup nginx, jenkins, redis, twemproxy, ElasticSearch or WTF..)&lt;/li&gt;&#xA;&lt;li&gt;CI/CD&lt;/li&gt;&#xA;&lt;li&gt;dependency management&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;They&amp;rsquo;re complicated, people developped bunch of tools to handle: puppet, chef, ansible, saltstack &amp;hellip;&lt;/p&gt;&#xA;&lt;p&gt;They&amp;rsquo;re great and working, but writing correct code still a challenge when changes involves:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Centralized Logging on K8S</title>
       <link>https://blog.monsterxx03.com/2019/05/26/centralized-logging-on-k8s/</link>
       <pubDate>Sun, 26 May 2019 14:27:38 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/05/26/centralized-logging-on-k8s/</guid>
-      <description>搞定了监控, 下一步在 k8s 上要做的是中心化日志, 大体看了下, 感兴趣的有两个选择: ELK 套件, 或fluent-bit + fluentd. ELK 那套好处是, 可以把监控和日志一体化, filebeat 收集日志, metricbeat 收集 metrics, 统一存储在 ElasticSearch 里, 通过第三方项目elastalert 可以做报警，也能在 kibana 里集成界面. 坏处是 ElasticSearch 存储成本高, 吃资源. 我们对存储的日志使用需求基本就是 debug, 没有特别复杂的BI需求, 上一整套 ELK 还是太重了. 选择 fluent-bit + fluentd 还有个好处是, 之前内部有套收集 m</description>
+      <description>&lt;p&gt;搞定了监控, 下一步在 k8s 上要做的是中心化日志, 大体看了下, 感兴趣的有两个选择: ELK 套件, 或fluent-bit + fluentd.&lt;/p&gt;&#xA;&lt;p&gt;ELK 那套好处是, 可以把监控和日志一体化, filebeat 收集日志, metricbeat 收集 metrics, 统一存储在 ElasticSearch 里, 通过第三方项目&lt;a href=&#34;https://github.com/Yelp/elastalert&#34;&gt;elastalert&lt;/a&gt;&#xA;可以做报警，也能在 kibana 里集成界面. 坏处是 ElasticSearch 存储成本高, 吃资源. 我们对存储的日志使用需求基本就是 debug, 没有特别复杂的BI需求, 上一整套 ELK 还是太重了.&lt;/p&gt;&#xA;&lt;p&gt;选择 fluent-bit + fluentd 还有个好处是, 之前内部有套收集 metrics(用于统计 DAU, retention 之类指标) 的系统本来就是基于 fluentd 的, 用这套就不用改 metrics 那边的 ETL 了.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Prometheus on K8S</title>
       <link>https://blog.monsterxx03.com/2019/05/14/prometheus-on-k8s/</link>
       <pubDate>Tue, 14 May 2019 13:52:02 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/05/14/prometheus-on-k8s/</guid>
-      <description>Why move to prometheus? 把生产环境迁移到 k8s 的第一步是要搞定监控, 目前线上监控用的是商业的 datadog, 在 container 环境下 datadog 监控还要按 container 数目收费, 单 host 只有 10 个的额度, 超过要加钱, 高密度部署下很不划算. 一个 server 跑 20 个以上 container 是很正常的事情, 单台 server 的监控费用立马翻倍. tracing 这块之前用的也是 datadog, 但太贵了,一直也想换开源实现, 索性监控报警也换了, 踩一把坑吧. vendor lock 总是不爽的&amp;hellip; Metrics in k8s 先不提 prometheus, k8s 中 metrics 来源有那么几个: metrics-serever metrics-server (取代 heapster), 从 node 上 kubelet 的 summary api 抓取</description>
+      <description>&lt;h1 id=&#34;why-move-to-prometheus&#34;&gt;Why move to prometheus?&lt;/h1&gt;&#xA;&lt;p&gt;把生产环境迁移到 k8s 的第一步是要搞定监控, 目前线上监控用的是商业的 datadog, 在 container 环境下&#xA;datadog 监控还要按 container 数目收费, 单 host 只有 10 个的额度, 超过要加钱, 高密度部署下很不划算.&#xA;一个 server 跑 20 个以上 container 是很正常的事情, 单台 server 的监控费用立马翻倍.&lt;/p&gt;&#xA;&lt;p&gt;tracing 这块之前用的也是 datadog, 但太贵了,一直也想换开源实现, 索性监控报警也换了, 踩一把坑吧.&lt;/p&gt;&#xA;&lt;p&gt;vendor lock 总是不爽的&amp;hellip;&lt;/p&gt;&#xA;&lt;h1 id=&#34;metrics-in-k8s&#34;&gt;Metrics in k8s&lt;/h1&gt;&#xA;&lt;p&gt;先不提 prometheus, k8s 中 metrics 来源有那么几个:&lt;/p&gt;&#xA;&lt;h2 id=&#34;metrics-serever&#34;&gt;metrics-serever&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://github.com/kubernetes-incubator/metrics-server&#34;&gt;metrics-server&lt;/a&gt; (取代 heapster), 从 node&#xA;上 kubelet 的 &lt;a href=&#34;https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/apis/stats/v1alpha1/types.go&#34;&gt;summary api&lt;/a&gt; 抓取数据(node/pod 的 cpu/memory 信息), kubectl top 和 kube-dashboard 的 metrics 数据来源就是它, horizontal pod&#xA;autoscaler 做 scale up/down 决策的数据来源也是它, metrics-server 只在内存里保留 node 和 pod 的最新值.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>kubeconfig 和 aws named profile 管理的 tips</title>
       <link>https://blog.monsterxx03.com/2019/05/07/kubeconfig-%E5%92%8C-aws-named-profile-%E7%AE%A1%E7%90%86%E7%9A%84-tips/</link>
       <pubDate>Tue, 07 May 2019 18:36:38 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/05/07/kubeconfig-%E5%92%8C-aws-named-profile-%E7%AE%A1%E7%90%86%E7%9A%84-tips/</guid>
-      <description>我有两个 EKS 集群 (sandbox + production), 这两个集群分处两个 aws 帐号中. 所以管理的时候也需要两套 aws credential. 同时我用 helm-secrets 来管理 helm charts 中需要加密的一些配置. helm-secrets 只是 sops 的一个 shell wrapper, 实际加密是通过 sops 进行的. sops 支持 aws KMS, gcp KMS, azure key vault.. 等加密服务. 我用的是 aws KMS, 在 KMS 里创建一个 key, 授权允许我这个 iam 帐号能用它来进行加解密. 这带来了一个问题, kubectl 和 helm-secrets 都需要 aws credential, 如果两边用的不一样就会执行失败. 我统一使用 aws 的 named profiles 来管理 credential. 不在环境变量里设 aws 的 access key/secret key(如果设置了, 优先</description>
+      <description>&lt;p&gt;我有两个 EKS 集群 (sandbox + production), 这两个集群分处两个 aws 帐号中.&#xA;所以管理的时候也需要两套 aws credential.&lt;/p&gt;&#xA;&lt;p&gt;同时我用 &lt;a href=&#34;https://github.com/futuresimple/helm-secrets&#34;&gt;helm-secrets&lt;/a&gt; 来管理 helm charts&#xA;中需要加密的一些配置. helm-secrets 只是 &lt;a href=&#34;https://github.com/mozilla/sops&#34;&gt;sops&lt;/a&gt; 的一个 shell&#xA;wrapper, 实际加密是通过 sops 进行的.&lt;/p&gt;&#xA;&lt;p&gt;sops 支持 aws KMS, gcp KMS, azure key vault.. 等加密服务. 我用的是 aws KMS, 在 KMS 里创建一个 key,&#xA;授权允许我这个 iam 帐号能用它来进行加解密.&lt;/p&gt;&#xA;&lt;p&gt;这带来了一个问题, kubectl 和 helm-secrets 都需要 aws credential, 如果两边用的不一样就会执行失败.&lt;/p&gt;&#xA;&lt;p&gt;我统一使用 aws 的 &lt;a href=&#34;https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html&#34;&gt;named profiles&lt;/a&gt;&#xA;来管理 credential. 不在环境变量里设 aws 的 access key/secret key(如果设置了, 优先级比 named profile 高)&lt;/p&gt;&#xA;&lt;p&gt;目录结构:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Jenkins on K8S</title>
       <link>https://blog.monsterxx03.com/2019/04/29/jenkins-on-k8s/</link>
       <pubDate>Mon, 29 Apr 2019 15:56:12 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/04/29/jenkins-on-k8s/</guid>
-      <description>最近在把 jenkins 迁移到 k8s, 具体怎么 setup 的不赘述了(helm chart, jenkins home 目录挂pvc, jenkins kubernetes-plugin). jenkins 跑 k8s 好处是可以方便得做分布式 build, 每次 trigger 一个 job 的时候自动起一个 pod 作为 jenkins slave agent, 结束了自动删掉. 在 aws 上结合 cluster-autoscaler 可以极大得扩展 ci 的并行能力, 降低成本. 记录一点过程中的坑. 装上 kubernetes-plugin 后,要想让 jenkins 的 job 在 pod 中跑, 必须用 pipeline 的方式编写 job 定义. script 和 declarative 两种方式都支持启动 pod. 如果用 shell 的方式编写, 不会跑在 pod 里，会直接在 master 的 workspace 里 build. declarative 方式的例子: pipeline { agent { kubernetes { label &#39;test-deploy&#39; yamlFile &#39;test-deploy.yaml&#39;</description>
+      <description>&lt;p&gt;最近在把 jenkins 迁移到 k8s, 具体怎么 setup 的不赘述了(helm chart, jenkins home 目录挂pvc, jenkins kubernetes-plugin).&lt;/p&gt;&#xA;&lt;p&gt;jenkins 跑 k8s 好处是可以方便得做分布式 build, 每次 trigger 一个 job 的时候自动起一个 pod 作为 jenkins slave agent, 结束了自动删掉.&#xA;在 aws 上结合 cluster-autoscaler 可以极大得扩展 ci 的并行能力, 降低成本.&lt;/p&gt;&#xA;&lt;p&gt;记录一点过程中的坑.&lt;/p&gt;&#xA;&lt;p&gt;装上 &lt;a href=&#34;https://github.com/jenkinsci/kubernetes-plugin&#34;&gt;kubernetes-plugin&lt;/a&gt; 后,要想让 jenkins 的 job 在 pod 中跑, 必须用 pipeline 的方式编写 job 定义. script 和 declarative&#xA;两种方式都支持启动 pod. 如果用 shell 的方式编写, 不会跑在 pod 里，会直接在　master 的　workspace 里 build.&lt;/p&gt;&#xA;&lt;p&gt;declarative 方式的例子:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;pipeline {&#xA;    agent {&#xA;        kubernetes  {&#xA;            label &#39;test-deploy&#39;&#xA;            yamlFile &#39;test-deploy.yaml&#39;&#xA;        }&#xA;    }&#xA;    stages {&#xA;        stage(&#39;stage test&#39;) {&#xA;            steps(&#39;tests&#39;) {&#xA;                container(&#39;test&#39;) {&#xA;                    sh &#39;ls&#39;&#xA;                }&#xA;            }&#xA;        }&#xA;    }&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;&lt;code&gt;ls&lt;/code&gt; 命令就会在 test container 里执行, 如果不用 &lt;code&gt;container()&lt;/code&gt; step 的话，默认会在 pod 的 default container 里执行.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>K8s Volume Resize on EKS</title>
       <link>https://blog.monsterxx03.com/2019/04/12/k8s-volume-resize-on-eks/</link>
       <pubDate>Fri, 12 Apr 2019 13:23:54 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/04/12/k8s-volume-resize-on-eks/</guid>
-      <description>从 k8s 1.8 开始支持 PersistentVolumeClaimResize. 但 api 是 alpha 状态, 默认不开启, eks launch 的时候版本是 1.10, 因为没法改 control plane, 所以没法直接在 k8s 内做 ebs 扩容. 后来升级到了 1.11, 这个 feature 默认被打开了, 尝试了下直接在 EKS 内做 ebs 的扩容. 注意: 这个 feature 只能对通过 pvc 管理的 volume 做扩容, 如果直接挂的是 pv, 只能自己按传统的 ebs 扩容流程在 eks 之外做. 用来创建 pvc 的 storageclass 上必须设置 allowVolumeExpansion 为 true 在 eks 上使用 pv/pvc, 对于需要 retain 的 volume, 我一般的流程是: 在 eks 之外手工创建 ebs volume. 在 eks 中创建 pv, 指向 ebs 的 volume id 在 eks 中创建 pvc, 指向 pv 示例 yaml:</description>
+      <description>&lt;p&gt;从 k8s 1.8 开始支持 &lt;a href=&#34;https://kubernetes.io/blog/2018/07/12/resizing-persistent-volumes-using-kubernetes/&#34;&gt;PersistentVolumeClaimResize&lt;/a&gt;. 但 api 是 alpha 状态, 默认不开启, eks launch&#xA;的时候版本是 1.10, 因为没法改 control plane, 所以没法直接在 k8s 内做 ebs 扩容. 后来升级到了&#xA;1.11, 这个 feature 默认被打开了, 尝试了下直接在 EKS 内做 ebs 的扩容.&lt;/p&gt;&#xA;&lt;p&gt;注意:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;这个 feature 只能对通过 pvc 管理的 volume 做扩容, 如果直接挂的是 pv, 只能自己按传统的 ebs 扩容流程在 eks 之外做.&lt;/li&gt;&#xA;&lt;li&gt;用来创建 pvc 的 storageclass 上必须设置 &lt;code&gt;allowVolumeExpansion&lt;/code&gt; 为 true&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;在 eks 上使用 pv/pvc,　对于需要 retain 的 volume, 我一般的流程是:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;在 eks 之外手工创建 ebs volume.&lt;/li&gt;&#xA;&lt;li&gt;在 eks 中创建 pv, 指向 ebs 的 volume id&lt;/li&gt;&#xA;&lt;li&gt;在 eks 中创建 pvc, 指向 pv&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;示例 yaml:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;---&#xA;kind: PersistentVolume&#xA;apiVersion: v1&#xA;metadata:&#xA;  name: test&#xA;spec:&#xA;  storageClassName: gp2&#xA;  persistentVolumeReclaimPolicy: Retain&#xA;  accessModes:&#xA;    - ReadWriteOnce&#xA;  capacity:&#xA;    storage: 5Gi&#xA;  awsElasticBlockStore:&#xA;    fsType: ext4&#xA;    volumeID: vol-xxxx   # create in aws manually&#xA;---&#xA;kind: PersistentVolumeClaim&#xA;apiVersion: v1&#xA;metadata:&#xA;  name: test-claim&#xA;spec:&#xA;  accessModes:&#xA;    - ReadWriteOnce&#xA;  resources:&#xA;    requests:&#xA;      storage: 5Gi&#xA;  volumeName: test&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;假如现在要扩容到 10Gi, 流程是:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>snet dev note</title>
       <link>https://blog.monsterxx03.com/2019/04/10/snet-dev-note/</link>
       <pubDate>Wed, 10 Apr 2019 22:33:49 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/04/10/snet-dev-note/</guid>
-      <description>完成 SNET 初版后又做了些后续更新, 记录一点. 支持 http tunnel 配置文件里增加一个 proxy-type 选项, 默认为 ss, 可改成 http, 这样可以将 支持 http tunnel 的代理服务器作为 upstream(例如 squid). 填上 http-proxy- 开头 的选项就行. 实现上 client 端要对接 http tunnel 非常简单: client 发送请求: Connect tgt-host:tgt-port HTTP/1.1 server response: HTTP/1.1 200, 即表示 server 端支持 http tunnel client 后续向该 tcp connection 写入的数据都会被 server 转发到 tgt-host:tgt-port 改动的时候把 upstream proxy 的部分重构了一下, 抽了个 Proxy interface 出来, 后续想对接其他协议方便扩展. 对 udp 支持的尝试 对 tcp 流量的转发能通过 iptables REDIRECT</description>
+      <description>&lt;p&gt;完成 &lt;a href=&#34;https://github.com/monsterxx03/snet&#34;&gt;SNET&lt;/a&gt; 初版后又做了些后续更新,　记录一点.&lt;/p&gt;&#xA;&lt;h2 id=&#34;支持-http-tunnel&#34;&gt;支持 http tunnel&lt;/h2&gt;&#xA;&lt;p&gt;配置文件里增加一个 &lt;code&gt;proxy-type&lt;/code&gt; 选项, 默认为 &lt;code&gt;ss&lt;/code&gt;, 可改成 &lt;code&gt;http&lt;/code&gt;, 这样可以将&#xA;支持 http tunnel 的代理服务器作为 upstream(例如 squid). 填上 &lt;code&gt;http-proxy-&lt;/code&gt; 开头&#xA;的选项就行.&lt;/p&gt;&#xA;&lt;p&gt;实现上 client 端要对接 http tunnel 非常简单:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;client 发送请求: &lt;code&gt;Connect tgt-host:tgt-port HTTP/1.1&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;server response: &lt;code&gt;HTTP/1.1 200&lt;/code&gt;, 即表示 server 端支持 http tunnel&lt;/li&gt;&#xA;&lt;li&gt;client 后续向该 tcp connection 写入的数据都会被 server 转发到 tgt-host:tgt-port&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;改动的时候把 upstream proxy 的部分重构了一下, 抽了个 &lt;code&gt;Proxy&lt;/code&gt; interface 出来, 后续想对接其他协议方便扩展.&lt;/p&gt;&#xA;&lt;h2 id=&#34;对-udp-支持的尝试&#34;&gt;对 udp 支持的尝试&lt;/h2&gt;&#xA;&lt;p&gt;对 tcp 流量的转发能通过 iptables REDIRECT 实现的, 通过 getsockoption 可以知道 tcp connection&#xA;的原目标, 但这对 udp 行不通, REDIRECT 之后拿不到原 target.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>snet: transparent ss proxy on Linux</title>
       <link>https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/</link>
       <pubDate>Sun, 31 Mar 2019 22:19:46 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/</guid>
-      <description>日常使用 Linux 工作, Linux 下实现全局透明代理可以用 iptables + ss-redir, 要有比较好的上网体验还需要 ChinaDNS 配合 dnsmasq, 这一整套在路由器上搞一遍就算了, 在本地太麻烦了. 仔细想想这几个加起来的功能实现起来也并不复杂, 前阵子就写了个小东西, 用一个进程完成全局透明代理 + ChinaDNS + 国内外分流: https://github.com/monsterxx03/snet 目前的限制: 不支持 ipv6 只支持 tcp (因为我的测试服务器不支持 udp, 以后再加上吧) 上游 server 只支持 ss 目的是一个进程 + 一个配置文件完成所有事情. 需要的 iptable 规则也全部内置了(包括</description>
+      <description>&lt;p&gt;日常使用 Linux 工作, Linux 下实现全局透明代理可以用 iptables + ss-redir, 要有比较好的上网体验还需要 ChinaDNS 配合 dnsmasq,&#xA;这一整套在路由器上搞一遍就算了, 在本地太麻烦了. 仔细想想这几个加起来的功能实现起来也并不复杂, 前阵子就写了个小东西,&#xA;用一个进程完成全局透明代理 + ChinaDNS + 国内外分流: &lt;a href=&#34;https://github.com/monsterxx03/snet&#34;&gt;https://github.com/monsterxx03/snet&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;目前的限制:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;不支持 ipv6&lt;/li&gt;&#xA;&lt;li&gt;只支持 tcp (因为我的测试服务器不支持 udp, 以后再加上吧)&lt;/li&gt;&#xA;&lt;li&gt;上游 server 只支持 ss&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;目的是一个进程 + 一个配置文件完成所有事情. 需要的 iptable 规则也全部内置了(包括 CN ip 段), 缺少灵活但对我够用了, 以后有需要再加上选项不自动配吧.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Celery Time Limit 的坑</title>
       <link>https://blog.monsterxx03.com/2019/03/28/celery-time-limit-%E7%9A%84%E5%9D%91/</link>
       <pubDate>Thu, 28 Mar 2019 17:37:29 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/03/28/celery-time-limit-%E7%9A%84%E5%9D%91/</guid>
-      <description>之前用 celery 做的 task 都是一些很简单轻量级的 task, 从来没触发过 timeout, 最近加入了一些复杂很耗时的 task, 碰到一些 time limit 的坑. celery 中 time limit 有两种, soft_time_limit 和 hard_time_limit, 区别是 soft_time_limit 会在内部抛一个 Exception, task 可以 catch 自行处理. hard time limit 没法被 catch. 使用如下: from myapp import app from celery.exceptions import SoftTimeLimitExceeded @app.task def mytask(): try: do_work() except SoftTimeLimitExceeded: clean_up_in_a_hurry() 我 celery pool 用的是 gevent, 实际上在现在的实现里 gevent 做 worker pool 的时候会忽略 soft_time_limit, 只有 hard_time_limit 会被触发(通过 gevent.Timeout 实现). 坑爹的是文档里写的是错的: http://docs.celeryproject.org/en/latest/userguide/workers.html#time-limit soft_time_limit 只在 prefork pool 里支持. 我现在想让 celery 把这个 hard timeout 的情况 report 到 sentry, 看了圈代码并没法</description>
+      <description>&lt;p&gt;之前用 celery 做的 task 都是一些很简单轻量级的 task, 从来没触发过 timeout, 最近加入了一些复杂很耗时的 task, 碰到一些 time limit 的坑.&lt;/p&gt;&#xA;&lt;p&gt;celery 中 time limit 有两种, soft_time_limit 和 hard_time_limit, 区别是 soft_time_limit 会在内部抛一个 Exception, task 可以 catch 自行处理.&#xA;hard time limit 没法被 catch.&lt;/p&gt;&#xA;&lt;p&gt;使用如下:&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; myapp &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; app&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; celery.exceptions &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; SoftTimeLimitExceeded&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@app.task&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;mytask&lt;/span&gt;():&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;try&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        do_work()&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;except&lt;/span&gt; SoftTimeLimitExceeded:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        clean_up_in_a_hurry()&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&#xA;&lt;p&gt;我 celery pool 用的是 gevent, 实际上在现在的实现里 gevent 做 worker pool 的时候会忽略 soft_time_limit, 只有 hard_time_limit 会被触发(通过 gevent.Timeout 实现).&lt;/p&gt;&#xA;&lt;p&gt;坑爹的是文档里写的是错的: &lt;a href=&#34;http://docs.celeryproject.org/en/latest/userguide/workers.html#time-limit&#34;&gt;http://docs.celeryproject.org/en/latest/userguide/workers.html#time-limit&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;soft_time_limit 只在 prefork pool 里支持.&lt;/p&gt;&#xA;&lt;p&gt;我现在想让 celery 把这个 hard timeout 的情况 report 到 sentry, 看了圈代码并没法从外面 override timeout 的 callback. 只能很丑得做了个 monkey patch, 在初始化 celeryapp&#xA;的代码里:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>管理负载</title>
       <link>https://blog.monsterxx03.com/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/</link>
       <pubDate>Tue, 12 Feb 2019 13:08:29 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/</guid>
-      <description>最近在看 google 的 &amp;lt;The Site Reliablity Workbook&amp;gt;, 其中有一章是&amp;quot;Manage load&amp;quot;, 内容还挺详细的, 结合在 aws 上的经验做点笔记. Load Balancing 流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存. google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency. 但只依赖 BGP 会带来两个问题: 某个地区的用户过多会给最近的 frontend server 带来过高的负</description>
+      <description>&lt;p&gt;最近在看 google 的 &lt;code&gt;&amp;lt;The Site Reliablity Workbook&amp;gt;&lt;/code&gt;, 其中有一章是&amp;quot;Manage load&amp;quot;, 内容还挺详细的, 结合在 aws 上的经验做点笔记.&lt;/p&gt;&#xA;&lt;h2 id=&#34;load-balancing&#34;&gt;Load Balancing&lt;/h2&gt;&#xA;&lt;p&gt;流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存.&lt;/p&gt;&#xA;&lt;p&gt;google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency.&lt;/p&gt;&#xA;&lt;p&gt;但只依赖 BGP 会带来两个问题:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;某个地区的用户过多会给最近的 frontend server 带来过高的负载&lt;/li&gt;&#xA;&lt;li&gt;ISP 的 BGP 路由会重计算, 当 BGP routing 变化后, 进行中的 tcp connection 会被 reset(同一个 connection 上的后续数据包被发送到不同的 server, tcp session 不存在于新 server 上)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;为了解决原生 BGP anycast 的问题, google 开发了 Maglev, 即使路由发生了变化(routing flap), connection 也不断开, 把这种方式叫做 stablized anycast.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>从去年的一个patch说起</title>
       <link>https://blog.monsterxx03.com/2018/12/29/%E4%BB%8E%E5%8E%BB%E5%B9%B4%E7%9A%84%E4%B8%80%E4%B8%AApatch%E8%AF%B4%E8%B5%B7/</link>
       <pubDate>Sat, 29 Dec 2018 15:14:46 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/12/29/%E4%BB%8E%E5%8E%BB%E5%B9%B4%E7%9A%84%E4%B8%80%E4%B8%AApatch%E8%AF%B4%E8%B5%B7/</guid>
-      <description>去年对线上业务做了一些性能优化, 当时把 http client 从 requests 换成了 geventhttpclient , 上线后发起 rpc 调用的 server 整体负载低了很多, 但 client 端 latency 却高了很多, 经过 debug 觉得问题是 geventhttpclient 把 header 和 body 通过两次 sock send 发出的额外开销造成的, 尝试 修改成一次 send 后 latency 就恢复了: https://github.com/gwik/geventhttpclient/pull/85 最近在调试 gunicorn 的代码时候, 看到它建立 socket 的时候设置了 TCP_NODELAY, 在很多项目里看到过这个 tcp option, 但没细究过, man tcp 得知是用来关闭 tcp 里的 nagle 算法的. nagle 在 linux 的 默认 tcp 协议栈里是开启的, 当发送的数据包 size 小于 mss 的时候会在内存里 buffer</description>
+      <description>&lt;p&gt;去年对线上业务做了一些性能优化, 当时把 http client 从 requests 换成了 geventhttpclient ,&#xA;上线后发起 rpc 调用的 server 整体负载低了很多, 但 client 端 latency 却高了很多, 经过 debug&#xA;觉得问题是 geventhttpclient 把 header 和 body 通过两次 sock send 发出的额外开销造成的, 尝试&#xA;修改成一次 send 后 latency 就恢复了: &lt;a href=&#34;https://github.com/gwik/geventhttpclient/pull/85&#34;&gt;https://github.com/gwik/geventhttpclient/pull/85&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;最近在调试 gunicorn 的代码时候, 看到它建立 socket 的时候设置了 TCP_NODELAY, 在很多项目里看到过这个&#xA;tcp option, 但没细究过, &lt;code&gt;man tcp&lt;/code&gt; 得知是用来关闭 tcp 里的 nagle 算法的. nagle 在 linux 的&#xA;默认 tcp 协议栈里是开启的, 当发送的数据包 size 小于 mss 的时候会在内存里 buffer 起来, 积累起来后再发送,&#xA;目的是提高带宽利用率, 毕竟 payload 只发一次字节也要带上 40 字节的 ip+tcp header.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Kubernetes 中的 pod 调度</title>
       <link>https://blog.monsterxx03.com/2018/12/16/kubernetes-%E4%B8%AD%E7%9A%84-pod-%E8%B0%83%E5%BA%A6/</link>
       <pubDate>Sun, 16 Dec 2018 13:09:20 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/12/16/kubernetes-%E4%B8%AD%E7%9A%84-pod-%E8%B0%83%E5%BA%A6/</guid>
-      <description>定义 pod 的时候通过添加 node selector 可以让 pod 调度到有特定 label 的 node 上去, 这是最简单的调度方式. 其他还有更复杂的调度方式: node-taints/tolerations, node-affinity, pod-affinity, 来达到让某些类型的 pod 调度到一起, 让某些类型的 pod 不跑一起的效果. Taints and Tolerations 如果 node 有 taints, 那只有能 tolerate 这些 taints 的 pod 才能调度到上面. taint 的基本格式是: &amp;lt;key&amp;gt;&amp;lt;operator&amp;gt;&amp;lt;value&amp;gt;:&amp;lt;effect&amp;gt; kubectl describe node xxx 可以看到节点的 taints, 比如 master 节点上会有: Taints: node-role.kubernetes.io/master:NoSchedule 这里 key 是 node-role.kubernetes.io/master, 没有等号和 value, operator 就是 Exists , effect 是 NoSchedule. master 节点上的这条 taint 就定义了只有能 tolerate 它的 pod 能调度到上面, 一般都是些系统 pod. 比如看</description>
+      <description>&lt;p&gt;定义 pod 的时候通过添加 node selector 可以让 pod 调度到有特定 label 的 node 上去, 这是最简单的调度方式.&#xA;其他还有更复杂的调度方式: node-taints/tolerations, node-affinity, pod-affinity, 来达到让某些类型的 pod 调度到一起,&#xA;让某些类型的 pod 不跑一起的效果.&lt;/p&gt;&#xA;&lt;h2 id=&#34;taints-and-tolerations&#34;&gt;Taints and Tolerations&lt;/h2&gt;&#xA;&lt;p&gt;如果 node 有 taints, 那只有能 tolerate 这些 taints 的 pod 才能调度到上面.&lt;/p&gt;&#xA;&lt;p&gt;taint 的基本格式是: &lt;code&gt;&amp;lt;key&amp;gt;&amp;lt;operator&amp;gt;&amp;lt;value&amp;gt;:&amp;lt;effect&amp;gt;&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;kubectl describe node xxx&lt;/code&gt; 可以看到节点的 taints, 比如 master 节点上会有:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;Taints:       node-role.kubernetes.io/master:NoSchedule &#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;这里 key 是 &lt;code&gt;node-role.kubernetes.io/master&lt;/code&gt;, 没有等号和 value, operator 就是 &lt;code&gt;Exists&lt;/code&gt; , effect 是 &lt;code&gt;NoSchedule&lt;/code&gt;.&lt;/p&gt;&#xA;&lt;p&gt;master 节点上的这条 taint 就定义了只有能 tolerate 它的 pod 能调度到上面, 一般都是些系统 pod.&lt;/p&gt;&#xA;&lt;p&gt;比如看下 kube-proxy: &lt;code&gt;kubectl describe pod kube-proxy-efiv -n kube-system&lt;/code&gt;&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Debug Skills on Linux</title>
       <link>https://blog.monsterxx03.com/2018/12/03/debug-skills-on-linux/</link>
       <pubDate>Mon, 03 Dec 2018 22:47:51 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/12/03/debug-skills-on-linux/</guid>
-      <description>This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04, some tools are not installed by default, you can installl by sudo apt install xxx. Some commands must be used via sudo.
-System resources can be classified in three main categories: compute, storage, and network. Usually, when you come to a performance issue, it&amp;rsquo;s always caused by exhaustion of those resources.
-Universal metric: System load There&amp;rsquo;re several ways to get system load, w, uptime, top, cat /proc/loadavg
-uptime example:
-03:34:23 up 20:31, 1 user, load average: 1.02, 0.65, 0.45 Top right corner three values named load average is system load.
-They means: average system load during last minute/last 5 minutes/last 15 minutes periods.
-If load/(# of cpu core) &amp;gt; 1 means there&amp;rsquo;re tasks pending in cpu queue. Usually, you will feel slow.
-It&amp;rsquo;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.
-If system load is high, means tasks are pending in CPU queue, maybe a result of:
-High cpu usage. Poor disk performance(disk io). Exhaustion of ram. &amp;hellip; free free -k/-m/-g show memory usage in KB/MB/GB
-free -h humanize output (automatically show in KB/MB/GB&amp;hellip;)</description>
+      <description>&lt;p&gt;This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04,&#xA;some tools are not installed by default, you can installl by &lt;code&gt;sudo apt install xxx&lt;/code&gt;.&#xA;Some commands must be used via &lt;code&gt;sudo&lt;/code&gt;.&lt;/p&gt;&#xA;&lt;p&gt;System resources can be classified in three main categories: compute, storage, and network.&#xA;Usually, when you come to a performance issue, it&amp;rsquo;s always caused by exhaustion of those&#xA;resources.&lt;/p&gt;&#xA;&lt;h2 id=&#34;universal-metric-system-load&#34;&gt;Universal metric: System load&lt;/h2&gt;&#xA;&lt;p&gt;There&amp;rsquo;re several ways to get system load, &lt;code&gt;w&lt;/code&gt;, &lt;code&gt;uptime&lt;/code&gt;, &lt;code&gt;top&lt;/code&gt;, &lt;code&gt;cat /proc/loadavg&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;uptime&lt;/code&gt; example:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;03:34:23 up 20:31,  1 user,  load average: 1.02, 0.65, 0.45&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;Top right corner three values named &lt;code&gt;load average&lt;/code&gt; is system load.&lt;/p&gt;&#xA;&lt;p&gt;They means: average system load during last minute/last 5 minutes/last 15 minutes periods.&lt;/p&gt;&#xA;&lt;p&gt;If &lt;code&gt;load/(# of cpu core) &amp;gt; 1&lt;/code&gt;  means there&amp;rsquo;re tasks pending in cpu queue. Usually, you will feel &lt;strong&gt;slow&lt;/strong&gt;.&lt;/p&gt;&#xA;&lt;p&gt;It&amp;rsquo;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.&lt;/p&gt;&#xA;&lt;p&gt;If system load is high, means tasks are pending in CPU queue, maybe a result of:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;High cpu usage.&lt;/li&gt;&#xA;&lt;li&gt;Poor disk performance(disk io).&lt;/li&gt;&#xA;&lt;li&gt;Exhaustion of ram.&lt;/li&gt;&#xA;&lt;li&gt;&amp;hellip;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;free&#34;&gt;free&lt;/h2&gt;&#xA;&lt;p&gt;&lt;code&gt;free -k/-m/-g&lt;/code&gt; show memory usage in KB/MB/GB&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;free -h&lt;/code&gt;  humanize output (automatically show in KB/MB/GB&amp;hellip;)&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>用 Bloom filter 给推荐列表去重</title>
       <link>https://blog.monsterxx03.com/2018/11/17/%E7%94%A8-bloom-filter-%E7%BB%99%E6%8E%A8%E8%8D%90%E5%88%97%E8%A1%A8%E5%8E%BB%E9%87%8D/</link>
       <pubDate>Sat, 17 Nov 2018 13:58:27 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/11/17/%E7%94%A8-bloom-filter-%E7%BB%99%E6%8E%A8%E8%8D%90%E5%88%97%E8%A1%A8%E5%8E%BB%E9%87%8D/</guid>
-      <description>之前产品里有一个功能是每天给用户推荐一批文章,要保证最后推给用户的文章每天不重复. 原先的实现很直接, 每次推送时候记录下用户 id 和 topic id 的键值对, 拿到新 topic 列表后,取出曾经给该用户推送过的文章列表, 两个 set 去重. 这个实现的问题很明显, 存储空间量太大(M * N), user id (int64) + topic id (int64) = 16 bytes, 1 million 的用户, 每天给用户推送10篇文章, 一年要存储: 16 * 10 * 365 * 1M = 54.4GB. 查询效率也很低,要么一次取所有已读 topic id, 要么把要推送的 topic id 都丢进数据</description>
+      <description>&lt;p&gt;之前产品里有一个功能是每天给用户推荐一批文章,要保证最后推给用户的文章每天不重复. 原先的实现很直接, 每次推送时候记录下用户 id 和 topic id 的键值对, 拿到新 topic 列表后,取出曾经给该用户推送过的文章列表, 两个 set 去重.&lt;/p&gt;&#xA;&lt;p&gt;这个实现的问题很明显, 存储空间量太大(M * N), user id (int64) + topic id (int64) = 16 bytes, 1 million 的用户, 每天给用户推送10篇文章, 一年要存储: 16 * 10 * 365 * 1M = 54.4GB. 查询效率也很低,要么一次取所有已读 topic id, 要么把要推送的 topic id 都丢进数据库去重.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>AWS Aurora DB</title>
       <link>https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/</link>
       <pubDate>Wed, 31 Oct 2018 15:23:45 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/</guid>
-      <description>最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比. Paper notes 存储计算分离 redo log 下推到存储层 副本: 6 副本 3 AZ(2 per az), 失去一个 AZ + 1 additoinal node 不会丢数据(可读不可写). 失去一个 AZ (或任意2 node) 不影响数据写入. 10GB 一个 segment, 每个 segment 6 副本一个 PG (protection group), 一 AZ 两副本. 在 10Gbps 的网络上, 修复一个 10GB 的segment 需要 10s. MySQL 一个应用层的写会在底层产生很多额外的写操作，会带来写放大问题: redo log 用来 crash recovery, binlog 会上传 s3 用于 point in time restore. 在 aurora 里，只</description>
+      <description>&lt;p&gt;最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比.&lt;/p&gt;&#xA;&lt;h2 id=&#34;paper-notes&#34;&gt;Paper notes&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;存储计算分离&lt;/li&gt;&#xA;&lt;li&gt;redo log 下推到存储层&lt;/li&gt;&#xA;&lt;li&gt;副本: 6 副本 3 AZ(2 per az), 失去一个 AZ + 1 additoinal node 不会丢数据(可读不可写). 失去一个 AZ (或任意2 node) 不影响数据写入.&lt;/li&gt;&#xA;&lt;li&gt;10GB 一个 segment, 每个 segment 6 副本一个 PG (protection group), 一 AZ　两副本.&lt;/li&gt;&#xA;&lt;li&gt;在 10Gbps 的网络上, 修复一个 10GB 的segment 需要 10s.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;MySQL 一个应用层的写会在底层产生很多额外的写操作，会带来写放大问题:&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://blog.monsterxx03.com/posts/images/aurora-mysql-replication.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;redo log 用来 crash recovery, binlog 会上传 s3　用于 point in time restore.&lt;/p&gt;&#xA;&lt;p&gt;在 aurora 里，只有 redo log 会通过网络复制到各个 replica, master 会等待 4/6 replicas 完成 redo log 的写入就认为写入成功 (所以失去3副本就无法写入数据了). 其他副本会根据 redo log 重建数据(单独的 redo log applicator 进程).&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>为 service 制定 SLO</title>
       <link>https://blog.monsterxx03.com/2018/10/15/%E4%B8%BA-service-%E5%88%B6%E5%AE%9A-slo/</link>
       <pubDate>Mon, 15 Oct 2018 11:31:05 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/10/15/%E4%B8%BA-service-%E5%88%B6%E5%AE%9A-slo/</guid>
-      <description>通常我们使用云服务的时候, 服务提供商会提供 SLA(Service Level Aggrement),作为他们提供的服务质量的标准(常说的几个9),达不到会进行赔偿. 比如 AWS 的计算类服务: https://aws.amazon.com/compute/sla/ . 对公司自己 host 的 service, 我们内部也需要一些技术指标来 track 我们为客户提供的服务质量如何, 这个叫做 SLO(Service Level Objective). 也可以把他当成一个对内的,没有赔偿协议的SLA. 定义指标 我主要 track 两个指标: Availability (服务的可用性) Quality (服务质量) Availability 的定义, 以前用简单的 service uptime 来定义, 在集群外部用一</description>
+      <description>&lt;p&gt;通常我们使用云服务的时候, 服务提供商会提供 SLA(Service Level Aggrement),作为他们提供的服务质量的标准(常说的几个9),达不到会进行赔偿.&#xA;比如 AWS 的计算类服务: &lt;a href=&#34;https://aws.amazon.com/compute/sla/&#34;&gt;https://aws.amazon.com/compute/sla/&lt;/a&gt; .&lt;/p&gt;&#xA;&lt;p&gt;对公司自己 host 的 service, 我们内部也需要一些技术指标来 track 我们为客户提供的服务质量如何, 这个叫做&#xA;SLO(Service Level Objective). 也可以把他当成一个对内的,没有赔偿协议的SLA.&lt;/p&gt;&#xA;&lt;h2 id=&#34;定义指标&#34;&gt;定义指标&lt;/h2&gt;&#xA;&lt;p&gt;我主要 track 两个指标:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Availability (服务的可用性)&lt;/li&gt;&#xA;&lt;li&gt;Quality (服务质量)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Availability 的定义, 以前用简单的 service  uptime 来定义, 在集群外部用一个 service check 定时 ping 我们 service　的 check endpoint,&#xA;失败就定义为 failure.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>在 redshift 中计算 p95 latency</title>
       <link>https://blog.monsterxx03.com/2018/10/12/%E5%9C%A8-redshift-%E4%B8%AD%E8%AE%A1%E7%AE%97-p95-latency/</link>
       <pubDate>Fri, 12 Oct 2018 14:49:13 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/10/12/%E5%9C%A8-redshift-%E4%B8%AD%E8%AE%A1%E7%AE%97-p95-latency/</guid>
-      <description>p95 latency 的定义: 把一段时间的 latency 按照从小到大排序, 砍掉最高的 %5, 剩下最大的值就是 p95 latency. p99, p90 同理. p95 latency 表示该时间段内 95% 的 reqeust 都比这个值快. 一般我直接看 CloudWatch, 和 datadog 算好的 p95 值. 这次看看怎么从 access log 里直接计算 p95 latency. 假设在 redshift 中有一张表存储了应用的 access log, 结构如下: CREATE TABLE access_log ( url string, time string, resp_time real ); url time resp_time /test1 2018-10-11T00:10:00.418480Z 0.123 /test2 2018-10-11T00:12:00.512340Z 0.321 要算 p95 很简单, 把 log 按分钟数分组, 用 percentile_cont 在组内按 resp_time 排序计算 就能得到: select date_trunc(&#39;minute&#39;, time::timestamp) as ts, percentile_cont(0.95) within group(order by resp_time) as p95 from access_log group by 1 order by 1; 得到: ts | p95 ---------------------+------------------- 2018-10-11 00:00:00 | 0.71904999999995 2018-10-11 00:01:00</description>
+      <description>&lt;p&gt;p95 latency 的定义: 把一段时间的 latency 按照从小到大排序, 砍掉最高的 %5, 剩下最大的值就是 p95 latency. p99, p90 同理.&lt;/p&gt;&#xA;&lt;p&gt;p95 latency 表示该时间段内 95% 的 reqeust 都比这个值快.&lt;/p&gt;&#xA;&lt;p&gt;一般我直接看 CloudWatch, 和 datadog 算好的 p95 值. 这次看看怎么从 access log 里直接计算 p95 latency.&lt;/p&gt;&#xA;&lt;p&gt;假设在 redshift 中有一张表存储了应用的 access log, 结构如下:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;CREATE TABLE access_log (&#xA;    url         string,&#xA;    time        string,&#xA;    resp_time   real&#xA;);&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;url&lt;/th&gt;&#xA;          &lt;th&gt;time&lt;/th&gt;&#xA;          &lt;th&gt;resp_time&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;/test1&lt;/td&gt;&#xA;          &lt;td&gt;2018-10-11T00:10:00.418480Z&lt;/td&gt;&#xA;          &lt;td&gt;0.123&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;/test2&lt;/td&gt;&#xA;          &lt;td&gt;2018-10-11T00:12:00.512340Z&lt;/td&gt;&#xA;          &lt;td&gt;0.321&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;要算 p95 很简单, 把 log 按分钟数分组, 用 &lt;code&gt;percentile_cont&lt;/code&gt; 在组内按 &lt;code&gt;resp_time&lt;/code&gt; 排序计算 就能得到:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;select date_trunc(&#39;minute&#39;, time::timestamp) as ts,&#xA;      percentile_cont(0.95) within group(order by resp_time) as p95&#xA;from access_log &#xA;group by 1&#xA;order by 1;&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;得到:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;     ts          |        p95&#xA;---------------------+-------------------&#xA; 2018-10-11 00:00:00 |  0.71904999999995&#xA; 2018-10-11 00:01:00 | 0.555550000000034&#xA; 2018-10-11 00:02:00 | 0.478999999999939&#xA; 2018-10-11 00:03:00 | 0.507250000000081&#xA; 2018-10-11 00:04:00 | 0.456000000000025&#xA; 2018-10-11 00:05:00 | 0.458999999999949&#xA; 2018-10-11 00:06:00 | 0.581000000000054&#xA; 2018-10-11 00:07:00 | 0.585099999999937&#xA; 2018-10-11 00:08:00 | 0.527999999999908&#xA; 2018-10-11 00:09:00 | 0.570999999999936&#xA; 2018-10-11 00:10:00 | 0.587950000000069&#xA; 2018-10-11 00:11:00 | 0.648900000000077&#xA; 2018-10-11 00:12:00 | 0.570000000000024&#xA; 2018-10-11 00:13:00 | 0.592649999999954&#xA; 2018-10-11 00:14:00 | 0.584149999999998&#xA; 2018-10-11 00:15:00 |  3.00854999999952&#xA; 2018-10-11 00:16:00 | 0.832999999999871&#xA; 2018-10-11 00:17:00 |  1.07154999999991&#xA; 2018-10-11 00:18:00 | 0.553600000000092&#xA; 2018-10-11 00:19:00 | 0.605799999999997&#xA; 2018-10-11 00:20:00 | 0.832000000000137&#xA; ...&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;&lt;code&gt;PERCENTILE_CONT&lt;/code&gt; 是逆分布函数, 给定一个百分比, 在一个连续分布模型上计算该百分比处的数值, 如果在该点处没有数据, 会根据最接近的前后值进行插值计算出实际值.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>EkS 评测 part-3</title>
       <link>https://blog.monsterxx03.com/2018/09/26/eks-%E8%AF%84%E6%B5%8B-part-3/</link>
       <pubDate>Wed, 26 Sep 2018 10:16:42 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/09/26/eks-%E8%AF%84%E6%B5%8B-part-3/</guid>
-      <description>这篇记录对 ingress 的测试. ingress 用来将外部流量导入 k8s 内的 service. 将 service 的类型设置为 LoadBalancer / NodePort 也可以将单个 service 暴露到公网, 但用 ingress 可以只使用一个公网入口,根据 host name 或 url path 来将请求分发到不同的 service. 一般 k8s 内的资源都会由一个 controller 来负责它的状态管理, 都由 kube-controller-manager 负责， 但 ingress controller 不是它的一部分，需要是视情况自己选择合适的 ingress controller. 在 eks 上我主要需要 ingress-nginx 和 aws-alb-ingress-controller. 注意, nginx inc 还维护一个 kubernetes-ingress, 和官方那个不是一个东西， 没测试过. 这里主要只测试了 ingress-nginx, 看了下内部实现, 数据的转发真扭曲</description>
+      <description>&lt;p&gt;这篇记录对 ingress 的测试.&lt;/p&gt;&#xA;&lt;p&gt;ingress 用来将外部流量导入　k8s 内的　service. 将 service 的类型设置为 LoadBalancer / NodePort 也可以将单个 service 暴露到公网, 但用 ingress 可以只使用一个公网入口,根据　host name 或　url path 来将请求分发到不同的 service.&lt;/p&gt;&#xA;&lt;p&gt;一般　k8s 内的资源都会由一个 controller 来负责它的状态管理, 都由 kube-controller-manager 负责，　但 ingress controller 不是它的一部分，需要是视情况自己选择合适的 ingress controller.&lt;/p&gt;&#xA;&lt;p&gt;在 eks 上我主要需要 &lt;a href=&#34;https://github.com/kubernetes/ingress-nginx&#34;&gt;ingress-nginx&lt;/a&gt; 和 &lt;a href=&#34;https://github.com/kubernetes-sigs/aws-alb-ingress-controller&#34;&gt;aws-alb-ingress-controller&lt;/a&gt;. 注意, nginx inc 还维护一个 &lt;a href=&#34;https://github.com/nginxinc/kubernetes-ingress&#34;&gt;kubernetes-ingress&lt;/a&gt;, 和官方那个不是一个东西， 没测试过.&lt;/p&gt;&#xA;&lt;p&gt;这里主要只测试了 ingress-nginx, 看了下内部实现, 数据的转发真扭曲&amp;hellip;.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>eks 评测 part-2</title>
       <link>https://blog.monsterxx03.com/2018/09/21/eks-%E8%AF%84%E6%B5%8B-part-2/</link>
       <pubDate>Fri, 21 Sep 2018 10:28:17 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/09/21/eks-%E8%AF%84%E6%B5%8B-part-2/</guid>
-      <description>上文测试了一下 EKS 和 cluster autoscaler, 本文记录对 persisten volume 的测试. PersistentVolume 创建 gp2 类型的 storageclass, 并用 annotations 设置为默认 sc, dynamic volume provision 会用到: kind: StorageClass apiVersion: storage.k8s.io/v1 metadata: name: gp2 annotations: storageclass.kubernetes.io/is-default-class: &amp;quot;true&amp;quot; provisioner: kubernetes.io/aws-ebs reclaimPolicy: Retain parameters: type: gp2 fsType: ext4 encrypted: &amp;quot;true&amp;quot; 因为 eks 是基于 1.10.3 的, volume expansion 还是 alpha 状态, 没法自动开启(没法改 api server 配置), 所以 storageclass 的 allowVolumeExpansion, 设置了也没用. 这里 encrypted 的值必须是字符串, 否则会创建失败, 而且报错莫名其妙. 创建 pod 的时候指定一个已存在的 ebs volume apiVersion: v1 kind: Pod metadata: name: test spec: volumes: - name: test awsElasticBlockStore: fsType: ext4 volumeID: vol-03670d6294ccf29fd containers: - image: nginx name: nginx volumeMounts: - name: test mountPath: /mnt kubectl -it test -- /bin/bash 进去看一下: root@test:/# df -h</description>
+      <description>&lt;p&gt;上文测试了一下 EKS 和 cluster autoscaler, 本文记录对 persisten volume 的测试.&lt;/p&gt;&#xA;&lt;h1 id=&#34;persistentvolume&#34;&gt;PersistentVolume&lt;/h1&gt;&#xA;&lt;p&gt;创建 gp2 类型的 storageclass, 并用 annotations 设置为默认 sc, dynamic volume provision 会用到:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;kind: StorageClass&#xA;apiVersion: storage.k8s.io/v1&#xA;metadata:&#xA;    name: gp2&#xA;    annotations:&#xA;        storageclass.kubernetes.io/is-default-class: &amp;quot;true&amp;quot;&#xA;provisioner: kubernetes.io/aws-ebs&#xA;reclaimPolicy: Retain&#xA;parameters:&#xA;    type: gp2&#xA;    fsType: ext4&#xA;    encrypted: &amp;quot;true&amp;quot;&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;因为 eks 是基于 1.10.3 的, volume expansion 还是 alpha 状态, 没法自动开启(没法改 api server 配置), 所以 storageclass 的 allowVolumeExpansion, 设置了也没用.&#xA;这里 &lt;code&gt;encrypted&lt;/code&gt; 的值必须是字符串, 否则会创建失败, 而且报错莫名其妙.&lt;/p&gt;&#xA;&lt;h2 id=&#34;创建-pod-的时候指定一个已存在的-ebs-volume&#34;&gt;创建 pod 的时候指定一个已存在的 ebs volume&lt;/h2&gt;&#xA;&lt;pre&gt;&lt;code&gt;apiVersion: v1&#xA;kind: Pod&#xA;metadata:&#xA;    name: test&#xA;spec:&#xA;    volumes:&#xA;        - name: test&#xA;          awsElasticBlockStore:&#xA;              fsType: ext4&#xA;              volumeID: vol-03670d6294ccf29fd&#xA;    containers:&#xA;        - image: nginx&#xA;          name: nginx&#xA;          volumeMounts:&#xA;              - name: test&#xA;                mountPath: /mnt&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;&lt;code&gt;kubectl -it test -- /bin/bash&lt;/code&gt;  进去看一下:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;root@test:/# df -h&#xA;Filesystem      Size  Used Avail Use% Mounted on&#xA;overlay          20G  2.2G   18G  11% /&#xA;tmpfs           3.9G     0  3.9G   0% /dev&#xA;tmpfs           3.9G     0  3.9G   0% /sys/fs/cgroup&#xA;/dev/xvdcz      976M  2.6M  907M   1% /mnt&#xA;/dev/xvda1       20G  2.2G   18G  11% /etc/hosts&#xA;shm              64M     0   64M   0% /dev/shm&#xA;tmpfs           3.9G   12K  3.9G   1% /run/secrets/kubernetes.io/serviceaccount&#xA;tmpfs           3.9G     0  3.9G   0% /sys/firmware&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;那块 volume 的确绑定在 &lt;code&gt;/mnt&lt;/code&gt;&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>EKS 评测</title>
       <link>https://blog.monsterxx03.com/2018/09/11/eks-%E8%AF%84%E6%B5%8B/</link>
       <pubDate>Tue, 11 Sep 2018 15:02:22 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/09/11/eks-%E8%AF%84%E6%B5%8B/</guid>
-      <description>EKS 正式 launch 还没有正经用过, 最近总算试了一把, 记录一点. Setup AWS 官方的 Guide 只提供了一个 cloudformation template 来设置 worker node, 我喜欢用 terraform, 可以跟着这个文档尝试:https://www.terraform.io/docs/providers/aws/guides/eks-getting-started.html 来设置完整的 eks cluster 和管理 worker node 的 autoscaling group. 设置完 EKS 后需要添加一条 ConfigMap: apiVersion: v1 kind: ConfigMap metadata: name: aws-auth namespace: kube-system data: mapRoles: | - rolearn: arn:aws:iam::&amp;lt;account-id&amp;gt;:role/eksNodeRole username: system:node:{{EC2PrivateDNSName}} groups: - system:bootstrappers - system:nodes 这样 worker node 节点才能加入集群. 网</description>
+      <description>&lt;p&gt;EKS 正式 launch 还没有正经用过, 最近总算试了一把, 记录一点.&lt;/p&gt;&#xA;&lt;h2 id=&#34;setup&#34;&gt;Setup&lt;/h2&gt;&#xA;&lt;p&gt;AWS 官方的 Guide 只提供了一个 cloudformation template 来设置 worker node, 我喜欢用 terraform, 可以跟着这个文档尝试:https://www.terraform.io/docs/providers/aws/guides/eks-getting-started.html 来设置完整的 eks cluster 和管理 worker node 的 autoscaling  group.&lt;/p&gt;&#xA;&lt;p&gt;设置完 EKS 后需要添加一条 ConfigMap:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;apiVersion: v1&#xA;kind: ConfigMap&#xA;metadata:&#xA;  name: aws-auth&#xA;  namespace: kube-system&#xA;data:&#xA;  mapRoles: |&#xA;    - rolearn: arn:aws:iam::&amp;lt;account-id&amp;gt;:role/eksNodeRole&#xA;      username: system:node:{{EC2PrivateDNSName}}&#xA;      groups:&#xA;        - system:bootstrappers&#xA;        - system:nodes&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;这样 worker node 节点才能加入集群.&lt;/p&gt;&#xA;&lt;h2 id=&#34;网络&#34;&gt;网络&lt;/h2&gt;&#xA;&lt;p&gt;之前一直没有在 AWS 上尝试构建 k8s 的一个原因, 就是不喜欢 overlay 网络, 给系统带来了额外的复杂度和管理开销, VPC flowlog 看不到 pod 之间流量, 封包后 tcpdump 不好 debug 应用层流量.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Kubernetes in Action Notes</title>
       <link>https://blog.monsterxx03.com/2018/09/03/kubernetes-in-action-notes/</link>
       <pubDate>Mon, 03 Sep 2018 18:20:46 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/09/03/kubernetes-in-action-notes/</guid>
-      <description>Miscellaneous notes when reading &amp;lt;Kubernetes in Action&amp;gt;.
-api group and api version core api group need&amp;rsquo;t specified in apiVersion field.
-For example, ReplicationController is on core api group, so only:
-apiVersion: v1 kind: ReplicationController ... ReplicationSet is added later in app group, v1beta2 version (k8s v1.8):
-apiVersion: apps/v1beta2 1 kind: ReplicaSet https://kubernetes.io/docs/concepts/overview/kubernetes-api/
-ReplicationController VS ReplicationSet ReplicationController is replaced by ReplicationSet, which has more expressive pod selectors.
-ReplicationController&amp;rsquo;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
-rs also support operator on key value: In, NotIn, Exists, DoesNotExist
-If migrate from rc to rs, can delete rc with --cascade=false option, it will delete rc only, but left pods running, then we can create a rs with same selector to make pods under management.
-DaemonSet DaemonSet ensures pod run exact one copy on one node, useful for processes like monitor agent and log collector. Use node-selector to make ds only run on specific nodes.
-If node is made unschedulable, normal pods won&amp;rsquo;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass scheduler.
-Job Job is used to run a single completable task.
-Use activeDeadlineSeconds to control job timeout.</description>
+      <description>&lt;p&gt;Miscellaneous notes when reading &lt;code&gt;&amp;lt;Kubernetes in Action&amp;gt;&lt;/code&gt;.&lt;/p&gt;&#xA;&lt;h2 id=&#34;api-group-and-api-version&#34;&gt;api group and api version&lt;/h2&gt;&#xA;&lt;p&gt;core api group need&amp;rsquo;t specified in &lt;code&gt;apiVersion&lt;/code&gt; field.&lt;/p&gt;&#xA;&lt;p&gt;For example, &lt;code&gt;ReplicationController&lt;/code&gt; is on core api group, so only:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;apiVersion: v1&#xA;kind: ReplicationController&#xA;...&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;&lt;code&gt;ReplicationSet&lt;/code&gt; is added later in &lt;code&gt;app&lt;/code&gt; group, &lt;code&gt;v1beta2&lt;/code&gt; version (k8s v1.8):&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;apiVersion: apps/v1beta2            1&#xA;kind: ReplicaSet           &#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://kubernetes.io/docs/concepts/overview/kubernetes-api/&#34;&gt;https://kubernetes.io/docs/concepts/overview/kubernetes-api/&lt;/a&gt;&lt;/p&gt;&#xA;&lt;h3 id=&#34;replicationcontroller-vs-replicationset&#34;&gt;ReplicationController VS ReplicationSet&lt;/h3&gt;&#xA;&lt;p&gt;ReplicationController is replaced by ReplicationSet, which has more expressive pod selectors.&lt;/p&gt;&#xA;&lt;p&gt;ReplicationController&amp;rsquo;s label selector only allows matching pods that include a certain label, ReplicationSet can&#xA;meet multi labels at same time.&lt;/p&gt;&#xA;&lt;p&gt;rs also support operator on key value: &lt;code&gt;In, NotIn, Exists, DoesNotExist&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;If migrate from rc to rs, can delete rc with &lt;code&gt;--cascade=false&lt;/code&gt; option, it will delete&#xA;rc only, but left pods running, then we can create a rs with same selector to make pods under management.&lt;/p&gt;&#xA;&lt;h3 id=&#34;daemonset&#34;&gt;DaemonSet&lt;/h3&gt;&#xA;&lt;p&gt;DaemonSet ensures pod run exact one copy on one node, useful for processes like monitor agent and log collector. Use &lt;code&gt;node-selector&lt;/code&gt;&#xA;to make ds only run on specific nodes.&lt;/p&gt;&#xA;&lt;p&gt;If node is made unschedulable, normal pods won&amp;rsquo;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass&#xA;scheduler.&lt;/p&gt;&#xA;&lt;h3 id=&#34;job&#34;&gt;Job&lt;/h3&gt;&#xA;&lt;p&gt;Job is used to run a single completable task.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>升级celery 到 4.2.0 碰到的坑</title>
       <link>https://blog.monsterxx03.com/2018/06/22/%E5%8D%87%E7%BA%A7celery-%E5%88%B0-4.2.0-%E7%A2%B0%E5%88%B0%E7%9A%84%E5%9D%91/</link>
       <pubDate>Fri, 22 Jun 2018 16:10:41 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/06/22/%E5%8D%87%E7%BA%A7celery-%E5%88%B0-4.2.0-%E7%A2%B0%E5%88%B0%E7%9A%84%E5%9D%91/</guid>
-      <description>在把代码往 python3 迁移的过程中需要升级一些第三方库, 升级了 gevent 后发现 celery 有问题, 于是尝试把 celery 从3.1.25 升级到 4.2.0, 中间碰到了很多问题, 记录一点. 配置的变化 CELERY_ACCEPT_CONENT 之前默认是都允许的, 4.0 开始默认值只允许 json, 因为我用的是msgpack, 所以需要修改这个配置让它接受 msgpack. CELERY_RESULT_SERIALIZER 之前默认是pickle, 现在默认也变成了json, 如果task 的返回结果是 binary 的话, json 无法处理,要么把结果 base64 编码, 要么把CELERY_RESULT_SERI</description>
+      <description>&lt;p&gt;在把代码往 python3 迁移的过程中需要升级一些第三方库, 升级了 gevent 后发现 celery 有问题, 于是尝试把 celery 从3.1.25 升级到 4.2.0, 中间碰到了很多问题, 记录一点.&lt;/p&gt;&#xA;&lt;h2 id=&#34;配置的变化&#34;&gt;配置的变化&lt;/h2&gt;&#xA;&lt;p&gt;&lt;code&gt;CELERY_ACCEPT_CONENT&lt;/code&gt; 之前默认是都允许的,  4.0 开始默认值只允许 json, 因为我用的是msgpack, 所以需要修改这个配置让它接受 msgpack.&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;CELERY_RESULT_SERIALIZER&lt;/code&gt; 之前默认是pickle, 现在默认也变成了json, 如果task 的返回结果是 binary 的话, json 无法处理,要么把结果 base64 编码, 要么把&lt;code&gt;CELERY_RESULT_SERIALIZER&lt;/code&gt; 配置成 msgpack,  pickle 明显 py2 / 3 不兼容, 没用.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>编写 python 2/3 兼容代码</title>
       <link>https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/</link>
       <pubDate>Sat, 16 Jun 2018 14:38:26 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/</guid>
-      <description>上一篇 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情. _future_ python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件. 首先是几个在 python 2.7 里不用特意写，已经默认开启的特性: from __future__ import nested_scopes 2.2 开始就默认开启了，用于修改嵌套函数内的变量搜索作用域, 在此之前, 全局模块的优先级比被嵌套函数的父函数要高, 现</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/&#34;&gt;上一篇&lt;/a&gt; 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情.&lt;/p&gt;&#xA;&lt;h2 id=&#34;_future_&#34;&gt;_&lt;em&gt;future&lt;/em&gt;_&lt;/h2&gt;&#xA;&lt;p&gt;python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件.&lt;/p&gt;&#xA;&lt;p&gt;首先是几个在 python 2.7 里不用特意写，已经默认开启的特性:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;code&gt;from __future__ import nested_scopes&lt;/code&gt; 2.2 开始就默认开启了，用于修改嵌套函数内的变量搜索作用域, 在此之前, 全局模块的优先级比被嵌套函数的父函数要高, 现在都没这个问题了.&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;from __future__ import generators&lt;/code&gt;, yield 关键词, 2.3 默认支持.&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;from __future__ import with_statement&lt;/code&gt;, with 关键词, 2.6 默认支持.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;我显示开启的两个特性:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>From python2 to python3</title>
       <link>https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/</link>
       <pubDate>Thu, 07 Jun 2018 16:41:57 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/</guid>
-      <description>This article won&amp;rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&amp;rsquo;t finished this project, also I haven&amp;rsquo;t gave up so far :).
-Won&amp;rsquo;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
-The codebase I&amp;rsquo;m working on:
-Only support python2.7, don&amp;rsquo;t consider python2.6 1X repos, about half a million lines of code in total (calculated by cloc). These repos will import each other, bad design from early days, not easy to resolve, which means I can&amp;rsquo;t switch to py3 one by one, I need write py2/3 compatiblility code for them, and switch together(I&amp;rsquo;m also considering solve the import problem first). Test coverage is not good, best is around 80%, lowest is 30%. Tools 2to3, a command line tools packaged with py2, it&amp;rsquo;s a oneway porting to convert your code to py3, new code won&amp;rsquo;t work under py2, since I need be compatible with py2 and py3 for long time, didn&amp;rsquo;t try it.
-future, it tries to make you write single clean python3.x code without ugly hack with six. I used it it first, but come to many problems, will explain later.</description>
+      <description>&lt;p&gt;This article won&amp;rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the&#xA;problems I come to, and my choices. I haven&amp;rsquo;t finished this project, also I haven&amp;rsquo;t gave up so far :).&lt;/p&gt;&#xA;&lt;p&gt;Won&amp;rsquo;t explain too much about the differences between py2 and py3, will write down some corner&#xA;cases which are easy to miss.&lt;/p&gt;&#xA;&lt;p&gt;The codebase I&amp;rsquo;m working on:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Only support python2.7, don&amp;rsquo;t consider python2.6&lt;/li&gt;&#xA;&lt;li&gt;1X repos, about half a million lines of code in total (calculated by cloc).&lt;/li&gt;&#xA;&lt;li&gt;These repos will import each other, bad design from early days, not easy to resolve, which means I can&amp;rsquo;t switch to py3 one by one, I need write&#xA;py2/3 compatiblility code for them, and switch together(I&amp;rsquo;m also considering solve the import problem first).&lt;/li&gt;&#xA;&lt;li&gt;Test coverage is not good, best is around 80%, lowest is 30%.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;tools&#34;&gt;Tools&lt;/h2&gt;&#xA;&lt;p&gt;&lt;code&gt;2to3&lt;/code&gt;, a command line tools packaged with py2, it&amp;rsquo;s a oneway porting to convert your code to py3, new code won&amp;rsquo;t work under&#xA;py2, since I need be compatible with py2 and py3 for long time, didn&amp;rsquo;t try it.&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;http://python-future.org/&#34;&gt;future&lt;/a&gt;, it tries to make you write single clean python3.x code without ugly hack with six. I used it it first,&#xA;but come to many problems, will explain later.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>在python3.7 中实现python2.7 的内置 hash 函数</title>
       <link>https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/</link>
       <pubDate>Fri, 01 Jun 2018 17:03:24 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/</guid>
-      <description>最近着手准备从 python2.7 迁移到 python3.7, 还没开始就碰到一个问题. 老系统里有一部分竟然是将 python 内置 hash 函数的结果存进了数据库, 这个做法绝对是错的, hash 的结果本来就没有保证过在各个版本的 python 中保证一致. 而且 python3 中算法完全变了, 默认在进程初始化的时候会用随机种子加进 hash 过程, 所以python 进程 一重启结果就不一样了. 木已成舟， 目前看将数据库里的值全部改掉是不可能了, 只能在 python3 中重新实现一下这个算法. python2.7 中的hash 算法是 fnv (有修改),</description>
+      <description>&lt;p&gt;最近着手准备从 python2.7 迁移到 python3.7, 还没开始就碰到一个问题. 老系统里有一部分竟然是将 python 内置 hash 函数的结果存进了数据库, 这个做法绝对是错的,&#xA;hash 的结果本来就没有保证过在各个版本的 python 中保证一致. 而且 python3 中算法完全变了, 默认在进程初始化的时候会用随机种子加进 hash 过程, 所以python 进程&#xA;一重启结果就不一样了. 木已成舟， 目前看将数据库里的值全部改掉是不可能了, 只能在 python3 中重新实现一下这个算法.&lt;/p&gt;&#xA;&lt;p&gt;python2.7 中的hash 算法是 fnv (有修改), python3 中变成了 sip, &lt;a href=&#34;https://www.python.org/dev/peps/pep-0456&#34;&gt;pep-456&lt;/a&gt;.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Use SNS &amp; SQS to build Pub/Sub System</title>
       <link>https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub/sub-system/</link>
       <pubDate>Wed, 23 May 2018 18:05:28 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub/sub-system/</guid>
-      <description>Recently, we build pub/sub system based on AWS&amp;rsquo;s SNS &amp;amp; SQS service, take some notes.
-Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&amp;rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&amp;rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
-There&amp;rsquo;re three obvious choices in my mind:
-kafka AMQP based system (rabbitmq,activemq &amp;hellip;) SNS + SQS My demands for this system are:
-Support message persistence. Support topic based message distribution. Easy to manage. The data volume won&amp;rsquo;t be very large, so performance and throughput won&amp;rsquo;t be critical concerns.
-I choose SNS + SQS, main concerns are from operation side:
-kafka need zookeeper to support cluster. rabbitmq need extra configuration for HA, and AMQP model is relatively complex for programming. So my decision is:
-application publish message to SNS topic Setup multi SQS queues to subscribe SNS topic Let different application processes to subscribe to different queues to finish its logic. SQS and SNS is very simple, not too much to say, just some notes:
-SQS queue have two types, FIFO queue and standard queue.</description>
+      <description>&lt;p&gt;Recently, we build pub/sub system based on AWS&amp;rsquo;s SNS &amp;amp; SQS service, take some notes.&lt;/p&gt;&#xA;&lt;p&gt;Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&amp;rsquo;s&#xA;really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex&#xA;pubsub logic, eg: topic based distribution. It don&amp;rsquo;t support redelivery as well, if subscribers failed to process&#xA;the message, message will be dropped.&lt;/p&gt;&#xA;&lt;p&gt;There&amp;rsquo;re three obvious choices in my mind:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;kafka&lt;/li&gt;&#xA;&lt;li&gt;AMQP based system (rabbitmq,activemq &amp;hellip;)&lt;/li&gt;&#xA;&lt;li&gt;SNS + SQS&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;My demands for this system are:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Support message persistence.&lt;/li&gt;&#xA;&lt;li&gt;Support topic based message distribution.&lt;/li&gt;&#xA;&lt;li&gt;Easy to manage.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;The data volume won&amp;rsquo;t be very large, so performance and throughput won&amp;rsquo;t be critical concerns.&lt;/p&gt;&#xA;&lt;p&gt;I choose SNS + SQS, main concerns are from operation side:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;kafka need zookeeper to support cluster.&lt;/li&gt;&#xA;&lt;li&gt;rabbitmq need extra configuration for HA, and AMQP model is relatively complex for programming.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;So my decision is:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;application publish message to SNS topic&lt;/li&gt;&#xA;&lt;li&gt;Setup multi SQS queues to subscribe SNS topic&lt;/li&gt;&#xA;&lt;li&gt;Let different application processes to subscribe to different queues to finish its logic.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;SQS and SNS is very simple, not too much to say, just some notes:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;SQS queue have two types, FIFO queue and standard queue. FIFO queue will ensure message order, and ensure exactly once delivery, tps is limited(3000/s)&#xA;standard queue is at least once delivery, message order is not ensured, tps is unlimited. In my case, I use standard queue, order is not very important.&lt;/li&gt;&#xA;&lt;li&gt;SQS message size limit is 256KB.&lt;/li&gt;&#xA;&lt;li&gt;Use &lt;a href=&#34;https://github.com/p4tin/goaws&#34;&gt;goaws&lt;/a&gt; for local development, it has problem on processing message attributes, but I just use message body. messages only store in ram,&#xA;will be cleared after restarted.&lt;/li&gt;&#xA;&lt;li&gt;If you failed to deliver message to sqs from sns, can setup topic&amp;rsquo;s &lt;code&gt;sqs failure feedback role&lt;/code&gt; to log to cloudwatch, in most case it&amp;rsquo;s caused by iam permission.&lt;/li&gt;&#xA;&lt;li&gt;Message in sqs can retain at most 14 days.&lt;/li&gt;&#xA;&lt;li&gt;Once a message is received by a client, it will be invisible to other clients in &lt;code&gt;visibility_timeout_seconds&lt;/code&gt;(default 30s). It means if your client failed to process&#xA;the message, it will be redelivered after 30s.&lt;/li&gt;&#xA;&lt;li&gt;SQS client use long polling to receive message, set &lt;code&gt;receive_wait_time_seconds&lt;/code&gt; to reduce api call to reduce fee.&lt;/li&gt;&#xA;&lt;li&gt;If your client failed to process a message due to bug, the message will be redelivered looply, set &lt;code&gt;redrive_policy&lt;/code&gt; for the queue to limit retry count, and set a dead letter&#xA;queue to store those messages. You can decide how to handle them late.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;I setup SNS and SQS via terraform, used following resources:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Migrate to Sqlalchemy</title>
       <link>https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/</link>
       <pubDate>Sun, 20 May 2018 15:11:31 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/05/20/migrate-to-sqlalchemy/</guid>
-      <description>最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些. 原来的 db 层代码历史非常古老(10年以上&amp;hellip;), 最早写代码的人早就不在了, 问题很多: 完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表</description>
+      <description>&lt;p&gt;最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些.&lt;/p&gt;&#xA;&lt;p&gt;原来的 db 层代码历史非常古老(10年以上&amp;hellip;), 最早写代码的人早就不在了, 问题很多:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;完全没有单元测试.&lt;/li&gt;&#xA;&lt;li&gt;暴露出的接口命名很混乱, 多数是为了兼容一些历史问题.&lt;/li&gt;&#xA;&lt;li&gt;里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便.&lt;/li&gt;&#xA;&lt;li&gt;老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表结构，只能直接看数据库.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;重写时候要考虑到的:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>AWS 的 K8S CNI Plugin</title>
       <link>https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/</link>
       <pubDate>Mon, 09 Apr 2018 15:28:38 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/</guid>
-      <description>EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别. K8S 集群对网络有几个基本要求: container 之间网络必须可达，且不通过 NAT 所有 node 必须可以和所有 container 通信, 且不通过 NAT container 自己看到的 IP, 必须和其他 container 看到的它的 ip 相同. Flannel in VPC flannel 是 K8S 的一个 CNI 插件, 在 VPC 里使用 flannel 的话, 有几个选择: 通过 VXLAN/UDP 进行封包, 封包影响网络性能, 而且不好 debug 用 aws vpc backend, 这种方式会把每台主机的 docker 网段添加进 vpc routing table, 但默认 routing table 里只能有50条规则</description>
+      <description>&lt;p&gt;EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别.&lt;/p&gt;&#xA;&lt;p&gt;K8S 集群对网络有几个基本要求:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;container 之间网络必须可达，且不通过 NAT&lt;/li&gt;&#xA;&lt;li&gt;所有 node 必须可以和所有 container 通信, 且不通过 NAT&lt;/li&gt;&#xA;&lt;li&gt;container 自己看到的 IP, 必须和其他 container 看到的它的 ip 相同.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;flannel-in-vpc&#34;&gt;Flannel in VPC&lt;/h2&gt;&#xA;&lt;p&gt;flannel 是 K8S 的一个 CNI 插件, 在 VPC 里使用 flannel 的话, 有几个选择:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;通过 VXLAN/UDP 进行封包, 封包影响网络性能, 而且不好 debug&lt;/li&gt;&#xA;&lt;li&gt;用 aws vpc backend, 这种方式会把每台主机的 docker 网段添加进 vpc routing table, 但默认 routing table 里只能有50条规则, 所以只能 50 个 node, 可以发 ticket 提升, 但数量太多会影响 vpc 性能.&lt;/li&gt;&#xA;&lt;li&gt;host-gw, 在每个 node 上直接维护集群中所有节点的路由, 没测试过, 感觉出问题也很难 debug, 假如用 autoscaling group 管理 node 集群, 能否让 K8S 在 scale in/out 的时候修改所有节点的路由?&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;以上方式都只能利用 EC2 上的单网卡, security group 也没法作用在 pod 上.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>AWS lambda 的一些应用场景</title>
       <link>https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</link>
       <pubDate>Fri, 23 Mar 2018 17:40:54 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</guid>
-      <description>这几年吹 serverless 的比较多, 在公司内部也用 lambda , 记录一下, 这东西挺有用, 但远不到万能, 场景比较有限. lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平台, 我们就只在 aws lambda 上了. 我基本上就把 lambda 当成 trigger 和 web hook 用. 和 auto scaling group 一起用 线上所有分组的机器都是用 auto scaling group 管理的, 只不过 stateless 的 server 开了自动伸缩, 带状态的 (ElasticSearch cluster, redis cache cluster) 只用来维护固定 size. 在往一个 group 里加 server 的时候, 要做的事情挺多的, 给新 server 添加组内编号 tag, 添加内网域名, provision, 部署最新代码. 这些事都用</description>
+      <description>&lt;p&gt;这几年吹 serverless 的比较多,  在公司内部也用 lambda , 记录一下, 这东西挺有用, 但远不到万能, 场景比较有限.&lt;/p&gt;&#xA;&lt;p&gt;lambda 的代码的部署用的 &lt;a href=&#34;https://serverless.com&#34;&gt;serverless&lt;/a&gt; 框架, 本身支持多种 cloud 平台, 我们就只在 aws lambda 上了.&lt;/p&gt;&#xA;&lt;p&gt;我基本上就把 lambda 当成 trigger 和 web hook 用.&lt;/p&gt;&#xA;&lt;h2 id=&#34;和--auto-scaling-group-一起用&#34;&gt;和  auto scaling group 一起用&lt;/h2&gt;&#xA;&lt;p&gt;线上所有分组的机器都是用 auto scaling group 管理的, 只不过 stateless 的 server 开了自动伸缩, 带状态的 (ElasticSearch cluster, redis cache cluster) 只用来维护固定 size.&lt;/p&gt;&#xA;&lt;p&gt;在往一个 group 里加 server 的时候, 要做的事情挺多的, 给新 server 添加组内编号 tag, 添加内网域名, provision, 部署最新代码.&lt;/p&gt;&#xA;&lt;p&gt;这些事都用 jenkins 来做, 但怎么触发 jenkins job 呢?&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>一次失败的性能问题排查</title>
       <link>https://blog.monsterxx03.com/2018/03/17/%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</link>
       <pubDate>Sat, 17 Mar 2018 14:24:33 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/03/17/%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</guid>
-      <description>一叶障目, 不见泰山. 前阵子一直在排查一个性能问题, 结果由于一些惯性思维, 费了好大劲才弄明白原因, 而且原因非常简单&amp;hellip;.把这事记录下来,免得以后再掉坑里去. 现象是到了晚上10点多, server lantency 突然一瞬间变高, 但持续时间很短，马上就会恢复, timeout 的请求也不多，影响不大.问题其实从蛮久前就出现了, 但一直也没很重视, 因为持续时间短,影响也不大,简单看了下也没看出明显的问题, 就一直搁置着. 直到最近，觉得问题</description>
+      <description>&lt;p&gt;一叶障目, 不见泰山. 前阵子一直在排查一个性能问题, 结果由于一些惯性思维, 费了好大劲才弄明白原因, 而且原因非常简单&amp;hellip;.把这事记录下来,免得以后再掉坑里去.&lt;/p&gt;&#xA;&lt;p&gt;现象是到了晚上10点多, server lantency 突然一瞬间变高, 但持续时间很短，马上就会恢复, timeout 的请求也不多，影响不大.问题其实从蛮久前就出现了, 但一直也没很重视, 因为持续时间短,影响也不大,简单看了下也没看出明显的问题, 就一直搁置着. 直到最近，觉得问题变严重了, latency 变的更高了，而且在10～11点间多次变高, 开始认真看为什么.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Access sensitive variables on AWS lambda</title>
       <link>https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/</link>
       <pubDate>Wed, 28 Feb 2018 21:45:23 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/</guid>
-      <description>AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&amp;hellip;
-Usually, we inject secrets as environment variables, but they&amp;rsquo;re still visable on lambda console. I don&amp;rsquo;t use it in aws lambda.
-The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
-Code example:
-client = boto3.client(&#39;ssm&#39;) resp = client.get_parameter( Name=&#39;/redshift/admin/password&#39;, WithDecryption=True ) resp: { &amp;quot;Parameter&amp;quot;: { &amp;quot;Name&amp;quot;: &amp;quot;/redshift/admin/password&amp;quot;, &amp;quot;Type&amp;quot;: &amp;quot;SecureString&amp;quot;, &amp;quot;Value&amp;quot;: &amp;quot;password value&amp;quot;, &amp;quot;Version&amp;quot;: 1 } } Things you need to do to make it work:
-Create a new KMS key Use new created KMS key to encrypt your data in parameter store. Set a execution role for your lambda function. In the KMS key&amp;rsquo;s setting page, add the lambda execution role to the list which can read this KMS key. Then your lambda code can access encrypted data at runtime, and you needn&amp;rsquo;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.
-BTW, parameter store support hierarchy(at most 15 levels), splitted by /. You can retrive data under same level in one call, deltails can be found in doc, eg: http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path</description>
+      <description>&lt;p&gt;AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&amp;hellip;&lt;/p&gt;&#xA;&lt;p&gt;Usually, we inject secrets as environment variables, but they&amp;rsquo;re still visable on lambda console. I don&amp;rsquo;t use it in aws lambda.&lt;/p&gt;&#xA;&lt;p&gt;The better way is use &lt;a href=&#34;https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html&#34;&gt;aws parameter store&lt;/a&gt; as configuration center. It can work with KMS to encrypt your data.&lt;/p&gt;&#xA;&lt;p&gt;Code example:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;client = boto3.client(&#39;ssm&#39;)&#xA;resp = client.get_parameter(&#xA;    Name=&#39;/redshift/admin/password&#39;,&#xA;    WithDecryption=True&#xA;)&#xA;resp:&#xA;&#xA;    {&#xA;        &amp;quot;Parameter&amp;quot;: {&#xA;            &amp;quot;Name&amp;quot;: &amp;quot;/redshift/admin/password&amp;quot;,&#xA;            &amp;quot;Type&amp;quot;: &amp;quot;SecureString&amp;quot;,&#xA;            &amp;quot;Value&amp;quot;: &amp;quot;password value&amp;quot;,&#xA;            &amp;quot;Version&amp;quot;: 1&#xA;        }&#xA;    }&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;Things you need to do to make it work:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Create a new KMS key&lt;/li&gt;&#xA;&lt;li&gt;Use new created KMS key to encrypt your data in parameter store.&lt;/li&gt;&#xA;&lt;li&gt;Set a execution role for your lambda function.&lt;/li&gt;&#xA;&lt;li&gt;In the KMS key&amp;rsquo;s setting page, add the lambda execution role to the list which can read this KMS key.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Then your lambda code can access encrypted data at runtime, and you needn&amp;rsquo;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.&lt;/p&gt;&#xA;&lt;p&gt;BTW, parameter store support hierarchy(at most 15 levels), splitted by &lt;code&gt;/&lt;/code&gt;. You can retrive data under same level in one call, deltails can be found in doc, eg: &lt;a href=&#34;http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path&#34;&gt;http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path&lt;/a&gt;&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Glow Infra Evolution</title>
       <link>https://blog.monsterxx03.com/2018/02/23/glow-infra-evolution/</link>
       <pubDate>Fri, 23 Feb 2018 23:25:13 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/02/23/glow-infra-evolution/</guid>
-      <description>Glow data infrastructure 的演化 Glow 一向是一个 data driven 做决策的公司，稳定高效的平台是必不可少的支撑, 本文总结几年里公司 data infrastructure 的演进过程. 结合业务特点做技术选型和实现时候的几个原则: real time 分析的需求不高，时间 delta 控制在1 小时以内可接受 . 支持快速的交互式查询. 底层平台尽量选择 AWS 托管服务, 减少维护成本. 遇到故障, 数据可以 delay 但不能丢. 可回溯历史数据. 成本可控. 用到的 AWS 服务: 数据存储和查询: S3, Redshift (spectrum), Athena ETL: DMS, EMR, Kinesis, Firehose, Lambda 开源软件: td-agent, maxwell 数据来源: 线上</description>
+      <description>&lt;h1 id=&#34;glow-data-infrastructure-的演化&#34;&gt;Glow data infrastructure 的演化&lt;/h1&gt;&#xA;&lt;p&gt;Glow 一向是一个 data driven 做决策的公司，稳定高效的平台是必不可少的支撑, 本文总结几年里公司 data infrastructure 的演进过程.&lt;/p&gt;&#xA;&lt;p&gt;结合业务特点做技术选型和实现时候的几个原则:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;real time 分析的需求不高，时间 delta 控制在1 小时以内可接受 .&lt;/li&gt;&#xA;&lt;li&gt;支持快速的交互式查询.&lt;/li&gt;&#xA;&lt;li&gt;底层平台尽量选择 AWS 托管服务, 减少维护成本.&lt;/li&gt;&#xA;&lt;li&gt;遇到故障, 数据可以 delay 但不能丢.&lt;/li&gt;&#xA;&lt;li&gt;可回溯历史数据.&lt;/li&gt;&#xA;&lt;li&gt;成本可控.&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;用到的 AWS 服务:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;数据存储和查询:  S3, Redshift (spectrum), Athena&lt;/li&gt;&#xA;&lt;li&gt;ETL: DMS, EMR, Kinesis, Firehose, Lambda&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;开源软件: td-agent, maxwell&lt;/p&gt;&#xA;&lt;p&gt;数据来源:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;线上业务数据库&lt;/li&gt;&#xA;&lt;li&gt;用户活动产生的 metrics log&lt;/li&gt;&#xA;&lt;li&gt;从各种第三方服务 api 拉下来的数据 (email之类)&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h2 id=&#34;最早期&#34;&gt;最早期&lt;/h2&gt;&#xA;&lt;p&gt;刚开始的时候业务单纯，数据量也少, 所有数据都用 MySQL 存储，搭了台 slave, 分析查询都在 slave 上进行.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Get Real Client Ip on AWS</title>
       <link>https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/</link>
       <pubDate>Thu, 01 Feb 2018 15:20:37 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/02/01/get-real-client-ip-on-aws/</guid>
-      <description>If you run a webserver on AWS, get real client ip will be tricky if you didn&amp;rsquo;t configure server right and write code correctly.
-Things related to client real ip:
-CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application). Request sequence diagram will be like following:
-User&amp;rsquo;s real client ip is forwarded by front proxies one by one in head X-Forwarded-For.
-For CloudFront:
-If user&amp;rsquo;s req header don&amp;rsquo;t have X-Forwarded-For, it will set user&amp;rsquo;s ip(from tcp connection) in X-Forwarded-For If user&amp;rsquo;s req already have X-Forwarded-For, it will append user&amp;rsquo;s ip(from tcp connection) to the end of X-Forwarded-For For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront&amp;rsquo;s ip.
-For nginx, things will be tricky depends on your config.
-Things maybe involved in nginx:
-real ip module proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; If you didn&amp;rsquo;t use real ip module, you need to pass X-Forwarded-For head explictly.
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; will append ALB&amp;rsquo;s ip to the end of X-Forwarded-For header received from ALB.
-So X-Forwarded-For header your webserver received will be user ip,cloudfront ip, alb ip
-Or you can use real ip module to trust the value passed from ALB.</description>
+      <description>&lt;p&gt;If you run a webserver on AWS, get real client ip will be tricky if you didn&amp;rsquo;t configure server right and write code correctly.&lt;/p&gt;&#xA;&lt;p&gt;Things related to client real ip:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;CloudFront (cdn)&lt;/li&gt;&#xA;&lt;li&gt;ALB (loadbalancer)&lt;/li&gt;&#xA;&lt;li&gt;nginx (on ec2)&lt;/li&gt;&#xA;&lt;li&gt;webserver (maybe a python flask application).&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Request sequence diagram will be like following:&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://blog.monsterxx03.com/posts/images/cf-alb-nginx.png&#34; alt=&#34;req&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;User&amp;rsquo;s real client ip is forwarded by front proxies one by one in head &lt;code&gt;X-Forwarded-For&lt;/code&gt;.&lt;/p&gt;&#xA;&lt;p&gt;For CloudFront:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;If user&amp;rsquo;s req header don&amp;rsquo;t  have &lt;code&gt;X-Forwarded-For&lt;/code&gt;, it will set user&amp;rsquo;s ip(from tcp connection) in &lt;code&gt;X-Forwarded-For&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;If user&amp;rsquo;s req already have &lt;code&gt;X-Forwarded-For&lt;/code&gt;, it will append user&amp;rsquo;s ip(from tcp connection) to the end of &lt;code&gt;X-Forwarded-For&lt;/code&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;For ALB, rule is same as CloudFront, so the &lt;code&gt;X-Forwarded-For&lt;/code&gt; header pass to nginx will be the value received from CloudFront + CloudFront&amp;rsquo;s ip.&lt;/p&gt;&#xA;&lt;p&gt;For nginx, things will be tricky depends on your config.&lt;/p&gt;&#xA;&lt;p&gt;Things maybe involved in nginx:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;real ip module&lt;/li&gt;&#xA;&lt;li&gt;proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;If you didn&amp;rsquo;t use real ip module, you need to pass X-Forwarded-For head explictly.&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;&lt;/code&gt; will append ALB&amp;rsquo;s ip to the end of &lt;code&gt;X-Forwarded-For&lt;/code&gt; header received from ALB.&lt;/p&gt;&#xA;&lt;p&gt;So &lt;code&gt;X-Forwarded-For&lt;/code&gt; header your webserver received will be &lt;code&gt;user ip,cloudfront ip, alb ip&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;Or you can use real ip module to trust the value passed from ALB.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>DynamoDB</title>
       <link>https://blog.monsterxx03.com/2017/12/15/dynamodb/</link>
       <pubDate>Fri, 15 Dec 2017 22:24:36 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/12/15/dynamodb/</guid>
-      <description>DynamoDB 是 AWS 的托管 NoSQL 数据库，可以当作简单的 KV 数据库使用，也可以作为文档数据库使用. Data model 组织数据的单位是 table, 每张 table 必须设置 primary key, 可以设置可选的 sort key 来做索引. 每条数据记作一个 item, 每个 item 含有一个或多个 attribute, 其中必须包括 primary key. attribute 对应的 value 支持以下几种类型: Number, 由于 DynamoDB 的传输协议是 http + json, 为了跨语言的兼容性, number 一律会被转成 string 传输. Binary, 用来表示任意的二进制数据，会用 base64 encode 后传输. Boolean, true or false Null Document 类型包含 List 和 Map, 可以互相嵌套. List, 个数无限制, 总大小</description>
+      <description>&lt;p&gt;DynamoDB 是 AWS 的托管 NoSQL 数据库，可以当作简单的 KV 数据库使用，也可以作为文档数据库使用.&lt;/p&gt;&#xA;&lt;h2 id=&#34;data-model&#34;&gt;Data model&lt;/h2&gt;&#xA;&lt;p&gt;组织数据的单位是 table, 每张 table 必须设置 primary key, 可以设置可选的 sort key 来做索引.&lt;/p&gt;&#xA;&lt;p&gt;每条数据记作一个 item, 每个 item 含有一个或多个 attribute, 其中必须包括 primary key.&lt;/p&gt;&#xA;&lt;p&gt;attribute 对应的 value 支持以下几种类型:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Number, 由于 DynamoDB 的传输协议是 http + json, 为了跨语言的兼容性, number 一律会被转成 string 传输.&lt;/li&gt;&#xA;&lt;li&gt;Binary, 用来表示任意的二进制数据，会用 base64 encode 后传输.&lt;/li&gt;&#xA;&lt;li&gt;Boolean, true or false&lt;/li&gt;&#xA;&lt;li&gt;Null&lt;/li&gt;&#xA;&lt;li&gt;Document 类型包含 List 和 Map, 可以互相嵌套.&#xA;&lt;ul&gt;&#xA;&lt;li&gt;List, 个数无限制, 总大小不超过 400KB&lt;/li&gt;&#xA;&lt;li&gt;Map, 属性个数无限制，总大小不超过 400 KB, 嵌套层级不超过 32 级.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;Set,  一个 set 内元素数目无限制, 无序，不超过 400KB, 但必须属于同一类型, 支持 number set, binary set, string set.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;选择-primary-key&#34;&gt;选择 primary key&lt;/h2&gt;&#xA;&lt;p&gt;Table 的 primary key 支持单一的 partition key 或复合的 partition key + sort key. 不管哪种，最后的组成的primary key 在一张表中必须唯一.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Handle outage</title>
       <link>https://blog.monsterxx03.com/2017/12/10/handle-outage/</link>
       <pubDate>Sun, 10 Dec 2017 11:13:53 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/12/10/handle-outage/</guid>
-      <description>A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&amp;rsquo;m working on a long term solution. I learned some important things from this accident.
-The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&amp;rsquo;s health check failed due to high load.
-I did following:
-Check monitor Identify the problem is caused by KV system Okay, problem is here, I know the problem is KV system&amp;rsquo;s performance issue. But I can&amp;rsquo;t figure out the root case right now, I need a temporary solution. Straightward way is redirect traffic to slave instance. But I know it won&amp;rsquo;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&amp;rsquo;t work.
-The real down time was not long, performance recovered to some degree soon, but latency was still high, not normal. I monitored it for long time, and tried to find out the root case until morning. Since traffic was growing when peak hour coming, performance became problem again.</description>
+      <description>&lt;p&gt;A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&amp;rsquo;m working on a long term solution. I learned some important things from this accident.&lt;/p&gt;&#xA;&lt;h2 id=&#34;the-outage&#34;&gt;The outage&lt;/h2&gt;&#xA;&lt;p&gt;I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&amp;rsquo;s health check failed due to high load.&lt;/p&gt;&#xA;&lt;p&gt;I did following:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Check monitor&lt;/li&gt;&#xA;&lt;li&gt;Identify the problem is caused by KV system&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;Okay, problem is here, I know the problem is KV system&amp;rsquo;s performance issue. But I can&amp;rsquo;t figure out the root case right now, I need a temporary solution.&#xA;Straightward way is redirect traffic to slave instance. But I know it won&amp;rsquo;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&amp;rsquo;t work.&lt;/p&gt;&#xA;&lt;p&gt;The real down time was not long, performance recovered to some degree soon, but latency was still high, not normal. I monitored it for long time, and tried to find out the root case until morning. Since traffic was growing when peak hour coming, performance became problem again.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>AWS DMS notes</title>
       <link>https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/</link>
       <pubDate>Sat, 14 Oct 2017 22:33:36 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/</guid>
-      <description>AWS&amp;rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
-It works, but have some concerns. Take some notes when doing this project.
-Prerequisites Source RDS must:
-Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration(&#39;binlog retention hours&#39;, 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT , REPLICATION SLAVE , SELECT on replication target tables DDL on source table Redshift has some limits on change columns:
-New column only must be added in the end Can&amp;rsquo;t rename columns So for DDL on source MySQL, you can&amp;rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
-&amp;quot;ChangeProcessingDdlHandlingPolicy&amp;quot;:{ &amp;quot;HandleSourceTableDropped&amp;quot;:false, &amp;quot;HandleSourceTableTruncated&amp;quot;:false, &amp;quot;HandleSourceTableAltered&amp;quot;:false }, If source table schema changed, I just drop and reload target table on console.
-Control write speed on Redshift Since Redshift is an OLAP database, write operation is slow and concurrency is low, streaming data directly will have big impact on it.
-And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.
-So I need to batch apply changes on DMS.</description>
+      <description>&lt;p&gt;AWS&amp;rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.&lt;/p&gt;&#xA;&lt;p&gt;It works, but have some concerns. Take some notes when doing this project.&lt;/p&gt;&#xA;&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;&#xA;&lt;p&gt;Source RDS must:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Enable automatic backups&lt;/li&gt;&#xA;&lt;li&gt;Increase binlog remain time, &lt;code&gt;call mysql.rds_set_configuration(&#39;binlog retention hours&#39;, 24);&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;Set &lt;code&gt;binlog_format&lt;/code&gt; to &lt;code&gt;ROW&lt;/code&gt;.&lt;/li&gt;&#xA;&lt;li&gt;Privileges on source RDS: &lt;code&gt;REPLICATION CLIENT &lt;/code&gt;, &lt;code&gt;REPLICATION SLAVE &lt;/code&gt;, &lt;code&gt;SELECT&lt;/code&gt; on replication target tables&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;ddl-on-source-table&#34;&gt;DDL on source table&lt;/h2&gt;&#xA;&lt;p&gt;Redshift has some limits on change columns:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;New column only must be added in the end&lt;/li&gt;&#xA;&lt;li&gt;Can&amp;rsquo;t rename columns&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;So for DDL on source MySQL, you can&amp;rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;    &amp;quot;ChangeProcessingDdlHandlingPolicy&amp;quot;:{  &#xA;        &amp;quot;HandleSourceTableDropped&amp;quot;:false,&#xA;        &amp;quot;HandleSourceTableTruncated&amp;quot;:false,&#xA;        &amp;quot;HandleSourceTableAltered&amp;quot;:false&#xA;    },&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;If source table schema changed, I just drop and reload target table on console.&lt;/p&gt;&#xA;&lt;h2 id=&#34;control-write-speed-on-redshift&#34;&gt;Control write speed on Redshift&lt;/h2&gt;&#xA;&lt;p&gt;Since Redshift is an OLAP database, write operation is slow and concurrency is low, streaming data directly will have big impact on it.&lt;/p&gt;&#xA;&lt;p&gt;And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.&lt;/p&gt;&#xA;&lt;p&gt;So I need to batch apply changes on DMS. Follow settings need to tweak in task settings json:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Get all invalid PTR record on  Route53</title>
       <link>https://blog.monsterxx03.com/2017/09/29/get-all-invalid-ptr-record-on-route53/</link>
       <pubDate>Fri, 29 Sep 2017 08:55:18 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/09/29/get-all-invalid-ptr-record-on-route53/</guid>
-      <description>I use autoscaling group to manage stateless servers. Servers go up and down every day.
-Once server is up, I will add a PTR record for it’s internal ip. But when it’s down, I didn’t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.
-To cleanup those PTR records realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?
-Straightforward way is write a script to call AWS API to get a PTR list, get ip from record, test whether the ip is live, if not, delete it.
-Since use awscli to delete a Route53 record is very troublesome (involve json format), you’d better write a python script to delete them. I just demo some ideas to collect those records via shell.
-You can do it in a single line, but make things clear and easy to debug, I split it into several steps.
-Get PTR record list aws route53 list-resource-record-sets --hosted-zone-id xxxxx --query &amp;quot;ResourceRecordSets[?Type==&#39;PTR&#39;].Name&amp;quot; | grep -Po &#39;&amp;quot;(.+?)&amp;quot;&#39; | tr -d \&amp;quot; &amp;gt; ptr.txt ptr.txt will contain lines like:
-1.0.0.10.in-addr.arpa. 2.0.0.10.in-addr.arpa. Get ip list from PTR records cat ptr.txt | while read -r line ; do echo -n $line | tac -s.</description>
+      <description>&lt;p&gt;I use autoscaling group to manage stateless servers. Servers go up and down every day.&lt;/p&gt;&#xA;&lt;p&gt;Once server is up, I will add a PTR record for it’s internal ip. But when it’s down, I didn’t cleanup the PTR record. As times fly, a lot of invalid PTR records left in Route53.&lt;/p&gt;&#xA;&lt;p&gt;To cleanup those PTR records realtime, you can write a lambda function, use server termination event as trigger. But how to cleanup the old records at once?&lt;/p&gt;&#xA;&lt;p&gt;Straightforward way is write a script to call AWS API to get a PTR list, get ip from record, test whether the ip is live, if not, delete it.&lt;/p&gt;&#xA;&lt;p&gt;Since use awscli to delete a Route53 record is very troublesome (involve json format), you’d better write a python script to delete them. I just demo some ideas to collect those records via shell.&lt;/p&gt;&#xA;&lt;p&gt;You can do it in a single line, but make things clear and easy to debug, I split it into several steps.&lt;/p&gt;&#xA;&lt;h2 id=&#34;get-ptr-record-list&#34;&gt;Get PTR record list&lt;/h2&gt;&#xA;&lt;pre&gt;&lt;code&gt;aws route53 list-resource-record-sets  --hosted-zone-id xxxxx --query &amp;quot;ResourceRecordSets[?Type==&#39;PTR&#39;].Name&amp;quot; |  grep -Po &#39;&amp;quot;(.+?)&amp;quot;&#39; | tr -d \&amp;quot; &amp;gt; ptr.txt&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;ptr.txt will contain lines like:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;1.0.0.10.in-addr.arpa.&#xA;2.0.0.10.in-addr.arpa.&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;h2 id=&#34;get-ip-list-from-ptr-records&#34;&gt;Get ip list from PTR records&lt;/h2&gt;&#xA;&lt;pre&gt;&lt;code&gt;cat ptr.txt | while read -r line ; do echo -n $line | tac -s. | cut -d. -f3- | sed &#39;s/.$//&#39; ; done &amp;gt; ip.txt&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;ip.txt:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Build private static website on S3</title>
       <link>https://blog.monsterxx03.com/2017/08/19/build-private-staticwebsite-on-s3/</link>
       <pubDate>Sat, 19 Aug 2017 07:28:16 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/08/19/build-private-staticwebsite-on-s3/</guid>
-      <description>Build static website on S3 is very easy, but by default, it can be accessed by open internet.It will be super helpful if we can build website only available in VPC. Then we can use it to host internal deb repo, doc site…
-Steps are very easy, you only need VPC endpoints and S3 bucket policy.
-AWS api is open to internet, if you need to access S3 in VPC, your requests will pass through VPC’s internet gateway or NAT gateway. With VPC endpoints(can be found in VPC console), your requests to S3 will go through AWS’s internal network. Currently, VPC endpoints only support S3, support for dynamodb is in test.
-To restrict S3 bucket only available in your VPC, need to set bucket policy (to host static website, enable static website support first). At first, I didn’t check doc, try to restrict access by my VPC ip cidr, but it didn’t work, I need to restrict by VPC endpoint id:
-{ &amp;quot;Version&amp;quot;: &amp;quot;2012-10-17&amp;quot;, &amp;quot;Id&amp;quot;: &amp;quot;Policy1415115909152&amp;quot;, &amp;quot;Statement&amp;quot;: [ { &amp;quot;Sid&amp;quot;: &amp;quot;Access-to-specific-VPCE-only&amp;quot;, &amp;quot;Principal&amp;quot;: &amp;quot;*&amp;quot;, &amp;quot;Action&amp;quot;: &amp;quot;s3:GetObject&amp;quot;, &amp;quot;Effect&amp;quot;: &amp;quot;Allow&amp;quot;, &amp;quot;Resource&amp;quot;: [&amp;quot;arn:aws:s3:::my_secure_bucket&amp;quot;, &amp;quot;arn:aws:s3:::my_secure_bucket/*&amp;quot;], &amp;quot;Condition&amp;quot;: { &amp;quot;StringEquals&amp;quot;: { &amp;quot;aws:sourceVpce&amp;quot;: &amp;quot;vpce-1a2b3c4d&amp;quot; } } } ] } BTW, if you can config bucket policy restrict on VPC directly, with VPC endpoint you can limit to subnets.</description>
+      <description>&lt;p&gt;Build static website on S3 is very easy, but by default, it can be accessed by open internet.It will be super helpful if we can build website only available in VPC. Then we can use it to host internal deb repo, doc site…&lt;/p&gt;&#xA;&lt;p&gt;Steps are very easy, you only need VPC endpoints and S3 bucket policy.&lt;/p&gt;&#xA;&lt;p&gt;AWS api is open to internet, if you need to access S3 in VPC, your requests will pass through VPC’s internet gateway or NAT gateway. With VPC endpoints(can be found in VPC console), your requests to S3 will go through AWS’s internal network. Currently, VPC endpoints only support S3, support for dynamodb is in test.&lt;/p&gt;&#xA;&lt;p&gt;To restrict S3 bucket only available in your VPC, need to set bucket policy (to host static website, enable static website support first). At first, I didn’t check doc, try to restrict access by my VPC ip cidr, but it didn’t work, I need to restrict by VPC endpoint id:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;{&#xA;  &amp;quot;Version&amp;quot;: &amp;quot;2012-10-17&amp;quot;,&#xA;  &amp;quot;Id&amp;quot;: &amp;quot;Policy1415115909152&amp;quot;,&#xA;  &amp;quot;Statement&amp;quot;: [&#xA;    {&#xA;      &amp;quot;Sid&amp;quot;: &amp;quot;Access-to-specific-VPCE-only&amp;quot;,&#xA;      &amp;quot;Principal&amp;quot;: &amp;quot;*&amp;quot;,&#xA;      &amp;quot;Action&amp;quot;: &amp;quot;s3:GetObject&amp;quot;,&#xA;      &amp;quot;Effect&amp;quot;: &amp;quot;Allow&amp;quot;,&#xA;      &amp;quot;Resource&amp;quot;: [&amp;quot;arn:aws:s3:::my_secure_bucket&amp;quot;,&#xA;                   &amp;quot;arn:aws:s3:::my_secure_bucket/*&amp;quot;],&#xA;      &amp;quot;Condition&amp;quot;: {&#xA;        &amp;quot;StringEquals&amp;quot;: {&#xA;          &amp;quot;aws:sourceVpce&amp;quot;: &amp;quot;vpce-1a2b3c4d&amp;quot;&#xA;        }&#xA;      }&#xA;    }&#xA;  ]&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;BTW, if you can config bucket policy restrict on VPC directly, with VPC endpoint you can limit to subnets. Details can be found in doc: &lt;a href=&#34;http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-endpoints-s3.html&#34;&gt;http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-endpoints-s3.html&lt;/a&gt;&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Use redshift spectrum to do query on s3</title>
       <link>https://blog.monsterxx03.com/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/</link>
       <pubDate>Fri, 21 Jul 2017 03:10:58 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/</guid>
-      <description>使用 redshift spectrum 查询 S3 数据 通常使用 redshift 做数据仓库的时候要做大量的 ETL 工作，一般流程是把各种来源的数据捣鼓捣鼓丢到 S3 上去，再从 S3 倒腾进 redshift. 如果你有大量的历史数据要导进 redshift，这个过程就会很痛苦，redshift 对一次倒入大量数据并不友好，你要分批来做。 今年4月的时候， redshift 发布了一个新功能 spectrum, 可以从 redshift 里直接查询 s3 上的结构化数据。最近把部分数据仓库直接迁移到了 spectrum, 正好来讲讲。 动机 Glow 的数据仓库建在 redshift 上， 又分成了两个</description>
+      <description>&lt;h1 id=&#34;使用-redshift-spectrum-查询-s3-数据&#34;&gt;使用 redshift spectrum 查询 S3 数据&lt;/h1&gt;&#xA;&lt;p&gt;通常使用 redshift 做数据仓库的时候要做大量的 ETL 工作，一般流程是把各种来源的数据捣鼓捣鼓丢到 S3 上去，再从 S3 倒腾进 redshift. 如果你有大量的历史数据要导进 redshift，这个过程就会很痛苦，redshift 对一次倒入大量数据并不友好，你要分批来做。&lt;/p&gt;&#xA;&lt;p&gt;今年4月的时候， redshift 发布了一个新功能 spectrum, 可以从 redshift 里直接查询 s3 上的结构化数据。最近把部分数据仓库直接迁移到了 spectrum, 正好来讲讲。&lt;/p&gt;&#xA;&lt;h2 id=&#34;动机&#34;&gt;动机&lt;/h2&gt;&#xA;&lt;p&gt;Glow 的数据仓库建在 redshift 上， 又分成了两个集群，一个 ssd 的集群存放最近 4 个月的数据，供产品分析，metrics report, debug 等等 adhoc 的查询。4个月之前的数据存放在一个 hdd 的集群里，便宜容量大，查询慢。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Enable coredump on ubuntu 16.04</title>
       <link>https://blog.monsterxx03.com/2017/07/15/enable-coredump-on-ubuntu-16.04/</link>
       <pubDate>Sat, 15 Jul 2017 02:35:52 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/07/15/enable-coredump-on-ubuntu-16.04/</guid>
-      <description>Coredump file is useful for debuging program crash. This post will show several settings related to coredump.
-Enable coredump If you run program from shell , enable coredump via unlimit -c unlimited， then check unlimit -a | grep core, if it shows unlimited, coredump is enabled for your current session.
-If your program is hosted by systemd, you need to edit your program’s service unit file’s [Service] section, add LimitCORE=infinity to enable coredump.
-coredump location Coredump file’s location is determined by kernerl parameter kernel.core_pattern.
-On ubuntu 16.04 kernel.core_pattern default value is |/usr/share/apport/apport %p %s %c %P. Leading | means pass coredump file to following program. %p %c %P is used to create dump filename, their meaning can check via man core. apport will save dump file in /var/crash
-If your default disk partition don’t have enough space to hold dump file, you can change kernel.core_pattern to another location, eg: /mnt/core/%e-%t.%P. If redis-server crashes, the dump file will be something like /mnt/core/redis-server-1500000000.1452. Also ensure crash process’s running user have write privilege on target location.
-systemd-coredump You can install systemd-coredump to control dump file deeply, like: size, compression….
-Its config file is /etc/systemd/coredump.conf.
-After install, it will change kernel.core_pattern to |/lib/systemd/systemd-coredump %P %u %g %s %t 9223372036854775808 %e.</description>
+      <description>&lt;p&gt;Coredump file is useful for debuging program crash. This post will show several settings related to coredump.&lt;/p&gt;&#xA;&lt;h2 id=&#34;enable-coredump&#34;&gt;Enable coredump&lt;/h2&gt;&#xA;&lt;p&gt;If you run program from shell , enable coredump via &lt;code&gt;unlimit  -c unlimited&lt;/code&gt;， then check &lt;code&gt;unlimit -a | grep core&lt;/code&gt;, if it shows &lt;code&gt;unlimited&lt;/code&gt;, coredump is enabled for your current session.&lt;/p&gt;&#xA;&lt;p&gt;If your program is hosted by systemd, you need to edit your program’s service unit file’s &lt;code&gt;[Service]&lt;/code&gt; section, add &lt;code&gt;LimitCORE=infinity&lt;/code&gt; to enable coredump.&lt;/p&gt;&#xA;&lt;h2 id=&#34;coredump-location&#34;&gt;coredump location&lt;/h2&gt;&#xA;&lt;p&gt;Coredump file’s location is determined by kernerl parameter &lt;code&gt;kernel.core_pattern&lt;/code&gt;.&lt;/p&gt;&#xA;&lt;p&gt;On ubuntu 16.04 &lt;code&gt;kernel.core_pattern&lt;/code&gt; default value is &lt;code&gt;|/usr/share/apport/apport %p %s %c %P&lt;/code&gt;. Leading &lt;code&gt;|&lt;/code&gt; means pass coredump file to following program. &lt;code&gt;%p %c %P&lt;/code&gt; is used to create dump filename, their meaning can check via &lt;code&gt;man core&lt;/code&gt;. apport will save dump file in /var/crash&lt;/p&gt;&#xA;&lt;p&gt;If your default disk partition don’t have enough space to hold dump file, you can change &lt;code&gt;kernel.core_pattern&lt;/code&gt; to another location, eg: &lt;code&gt;/mnt/core/%e-%t.%P&lt;/code&gt;. If redis-server crashes, the dump file will be something like /mnt/core/redis-server-1500000000.1452. Also ensure crash process’s running user have write privilege on target location.&lt;/p&gt;&#xA;&lt;h2 id=&#34;systemd-coredump&#34;&gt;systemd-coredump&lt;/h2&gt;&#xA;&lt;p&gt;You can install systemd-coredump to control dump file deeply, like: size, compression….&lt;/p&gt;&#xA;&lt;p&gt;Its config file is /etc/systemd/coredump.conf.&lt;/p&gt;&#xA;&lt;p&gt;After install, it will change &lt;code&gt;kernel.core_pattern&lt;/code&gt; to &lt;code&gt;|/lib/systemd/systemd-coredump %P %u %g %s %t 9223372036854775808 %e&lt;/code&gt;.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Python Web 应用性能调优</title>
       <link>https://blog.monsterxx03.com/2017/07/01/python-web-%E5%BA%94%E7%94%A8%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</link>
       <pubDate>Sat, 01 Jul 2017 23:38:24 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/07/01/python-web-%E5%BA%94%E7%94%A8%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</guid>
-      <description>Python web 应用性能调优 为了快速上线，早期很多代码基本是怎么方便怎么来，这样就留下了很多隐患，性能也不是很理想，python 因为 GIL 的原因，在性能上有天然劣势，即使用了 gevent/eventlet 这种协程方案，也很容易因为耗时的 CPU 操作阻塞住整个进程。前阵子对基础代码做了些重构，效果显著，记录一些。 设定目标: 性能提高了，最直接的效果当然是能用更少的机器处理相同流量，目标是关闭 20% 的 stateless webserver. 尽量在框架代码上做改动，不动业务逻辑代码。 低风险 (历</description>
+      <description>&lt;h1 id=&#34;python-web-应用性能调优&#34;&gt;Python web 应用性能调优&lt;/h1&gt;&#xA;&lt;p&gt;为了快速上线，早期很多代码基本是怎么方便怎么来，这样就留下了很多隐患，性能也不是很理想，python 因为 GIL 的原因，在性能上有天然劣势，即使用了 gevent/eventlet 这种协程方案，也很容易因为耗时的 CPU 操作阻塞住整个进程。前阵子对基础代码做了些重构，效果显著，记录一些。&lt;/p&gt;&#xA;&lt;p&gt;设定目标:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;性能提高了，最直接的效果当然是能用更少的机器处理相同流量，目标是关闭 20% 的 stateless webserver.&lt;/li&gt;&#xA;&lt;li&gt;尽量在框架代码上做改动，不动业务逻辑代码。&lt;/li&gt;&#xA;&lt;li&gt;低风险 (历史经验告诉我们，动态一时爽，重构火葬场&amp;hellip;.)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;治标&#34;&gt;治标&lt;/h2&gt;&#xA;&lt;p&gt;常见场景是大家开开心心做完一个 feature， sandbox 测试也没啥问题，上线了，结果 server load 飙升，各种 timeout 都来了，要么 rollback 代码，要么加机器。问题代码在哪?&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Build deb repository with fpm , aptly and s3</title>
       <link>https://blog.monsterxx03.com/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/</link>
       <pubDate>Fri, 23 Jun 2017 09:40:58 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/</guid>
-      <description>I’m lazy, I don’t want to be deb/rpm expert, I don’t want to maintain repo server. I want as less maintenance effort as possible. 🙂
-Combine tools fpm, aptly with aws s3, we can do it.
-Use fpm to convert python package to deb fpm can transform python/gem/npm/dir/… to deb/rpm/solaris/… packages
-Example:
-fpm -s python -t deb -m xyj.asmy@gmail.com --verbose -v 0.10.1 --python-pip /usr/local/pip Flask It will transform Flask 0.10.1 package to deb. Output package will be python-flask_0.10.1_all.deb
-Notes:
-If python packages rely on some c libs like MySQLdb (libmysqlclient-dev), you need to install them on the machine to build deb binary. By default fpm use easy_install to build packages, some packages like httplib2 have permission bug with easy_install, so I use pip By default, msgpack-python will be convert to python-msgpack-python, I don’t like it, so add -n python-msgpack to normalize the package name. Some package’s dependencies’ version number is not valid(eg: celery 3.1.25 deps pytz &amp;gt;= dev), so I replace the dependencies with --python-disable-dependency pytz -d &#39;pytz &amp;gt;= 2016.7&#39; fpm will not dowload package’s dependency automatically, you need to do it by your self Use aptly to setup deb repository aptly can help build a self host deb repository and publish it on s3.</description>
+      <description>&lt;p&gt;I’m lazy, I don’t want to be deb/rpm expert, I don’t want to maintain repo server. I want as less maintenance effort as possible. 🙂&lt;/p&gt;&#xA;&lt;p&gt;Combine tools fpm, aptly with aws s3, we can do it.&lt;/p&gt;&#xA;&lt;h2 id=&#34;use-fpm-to-convert-python-package-to-deb&#34;&gt;Use fpm to convert python package to deb&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://fpm.readthedocs.io/en/latest/&#34;&gt;fpm&lt;/a&gt; can transform python/gem/npm/dir/… to deb/rpm/solaris/… packages&lt;/p&gt;&#xA;&lt;p&gt;Example:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;fpm -s python -t  deb -m xyj.asmy@gmail.com --verbose  -v 0.10.1 --python-pip /usr/local/pip Flask&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;It will transform Flask 0.10.1 package to deb. Output package will be &lt;code&gt;python-flask_0.10.1_all.deb&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;Notes:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;If python packages rely on some c libs like &lt;code&gt;MySQLdb&lt;/code&gt; (libmysqlclient-dev), you need to install them on the machine to build deb binary.&lt;/li&gt;&#xA;&lt;li&gt;By default fpm use easy_install to build packages, some packages like httplib2 have permission bug with easy_install, so I use pip&lt;/li&gt;&#xA;&lt;li&gt;By default, msgpack-python will be convert to &lt;code&gt;python-msgpack-python&lt;/code&gt;, I don’t like it, so add &lt;code&gt;-n python-msgpack&lt;/code&gt; to normalize the package name.&lt;/li&gt;&#xA;&lt;li&gt;Some package’s dependencies’ version number is not valid(eg: celery 3.1.25 deps pytz &amp;gt;= dev), so I replace the dependencies with &lt;code&gt;--python-disable-dependency pytz -d &#39;pytz &amp;gt;= 2016.7&#39;&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;fpm will not dowload package’s dependency automatically, you need to do it by your self&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;use-aptly-to-setup-deb-repository&#34;&gt;Use aptly to setup deb repository&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://www.aptly.info/&#34;&gt;aptly&lt;/a&gt; can help build a self host deb repository and publish it on s3.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Debug python performance issue with pyflame</title>
       <link>https://blog.monsterxx03.com/2017/06/05/debug-python-performance-issue-with-pyflame/</link>
       <pubDate>Mon, 05 Jun 2017 09:50:44 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/06/05/debug-python-performance-issue-with-pyflame/</guid>
-      <description>pyflame is an opensource tool developed by uber: https://github.com/uber/pyflame
-It can take snapshots of running python process, combined with flamegraph.pl, can output flamegraph picture of python call stacks. Help analyze bottleneck of python program, needn’t inject any perf code into your application, and overhead is very low.
-Basic Usage sudo pyflame -s 10 -x -r 0.001 $pid | ./flamegraph.pl &amp;gt; perf.svg
--s, how many seconds to run -r, sample rate (seconds) Your output will be something like following:
-Longer bar means more sample points located in it, which means this part code is slower so it has a higher chance seen by pyflame.
-In my case, the output graph has a long IDLE part. Pyflame can detect call stacks who are holding GIL, so if the running code doesn’t hold GIL, pyflame don’t know what it’s doing, it will label them as IDLE. Following cases will be considered as IDLE:
-Your process is sleeping, do nothing. Waiting for IO.(eg: Your application is calling a very slow RPC server) Call libs written in C. The right part is real application logic code. You can check this part to get a sense of overview performance of your code.
-Also you can exclude the IDLE part from graph if you don’t care about them, just apply -x</description>
+      <description>&lt;p&gt;pyflame is an opensource tool developed by uber: &lt;a href=&#34;https://github.com/uber/pyflame&#34;&gt;https://github.com/uber/pyflame&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;It can take snapshots of running python process, combined with &lt;a href=&#34;https://raw.githubusercontent.com/brendangregg/FlameGraph/master/flamegraph.pl&#34;&gt;flamegraph.pl&lt;/a&gt;, can output flamegraph picture of python call stacks. Help analyze bottleneck of python program, needn’t inject any perf code into your application, and overhead is very low.&lt;/p&gt;&#xA;&lt;h2 id=&#34;basic-usage&#34;&gt;Basic Usage&lt;/h2&gt;&#xA;&lt;p&gt;sudo pyflame -s 10 -x -r 0.001 $pid | ./flamegraph.pl &amp;gt; perf.svg&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;-s, how many seconds to run&lt;/li&gt;&#xA;&lt;li&gt;-r, sample rate (seconds)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Your output will be something like following:&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://blog.monsterxx03.com/wp-content/uploads/2017/06/Screen-Shot-2017-06-05-at-5.18.23-PM-300x160.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;Longer bar means more sample points located in it, which means this part code is slower so it has a higher chance seen by pyflame.&lt;/p&gt;&#xA;&lt;p&gt;In my case, the output graph has a long IDLE part. Pyflame can detect call stacks who are holding GIL, so if the running code doesn’t hold GIL, pyflame don’t know what it’s doing, it will label them as IDLE. Following cases will be considered as IDLE:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Your process is sleeping, do nothing.&lt;/li&gt;&#xA;&lt;li&gt;Waiting for IO.(eg: Your application is calling a very slow RPC server)&lt;/li&gt;&#xA;&lt;li&gt;Call libs written in C.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;The right part is real application logic code. You can check this part to get a sense of overview performance of your code.&lt;/p&gt;&#xA;&lt;p&gt;Also you can exclude the IDLE part from graph if you don’t care about them, just apply &lt;code&gt;-x&lt;/code&gt;&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Designing data intensive application, reading notes, Part 2</title>
       <link>https://blog.monsterxx03.com/2017/05/17/designing-data-intensive-application-reading-notes-part-2/</link>
       <pubDate>Wed, 17 May 2017 09:12:44 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/05/17/designing-data-intensive-application-reading-notes-part-2/</guid>
-      <description>Chapter 4, 5, 6
-Encoding formats xml, json, msgpack are text based encoding format, they can’t carry binary bytes (useless you encode them in base64, size grows 33%). And they cary schema definition with data, wast a lot of space.
-thrift, protobuf are binary format, can take binary bytes, only carry data, the schema is defined with IDL(interface definition language). They have code generation tool to generate code to encode and decode data, along with check. Every field of data is binded with a tag(mapped to a field in IDL file). If a field is defined is required, it can’t by removed or change tag value, otherwise old code will not be able to decode it.
-avro (used in hadoop), have a write schema and a read schema, when store a large file in avro format(contain many records with same schema), the avro write schama file is appended to the data. If use avro in RPC, the avro schema is exchanged during connection setup. When decoding avro, the lib will look both write schema and read schema, and translate write schema into read schema. Forward compatibility means that you can have a new version of the schema as writer and an old version of the schema as reader, backward compatibility means that you can have a new version of the schema as reader and an old version as writer.</description>
+      <description>&lt;p&gt;Chapter 4, 5, 6&lt;/p&gt;&#xA;&lt;h2 id=&#34;encoding-formats&#34;&gt;Encoding formats&lt;/h2&gt;&#xA;&lt;p&gt;xml, json, msgpack are text based encoding format, they can’t carry binary bytes (useless you encode them in base64, size grows 33%). And they cary schema definition with data, wast a lot of space.&lt;/p&gt;&#xA;&lt;p&gt;thrift, protobuf are binary format, can take binary bytes, only carry data, the schema is defined with IDL(interface definition language). They have code generation tool to generate code to encode and decode data, along with check. Every field of data is binded with a tag(mapped to a field in IDL file). If a field is defined is required, it can’t by removed or change tag value, otherwise old code will not be able to decode it.&lt;/p&gt;&#xA;&lt;p&gt;avro (used in hadoop), have a write schema and a read schema, when store a large file in avro format(contain many records with same schema), the avro write schama file is appended to the data. If use avro in RPC, the avro schema is exchanged during connection setup. When decoding avro, the lib will look both write schema and read schema, and translate write schema into read schema. Forward compatibility means that you can have a new version of the schema as writer and an old version of the schema as reader, backward compatibility means that you can have a new version of the schema as reader and an old version as writer.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Designing data intensive application, reading notes, Part 1</title>
       <link>https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/</link>
       <pubDate>Thu, 04 May 2017 16:27:52 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/</guid>
       <description>&lt;p&gt;Notes when reading chapter 2 “Data models and query languages”, chapter 3 “Storage and retrieval”&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Infrastructure as Code</title>
       <link>https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/</link>
       <pubDate>Fri, 21 Apr 2017 16:25:07 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/</guid>
-      <description>Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.
-You will come to:
-How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what’s the DHCP option set?), navigate around AWS console is okay, but not convenient. Who did what to which resource at when? AWS have a service called Config, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do. Ideally, we should manage AWS resources like code, all changes kept in VCS, so called Infrastructure as Code.
-I’ve tried three ways to do it:
-ansible CloudFormation terraform In this article, I&amp;rsquo;ll compare them, however, the conclusion is to use terraform 🙂
-Ansible Provision tools, like ansible/chef/puppet, all can be used to create aws resources, but they have some common problems:
-Hard to track changes after bootstrap. No confident what it will do to existing resources. For example, I define a security group in ansibble:
-ec2_group: name: &amp;quot;web&amp;quot; description: &amp;quot;security group in web&amp;quot; vpc_id: &amp;quot;vpc-xxx&amp;quot; region: &amp;quot;us-east-1&amp;quot; rules: - proto: tcp from_port: 80 to_port: 80 cidr_ip: 0.</description>
+      <description>&lt;p&gt;Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.&lt;/p&gt;&#xA;&lt;p&gt;You will come to:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what’s the DHCP option set?), navigate around AWS console is okay, but not convenient.&lt;/li&gt;&#xA;&lt;li&gt;Who did what to which resource at when? AWS have a service called &lt;code&gt;Config&lt;/code&gt;, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Ideally, we should manage AWS resources like code, all changes kept in VCS, so called &lt;code&gt;Infrastructure as Code&lt;/code&gt;.&lt;/p&gt;&#xA;&lt;p&gt;I’ve tried three ways to do it:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;ansible&lt;/li&gt;&#xA;&lt;li&gt;CloudFormation&lt;/li&gt;&#xA;&lt;li&gt;terraform&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;In this article, I&amp;rsquo;ll compare them, however, the conclusion is to use terraform 🙂&lt;/p&gt;&#xA;&lt;h2 id=&#34;ansible&#34;&gt;Ansible&lt;/h2&gt;&#xA;&lt;p&gt;Provision tools, like ansible/chef/puppet, all can be used to create aws resources, but they have some common problems:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Hard to track changes after bootstrap.&lt;/li&gt;&#xA;&lt;li&gt;No confident what it will do to existing resources.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;For example, I define a security group in ansibble:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;ec2_group:&#xA;  name: &amp;quot;web&amp;quot;&#xA;  description: &amp;quot;security group in web&amp;quot;&#xA;  vpc_id: &amp;quot;vpc-xxx&amp;quot;&#xA;  region: &amp;quot;us-east-1&amp;quot;&#xA;  rules:&#xA;    - proto: tcp&#xA;      from_port: 80&#xA;      to_port: 80&#xA;      cidr_ip: 0.0.0.0/0&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;It will create a security group named “web” in vpc-xxx. At first glance, it’s convenient and straightforward.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Concurrency in Go, Reading Notes</title>
       <link>https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/</link>
       <pubDate>Wed, 19 Apr 2017 16:26:58 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/</guid>
       <description>&lt;p&gt;A few notes taken when reading &lt;!-- raw HTML omitted --&gt;&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>MySQL partition table</title>
       <link>https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/</link>
       <pubDate>Wed, 05 Apr 2017 16:23:32 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/</guid>
-      <description>&lt;h1 id=&#34;overview&#34;&gt;Overview&lt;/h1&gt;
-&lt;p&gt;MySQL has buildin partition table support, which can help split data accross multi tables,&lt;/p&gt;
-&lt;p&gt;and provide a unified query interface as normal tables.&lt;/p&gt;
-&lt;p&gt;Benefit:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly.&lt;/li&gt;
-&lt;li&gt;Speed up query based on partition key(partitoin pruning)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Limit:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;For partition table, every unique key must use every column in table’s partition expression(include primary key)&lt;/li&gt;
-&lt;li&gt;For innodb engine, paritioned table can’t have foreign key,and can’t have columns referenced by foreign keys.&lt;/li&gt;
-&lt;li&gt;For MyISAM engine, mysql version &amp;lt;= 5.6.5, DML operation will lock all partition as a whole.&lt;/li&gt;
-&lt;/ul&gt;</description>
+      <description>&lt;h1 id=&#34;overview&#34;&gt;Overview&lt;/h1&gt;&#xA;&lt;p&gt;MySQL has buildin partition table support, which can help split data accross multi tables,&lt;/p&gt;&#xA;&lt;p&gt;and provide a unified query interface as normal tables.&lt;/p&gt;&#xA;&lt;p&gt;Benefit:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly.&lt;/li&gt;&#xA;&lt;li&gt;Speed up query based on partition key(partitoin pruning)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Limit:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;For partition table, every unique key must use every column in table’s partition expression(include primary key)&lt;/li&gt;&#xA;&lt;li&gt;For innodb engine, paritioned table can’t have foreign key,and can’t have columns referenced by foreign keys.&lt;/li&gt;&#xA;&lt;li&gt;For MyISAM engine, mysql version &amp;lt;= 5.6.5, DML operation will lock all partition as a whole.&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
     </item>
-    
     <item>
       <title>ElasticSearch cluster</title>
       <link>https://blog.monsterxx03.com/2017/03/22/elasticsearch-cluster/</link>
       <pubDate>Wed, 22 Mar 2017 16:22:32 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/03/22/elasticsearch-cluster/</guid>
-      <description>&lt;p&gt;In this article, let’s talk about ElasticSearch’s cluster mode, which means multi nodes ElasticSearch.&lt;/p&gt;
-&lt;h2 id=&#34;basic-concepts&#34;&gt;Basic concepts&lt;/h2&gt;
-&lt;p&gt;cluster: A collection of server nodes with same &lt;code&gt;cluster.name&lt;/code&gt; settings in elasticsearch.yaml&lt;/p&gt;
-&lt;p&gt;primary shards: Divide a index into multi parts(by default 5), shards of an index can be distributed over multi nodes. It enables scale index horizontally and make access to index parallelly(accross multi nodes).&lt;/p&gt;
-&lt;p&gt;replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.&lt;/p&gt;</description>
+      <description>&lt;p&gt;In this article, let’s talk about ElasticSearch’s cluster mode, which means multi nodes ElasticSearch.&lt;/p&gt;&#xA;&lt;h2 id=&#34;basic-concepts&#34;&gt;Basic concepts&lt;/h2&gt;&#xA;&lt;p&gt;cluster: A collection of server nodes with same &lt;code&gt;cluster.name&lt;/code&gt; settings in elasticsearch.yaml&lt;/p&gt;&#xA;&lt;p&gt;primary shards: Divide a index into multi parts(by default 5), shards of an index can be distributed over multi nodes. It enables scale index horizontally and make access to index parallelly(accross multi nodes).&lt;/p&gt;&#xA;&lt;p&gt;replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Bigtable notes</title>
       <link>https://blog.monsterxx03.com/2016/12/11/bigtable-notes/</link>
       <pubDate>Sun, 11 Dec 2016 16:20:24 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2016/12/11/bigtable-notes/</guid>
       <description>&lt;p&gt;杂乱笔记，辅助读paper.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>GFS notes</title>
       <link>https://blog.monsterxx03.com/2016/11/19/gfs-notes/</link>
       <pubDate>Sat, 19 Nov 2016 16:18:41 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2016/11/19/gfs-notes/</guid>
       <description>&lt;p&gt;看了下很久前 google 的 GFS 论文， 做点笔记。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Migrate to encrypted RDS</title>
       <link>https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/</link>
       <pubDate>Fri, 28 Oct 2016 16:17:30 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/</guid>
-      <description>&lt;p&gt;最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.&lt;/p&gt;
-&lt;p&gt;比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.&lt;/p&gt;</description>
+      <description>&lt;p&gt;最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.&lt;/p&gt;&#xA;&lt;p&gt;比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>MySQL 索引优化</title>
       <link>https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/</link>
       <pubDate>Tue, 26 Jul 2016 16:13:54 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/</guid>
-      <description>&lt;p&gt;什么是索引,索引怎么建这些基本的就跳过不谈了,整理一些前段时间优化线上 SQL 查询时碰到的一些问题. 主要解决下面几个问题:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;建立索引怎样选择合适的列.&lt;/li&gt;
-&lt;li&gt;怎样让 SQL 能有效利用索引.&lt;/li&gt;
-&lt;li&gt;如果对 SQL 效率进行评估(即设置索引前后是否真的有性能提升).&lt;/li&gt;
-&lt;/ul&gt;</description>
+      <description>&lt;p&gt;什么是索引,索引怎么建这些基本的就跳过不谈了,整理一些前段时间优化线上 SQL 查询时碰到的一些问题. 主要解决下面几个问题:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;建立索引怎样选择合适的列.&lt;/li&gt;&#xA;&lt;li&gt;怎样让 SQL 能有效利用索引.&lt;/li&gt;&#xA;&lt;li&gt;如果对 SQL 效率进行评估(即设置索引前后是否真的有性能提升).&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
     </item>
-    
     <item>
       <title>Redshift as data warehouse</title>
       <link>https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/</link>
       <pubDate>Sat, 16 Jul 2016 16:11:39 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/</guid>
-      <description>&lt;p&gt;Glow 的 server infrastructure 全部搭建在 AWS 上，一般要选择一些基础服务的时候，总是先看 AWS, 只要功能和成本符合要求，不会特意选择开源方案。&lt;/p&gt;
-&lt;p&gt;数据仓库我们选择了 AWS 的 Redshift.&lt;/p&gt;
-&lt;p&gt;在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Glow 的 server infrastructure 全部搭建在 AWS 上，一般要选择一些基础服务的时候，总是先看 AWS, 只要功能和成本符合要求，不会特意选择开源方案。&lt;/p&gt;&#xA;&lt;p&gt;数据仓库我们选择了 AWS 的 Redshift.&lt;/p&gt;&#xA;&lt;p&gt;在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>MySQL innodb buffer pool</title>
       <link>https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/</link>
       <pubDate>Sat, 16 Jul 2016 16:07:14 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/</guid>
-      <description>&lt;p&gt;最近在对公司的 MySQL 服务器做性能优化, 一直对 innodb 的内存使用方式不是很清楚, 乘这机会做点总结.&lt;/p&gt;
-&lt;p&gt;在配置 MySQL 的时候, 一般都会需要设置 &lt;em&gt;innodb_buffer_pool_size&lt;/em&gt;, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.&lt;/p&gt;
-&lt;p&gt;之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?&lt;/p&gt;</description>
+      <description>&lt;p&gt;最近在对公司的 MySQL 服务器做性能优化, 一直对 innodb 的内存使用方式不是很清楚, 乘这机会做点总结.&lt;/p&gt;&#xA;&lt;p&gt;在配置 MySQL 的时候, 一般都会需要设置 &lt;em&gt;innodb_buffer_pool_size&lt;/em&gt;, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.&lt;/p&gt;&#xA;&lt;p&gt;之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>fluentd on Shining Moon</title>
+    <title>Fluentd on Shining Moon</title>
     <link>https://blog.monsterxx03.com/tags/fluentd/</link>
-    <description>Recent content in fluentd on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Fluentd on Shining Moon</description>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sun, 26 May 2019 14:27:38 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/fluentd/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 26 May 2019 14:27:38 +0800</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/tags/fluentd/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Centralized Logging on K8S</title>
       <link>https://blog.monsterxx03.com/2019/05/26/centralized-logging-on-k8s/</link>
       <pubDate>Sun, 26 May 2019 14:27:38 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/05/26/centralized-logging-on-k8s/</guid>
-      <description>搞定了监控, 下一步在 k8s 上要做的是中心化日志, 大体看了下, 感兴趣的有两个选择: ELK 套件, 或fluent-bit + fluentd. ELK 那套好处是, 可以把监控和日志一体化, filebeat 收集日志, metricbeat 收集 metrics, 统一存储在 ElasticSearch 里, 通过第三方项目elastalert 可以做报警，也能在 kibana 里集成界面. 坏处是 ElasticSearch 存储成本高, 吃资源. 我们对存储的日志使用需求基本就是 debug, 没有特别复杂的BI需求, 上一整套 ELK 还是太重了. 选择 fluent-bit + fluentd 还有个好处是, 之前内部有套收集 m</description>
+      <description>&lt;p&gt;搞定了监控, 下一步在 k8s 上要做的是中心化日志, 大体看了下, 感兴趣的有两个选择: ELK 套件, 或fluent-bit + fluentd.&lt;/p&gt;&#xA;&lt;p&gt;ELK 那套好处是, 可以把监控和日志一体化, filebeat 收集日志, metricbeat 收集 metrics, 统一存储在 ElasticSearch 里, 通过第三方项目&lt;a href=&#34;https://github.com/Yelp/elastalert&#34;&gt;elastalert&lt;/a&gt;&#xA;可以做报警，也能在 kibana 里集成界面. 坏处是 ElasticSearch 存储成本高, 吃资源. 我们对存储的日志使用需求基本就是 debug, 没有特别复杂的BI需求, 上一整套 ELK 还是太重了.&lt;/p&gt;&#xA;&lt;p&gt;选择 fluent-bit + fluentd 还有个好处是, 之前内部有套收集 metrics(用于统计 DAU, retention 之类指标) 的系统本来就是基于 fluentd 的, 用这套就不用改 metrics 那边的 ETL 了.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

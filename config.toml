@@ -5,7 +5,6 @@ title = "Shining Moon"
 theme = "zozo"
 hasCJKLanguage = true
 summaryLength = 200
-paginate = 10
 copyright = "monsterxx03"
 enableRobotsTXT = true # generate robots.txt
 enableEmoji = true
@@ -39,9 +38,6 @@ publishDir="docs"
     enableMathJax = true
     enableSummary = true
     customCSS = ["home.css"]
-
-[social]
-    github = "https://github.com/monsterxx03"
 
 [permalinks]
 page = "/:slug/"

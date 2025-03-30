@@ -7,18 +7,19 @@
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
-  <meta name="description" content="Recently, we build pub/sub system based on AWS&amp;rsquo;s SNS &amp;amp; SQS service, take some notes.
-Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&amp;rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&amp;rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
-There&amp;rsquo;re three obvious choices in my mind:
-kafka AMQP based system (rabbitmq,activemq &amp;hellip;) SNS &#43; SQS My demands for this system are:
-Support message persistence. Support topic based message distribution. Easy to manage. The data volume won&amp;rsquo;t be very large, so performance and throughput won&amp;rsquo;t be critical concerns.
+  <meta name="description" content="Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, take some notes.
+Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
+There&rsquo;re three obvious choices in my mind:
+kafka AMQP based system (rabbitmq,activemq &hellip;) SNS &#43; SQS My demands for this system are:
+Support message persistence. Support topic based message distribution. Easy to manage. The data volume won&rsquo;t be very large, so performance and throughput won&rsquo;t be critical concerns.
 I choose SNS &#43; SQS, main concerns are from operation side:
 kafka need zookeeper to support cluster. rabbitmq need extra configuration for HA, and AMQP model is relatively complex for programming. So my decision is:
 application publish message to SNS topic Setup multi SQS queues to subscribe SNS topic Let different application processes to subscribe to different queues to finish its logic. SQS and SNS is very simple, not too much to say, just some notes:
-SQS queue have two types, FIFO queue and standard queue."/>
+SQS queue have two types, FIFO queue and standard queue. FIFO queue will ensure message order, and ensure exactly once delivery, tps is limited(3000/s) standard queue is at least once delivery, message order is not ensured, tps is unlimited. In my case, I use standard queue, order is not very important. SQS message size limit is 256KB. Use goaws for local development, it has problem on processing message attributes, but I just use message body. messages only store in ram, will be cleared after restarted. If you failed to deliver message to sqs from sns, can setup topic&rsquo;s sqs failure feedback role to log to cloudwatch, in most case it&rsquo;s caused by iam permission. Message in sqs can retain at most 14 days. Once a message is received by a client, it will be invisible to other clients in visibility_timeout_seconds(default 30s). It means if your client failed to process the message, it will be redelivered after 30s. SQS client use long polling to receive message, set receive_wait_time_seconds to reduce api call to reduce fee. If your client failed to process a message due to bug, the message will be redelivered looply, set redrive_policy for the queue to limit retry count, and set a dead letter queue to store those messages. You can decide how to handle them late. I setup SNS and SQS via terraform, used following resources:
+"/>
   
 
   
@@ -75,7 +76,7 @@ SQS queue have two types, FIFO queue and standard queue."/>
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -84,12 +85,8 @@ SQS queue have two types, FIFO queue and standard queue."/>
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -178,7 +175,7 @@ queue to store those messages. You can decide how to handle them late.</li>
         </div>
       </div>
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -261,17 +258,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

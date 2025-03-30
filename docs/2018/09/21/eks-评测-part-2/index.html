@@ -7,10 +7,15 @@
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
-  <meta name="description" content="上文测试了一下 EKS 和 cluster autoscaler, 本文记录对 persisten volume 的测试. PersistentVolume 创建 gp2 类型的 storageclass, 并用 annotations 设置为默认 sc, dynamic volume provision 会用到: kind: StorageClass apiVersion: storage.k8s.io/v1 metadata: name: gp2 annotations: storageclass.kubernetes.io/is-default-class: &amp;quot;true&amp;quot; provisioner: kubernetes.io/aws-ebs reclaimPolicy: Retain parameters: type: gp2 fsType: ext4 encrypted: &amp;quot;true&amp;quot; 因为 eks 是基于 1.10.3 的, volume expansion 还是 alpha 状态, 没法自动开启(没法改 api server 配置), 所以 storageclass 的 allowVolumeExpansion, 设置了也没用. 这里 encrypted 的值必须是字符串, 否则会创建失败, 而且报错莫名其妙. 创建 pod 的时候指定一个已存在的 ebs volume apiVersion: v1 kind: Pod metadata: name: test spec: volumes: - name: test awsElasticBlockStore: fsType: ext4 volumeID: vol-03670d6294ccf29fd containers: - image: nginx name: nginx volumeMounts: - name: test mountPath: /mnt kubectl -it test -- /bin/bash 进去看一下: root@test:/# df -h"/>
+  <meta name="description" content="上文测试了一下 EKS 和 cluster autoscaler, 本文记录对 persisten volume 的测试.
+PersistentVolume 创建 gp2 类型的 storageclass, 并用 annotations 设置为默认 sc, dynamic volume provision 会用到:
+kind: StorageClass apiVersion: storage.k8s.io/v1 metadata: name: gp2 annotations: storageclass.kubernetes.io/is-default-class: &quot;true&quot; provisioner: kubernetes.io/aws-ebs reclaimPolicy: Retain parameters: type: gp2 fsType: ext4 encrypted: &quot;true&quot; 因为 eks 是基于 1.10.3 的, volume expansion 还是 alpha 状态, 没法自动开启(没法改 api server 配置), 所以 storageclass 的 allowVolumeExpansion, 设置了也没用. 这里 encrypted 的值必须是字符串, 否则会创建失败, 而且报错莫名其妙.
+创建 pod 的时候指定一个已存在的 ebs volume apiVersion: v1 kind: Pod metadata: name: test spec: volumes: - name: test awsElasticBlockStore: fsType: ext4 volumeID: vol-03670d6294ccf29fd containers: - image: nginx name: nginx volumeMounts: - name: test mountPath: /mnt kubectl -it test -- /bin/bash 进去看一下:
+root@test:/# df -h Filesystem Size Used Avail Use% Mounted on overlay 20G 2.2G 18G 11% / tmpfs 3.9G 0 3.9G 0% /dev tmpfs 3.9G 0 3.9G 0% /sys/fs/cgroup /dev/xvdcz 976M 2.6M 907M 1% /mnt /dev/xvda1 20G 2.2G 18G 11% /etc/hosts shm 64M 0 64M 0% /dev/shm tmpfs 3.9G 12K 3.9G 1% /run/secrets/kubernetes.io/serviceaccount tmpfs 3.9G 0 3.9G 0% /sys/firmware 那块 volume 的确绑定在 /mnt
+"/>
   
 
   
@@ -67,7 +72,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -76,12 +81,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -236,7 +237,7 @@ spec:
         </div>
       </div>
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -319,17 +320,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

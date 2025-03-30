@@ -7,18 +7,19 @@
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
-  <meta name="description" content="AWS&amp;rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
+  <meta name="description" content="AWS&rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
 It works, but have some concerns. Take some notes when doing this project.
 Prerequisites Source RDS must:
 Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration(&#39;binlog retention hours&#39;, 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT , REPLICATION SLAVE , SELECT on replication target tables DDL on source table Redshift has some limits on change columns:
-New column only must be added in the end Can&amp;rsquo;t rename columns So for DDL on source MySQL, you can&amp;rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
-&amp;quot;ChangeProcessingDdlHandlingPolicy&amp;quot;:{ &amp;quot;HandleSourceTableDropped&amp;quot;:false, &amp;quot;HandleSourceTableTruncated&amp;quot;:false, &amp;quot;HandleSourceTableAltered&amp;quot;:false }, If source table schema changed, I just drop and reload target table on console.
+New column only must be added in the end Can&rsquo;t rename columns So for DDL on source MySQL, you can&rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
+&quot;ChangeProcessingDdlHandlingPolicy&quot;:{ &quot;HandleSourceTableDropped&quot;:false, &quot;HandleSourceTableTruncated&quot;:false, &quot;HandleSourceTableAltered&quot;:false }, If source table schema changed, I just drop and reload target table on console.
 Control write speed on Redshift Since Redshift is an OLAP database, write operation is slow and concurrency is low, streaming data directly will have big impact on it.
 And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.
-So I need to batch apply changes on DMS."/>
+So I need to batch apply changes on DMS. Follow settings need to tweak in task settings json:
+"/>
   
 
   
@@ -75,7 +76,7 @@ So I need to batch apply changes on DMS."/>
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -84,12 +85,8 @@ So I need to batch apply changes on DMS."/>
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -183,7 +180,7 @@ AWS still creates a log stream with random name for you.</p>
         </div>
       </div>
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -266,17 +263,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

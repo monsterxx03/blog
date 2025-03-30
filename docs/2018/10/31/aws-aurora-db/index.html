@@ -7,10 +7,14 @@
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
-  <meta name="description" content="最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比. Paper notes 存储计算分离 redo log 下推到存储层 副本: 6 副本 3 AZ(2 per az), 失去一个 AZ &#43; 1 additoinal node 不会丢数据(可读不可写). 失去一个 AZ (或任意2 node) 不影响数据写入. 10GB 一个 segment, 每个 segment 6 副本一个 PG (protection group), 一 AZ 两副本. 在 10Gbps 的网络上, 修复一个 10GB 的segment 需要 10s. MySQL 一个应用层的写会在底层产生很多额外的写操作，会带来写放大问题: redo log 用来 crash recovery, binlog 会上传 s3 用于 point in time restore. 在 aurora 里，只"/>
+  <meta name="description" content="最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比.
+Paper notes 存储计算分离 redo log 下推到存储层 副本: 6 副本 3 AZ(2 per az), 失去一个 AZ &#43; 1 additoinal node 不会丢数据(可读不可写). 失去一个 AZ (或任意2 node) 不影响数据写入. 10GB 一个 segment, 每个 segment 6 副本一个 PG (protection group), 一 AZ　两副本. 在 10Gbps 的网络上, 修复一个 10GB 的segment 需要 10s. MySQL 一个应用层的写会在底层产生很多额外的写操作，会带来写放大问题:
+redo log 用来 crash recovery, binlog 会上传 s3　用于 point in time restore.
+在 aurora 里，只有 redo log 会通过网络复制到各个 replica, master 会等待 4/6 replicas 完成 redo log 的写入就认为写入成功 (所以失去3副本就无法写入数据了). 其他副本会根据 redo log 重建数据(单独的 redo log applicator 进程).
+"/>
   
 
   
@@ -67,7 +71,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -76,12 +80,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -180,7 +180,7 @@
         </div>
       </div>
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -263,17 +263,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

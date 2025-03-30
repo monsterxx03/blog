@@ -7,10 +7,14 @@
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
-  <meta name="description" content="最近对业务里发送 apple APNS, google FCM 部分的代码进行了重构, 抽出了一个单独的 service, 本文记录下整个过程. 存在的问题 我们有好几个 mobile app, 每个 app 会有一套对应的 server 端 service 做业务逻辑, 因为历史原因, 每个 service 里面其实有很多重复代码, 大多只是一些配置和错误处理上有差异. 给 app 发推送是个典型, 原来的做法是当要发推送的时候, 往 python 的 celery 队列里扔一个 task, 由 celery 异步得去发. 有如下问题: celery 性能不佳, worker class 用的是 gevent, 但在高峰时候任务队列里还是有大量 pending, 代码上之前做过"/>
+  <meta name="description" content="最近对业务里发送 apple APNS, google FCM 部分的代码进行了重构, 抽出了一个单独的 service, 本文记录下整个过程.
+存在的问题 我们有好几个 mobile app, 每个 app 会有一套对应的 server 端 service 做业务逻辑, 因为历史原因, 每个 service 里面其实有很多重复代码, 大多只是一些配置和错误处理上有差异. 给 app 发推送是个典型, 原来的做法是当要发推送的时候, 往 python 的 celery 队列里扔一个 task, 由 celery 异步得去发.
+有如下问题:
+celery 性能不佳, worker class 用的是 gevent, 但在高峰时候任务队列里还是有大量 pending, 代码上之前做过多次优化, 但收效甚微. 当 pending 了大量发推送的 task 之后, 会导致其他异步 task 跟着延时, 造成用户体验上的一些问题. 历史代码的问题, 每个 app 里对接 APNS/FCM 都有一套单独的代码, 在部分错误处理和统计 metrics 上有差异. 解决方案 问题1, 目前已经迁移到 k8s, 其实可以无脑开 HPA, 做 auto scaling, 来提高发送效率. 问题是 python 性能实在太差, 峰值时候估计会 scale 到原先的好多倍, 而 celery 里 除了发推送还有很多 task 有 db 操作, scale 过多, 会带来其他问题, 那是另一个问题, 不想在当前这个问题里解决. 问题２, celery 里可以设 routing, 简单说可以用单独的 celery instance 来专门处理推送相关 task, 也可以规避1里的 db 问题. 问题3, 单纯代码问题, 统一用一套代码重构就行了. 讲真, 碰到的 celery 的 bug 实在太多了, 存量代码用用就行了, 新做业务实在不想用. 而发推送是个很独立的业务, 最后打算拿 go 来单独跑推送.
+"/>
   
 
   
@@ -67,7 +71,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -76,12 +80,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -157,7 +157,7 @@
         </div>
       </div>
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -240,17 +240,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

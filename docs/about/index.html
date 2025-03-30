@@ -7,16 +7,17 @@
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
   <meta name="description" content="Work with tech, belive in magic, live on fun :)
-Side projects https://github.com/monsterxx03/gospy non-Invasive goroutine inspector https://github.com/monsterxx03/snet transparent tcp proxy(mainly used in China), works on Linux &amp;amp; MacOS Work expenrience 2021.6 ~ Now XSky Ltd (https://www.xsky.com/) Work as senior architect, participated in the design and development of HCI(Hyperconverged infrastructure) system from 0 to 1.
-It&amp;rsquo;s a vm scheduling and management system.
+Side projects https://github.com/monsterxx03/gospy non-Invasive goroutine inspector https://github.com/monsterxx03/snet transparent tcp proxy(mainly used in China), works on Linux &amp; MacOS Work expenrience 2021.6 ~ Now XSky Ltd (https://www.xsky.com/) Work as senior architect, participated in the design and development of HCI(Hyperconverged infrastructure) system from 0 to 1.
+It&rsquo;s a vm scheduling and management system.
 Main tech stack:
 Postgresql as DB, use logical replication as msg queue. VictoriaMetrics for monitoring. Etcd for leader election. code in golang Major achievements:
-Write a terraform provider for the product, which generates the terraform schema definition from an OpenAPI spec using code generation, uses reflection to implement generic Terraform CRUD. Designed and developed a HA solution for Postgresql based on Patroni(by client side service discovering) Build alerting system based on VictoriaMetrics, support both metrics &amp;amp; event based alerting. Design and implement the upgrade path for the product. 2014.11 ~ 2021.5 Glow Inc (https://glowing.com) Work as company&amp;rsquo;s infrastructure architect:
-Responsible for AWS-based infrastructure design, selection, maintenance, and refactoring. System capacity planning, cost management. Identify bottlenecks in system performance and architecture scalability, refactor existing code, increase user base by 10X while keeping IT cost increase to only two times. Regular team training and technical sharing, as well as code quality control."/>
+Write a terraform provider for the product, which generates the terraform schema definition from an OpenAPI spec using code generation, uses reflection to implement generic Terraform CRUD. Designed and developed a HA solution for Postgresql based on Patroni(by client side service discovering) Build alerting system based on VictoriaMetrics, support both metrics &amp; event based alerting. Design and implement the upgrade path for the product. 2014.11 ~ 2021.5 Glow Inc (https://glowing.com) Work as company&rsquo;s infrastructure architect:
+Responsible for AWS-based infrastructure design, selection, maintenance, and refactoring. System capacity planning, cost management. Identify bottlenecks in system performance and architecture scalability, refactor existing code, increase user base by 10X while keeping IT cost increase to only two times. Regular team training and technical sharing, as well as code quality control. Server Infra Develop and achieve SLOs for the business, including: Availability: service uptime &gt;=99.99% Quality: p95 latency &lt; 200ms Core service p95 latency &lt; 50ms. Implement infrastructure as code and use Terraform to codify the management of AWS infrastructure components such as VPC, Autoscaling Group, IAM permissions, DMS tasks, RDS, etc. All historical changes should be tracking. Fully migrating the architecture to EKS (AWS-managed Kubernetes) and upgrading it from version 1.10 to 1.18 without any downtime, such as containerizing the business applications and refactoring the monitoring and alerting solution from Datadog to Prometheus&#43;Grafana. Based on Jenkins, using Groovy to write pipelines, achieve self-service deployment and rollback of business, and integrate SonarQube to ensure code quality control for the team. Database selection and optimization, e.g., using MySQL on RDS or AWS Aurora for relational databases, DynamoDB for key-value databases, Sentinel Redis for message queue brokers, Redis Cluster for caching, and ElasticSearch for search and analytics Performing daily troubleshooting and performance tuning in the production environment, and improving related toolchains, such as using Sentry for bug reporting, Jaeger for OpenTracing, and FluentBit &#43; Loki &#43; Syslog-ng for logging. Developing a management tool for EKS worker node groups using Golang, enabling seamless migration of stateless applications (such as web services and some message queue consumers) and stateful applications (such as Redis Sentinel HA and Redis Cluster). Assisting the company in achieving HIPAA compliance, which primarily involves implementing technical measures such as data-at-rest encryption, log anonymization, and access control for internal data. Code framework design and refactor Upgrading a Python project with over 600,000 lines of code from Python 2.7 to Python 3.6, performing a gradual rollout to production within three months without any downtime and without adding extra burden to business development. This was achieved by using SonarQube to perform syntax checks in the CI phase to prevent developers from submitting Python 2.7 incompatible code. Splitting a code repository was necessary as the early codebase consisted of over a dozen Python repositories that imported each other, leading to significant deployment and troubleshooting issues. To address this, the API frontend layer and business RPC layer were cleanly separated, and the RPC client was generated through code to synchronize with each repository (using AST traversal for syntax checks). Refactor the deduplication module in the business with Bloom filter to reduce the latency and storage of related business to around 1/10 of the original. Data warehourse Build a data warehouse based on Redshift/Spectrum and S3 Design and implement ETL process using DMS, fluentd, argo-workflow, and Spark. Refactor an early complex reporting system (with over 10,000 lines of Python code) by separating the definition and calculation logic of metrics. After the transformation, the core Python code was reduced to 1,000 lines, and the rest was written in YAML. The system had not been significantly modified for five years. The purpose of the refactoring was to enable PAs (Product Analysts) who are not proficient in Python to define and launch business metrics independently. 2013.1 ~ 2014.10 UnitedStack(previous ustack.com, current tfcloud.com) Main work is build a privatized OpenStack distribution, including:
+"/>
   
 
   
@@ -73,7 +74,7 @@ Responsible for AWS-based infrastructure design, selection, maintenance, and ref
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -82,12 +83,8 @@ Responsible for AWS-based infrastructure design, selection, maintenance, and ref
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -107,7 +104,7 @@ Responsible for AWS-based infrastructure design, selection, maintenance, and ref
 <li><a href="https://github.com/monsterxx03/snet">https://github.com/monsterxx03/snet</a>  transparent tcp proxy(mainly used in China), works on Linux &amp; MacOS</li>
 </ul>
 <h2 id="work-expenrience">Work expenrience</h2>
-<h3 id="20216--now--xsky-ltd-httpswwwxskycom">2021.6 ~ Now  XSky Ltd (<a href="https://www.xsky.com/">https://www.xsky.com/</a>)</h3>
+<h3 id="20216--now--xsky-ltd-">2021.6 ~ Now  XSky Ltd (<a href="https://www.xsky.com/">https://www.xsky.com/</a>)</h3>
 <p>Work as senior architect, participated in the design and development of HCI(Hyperconverged infrastructure) system from 0 to 1.</p>
 <p>It&rsquo;s a vm scheduling and management system.</p>
 <p>Main tech stack:</p>
@@ -124,7 +121,7 @@ Responsible for AWS-based infrastructure design, selection, maintenance, and ref
 <li>Build alerting system based on VictoriaMetrics, support both metrics &amp; event based alerting.</li>
 <li>Design and implement the upgrade path for the product.</li>
 </ul>
-<h3 id="201411--20215-glow-inc-httpsglowingcom">2014.11 ~ 2021.5 Glow Inc (<a href="https://glowing.com">https://glowing.com</a>)</h3>
+<h3 id="201411--20215-glow-inc-">2014.11 ~ 2021.5 Glow Inc (<a href="https://glowing.com">https://glowing.com</a>)</h3>
 <p>Work as company&rsquo;s infrastructure architect:</p>
 <ul>
 <li>Responsible for AWS-based infrastructure design, selection, maintenance, and refactoring. System capacity planning, cost management.</li>
@@ -176,7 +173,7 @@ Responsible for AWS-based infrastructure design, selection, maintenance, and ref
         </div>
       </div>
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -259,17 +256,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

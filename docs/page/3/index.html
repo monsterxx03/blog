@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.111.3">
+	<meta name="generator" content="Hugo 0.145.0">
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
 
@@ -68,7 +68,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -77,12 +77,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -94,12 +90,62 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2019/10/31/%E8%80%81%E4%BB%A3%E7%A0%81%E9%87%8C%E5%92%8C-mysql-%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%80%E4%B8%AAbug/'>老代码里和 MySQL 的事务隔离相关的一个bug</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p><p>这两天在调试代码的时候, 发现 db 层的代码在每次把 connection 放回 db pool 的时候,即使之前执行的是 select 语句,也会 rollback 一下,
+这代码很古老, 我也不知道为啥, 尝试把 rollback 去掉, 结果单元测试挂了一堆, 大多都是数据不一致的问题, debug 了一下, 最后发现这坑还挺大的.</p>
+<p>为什么去掉 select 的 rollback 后会出现数据不一致?</p>
+<p>pymysql 默认关闭了 autocommit, connection A 进行 select 之后, 其实 MySQL 内部为 select 也开启了一个 transaction(Repeatable Read),
+可以通过 <code>SELECT * FROM information_schema.innodb_trx\G</code>  查看.</p>
+<p>所以当 connection A 先 select 一次, connection B 在 transaction 内更新数据并 commit, connection A 再次 select (之前的 transaction 并没 rollback 或 commit),
+得到了老的数据. MySQL 在 repeatable read 下, 为了 consistent read 会使用一个 snapshot, 时间是第一次 read 发生的时间: <a href="https://dev.mysql.com/doc/refman/5.7/en/glossary.html#glos_consistent_read">https://dev.mysql.com/doc/refman/5.7/en/glossary.html#glos_consistent_read</a></p>......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2019.10.31</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/mysql/">mysql</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2019/09/29/gospy-dev-note/'>gospy dev note</a></h2>
   </div>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>前文讲了下 gospy 的大致用法, 这篇记录具体实现和过程中碰到的一些问题. 原理 要从外部获取 golang 进程的 runtime 信息, 需要做得是从进程的 binary 中的 debug 信息里 parse 出需要的一些变量的虚拟内存地址, 读取目标进程的内存, 得到相应的数据, 将两者映射起来就好了.只支持了 linux 上的 ELF 格式 binary, debug 信息是 go 在编译时候弄进去的, 格式是通用的 DWARF. ELF 和 DWARF 格式本身不细究(汗, 文档几百页也实在看不动), go 标准库里自带相应的 parser: debug/elf, debug/dwarf, debug/gosym. 一个基本的读取例子: f, _ := os.Open(path) b, _ :=......</p>
+      <p><p><a href="/2019/09/20/gospy-non-invasive-goroutine-inspector/">前文</a>讲了下 gospy 的大致用法, 这篇记录具体实现和过程中碰到的一些问题.</p>
+<h2 id="原理">原理</h2>
+<p>要从外部获取 golang 进程的 runtime 信息, 需要做得是从进程的 binary 中的 debug 信息里 parse 出需要的一些变量的虚拟内存地址, 读取目标进程的内存, 得到相应的数据,
+将两者映射起来就好了.只支持了 linux 上的 ELF 格式 binary, debug 信息是 go 在编译时候弄进去的, 格式是通用的 DWARF.</p>
+<p>ELF 和 DWARF 格式本身不细究(汗, 文档几百页也实在看不动), go 标准库里自带相应的 parser: <code>debug/elf, debug/dwarf, debug/gosym</code>. 一个基本的读取例子:</p>
+<pre><code>f, _ := os.Open(path)
+b, _ := elf.NewFile(f)
+lndata, _ := b.Section(&quot;.gopclntab&quot;).Data()
+ln := gosym.NewLineTable(lndata, b.Section(&quot;.text&quot;).Addr)
+symtab, _ := gosym.NewTable([]byte{}, ln)
+</code></pre>
+<p>在 go 1.3 之前, elf binary 里有一节 session: <code>.gosymtab</code>, 1.3 开始不需要了,　为了 api 兼容, <code>gosym.NewTable</code> 还需要这个参数,传个空　byte slice 进去就行.</p>......</p>
     </div>
   </div>
   
@@ -132,7 +178,11 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>题文无关. 楼下阿姨 三楼住了一对老夫妻, 丈夫身体不好, 不怎么出门, 阿姨倒是很精神, 天天溜达, 偶尔会上来问我些用手机的事情. 阿姨人挺好, 就是总想着捡些小便宜, 那个年代过来的人都这样, 无可厚非. 某日, 拿着手机给我看某基金的公众号, 说是可以领红包, 意兴阑珊得帮她看了下, 大致意思是在公众号下留言, 记录自己在这个基金的投资故事, 抽取写得好的发红包&hellip;我就告诉她, 这个基本是没啥可能被抽中的(我也不可......</p>
+      <p><p>题文无关.</p>
+<h2 id="楼下阿姨">楼下阿姨</h2>
+<p>三楼住了一对老夫妻, 丈夫身体不好, 不怎么出门, 阿姨倒是很精神, 天天溜达, 偶尔会上来问我些用手机的事情. 阿姨人挺好, 就是总想着捡些小便宜, 那个年代过来的人都这样, 无可厚非.</p>
+<p>某日, 拿着手机给我看某基金的公众号, 说是可以领红包, 意兴阑珊得帮她看了下, 大致意思是在公众号下留言, 记录自己在这个基金的投资故事,
+抽取写得好的发红包&hellip;我就告诉她, 这个基本是没啥可能被抽中的(我也不可能帮你编一篇小作文啊), 阿姨还是坚持要写, 说就写:&ldquo;这个基金挺好的, 虽然到现在还是亏损的.&rdquo;, 看着阿姨一脸真挚的样子, 您真的不是反串黑吗???</p>......</p>
     </div>
   </div>
   
@@ -156,7 +206,45 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>go 自带的 profiling 工具很强大(pprof, trace, GODEBUG &hellip;), 但有时我还是想不修改目标进程的源码获取它的一些 runtime 信息, 最近研究了一下 py-spy 和 delve, 发现还是可实现的, 就做了个小东西gospy. 用法 目前就两个命令: gospy summary 和 gospy top sudo ./gospy summary --pid 1234, 可以 dump 目标进程的一些信息和当前活动 goroutine 正在执行的函数信息, 比如对一个 prometheus 进程做一次 snapshot: bin: /home/will/Downloads/prometheus-2.12.0.linux-amd64/prometheus, goVer: 1.12.8, gomaxprocs: 6 P0 idle, schedtick: 642, syscalltick: 81 P1 idle, schedtick: 959, syscalltick: 67 P2 idle, schedtick: 992, syscalltick: 32 P3 idle, schedtick: 581, syscalltick: 17 P4 idle, schedtick: 89, syscalltick: 8 P5 idle, schedtick: 231, syscalltick: 5 Threads: 14 total, 0 running, 14 sleeping, 0 stopped, 0 zombie Goroutines: 44 total, 0 idle, 0 running, 5......</p>
+      <p><p>go 自带的 profiling 工具很强大(pprof, trace, GODEBUG &hellip;), 但有时我还是想不修改目标进程的源码获取它的一些
+runtime 信息, 最近研究了一下 py-spy 和 delve, 发现还是可实现的, 就做了个小东西<a href="https://github.com/monsterxx03/gospy">gospy</a>.</p>
+<h2 id="用法">用法</h2>
+<p>目前就两个命令: <code>gospy summary</code> 和 <code>gospy top</code></p>
+<p><code>sudo ./gospy summary --pid 1234</code>, 可以 dump 目标进程的一些信息和当前活动 goroutine 正在执行的函数信息,
+比如对一个 prometheus 进程做一次 snapshot:</p>
+<pre><code>bin: /home/will/Downloads/prometheus-2.12.0.linux-amd64/prometheus, goVer: 1.12.8, gomaxprocs: 6
+P0 idle, schedtick: 642, syscalltick: 81
+P1 idle, schedtick: 959, syscalltick: 67
+P2 idle, schedtick: 992, syscalltick: 32
+P3 idle, schedtick: 581, syscalltick: 17
+P4 idle, schedtick: 89, syscalltick: 8
+P5 idle, schedtick: 231, syscalltick: 5
+Threads: 14 total, 0 running, 14 sleeping, 0 stopped, 0 zombie
+Goroutines: 44 total, 0 idle, 0 running, 5 syscall, 39 waiting
+
+goroutines:
+
+1 - waiting for chan receive: rt0_go (/usr/local/go/src/runtime/asm_amd64.s:202) 
+2 - waiting for force gc (idle): 5 (/usr/local/go/src/runtime/proc.go:240) 
+3 - waiting for GC sweep wait: gcenable (/usr/local/go/src/runtime/mgc.go:209) 
+8 - syscall: addtimerLocked (/usr/local/go/src/runtime/time.go:169) 
+9 - waiting for select: 0 (/app/vendor/go.opencensus.io/stats/view/worker.go:33) 
+16 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) 
+17 - waiting for finalizer wait: createfing (/usr/local/go/src/runtime/mfinal.go:156) 
+19 - syscall: 0 (/usr/local/go/src/os/signal/signal_unix.go:30) 
+22 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) 
+23 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) 
+38 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) 
+49 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) 
+50 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) 
+74 - waiting for select: sync (/app/scrape/scrape.go:408) 
+75 - syscall: addtimerLocked (/usr/local/go/src/runtime/time.go:169) 
+84 - syscall: addtimerLocked (/usr/local/go/src/runtime/time.go:169) 
+85 - waiting for select: Run (/app/vendor/github.com/oklog/run/group.go:36) 
+...
+</code></pre>
+<p>P0, P1 &hellip;, 是 go 的 GMP schedule 模型里的 P, 可以简单理解成对一个物理核心的逻辑抽象. 个数可由环境变量 GOMAXPROCS 控制,
+默认是机器核心数.</p>......</p>
     </div>
   </div>
   
@@ -189,7 +277,11 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>随记. Life &lt;火焰文章-风花雪月&gt; 流程过半, 这一作难度确实低, 怂如我玩的又是不死人模式, 即使是困难难度, 到后面也是切菜. 流程里学生们 seisei 得喊, 想到后面要把他们一个个干掉, 心情挺复杂得&hellip; 风花雪月这个副标题, 玩着玩着也有点明白意思了, 美版竟然叫 &lt;Three houses&gt;, 老外神经果然傻大粗啊&hellip; 西泽保彦的高千和千晓系列看完了好几本, 还剩下&lt;依存&gt; 和 &lt;啤酒之家的冒险&gt;. 昨......</p>
+      <p><p>随记.</p>
+<h2 id="life">Life</h2>
+<p><code>&lt;火焰文章-风花雪月&gt;</code> 流程过半, 这一作难度确实低, 怂如我玩的又是不死人模式, 即使是困难难度, 到后面也是切菜. 流程里学生们 seisei 得喊, 想到后面要把他们一个个干掉, 心情挺复杂得&hellip;
+风花雪月这个副标题, 玩着玩着也有点明白意思了, 美版竟然叫 <code>&lt;Three houses&gt;</code>, 老外神经果然傻大粗啊&hellip;</p>
+<p>西泽保彦的高千和千晓系列看完了好几本, 还剩下<code>&lt;依存&gt;</code> 和 <code>&lt;啤酒之家的冒险&gt;</code>. 昨晚读完了 <code>&lt;苏格兰游戏&gt;</code>, 剧情高开低走, 前半段的迷题和悬念设置堪称系列之最, 我都想大吹特吹这本了, 结果最后的凶手犯罪动机特别无语, 怪不得豆瓣上评分不高. 但仍旧非常推荐, 毕竟是高千的故事嘛.</p>......</p>
     </div>
   </div>
   
@@ -213,7 +305,17 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>追了一下 kube-scheduler 的源码, 记录一点, 基于 tag v1.16.0-alpha.2. 一句话概括 kube-scheduler 的职责是: 找到 pending 的 pod, 挑选一个合适的 node, 将 pod bind 上去. Get pending pod 在 scheduler 的初始化过程中给 pod/node/pv/pvc/service/storageClassInformer 添加回调函数, 功能大致都是在这些资源发生变化时更新本地的 cache 和 ScheduleQueue scheduler.go:New. ScheduleQueue 是关键, 内部实现是一个 PriorityQueue, 它有三个 sub queue: activeQ 用来存放等待 schedule 的 pods, kube-schedule 实际工作时候从这个 queue 中取 pod, 实现上是一个 heap, 如果 pod 定义了 priority, 则按照 priority 由高到低排序, 否则按 pod 到达的时间排序: activeQComp podBackoffQ 存放正在经历 backoff 的 pod, 也是 heap, 按 pod 上次 backoff 的时间排序: podsCompareBackoffCompleted......</p>
+      <p><p>追了一下 kube-scheduler 的源码, 记录一点, 基于 tag <code>v1.16.0-alpha.2</code>.</p>
+<p>一句话概括 kube-scheduler 的职责是: 找到 pending 的 pod, 挑选一个合适的 node, 将 pod bind 上去.</p>
+<h2 id="get-pending-pod">Get pending pod</h2>
+<p>在 scheduler 的初始化过程中给 <code>pod/node/pv/pvc/service/storageClassInformer</code> 添加回调函数, 功能大致都是在这些资源发生变化时更新本地的 cache 和 ScheduleQueue <a href="https://github.com/kubernetes/kubernetes/blob/v1.16.0-alpha.2/pkg/scheduler/scheduler.go#L207">scheduler.go:New</a>.</p>
+<p>ScheduleQueue 是关键, 内部实现是一个 PriorityQueue, 它有三个 sub queue:</p>
+<ul>
+<li>activeQ 用来存放等待 schedule 的 pods, kube-schedule 实际工作时候从这个 queue 中取 pod, 实现上是一个 heap, 如果 pod 定义了 priority, 则按照 priority 由高到低排序, 否则按 pod 到达的时间排序: <a href="https://github.com/kubernetes/kubernetes/blob/v1.16.0-alpha.2/pkg/scheduler/internal/queue/scheduling_queue.go#L154">activeQComp</a></li>
+<li>podBackoffQ 存放正在经历 backoff 的 pod, 也是 heap, 按 pod 上次 backoff 的时间排序: <a href="https://github.com/kubernetes/kubernetes/blob/v1.16.0-alpha.2/pkg/scheduler/internal/queue/scheduling_queue.go#L651">podsCompareBackoffCompleted</a></li>
+<li>unschedulableQ 存放 schedule 失败的 pod, 只需要能根据 pod 的 identity (<code>podName_namespace</code>) 找到 pod 就行, 不需要排序, 内部是个 map.</li>
+</ul>
+<p>由 podInformer 的 eventHandler 将新的 pod 加到 activeQ 中.</p>......</p>
     </div>
   </div>
   
@@ -244,7 +346,17 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>pyflame 可以比较方便得生成 python 进程的调用函数栈火焰图, 来 debug 一些性能瓶颈, 做了个 kubectl 的小插件, 来方便得对 k8s pod 中的 python 进程进行 debug: https://github.com/monsterxx03/kube-pyflame 直接把 svg 文件下载到本地. 要对 pod 中的 python 进程进行 profiling, 大致思路有两种: 直接在 container 内使用 pyflame, 但这样要把 pyflame 做到所有的 base 镜像里去, 而且目标 container要在 SecurityContext 加上 SYS_PTRACE 在 host 上用 pyflame debug 对应进程, pyflame 自身是能识别跑在 container 里的进程, 自动执行 setns 的. 我希望保持线上环境干净, 最后的做法是, 把 pyflame 单独做一个镜像, 先用 kubectl 找到目......</p>
+      <p><p><a href="https://github.com/uber/pyflame">pyflame</a> 可以比较方便得生成 python 进程的调用函数栈火焰图, 来 debug
+一些性能瓶颈, 做了个 kubectl 的小插件, 来方便得对 k8s pod 中的 python 进程进行 debug: <a href="https://github.com/monsterxx03/kube-pyflame">https://github.com/monsterxx03/kube-pyflame</a>
+直接把 svg 文件下载到本地.</p>
+<p>要对 pod 中的 python 进程进行 profiling, 大致思路有两种:</p>
+<ul>
+<li>直接在 container 内使用 pyflame, 但这样要把 pyflame 做到所有的 base 镜像里去, 而且目标 container要在 SecurityContext 加上 <code>SYS_PTRACE</code></li>
+<li>在 host 上用 pyflame debug 对应进程, pyflame 自身是能识别跑在 container 里的进程, 自动执行 <code>setns</code> 的.</li>
+</ul>
+<p>我希望保持线上环境干净, 最后的做法是, 把 pyflame 单独做一个镜像, 先用 kubectl 找到目标 pod 所在节点, 然后用 nodeSelector 在对应节点上起一个
+pyflame 的 pod, 因为要能看到其他 namespace 的进程, 需要设置 <code>hostPID: true</code>, pyflame 要能执行 <code>setns</code>, 这个 debug pod 要设置 <code>privileged: true</code>.
+执行完成后把 svg 下载下来, 并删除 debug pod.</p>......</p>
     </div>
   </div>
   
@@ -277,7 +389,10 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>回首一看, 大半年没写过杂谈系列了, 今年都没休假, 也是醉了. 随便唠叨几句. 小区门口的大爷养的花猫生了二胎, 长特别好看, 随它们妈, 颜值吊打白猫大哥, 每天下班路过看它们在马路口咬报纸也是很有意思. 犹豫了几天要不要抱只回来, 犹豫着犹豫着就都被别人领走了, 叹. 最近在看西泽保彦的书, 看完了一本&lt;死了7次的男人&gt;, 正在读&lt;解体诸因&gt;. 简直是发现了宝藏, 好久没有看到喜欢的推理小说了, 真的是......</p>
+      <p><p>回首一看, 大半年没写过杂谈系列了, 今年都没休假, 也是醉了. 随便唠叨几句.</p>
+<p>小区门口的大爷养的花猫生了二胎, 长特别好看, 随它们妈, 颜值吊打白猫大哥, 每天下班路过看它们在马路口咬报纸也是很有意思. 犹豫了几天要不要抱只回来, 犹豫着犹豫着就都被别人领走了, 叹.</p>
+<p>最近在看西泽保彦的书, 看完了一本&lt;死了7次的男人&gt;, 正在读&lt;解体诸因&gt;. 简直是发现了宝藏, 好久没有看到喜欢的推理小说了, 真的是看到最后会喊一声&quot;牛逼&quot;,
+这书还是20多年前写的, 行文中的黑色幽默真是非常喜欢了. 觉着这人估计挺烦恼家庭关系的, 书里多处夹带私货.</p>......</p>
     </div>
   </div>
   
@@ -301,7 +416,19 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>开始把线上流量往 k8s 集群里面导了, 中间碰到了茫茫多的问题 &hellip;&hellip; 记录一下(大多都不是 k8s 的问题). nginx ingress controller 的问题 zero-downtime pods upgrade 默认配置下, nginx ingress controller 的 upstream 是 service 的 endpoints, 在 eks 里, 就是 vpc cni plugin 分配给 pod 的 vpc ip(不是 cluster ip), 和直接使用 service cluster ip 比, 好处是: 可以支持 sticky session 可以用 round robin 之外的负载均衡算法 具体实现是, 当 service 的 endpoint 列表发生变化时, nginx ingress controller 收到通知, 对它管理的 nginx 进程发起一个 http request, 更新 endpoint ip list(nginx 内置的 lua 来修改内存中的 ip list) 这样的问题是, 从 pod 被干掉到 nginx 更新之间......</p>
+      <p><p>开始把线上流量往 k8s 集群里面导了, 中间碰到了茫茫多的问题 &hellip;&hellip; 记录一下(大多都不是 k8s 的问题).</p>
+<h2 id="nginx-ingress-controller-的问题">nginx ingress controller 的问题</h2>
+<h3 id="zero-downtime-pods-upgrade">zero-downtime pods upgrade</h3>
+<p>默认配置下, nginx ingress controller 的 upstream 是 service 的 endpoints, 在 eks 里, 就是 vpc cni plugin 分配给 pod 的 vpc ip(不是 cluster ip),
+和直接使用 service cluster ip 比, 好处是:</p>
+<ul>
+<li>可以支持 sticky session</li>
+<li>可以用 round robin 之外的负载均衡算法</li>
+</ul>
+<p>具体实现是, 当 service 的 endpoint 列表发生变化时, nginx ingress controller 收到通知, 对它管理的 nginx 进程发起一个 http request, 更新 endpoint ip
+list(nginx 内置的 lua 来修改内存中的 ip list)</p>
+<p>这样的问题是, 从 pod 被干掉到 nginx 更新之间有个时间差, 部分请求会挂掉, 解决方法可以给 pod 设置一个 preStop hook, sleep 几秒, 等 nginx ingress controller
+更新完成.</p>......</p>
     </div>
   </div>
   
@@ -336,7 +463,17 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>准备工作都差不多了, 没意外下周就该开始把线上的服务往 k8s 上迁移了. 记录几个问题，暂时不 block 我的迁移进程, 但需要持续关注. DNS timeout and conntrack 看到有个关于 DNS 的issue: #56903 现象是 k8s cluster 内部 dns 查询间歇性会 5s 超时, 大致原因是 coredns 作为中心 dns 的时候, 要通过 iptables 把 coredns 的 cluster ip, 转化到它真实的可路由 ip, 中间需要 SNAT, DNAT, 并在 conntrack 内记录映射关系. 这可能会带来两个问题: conntrack table 被 udp 的 dns 查询填满 udp 是无连接的, tcp 关闭链接就会清理 conntrack 内记录, udp 不会，只能等超时, 默......</p>
+      <p><p>准备工作都差不多了, 没意外下周就该开始把线上的服务往 k8s 上迁移了. 记录几个问题，暂时不 block 我的迁移进程,
+但需要持续关注.</p>
+<h2 id="dns-timeout-and-conntrack">DNS timeout and conntrack</h2>
+<p>看到有个关于 DNS 的issue: <a href="https://github.com/kubernetes/kubernetes/issues/56903">#56903</a></p>
+<p>现象是 k8s cluster 内部 dns 查询间歇性会 5s 超时, 大致原因是 coredns 作为中心 dns 的时候,
+要通过 iptables 把　coredns 的 cluster ip, 转化到它真实的可路由 ip, 中间需要 SNAT, DNAT, 并在
+conntrack 内记录映射关系.</p>
+<p>这可能会带来两个问题:</p>
+<h3 id="conntrack-table-被-udp-的-dns-查询填满">conntrack table 被 udp 的 dns 查询填满</h3>
+<p>udp 是无连接的, tcp 关闭链接就会清理 conntrack 内记录, udp 不会，只能等超时, 默认 30s(<code>net.netfilter.nf_conntrack_udp_timeout</code>)
+短时间内大量 udp 查询可能填满 conntrack, 导致丢包.</p>......</p>
     </div>
   </div>
   
@@ -356,41 +493,6 @@
           <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
           
           <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2019/06/20/snet-dev-note-support-macos/'>snet dev note: support MacOS</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>这两天得了空, 让 snet 支持了下 MacOS. snet 的大致原理是通过系统防火墙的流量重定向功能,将所有去往国外的流量导到 snet 监听的端口, 在程序内部 将流量传递给上游的 proxy server(ss, http), 拿到响应后再回给客户端. 实现关键是要在 snet 内部获取到流量的原目标地址, 因为重定向之后 tcp connnection 的目标地址变成了 snet 监听 的地址. Linux 上的实现，以前讲过: https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/ 是通过 SO_ORIGINAL_DST 这个 socket option 实现的. MacOS 上没有 iptables, 类似的工具是系统自带的 pfctl, 捣鼓了一下也能实现一样的功能. 用 pfctl 做流量重定向 pfctl 的文档可......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2019.06.20</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/network/">network</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/golang/">golang</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/snet/">snet</a>
           
         </span>
         
@@ -475,17 +577,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

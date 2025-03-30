@@ -7,7 +7,7 @@
 
   <!-- author & description & keywords  -->
   <meta name="author"
-        content="{{ if .Params.author }}{{ .Params.author | safeHTML }}{{ else }}{{ .Site.Author.name | safeHTML }}{{ end }}"/>
+        content="{{ if .Params.author }}{{ .Params.author | safeHTML }}{{ else }}{{ .Site.Params.Author | safeHTML }}{{ end }}"/>
 
   {{ if .Description }}
   <meta name="description" content="{{ .Description | safeHTML }}"/>

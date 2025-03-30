@@ -1,39 +1,34 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>redis on Shining Moon</title>
+    <title>Redis on Shining Moon</title>
     <link>https://blog.monsterxx03.com/tags/redis/</link>
-    <description>Recent content in redis on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Redis on Shining Moon</description>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Thu, 01 Apr 2021 14:40:30 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/redis/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 01 Apr 2021 14:40:30 +0800</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/tags/redis/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Rolling Upgrade Worker Nodes in EKS</title>
       <link>https://blog.monsterxx03.com/2021/04/01/rolling-upgrade-worker-nodes-in-eks/</link>
       <pubDate>Thu, 01 Apr 2021 14:40:30 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2021/04/01/rolling-upgrade-worker-nodes-in-eks/</guid>
-      <description>EKS control plane 的升级是比较简单的, 直接在 aws console 上点下就可以了, 但 worker node 是自己用 asg(autoscaling group) 管理的, 升级 worker node 又不想影响业务是有讲究的. 跑在 EKS 里, 且希望不被中断 traffic 的有: stateless 的 api server, queue consumer 被 redis sentinel 监控着的 redis master/slave 用于 cache 的 redis cluster 写了个内部工具, 把下面的流程全部自动化了. 这样升级 eks 版本, 需要更换 worker node 时候就轻松多了. 因为这个工具对部署情况做了很多假设和限制, 开源的价值不是很大. Stateless application stateless 的应用全部用 deployment 部署. 一般建议的流程是: 修改 asg 的 launch configuration, 指向新版本</description>
+      <description>&lt;p&gt;EKS control plane 的升级是比较简单的, 直接在 aws console 上点下就可以了, 但 worker node 是自己用 asg(autoscaling group) 管理的, 升级 worker node 又不想影响业务是有讲究的.&lt;/p&gt;&#xA;&lt;p&gt;跑在 EKS 里, 且希望不被中断 traffic 的有:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;stateless 的 api server, queue consumer&lt;/li&gt;&#xA;&lt;li&gt;被 redis sentinel 监控着的 redis master/slave&lt;/li&gt;&#xA;&lt;li&gt;用于 cache 的 redis cluster&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;写了个内部工具, 把下面的流程全部自动化了. 这样升级 eks 版本, 需要更换 worker node 时候就轻松多了. 因为这个工具对部署情况做了很多假设和限制, 开源的价值不是很大.&lt;/p&gt;&#xA;&lt;h2 id=&#34;stateless-application&#34;&gt;Stateless application&lt;/h2&gt;&#xA;&lt;p&gt;stateless 的应用全部用 deployment 部署.&lt;/p&gt;&#xA;&lt;p&gt;一般建议的流程是:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;修改 asg 的 launch configuration, 指向新版本的 ami&lt;/li&gt;&#xA;&lt;li&gt;把所有老的 worker node 用 kubectl cordon 标记成 unschedulable&lt;/li&gt;&#xA;&lt;li&gt;关闭 cluster-autoscaler&lt;/li&gt;&#xA;&lt;li&gt;修改 asg 的 desired count, 让 asg 用新 ami 启动新的 worker node&lt;/li&gt;&#xA;&lt;li&gt;用 kubectl drain 把老 worker node 上的 pod evict 掉, 让它们 schedule 到新的 worker node 上.&lt;/li&gt;&#xA;&lt;li&gt;重新开启 cluster autoscaler, 等它把老的闲置 worker node 关闭.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;这里有些问题:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Kubectl Plugin for Redis Cluster</title>
       <link>https://blog.monsterxx03.com/2020/08/04/kubectl-plugin-for-redis-cluster/</link>
       <pubDate>Tue, 04 Aug 2020 22:44:40 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2020/08/04/kubectl-plugin-for-redis-cluster/</guid>
-      <description>在 k8s 上部署 redis cluster 后, 感觉 redis-cli 管理 redis cluster 非常别扭, 写了个 kubectl 的插件 kubectl-rc 来辅助管理 redis-cluster. redis-cli 难用在哪 不直观 &amp;amp; 不统一 部分 cluster 信息是直接通过 redis protocol 获得的, 比如 cluster nodes, cluster slots, 但部分管理命令又是通过 redis-cli --cluster 执行的. cluster nodes, cluster slots 这些命令输出的又是 ip 和 node id, k8s 环境下我更关心实际的 pod name. 做 failover 的时候又不是通过 --cluster 执行的, 必须连到 slave 上通过 cluster failover 来执行 传参在 k8s 环境下特别麻烦 举个例子, 添加节点: redis-cli --cluster add-node new_host:new_port existing_host:existing_port --cluster-slave --cluster-master-id &amp;lt;arg&amp;gt; 需要知道操作 pod 的 ip, 如果要变成某个指定 pod 的 slave, 又要传 node id. 在</description>
+      <description>&lt;p&gt;在 k8s 上部署 redis cluster 后, 感觉 redis-cli 管理 redis cluster 非常别扭, 写了个 kubectl 的插件 &lt;a href=&#34;https://github.com/monsterxx03/kubectl-rc&#34;&gt;kubectl-rc&lt;/a&gt; 来辅助管理 redis-cluster.&lt;/p&gt;&#xA;&lt;h2 id=&#34;redis-cli-难用在哪&#34;&gt;redis-cli 难用在哪&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;不直观 &amp;amp; 不统一&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;部分 cluster 信息是直接通过 redis protocol 获得的, 比如 &lt;code&gt;cluster nodes&lt;/code&gt;, &lt;code&gt;cluster slots&lt;/code&gt;, 但部分管理命令又是通过 &lt;code&gt;redis-cli --cluster&lt;/code&gt; 执行的.&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;cluster nodes&lt;/code&gt;, &lt;code&gt;cluster slots&lt;/code&gt; 这些命令输出的又是 ip 和 node id, k8s 环境下我更关心实际的 pod name.&lt;/p&gt;&#xA;&lt;p&gt;做 failover 的时候又不是通过 &lt;code&gt;--cluster&lt;/code&gt; 执行的, 必须连到 slave 上通过 &lt;code&gt;cluster failover&lt;/code&gt; 来执行&lt;/p&gt;&#xA;&lt;ol start=&#34;2&#34;&gt;&#xA;&lt;li&gt;传参在 k8s 环境下特别麻烦&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;举个例子, 添加节点:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;redis-cli --cluster add-node new_host:new_port existing_host:existing_port&#xA;    --cluster-slave --cluster-master-id &amp;lt;arg&amp;gt;&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;需要知道操作 pod 的 ip, 如果要变成某个指定 pod 的 slave, 又要传 node id.&lt;/p&gt;&#xA;&lt;p&gt;在 k8s 环境下实际操作的时候流程就会变成:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>从 twemproxy 迁移到 redis cluster</title>
       <link>https://blog.monsterxx03.com/2020/07/08/%E4%BB%8E-twemproxy-%E8%BF%81%E7%A7%BB%E5%88%B0-redis-cluster/</link>
       <pubDate>Wed, 08 Jul 2020 17:08:40 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2020/07/08/%E4%BB%8E-twemproxy-%E8%BF%81%E7%A7%BB%E5%88%B0-redis-cluster/</guid>
-      <description>线上有个 redis 的缓存集群, 跑的还是 3.0, 前面套 twemproxy 做 sharding. 跑了好几年了都很稳定, 但一直有些很不爽的地方, 最近有点时间,决定 升级到redis 6, 并迁移到 redis cluster 方案. twemproxy 的工作模式 twemproxy 的原理很简单, 后面运行 N 个 redis 实例, 应用连到 twemproxy, twemproxy 解析应用发过来的 redis protocol, 根据 key 做 hash, 打散到后面 N 个 redis 实例上. 具体打散的方式可以是简单的 hash%N, 也可以用一致性 hash 算法. hash%N 的问题是, 增减节点的时候所有 cache 必然 miss. 一致性 hash, 在实现的时候会先弄一个 size 很大的 hash ring(eg: 2^32),</description>
+      <description>&lt;p&gt;线上有个 redis 的缓存集群, 跑的还是 3.0, 前面套 twemproxy 做 sharding. 跑了好几年了都很稳定, 但一直有些很不爽的地方, 最近有点时间,决定&#xA;升级到redis 6, 并迁移到 redis cluster 方案.&lt;/p&gt;&#xA;&lt;h3 id=&#34;twemproxy-的工作模式&#34;&gt;twemproxy 的工作模式&lt;/h3&gt;&#xA;&lt;p&gt;twemproxy 的原理很简单, 后面运行 N 个 redis 实例, 应用连到 twemproxy, twemproxy 解析应用发过来的 redis protocol, 根据 key 做 hash, 打散到后面 N 个 redis 实例上.&lt;/p&gt;&#xA;&lt;p&gt;具体打散的方式可以是简单的 hash%N, 也可以用一致性 hash 算法. hash%N 的问题是, 增减节点的时候所有 cache 必然 miss.&lt;/p&gt;&#xA;&lt;p&gt;一致性 hash, 在实现的时候会先弄一个 size 很大的 hash ring(eg: 2^32),这里每个节点被叫做一个虚拟节点, 把虚拟节点的数目叫做 X, 然后将 N 个 redis 实例均匀分布到这个环上, 每个 redis 把它叫做实节点吧, 分配 key&#xA;的时候 hash%X, 得到虚拟节点, 然后顺时针找下一个最近的实节点, 就找到了相应的 redis. 因为虚拟节点的数目是不变的, 增减 redis 实例的数目是改变了实节点的分布, 顺时针找下个实节点的时候还是有一定几率落在以前的&#xA;redis 实例上的, 这在一定程度上减少了 cache 的 miss. 可以看作 hash%N 的优化版本,但不解决本质问题.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

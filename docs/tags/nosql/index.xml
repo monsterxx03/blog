@@ -4,18 +4,17 @@
     <title>NoSQL on Shining Moon</title>
     <link>https://blog.monsterxx03.com/tags/nosql/</link>
     <description>Recent content in NoSQL on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 15 Dec 2017 22:24:36 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/nosql/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 15 Dec 2017 22:24:36 +0800</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/tags/nosql/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>DynamoDB</title>
       <link>https://blog.monsterxx03.com/2017/12/15/dynamodb/</link>
       <pubDate>Fri, 15 Dec 2017 22:24:36 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/12/15/dynamodb/</guid>
-      <description>DynamoDB 是 AWS 的托管 NoSQL 数据库，可以当作简单的 KV 数据库使用，也可以作为文档数据库使用. Data model 组织数据的单位是 table, 每张 table 必须设置 primary key, 可以设置可选的 sort key 来做索引. 每条数据记作一个 item, 每个 item 含有一个或多个 attribute, 其中必须包括 primary key. attribute 对应的 value 支持以下几种类型: Number, 由于 DynamoDB 的传输协议是 http + json, 为了跨语言的兼容性, number 一律会被转成 string 传输. Binary, 用来表示任意的二进制数据，会用 base64 encode 后传输. Boolean, true or false Null Document 类型包含 List 和 Map, 可以互相嵌套. List, 个数无限制, 总大小</description>
+      <description>&lt;p&gt;DynamoDB 是 AWS 的托管 NoSQL 数据库，可以当作简单的 KV 数据库使用，也可以作为文档数据库使用.&lt;/p&gt;&#xA;&lt;h2 id=&#34;data-model&#34;&gt;Data model&lt;/h2&gt;&#xA;&lt;p&gt;组织数据的单位是 table, 每张 table 必须设置 primary key, 可以设置可选的 sort key 来做索引.&lt;/p&gt;&#xA;&lt;p&gt;每条数据记作一个 item, 每个 item 含有一个或多个 attribute, 其中必须包括 primary key.&lt;/p&gt;&#xA;&lt;p&gt;attribute 对应的 value 支持以下几种类型:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Number, 由于 DynamoDB 的传输协议是 http + json, 为了跨语言的兼容性, number 一律会被转成 string 传输.&lt;/li&gt;&#xA;&lt;li&gt;Binary, 用来表示任意的二进制数据，会用 base64 encode 后传输.&lt;/li&gt;&#xA;&lt;li&gt;Boolean, true or false&lt;/li&gt;&#xA;&lt;li&gt;Null&lt;/li&gt;&#xA;&lt;li&gt;Document 类型包含 List 和 Map, 可以互相嵌套.&#xA;&lt;ul&gt;&#xA;&lt;li&gt;List, 个数无限制, 总大小不超过 400KB&lt;/li&gt;&#xA;&lt;li&gt;Map, 属性个数无限制，总大小不超过 400 KB, 嵌套层级不超过 32 级.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;Set,  一个 set 内元素数目无限制, 无序，不超过 400KB, 但必须属于同一类型, 支持 number set, binary set, string set.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;选择-primary-key&#34;&gt;选择 primary key&lt;/h2&gt;&#xA;&lt;p&gt;Table 的 primary key 支持单一的 partition key 或复合的 partition key + sort key. 不管哪种，最后的组成的primary key 在一张表中必须唯一.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

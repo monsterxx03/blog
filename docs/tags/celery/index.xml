@@ -1,30 +1,27 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>celery on Shining Moon</title>
+    <title>Celery on Shining Moon</title>
     <link>https://blog.monsterxx03.com/tags/celery/</link>
-    <description>Recent content in celery on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Celery on Shining Moon</description>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Thu, 28 Mar 2019 17:37:29 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/celery/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 28 Mar 2019 17:37:29 +0800</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/tags/celery/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Celery Time Limit 的坑</title>
       <link>https://blog.monsterxx03.com/2019/03/28/celery-time-limit-%E7%9A%84%E5%9D%91/</link>
       <pubDate>Thu, 28 Mar 2019 17:37:29 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/03/28/celery-time-limit-%E7%9A%84%E5%9D%91/</guid>
-      <description>之前用 celery 做的 task 都是一些很简单轻量级的 task, 从来没触发过 timeout, 最近加入了一些复杂很耗时的 task, 碰到一些 time limit 的坑. celery 中 time limit 有两种, soft_time_limit 和 hard_time_limit, 区别是 soft_time_limit 会在内部抛一个 Exception, task 可以 catch 自行处理. hard time limit 没法被 catch. 使用如下: from myapp import app from celery.exceptions import SoftTimeLimitExceeded @app.task def mytask(): try: do_work() except SoftTimeLimitExceeded: clean_up_in_a_hurry() 我 celery pool 用的是 gevent, 实际上在现在的实现里 gevent 做 worker pool 的时候会忽略 soft_time_limit, 只有 hard_time_limit 会被触发(通过 gevent.Timeout 实现). 坑爹的是文档里写的是错的: http://docs.celeryproject.org/en/latest/userguide/workers.html#time-limit soft_time_limit 只在 prefork pool 里支持. 我现在想让 celery 把这个 hard timeout 的情况 report 到 sentry, 看了圈代码并没法</description>
+      <description>&lt;p&gt;之前用 celery 做的 task 都是一些很简单轻量级的 task, 从来没触发过 timeout, 最近加入了一些复杂很耗时的 task, 碰到一些 time limit 的坑.&lt;/p&gt;&#xA;&lt;p&gt;celery 中 time limit 有两种, soft_time_limit 和 hard_time_limit, 区别是 soft_time_limit 会在内部抛一个 Exception, task 可以 catch 自行处理.&#xA;hard time limit 没法被 catch.&lt;/p&gt;&#xA;&lt;p&gt;使用如下:&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; myapp &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; app&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; celery.exceptions &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; SoftTimeLimitExceeded&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@app.task&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;mytask&lt;/span&gt;():&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;try&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        do_work()&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;except&lt;/span&gt; SoftTimeLimitExceeded:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        clean_up_in_a_hurry()&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&#xA;&lt;p&gt;我 celery pool 用的是 gevent, 实际上在现在的实现里 gevent 做 worker pool 的时候会忽略 soft_time_limit, 只有 hard_time_limit 会被触发(通过 gevent.Timeout 实现).&lt;/p&gt;&#xA;&lt;p&gt;坑爹的是文档里写的是错的: &lt;a href=&#34;http://docs.celeryproject.org/en/latest/userguide/workers.html#time-limit&#34;&gt;http://docs.celeryproject.org/en/latest/userguide/workers.html#time-limit&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;soft_time_limit 只在 prefork pool 里支持.&lt;/p&gt;&#xA;&lt;p&gt;我现在想让 celery 把这个 hard timeout 的情况 report 到 sentry, 看了圈代码并没法从外面 override timeout 的 callback. 只能很丑得做了个 monkey patch, 在初始化 celeryapp&#xA;的代码里:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>升级celery 到 4.2.0 碰到的坑</title>
       <link>https://blog.monsterxx03.com/2018/06/22/%E5%8D%87%E7%BA%A7celery-%E5%88%B0-4.2.0-%E7%A2%B0%E5%88%B0%E7%9A%84%E5%9D%91/</link>
       <pubDate>Fri, 22 Jun 2018 16:10:41 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/06/22/%E5%8D%87%E7%BA%A7celery-%E5%88%B0-4.2.0-%E7%A2%B0%E5%88%B0%E7%9A%84%E5%9D%91/</guid>
-      <description>在把代码往 python3 迁移的过程中需要升级一些第三方库, 升级了 gevent 后发现 celery 有问题, 于是尝试把 celery 从3.1.25 升级到 4.2.0, 中间碰到了很多问题, 记录一点. 配置的变化 CELERY_ACCEPT_CONENT 之前默认是都允许的, 4.0 开始默认值只允许 json, 因为我用的是msgpack, 所以需要修改这个配置让它接受 msgpack. CELERY_RESULT_SERIALIZER 之前默认是pickle, 现在默认也变成了json, 如果task 的返回结果是 binary 的话, json 无法处理,要么把结果 base64 编码, 要么把CELERY_RESULT_SERI</description>
+      <description>&lt;p&gt;在把代码往 python3 迁移的过程中需要升级一些第三方库, 升级了 gevent 后发现 celery 有问题, 于是尝试把 celery 从3.1.25 升级到 4.2.0, 中间碰到了很多问题, 记录一点.&lt;/p&gt;&#xA;&lt;h2 id=&#34;配置的变化&#34;&gt;配置的变化&lt;/h2&gt;&#xA;&lt;p&gt;&lt;code&gt;CELERY_ACCEPT_CONENT&lt;/code&gt; 之前默认是都允许的,  4.0 开始默认值只允许 json, 因为我用的是msgpack, 所以需要修改这个配置让它接受 msgpack.&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;CELERY_RESULT_SERIALIZER&lt;/code&gt; 之前默认是pickle, 现在默认也变成了json, 如果task 的返回结果是 binary 的话, json 无法处理,要么把结果 base64 编码, 要么把&lt;code&gt;CELERY_RESULT_SERIALIZER&lt;/code&gt; 配置成 msgpack,  pickle 明显 py2 / 3 不兼容, 没用.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

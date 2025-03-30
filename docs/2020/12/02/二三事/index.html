@@ -7,10 +7,15 @@
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
-  <meta name="description" content="天气渐凉, 无奈得拿出了秋裤. 偷懒好久没写博客了, 回顾下这阵子做了什么. 工作 年底打算把之前用的 dedicated ec2 instance 全部换掉, 几年前为了 HIPAA 合规做的, 但 AWS 的 BBA 里后来不要求 dedicated instance 了, 换成普通的, 可以省掉每月1400多刀的固定 dedicated fee, 同类型的 ec2 instance 可以再省10%左右. 为了这个, 打算把部分遗留在 vm 上的东西迁移到 k8s 里, 减少之后更换 instance 的工作量. cronjob 尝试用 argo 来调度 cronjob. 还是有不少坑的: cron workflow 到点后有一定几率会 trigger 重复的workflow, 目前还没有"/>
+  <meta name="description" content="天气渐凉, 无奈得拿出了秋裤. 偷懒好久没写博客了, 回顾下这阵子做了什么.
+工作 年底打算把之前用的 dedicated ec2 instance 全部换掉, 几年前为了 HIPAA 合规做的, 但 AWS 的 BBA 里后来不要求 dedicated instance 了, 换成普通的, 可以省掉每月1400多刀的固定 dedicated fee, 同类型的 ec2 instance 可以再省10%左右. 为了这个, 打算把部分遗留在 vm 上的东西迁移到 k8s 里, 减少之后更换 instance 的工作量.
+cronjob 尝试用 argo 来调度 cronjob.
+还是有不少坑的:
+cron workflow 到点后有一定几率会 trigger 重复的workflow, 目前还没有修复#4558, 临时在所有 cronjob 的代码里加了个保护, 在 redis 里上个锁, 没抢到锁的 cronjob 直接抛异常失败. 目前看每天还是有 7,8 次重复的 workflow 会触发. WorkflowTemplate 可以用来复用 pod 的定义, 但外部往里面传参的方式很搓, 不是所有字段都能直接覆盖, 比如activeDeadlineSeconds, resources 等, 必须用 podSpecPatch 的方式, 文档里又不说清楚, 只能自己去翻issue. exit-handler 用来在 workflow 状态改变的时候触发一个 callback, 但没法获取触发它的那个 workflow 的详细信息, 比如一个 workflow 由很多个 step 构成, 失败时我希望能从 exit-handler 里拿到是哪个step 挂了, 现在做不到. 也没法往 exit-handler 里传参(只能取一些global paramaters). 如果一个 workflow 由多个 step 构成, 当其中一个 step 挂了, 可以设置 continueOn 控制是否继续后面的step, 但如果我选择了继续, 整个 workflow 的最终状态又是 success 的, 导致在 exit-handler 里没法区分, 最好有个 partial success 的状态. 日志 应用里的日志, 之前是打到部署在 vm 上的一台 rsyslog 上. 在 k8s 环境下我用 fluent-bit 做 daemonset 来收集 pod 日志. fluent-bit 在最近的版本里支持了转发到 loki, 我就部署了 loki 来收集pod 日志, 可以方便在 grafana 里进行查看. 问题也很多:
+"/>
   
 
   
@@ -67,7 +72,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -76,12 +81,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -130,7 +131,7 @@
         </div>
       </div>
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -213,17 +214,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

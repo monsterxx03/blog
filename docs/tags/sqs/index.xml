@@ -4,26 +4,17 @@
     <title>SQS on Shining Moon</title>
     <link>https://blog.monsterxx03.com/tags/sqs/</link>
     <description>Recent content in SQS on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Wed, 23 May 2018 18:05:28 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/sqs/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 23 May 2018 18:05:28 +0800</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/tags/sqs/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Use SNS &amp; SQS to build Pub/Sub System</title>
       <link>https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub/sub-system/</link>
       <pubDate>Wed, 23 May 2018 18:05:28 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/05/23/use-sns-sqs-to-build-pub/sub-system/</guid>
-      <description>Recently, we build pub/sub system based on AWS&amp;rsquo;s SNS &amp;amp; SQS service, take some notes.
-Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&amp;rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&amp;rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
-There&amp;rsquo;re three obvious choices in my mind:
-kafka AMQP based system (rabbitmq,activemq &amp;hellip;) SNS + SQS My demands for this system are:
-Support message persistence. Support topic based message distribution. Easy to manage. The data volume won&amp;rsquo;t be very large, so performance and throughput won&amp;rsquo;t be critical concerns.
-I choose SNS + SQS, main concerns are from operation side:
-kafka need zookeeper to support cluster. rabbitmq need extra configuration for HA, and AMQP model is relatively complex for programming. So my decision is:
-application publish message to SNS topic Setup multi SQS queues to subscribe SNS topic Let different application processes to subscribe to different queues to finish its logic. SQS and SNS is very simple, not too much to say, just some notes:
-SQS queue have two types, FIFO queue and standard queue.</description>
+      <description>&lt;p&gt;Recently, we build pub/sub system based on AWS&amp;rsquo;s SNS &amp;amp; SQS service, take some notes.&lt;/p&gt;&#xA;&lt;p&gt;Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&amp;rsquo;s&#xA;really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex&#xA;pubsub logic, eg: topic based distribution. It don&amp;rsquo;t support redelivery as well, if subscribers failed to process&#xA;the message, message will be dropped.&lt;/p&gt;&#xA;&lt;p&gt;There&amp;rsquo;re three obvious choices in my mind:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;kafka&lt;/li&gt;&#xA;&lt;li&gt;AMQP based system (rabbitmq,activemq &amp;hellip;)&lt;/li&gt;&#xA;&lt;li&gt;SNS + SQS&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;My demands for this system are:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Support message persistence.&lt;/li&gt;&#xA;&lt;li&gt;Support topic based message distribution.&lt;/li&gt;&#xA;&lt;li&gt;Easy to manage.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;The data volume won&amp;rsquo;t be very large, so performance and throughput won&amp;rsquo;t be critical concerns.&lt;/p&gt;&#xA;&lt;p&gt;I choose SNS + SQS, main concerns are from operation side:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;kafka need zookeeper to support cluster.&lt;/li&gt;&#xA;&lt;li&gt;rabbitmq need extra configuration for HA, and AMQP model is relatively complex for programming.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;So my decision is:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;application publish message to SNS topic&lt;/li&gt;&#xA;&lt;li&gt;Setup multi SQS queues to subscribe SNS topic&lt;/li&gt;&#xA;&lt;li&gt;Let different application processes to subscribe to different queues to finish its logic.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;SQS and SNS is very simple, not too much to say, just some notes:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;SQS queue have two types, FIFO queue and standard queue. FIFO queue will ensure message order, and ensure exactly once delivery, tps is limited(3000/s)&#xA;standard queue is at least once delivery, message order is not ensured, tps is unlimited. In my case, I use standard queue, order is not very important.&lt;/li&gt;&#xA;&lt;li&gt;SQS message size limit is 256KB.&lt;/li&gt;&#xA;&lt;li&gt;Use &lt;a href=&#34;https://github.com/p4tin/goaws&#34;&gt;goaws&lt;/a&gt; for local development, it has problem on processing message attributes, but I just use message body. messages only store in ram,&#xA;will be cleared after restarted.&lt;/li&gt;&#xA;&lt;li&gt;If you failed to deliver message to sqs from sns, can setup topic&amp;rsquo;s &lt;code&gt;sqs failure feedback role&lt;/code&gt; to log to cloudwatch, in most case it&amp;rsquo;s caused by iam permission.&lt;/li&gt;&#xA;&lt;li&gt;Message in sqs can retain at most 14 days.&lt;/li&gt;&#xA;&lt;li&gt;Once a message is received by a client, it will be invisible to other clients in &lt;code&gt;visibility_timeout_seconds&lt;/code&gt;(default 30s). It means if your client failed to process&#xA;the message, it will be redelivered after 30s.&lt;/li&gt;&#xA;&lt;li&gt;SQS client use long polling to receive message, set &lt;code&gt;receive_wait_time_seconds&lt;/code&gt; to reduce api call to reduce fee.&lt;/li&gt;&#xA;&lt;li&gt;If your client failed to process a message due to bug, the message will be redelivered looply, set &lt;code&gt;redrive_policy&lt;/code&gt; for the queue to limit retry count, and set a dead letter&#xA;queue to store those messages. You can decide how to handle them late.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;I setup SNS and SQS via terraform, used following resources:&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

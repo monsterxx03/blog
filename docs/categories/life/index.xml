@@ -1,140 +1,111 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>life on Shining Moon</title>
+    <title>Life on Shining Moon</title>
     <link>https://blog.monsterxx03.com/categories/life/</link>
-    <description>Recent content in life on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Life on Shining Moon</description>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Wed, 02 Dec 2020 16:00:13 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/categories/life/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 02 Dec 2020 16:00:13 +0800</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/categories/life/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>二三事</title>
       <link>https://blog.monsterxx03.com/2020/12/02/%E4%BA%8C%E4%B8%89%E4%BA%8B/</link>
       <pubDate>Wed, 02 Dec 2020 16:00:13 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2020/12/02/%E4%BA%8C%E4%B8%89%E4%BA%8B/</guid>
-      <description>天气渐凉, 无奈得拿出了秋裤. 偷懒好久没写博客了, 回顾下这阵子做了什么. 工作 年底打算把之前用的 dedicated ec2 instance 全部换掉, 几年前为了 HIPAA 合规做的, 但 AWS 的 BBA 里后来不要求 dedicated instance 了, 换成普通的, 可以省掉每月1400多刀的固定 dedicated fee, 同类型的 ec2 instance 可以再省10%左右. 为了这个, 打算把部分遗留在 vm 上的东西迁移到 k8s 里, 减少之后更换 instance 的工作量. cronjob 尝试用 argo 来调度 cronjob. 还是有不少坑的: cron workflow 到点后有一定几率会 trigger 重复的workflow, 目前还没有</description>
+      <description>&lt;p&gt;天气渐凉, 无奈得拿出了秋裤. 偷懒好久没写博客了, 回顾下这阵子做了什么.&lt;/p&gt;&#xA;&lt;h2 id=&#34;工作&#34;&gt;工作&lt;/h2&gt;&#xA;&lt;p&gt;年底打算把之前用的 dedicated ec2 instance 全部换掉, 几年前为了 HIPAA 合规做的, 但 AWS 的 BBA 里后来不要求 dedicated instance 了, 换成普通的, 可以省掉每月1400多刀的固定 dedicated fee, 同类型的 ec2 instance 可以再省10%左右. 为了这个, 打算把部分遗留在 vm 上的东西迁移到 k8s 里, 减少之后更换 instance 的工作量.&lt;/p&gt;&#xA;&lt;h3 id=&#34;cronjob&#34;&gt;cronjob&lt;/h3&gt;&#xA;&lt;p&gt;尝试用 &lt;a href=&#34;https://github.com/argoproj/argo&#34;&gt;argo&lt;/a&gt; 来调度 cronjob.&lt;/p&gt;&#xA;&lt;p&gt;还是有不少坑的:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;cron workflow 到点后有一定几率会 trigger 重复的workflow, 目前还没有修复&lt;a href=&#34;https://github.com/argoproj/argo/issues/4558&#34;&gt;#4558&lt;/a&gt;, 临时在所有 cronjob 的代码里加了个保护, 在 redis 里上个锁, 没抢到锁的 cronjob 直接抛异常失败. 目前看每天还是有 7,8 次重复的 workflow 会触发.&lt;/li&gt;&#xA;&lt;li&gt;WorkflowTemplate 可以用来复用 pod 的定义, 但外部往里面传参的方式很搓, 不是所有字段都能直接覆盖, 比如activeDeadlineSeconds, resources 等, 必须用 podSpecPatch 的方式, 文档里又不说清楚, 只能自己去翻issue.&lt;/li&gt;&#xA;&lt;li&gt;exit-handler 用来在 workflow 状态改变的时候触发一个 callback, 但没法获取触发它的那个 workflow 的详细信息, 比如一个 workflow 由很多个 step 构成, 失败时我希望能从 exit-handler 里拿到是哪个step 挂了, 现在做不到. 也没法往 exit-handler 里传参(只能取一些global paramaters).&lt;/li&gt;&#xA;&lt;li&gt;如果一个 workflow 由多个 step 构成, 当其中一个 step 挂了, 可以设置 continueOn 控制是否继续后面的step, 但如果我选择了继续, 整个 workflow 的最终状态又是 success 的, 导致在 exit-handler 里没法区分, 最好有个 partial success 的状态.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;日志&#34;&gt;日志&lt;/h3&gt;&#xA;&lt;p&gt;应用里的日志, 之前是打到部署在 vm 上的一台 rsyslog 上. 在 k8s 环境下我用 fluent-bit 做 daemonset 来收集 pod 日志. fluent-bit 在最近的版本里支持了转发到 loki, 我就部署了 loki 来收集pod 日志, 可以方便在 grafana 里进行查看. 问题也很多:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>二月</title>
       <link>https://blog.monsterxx03.com/2020/02/09/%E4%BA%8C%E6%9C%88/</link>
       <pubDate>Sun, 09 Feb 2020 22:22:30 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2020/02/09/%E4%BA%8C%E6%9C%88/</guid>
-      <description>过了个短暂的春节, 怕之后高铁也停了, 早早回了上海. 算起来到今天，已经有半个月没和人当面说三句以上的话了. 莫名得还挺享受的. 最近怎么过的 一觉睡到八点多起床, 早饭炒两个蛋加一杯牛奶， 偶尔喝粥. 盒马买的米真是巨贵, 煮饭也没多好吃, 煮粥倒不错. 打开电脑, 处理点工作或看看新闻, 恩, 基本没什么好新闻, 微博上要么加油体, 要么撕逼, 都是信息垃圾, 不评论了. 新买的桌子不太行,便宜没好货哦, 打字用力点都会晃, 考虑把餐</description>
+      <description>&lt;p&gt;过了个短暂的春节, 怕之后高铁也停了, 早早回了上海.&lt;/p&gt;&#xA;&lt;p&gt;算起来到今天，已经有半个月没和人当面说三句以上的话了. 莫名得还挺享受的.&lt;/p&gt;&#xA;&lt;h2 id=&#34;最近怎么过的&#34;&gt;最近怎么过的&lt;/h2&gt;&#xA;&lt;p&gt;一觉睡到八点多起床, 早饭炒两个蛋加一杯牛奶， 偶尔喝粥. 盒马买的米真是巨贵, 煮饭也没多好吃, 煮粥倒不错.&lt;/p&gt;&#xA;&lt;p&gt;打开电脑, 处理点工作或看看新闻, 恩, 基本没什么好新闻, 微博上要么加油体, 要么撕逼, 都是信息垃圾, 不评论了.&lt;/p&gt;&#xA;&lt;p&gt;新买的桌子不太行,便宜没好货哦, 打字用力点都会晃, 考虑把餐桌拿来办公, 这张桌子吃饭吧.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>11月</title>
       <link>https://blog.monsterxx03.com/2019/11/24/11%E6%9C%88/</link>
       <pubDate>Sun, 24 Nov 2019 22:31:42 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/11/24/11%E6%9C%88/</guid>
-      <description>前两天落枕了, 起床后脖子特别疼, 久坐不动的恶果, 这周末去了附近一家盲人按摩推拿了一下, 舒坦了不少, 这还是第一次近距离接触一个盲人, 感触颇深. 给我推拿的是个大姐, 大我几岁, 刚进门的时候我还没意识到她是个盲人, 动作特别利落, 屋里也收拾得井井有条(惭愧!), 直到看到她用手机才确定是真的看不见. 一般在外面我不太喜欢和店员搭话, 比如理发师话多的话绝对不会去第二次, 这次虽然对盲人的生活有点好奇, 也没多问, 不清</description>
+      <description>&lt;p&gt;前两天落枕了, 起床后脖子特别疼, 久坐不动的恶果, 这周末去了附近一家盲人按摩推拿了一下, 舒坦了不少, 这还是第一次近距离接触一个盲人, 感触颇深.&lt;/p&gt;&#xA;&lt;p&gt;给我推拿的是个大姐, 大我几岁, 刚进门的时候我还没意识到她是个盲人, 动作特别利落, 屋里也收拾得井井有条(惭愧!), 直到看到她用手机才确定是真的看不见.&#xA;一般在外面我不太喜欢和店员搭话, 比如理发师话多的话绝对不会去第二次, 这次虽然对盲人的生活有点好奇, 也没多问, 不清楚她是先天还是后天,&#xA;是否全盲还是有光感. 追着人家问这些也不太礼貌.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>割裂感</title>
       <link>https://blog.monsterxx03.com/2019/09/26/%E5%89%B2%E8%A3%82%E6%84%9F/</link>
       <pubDate>Thu, 26 Sep 2019 16:05:05 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/09/26/%E5%89%B2%E8%A3%82%E6%84%9F/</guid>
-      <description>题文无关. 楼下阿姨 三楼住了一对老夫妻, 丈夫身体不好, 不怎么出门, 阿姨倒是很精神, 天天溜达, 偶尔会上来问我些用手机的事情. 阿姨人挺好, 就是总想着捡些小便宜, 那个年代过来的人都这样, 无可厚非. 某日, 拿着手机给我看某基金的公众号, 说是可以领红包, 意兴阑珊得帮她看了下, 大致意思是在公众号下留言, 记录自己在这个基金的投资故事, 抽取写得好的发红包&amp;hellip;我就告诉她, 这个基本是没啥可能被抽中的(我也不可</description>
+      <description>&lt;p&gt;题文无关.&lt;/p&gt;&#xA;&lt;h2 id=&#34;楼下阿姨&#34;&gt;楼下阿姨&lt;/h2&gt;&#xA;&lt;p&gt;三楼住了一对老夫妻, 丈夫身体不好, 不怎么出门, 阿姨倒是很精神, 天天溜达, 偶尔会上来问我些用手机的事情. 阿姨人挺好, 就是总想着捡些小便宜, 那个年代过来的人都这样, 无可厚非.&lt;/p&gt;&#xA;&lt;p&gt;某日, 拿着手机给我看某基金的公众号, 说是可以领红包, 意兴阑珊得帮她看了下, 大致意思是在公众号下留言, 记录自己在这个基金的投资故事,&#xA;抽取写得好的发红包&amp;hellip;我就告诉她, 这个基本是没啥可能被抽中的(我也不可能帮你编一篇小作文啊), 阿姨还是坚持要写, 说就写:&amp;ldquo;这个基金挺好的, 虽然到现在还是亏损的.&amp;rdquo;, 看着阿姨一脸真挚的样子, 您真的不是反串黑吗???&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>杂</title>
       <link>https://blog.monsterxx03.com/2019/08/16/%E6%9D%82/</link>
       <pubDate>Fri, 16 Aug 2019 15:00:02 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/08/16/%E6%9D%82/</guid>
-      <description>随记. Life &amp;lt;火焰文章-风花雪月&amp;gt; 流程过半, 这一作难度确实低, 怂如我玩的又是不死人模式, 即使是困难难度, 到后面也是切菜. 流程里学生们 seisei 得喊, 想到后面要把他们一个个干掉, 心情挺复杂得&amp;hellip; 风花雪月这个副标题, 玩着玩着也有点明白意思了, 美版竟然叫 &amp;lt;Three houses&amp;gt;, 老外神经果然傻大粗啊&amp;hellip; 西泽保彦的高千和千晓系列看完了好几本, 还剩下&amp;lt;依存&amp;gt; 和 &amp;lt;啤酒之家的冒险&amp;gt;. 昨</description>
+      <description>&lt;p&gt;随记.&lt;/p&gt;&#xA;&lt;h2 id=&#34;life&#34;&gt;Life&lt;/h2&gt;&#xA;&lt;p&gt;&lt;code&gt;&amp;lt;火焰文章-风花雪月&amp;gt;&lt;/code&gt; 流程过半, 这一作难度确实低, 怂如我玩的又是不死人模式, 即使是困难难度, 到后面也是切菜. 流程里学生们 seisei 得喊, 想到后面要把他们一个个干掉, 心情挺复杂得&amp;hellip;&#xA;风花雪月这个副标题, 玩着玩着也有点明白意思了, 美版竟然叫 &lt;code&gt;&amp;lt;Three houses&amp;gt;&lt;/code&gt;, 老外神经果然傻大粗啊&amp;hellip;&lt;/p&gt;&#xA;&lt;p&gt;西泽保彦的高千和千晓系列看完了好几本, 还剩下&lt;code&gt;&amp;lt;依存&amp;gt;&lt;/code&gt; 和 &lt;code&gt;&amp;lt;啤酒之家的冒险&amp;gt;&lt;/code&gt;. 昨晚读完了 &lt;code&gt;&amp;lt;苏格兰游戏&amp;gt;&lt;/code&gt;, 剧情高开低走, 前半段的迷题和悬念设置堪称系列之最, 我都想大吹特吹这本了, 结果最后的凶手犯罪动机特别无语, 怪不得豆瓣上评分不高. 但仍旧非常推荐, 毕竟是高千的故事嘛.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>杂谈</title>
       <link>https://blog.monsterxx03.com/2019/07/24/%E6%9D%82%E8%B0%88/</link>
       <pubDate>Wed, 24 Jul 2019 21:58:09 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/07/24/%E6%9D%82%E8%B0%88/</guid>
-      <description>回首一看, 大半年没写过杂谈系列了, 今年都没休假, 也是醉了. 随便唠叨几句. 小区门口的大爷养的花猫生了二胎, 长特别好看, 随它们妈, 颜值吊打白猫大哥, 每天下班路过看它们在马路口咬报纸也是很有意思. 犹豫了几天要不要抱只回来, 犹豫着犹豫着就都被别人领走了, 叹. 最近在看西泽保彦的书, 看完了一本&amp;lt;死了7次的男人&amp;gt;, 正在读&amp;lt;解体诸因&amp;gt;. 简直是发现了宝藏, 好久没有看到喜欢的推理小说了, 真的是</description>
+      <description>&lt;p&gt;回首一看, 大半年没写过杂谈系列了, 今年都没休假, 也是醉了. 随便唠叨几句.&lt;/p&gt;&#xA;&lt;p&gt;小区门口的大爷养的花猫生了二胎, 长特别好看, 随它们妈, 颜值吊打白猫大哥, 每天下班路过看它们在马路口咬报纸也是很有意思. 犹豫了几天要不要抱只回来, 犹豫着犹豫着就都被别人领走了, 叹.&lt;/p&gt;&#xA;&lt;p&gt;最近在看西泽保彦的书, 看完了一本&amp;lt;死了7次的男人&amp;gt;, 正在读&amp;lt;解体诸因&amp;gt;. 简直是发现了宝藏, 好久没有看到喜欢的推理小说了, 真的是看到最后会喊一声&amp;quot;牛逼&amp;quot;,&#xA;这书还是20多年前写的, 行文中的黑色幽默真是非常喜欢了. 觉着这人估计挺烦恼家庭关系的, 书里多处夹带私货.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>杂谈</title>
       <link>https://blog.monsterxx03.com/2018/11/30/%E6%9D%82%E8%B0%88/</link>
       <pubDate>Fri, 30 Nov 2018 17:39:00 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/11/30/%E6%9D%82%E8%B0%88/</guid>
-      <description>屋里有两个钟，一个快 5 分钟， 一个慢 5 分钟, 一直懒得把它们调正, 有种莫名的时间撕裂感, 好像还挺喜欢.还有一个月 2018 就过去了, 我想想最近都干嘛了. 最近看的书 读完了 &amp;lt;a philosophy of software design&amp;gt;, 书是好书, 就是好贵(花了我260&amp;hellip;). 本来想专门写一篇的,但开了个头发却发现没太多可写的. 书里提到的问题都碰到过, 解决方法和建议其实也一直在用, 没有什么银弹, 等再践行一段时间再说吧. PS: 收益最大的是讲注释的章节. 昨晚看完了</description>
+      <description>&lt;p&gt;屋里有两个钟，一个快 5 分钟，　一个慢 5 分钟,　一直懒得把它们调正, 有种莫名的时间撕裂感, 好像还挺喜欢.还有一个月 2018 就过去了,&#xA;我想想最近都干嘛了.&lt;/p&gt;&#xA;&lt;h2 id=&#34;最近看的书&#34;&gt;最近看的书&lt;/h2&gt;&#xA;&lt;p&gt;读完了 &lt;code&gt;&amp;lt;a philosophy of software design&amp;gt;&lt;/code&gt;, 书是好书, 就是好贵(花了我260&amp;hellip;). 本来想专门写一篇的,但开了个头发却发现没太多可写的. 书里提到的问题都碰到过, 解决方法和建议其实也一直在用,&#xA;没有什么银弹, 等再践行一段时间再说吧. PS: 收益最大的是讲注释的章节.&lt;/p&gt;&#xA;&lt;p&gt;昨晚看完了 &lt;code&gt;&amp;lt;夜行&amp;gt;&lt;/code&gt;. 森见登美彦的书, 改编的动画倒是看过不少, 书以前只看过 &lt;code&gt;&amp;lt;有顶天家族&amp;gt;&lt;/code&gt;. 这本风格差得挺远,　通篇五里雾中的感觉, 有点　&lt;code&gt;&amp;lt;1Q84&amp;gt;&lt;/code&gt;　的意思. &amp;ldquo;世界是一场夜&amp;rdquo;, 后半部分看到这句话的时候, 起了鸡皮疙瘩,　夜行和曙光世界里的岸田过着完全不同的生活, 契机只是鞍马火祭上的偶遇. 是不是真的存在一个和现实完全对立的世界, 跨越的分界线只是那一点点契机?那个世界的自己又过得到好还是差呢?　&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>濑户内海的风与阳</title>
       <link>https://blog.monsterxx03.com/2018/11/04/%E6%BF%91%E6%88%B7%E5%86%85%E6%B5%B7%E7%9A%84%E9%A3%8E%E4%B8%8E%E9%98%B3/</link>
       <pubDate>Sun, 04 Nov 2018 23:31:07 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/11/04/%E6%BF%91%E6%88%B7%E5%86%85%E6%B5%B7%E7%9A%84%E9%A3%8E%E4%B8%8E%E9%98%B3/</guid>
-      <description>上月休假去濑户内海溜达了一圈, 一个比想象中美太多的地方. 对濑户内海的印象, 要追溯到高中时看的一部搞笑番 &amp;lt;濑户花嫁&amp;gt;, 挺有意思的片子, 爆笑之余, 对濑户内海这个地方有了模模糊糊的印象. 去年去了青森和九州, 就想着再去个日本犄角旮旯的地吧, 四国就被提上了日程, 稍做攻略, 发现濑户内海就这里, 兴趣来了. 明年三月的时候濑户内海有艺术祭, 那会估计就被世界各地的人给挤爆了, 不凑这热闹, 还是10月去吧. 大</description>
+      <description>&lt;p&gt;上月休假去濑户内海溜达了一圈, 一个比想象中美太多的地方.&lt;/p&gt;&#xA;&lt;p&gt;对濑户内海的印象, 要追溯到高中时看的一部搞笑番 &amp;lt;濑户花嫁&amp;gt;, 挺有意思的片子, 爆笑之余, 对濑户内海这个地方有了模模糊糊的印象.&lt;/p&gt;&#xA;&lt;p&gt;去年去了青森和九州, 就想着再去个日本犄角旮旯的地吧, 四国就被提上了日程, 稍做攻略, 发现濑户内海就这里, 兴趣来了.&lt;/p&gt;&#xA;&lt;p&gt;明年三月的时候濑户内海有艺术祭, 那会估计就被世界各地的人给挤爆了, 不凑这热闹, 还是10月去吧.&lt;/p&gt;&#xA;&lt;p&gt;大致行程: 上海 -&amp;gt; 高松 -&amp;gt; 小豆岛 -&amp;gt; 丰岛 -&amp;gt; 直岛. 除了在小豆岛上呆了一晚上，其他时候都住在了高松.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>杂谈</title>
       <link>https://blog.monsterxx03.com/2018/09/01/%E6%9D%82%E8%B0%88/</link>
       <pubDate>Sat, 01 Sep 2018 12:03:42 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/09/01/%E6%9D%82%E8%B0%88/</guid>
-      <description>忙了好一阵, 两个月没写了, 工作上的事告一段落, 也该补上这笔帐了, 老规矩, 随便写写 :) 最近在做什么? 把公司的代码环境从 python 2.7 升级到 python3.6, 前后忙了 3 个月, 50w 行代码, 也是够呛, 好歹算是顺利完成了, 具体的过程6月零散写过 几篇文章, 大差不差, 后续又碰了不少坑, 但也都能解决. 下一步打算基于 python3 的一些特性对代码做些重构, 从基础库开始吧. 最近看了什么书? &amp;lt;特别的猫&amp;gt;, 特别喜欢的一本书, 不是那种猫奴一昧赞美猫咪多</description>
+      <description>&lt;p&gt;忙了好一阵, 两个月没写了, 工作上的事告一段落, 也该补上这笔帐了, 老规矩, 随便写写 :)&lt;/p&gt;&#xA;&lt;h2 id=&#34;最近在做什么&#34;&gt;最近在做什么?&lt;/h2&gt;&#xA;&lt;p&gt;把公司的代码环境从 python 2.7 升级到 python3.6, 前后忙了 3 个月, 50w 行代码, 也是够呛, 好歹算是顺利完成了, 具体的过程6月零散写过&#xA;几篇文章, 大差不差, 后续又碰了不少坑, 但也都能解决. 下一步打算基于 python3 的一些特性对代码做些重构, 从基础库开始吧.&lt;/p&gt;&#xA;&lt;h2 id=&#34;最近看了什么书&#34;&gt;最近看了什么书?&lt;/h2&gt;&#xA;&lt;p&gt;&amp;lt;特别的猫&amp;gt;, 特别喜欢的一本书, 不是那种猫奴一昧赞美猫咪多么多么可爱的文字, 作者和猫咪过了一辈子, 把它们当成自己的朋友, 家人一样对待, 迫于无奈对猫做过残酷的事情, 也尽力照顾过病痛中的猫,把它从死亡边缘拉回来过, 猫给她带来的快乐和烦恼都在这本书里. 读着读着, 会产生一种错觉, 那一个个精灵古怪的小东西就自己脚边转悠. 作者是一个懂生活的人, 太羡慕了.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>杂谈松本清张</title>
       <link>https://blog.monsterxx03.com/2018/06/10/%E6%9D%82%E8%B0%88%E6%9D%BE%E6%9C%AC%E6%B8%85%E5%BC%A0/</link>
       <pubDate>Sun, 10 Jun 2018 17:15:29 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/06/10/%E6%9D%82%E8%B0%88%E6%9D%BE%E6%9C%AC%E6%B8%85%E5%BC%A0/</guid>
-      <description>去年在 kindle 上买了套松本清张的合集, 总共有10本, 断断续续看到现在终于看完了第 9 本&amp;lt;隐花平原&amp;gt;, 随便扯一点(喂，为什么不看完最后一本! 松本清张 (1909 ~ 1992), 社会派推理开创人, 这套书里的作品各个年代都有, 最有名的&amp;lt;砂之器&amp;gt;(貌似仲间姐姐拍过剧?) 和 &amp;lt;点与线&amp;gt; 却没收录. 本格派讲究逻辑的精巧， 整个故事就像在玩密室逃脱一样, 一环扣一环, 最后谜底揭开的时候让人惊呼&amp;quot;卧槽&amp;q</description>
+      <description>&lt;p&gt;去年在 kindle 上买了套松本清张的合集, 总共有10本, 断断续续看到现在终于看完了第 9 本&amp;lt;隐花平原&amp;gt;, 随便扯一点(喂，为什么不看完最后一本!&lt;/p&gt;&#xA;&lt;p&gt;松本清张 (1909 ~ 1992), 社会派推理开创人, 这套书里的作品各个年代都有, 最有名的&amp;lt;砂之器&amp;gt;(貌似仲间姐姐拍过剧?) 和 &amp;lt;点与线&amp;gt; 却没收录.&lt;/p&gt;&#xA;&lt;p&gt;本格派讲究逻辑的精巧， 整个故事就像在玩密室逃脱一样, 一环扣一环, 最后谜底揭开的时候让人惊呼&amp;quot;卧槽&amp;quot;, 写的就很棒了, 但如果被提前剧透了, 就丧失了大半乐趣.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>旅行散记</title>
       <link>https://blog.monsterxx03.com/2017/08/13/%E6%97%85%E8%A1%8C%E6%95%A3%E8%AE%B0/</link>
       <pubDate>Sun, 13 Aug 2017 15:18:52 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/08/13/%E6%97%85%E8%A1%8C%E6%95%A3%E8%AE%B0/</guid>
-      <description>前阵子总有点心烦意乱的，生活上的，家里的，堵在一块，弄得自己都有点疲惫了，8月初的时候去日本东北逛了一圈，恰逢当地祭奠密集期，也就凑了把热闹，还挺有意思。 行程: 上海 -&amp;gt; 东京 -&amp;gt; 盛冈 -&amp;gt; 八户 -&amp;gt; 十和田湖 -&amp;gt; 青森 -&amp;gt; 弘前 -&amp;gt; 东京 -&amp;gt; 上海, 满满当当的7天, 懒得贴图，瞎记一点。 盛冈是岩手县的首府，但刚到的时候感觉真是个大乡下啊，大白天，出了车站区域，步行1公里多的时间里只碰到了2个人，一个桥下睡觉的大叔，一个遛狗的，像个</description>
+      <description>&lt;p&gt;前阵子总有点心烦意乱的，生活上的，家里的，堵在一块，弄得自己都有点疲惫了，8月初的时候去日本东北逛了一圈，恰逢当地祭奠密集期，也就凑了把热闹，还挺有意思。&lt;/p&gt;&#xA;&lt;p&gt;行程: 上海 -&amp;gt; 东京 -&amp;gt; 盛冈 -&amp;gt; 八户 -&amp;gt; 十和田湖 -&amp;gt; 青森 -&amp;gt; 弘前 -&amp;gt; 东京 -&amp;gt; 上海, 满满当当的7天, 懒得贴图，瞎记一点。&lt;/p&gt;&#xA;&lt;p&gt;盛冈是岩手县的首府，但刚到的时候感觉真是个大乡下啊，大白天，出了车站区域，步行1公里多的时间里只碰到了2个人，一个桥下睡觉的大叔，一个遛狗的，像个鬼城似的，超级不习惯。到了晚上，当地有三飒舞祭典，一下子不知从哪冒出来好多人。大家聚在一起，各种路边摊买买买，吃吃吃，热闹的不敢相信是白天那个城市。三飒舞是当地一种传统舞蹈(传说是为了封印一个什么鬼的)，一边跳一边前进，有的打太鼓，有的吹笛，有的空手，跳的专业的还挺好看的，也有很多充数的小盆友啦:). 参加的都是当地一些团体和企业，基本就当是一次大型广告巡游, 当打太鼓的方阵经过面前的时候，气势还是很震撼的。在盛冈呆了两天，从刚到的不适应一下变得相当享受那里的城市氛围, 城市里到处都是风铃和紫阳花，闲适的生活，第一次这么向往在一个城市生活。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>4月周末杂记</title>
       <link>https://blog.monsterxx03.com/2017/04/23/4%E6%9C%88%E5%91%A8%E6%9C%AB%E6%9D%82%E8%AE%B0/</link>
       <pubDate>Sun, 23 Apr 2017 16:26:04 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/04/23/4%E6%9C%88%E5%91%A8%E6%9C%AB%E6%9D%82%E8%AE%B0/</guid>
-      <description>&lt;p&gt;月初的时候搬了家, 之后的周末一直在忙些琐琐碎碎的事情，嘛，仔细一想，除了去宜家搬了个电视柜回来都不记得干了啥…&lt;/p&gt;
-&lt;p&gt;这周末心血来潮去听了两个讲座，一个人文的，一个技术的，还都碰到了点有意思的事情。&lt;/p&gt;</description>
+      <description>&lt;p&gt;月初的时候搬了家, 之后的周末一直在忙些琐琐碎碎的事情，嘛，仔细一想，除了去宜家搬了个电视柜回来都不记得干了啥…&lt;/p&gt;&#xA;&lt;p&gt;这周末心血来潮去听了两个讲座，一个人文的，一个技术的，还都碰到了点有意思的事情。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Matrix 14 years later</title>
       <link>https://blog.monsterxx03.com/2017/03/11/matrix-14-years-later/</link>
       <pubDate>Sat, 11 Mar 2017 16:21:31 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/03/11/matrix-14-years-later/</guid>
-      <description>&lt;p&gt;心血来潮, 又看了遍黑客帝国三部曲, 当年的沃卓斯基兄弟都变成沃卓斯基姐妹了, 唏嘘啊…&lt;/p&gt;
-&lt;p&gt;第一次看的时候, 好像是初中吧, 记得看第三部还是姑父的盗版碟上看的, 那天还拉了个同学和我一起看,然后请他吃了泡面+冰淇淋,结果他回家就拉肚了,抱怨了我好久,所以印象特别深刻,哈哈.&lt;/p&gt;</description>
+      <description>&lt;p&gt;心血来潮, 又看了遍黑客帝国三部曲, 当年的沃卓斯基兄弟都变成沃卓斯基姐妹了, 唏嘘啊…&lt;/p&gt;&#xA;&lt;p&gt;第一次看的时候, 好像是初中吧, 记得看第三部还是姑父的盗版碟上看的, 那天还拉了个同学和我一起看,然后请他吃了泡面+冰淇淋,结果他回家就拉肚了,抱怨了我好久,所以印象特别深刻,哈哈.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>魔法使</title>
       <link>https://blog.monsterxx03.com/2016/08/06/witch-night/</link>
       <pubDate>Sat, 06 Aug 2016 16:16:23 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2016/08/06/witch-night/</guid>
       <description>&lt;p&gt;最近心血来潮把&amp;lt;魔法使之夜&amp;gt;的游戏通关了, 都已经是5年?还是6年前发售的了, 因为当年汉化迟迟不发布, 就一直搁置了.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

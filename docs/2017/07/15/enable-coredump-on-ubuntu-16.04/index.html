@@ -18,7 +18,8 @@ On ubuntu 16.04 kernel.core_pattern default value is |/usr/share/apport/apport %
 If your default disk partition don’t have enough space to hold dump file, you can change kernel.core_pattern to another location, eg: /mnt/core/%e-%t.%P. If redis-server crashes, the dump file will be something like /mnt/core/redis-server-1500000000.1452. Also ensure crash process’s running user have write privilege on target location.
 systemd-coredump You can install systemd-coredump to control dump file deeply, like: size, compression….
 Its config file is /etc/systemd/coredump.conf.
-After install, it will change kernel.core_pattern to |/lib/systemd/systemd-coredump %P %u %g %s %t 9223372036854775808 %e."/>
+After install, it will change kernel.core_pattern to |/lib/systemd/systemd-coredump %P %u %g %s %t 9223372036854775808 %e.
+"/>
   
 
   
@@ -75,7 +76,7 @@ After install, it will change kernel.core_pattern to |/lib/systemd/systemd-cored
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -84,12 +85,8 @@ After install, it will change kernel.core_pattern to |/lib/systemd/systemd-cored
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -142,7 +139,7 @@ After install, it will change kernel.core_pattern to |/lib/systemd/systemd-cored
         </div>
       </div>
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -225,17 +222,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

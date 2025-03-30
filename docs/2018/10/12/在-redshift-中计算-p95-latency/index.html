@@ -7,10 +7,17 @@
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
-  <meta name="description" content="p95 latency 的定义: 把一段时间的 latency 按照从小到大排序, 砍掉最高的 %5, 剩下最大的值就是 p95 latency. p99, p90 同理. p95 latency 表示该时间段内 95% 的 reqeust 都比这个值快. 一般我直接看 CloudWatch, 和 datadog 算好的 p95 值. 这次看看怎么从 access log 里直接计算 p95 latency. 假设在 redshift 中有一张表存储了应用的 access log, 结构如下: CREATE TABLE access_log ( url string, time string, resp_time real ); url time resp_time /test1 2018-10-11T00:10:00.418480Z 0.123 /test2 2018-10-11T00:12:00.512340Z 0.321 要算 p95 很简单, 把 log 按分钟数分组, 用 percentile_cont 在组内按 resp_time 排序计算 就能得到: select date_trunc(&#39;minute&#39;, time::timestamp) as ts, percentile_cont(0.95) within group(order by resp_time) as p95 from access_log group by 1 order by 1; 得到: ts | p95 ---------------------&#43;------------------- 2018-10-11 00:00:00 | 0.71904999999995 2018-10-11 00:01:00"/>
+  <meta name="description" content="p95 latency 的定义: 把一段时间的 latency 按照从小到大排序, 砍掉最高的 %5, 剩下最大的值就是 p95 latency. p99, p90 同理.
+p95 latency 表示该时间段内 95% 的 reqeust 都比这个值快.
+一般我直接看 CloudWatch, 和 datadog 算好的 p95 值. 这次看看怎么从 access log 里直接计算 p95 latency.
+假设在 redshift 中有一张表存储了应用的 access log, 结构如下:
+CREATE TABLE access_log ( url string, time string, resp_time real ); url time resp_time /test1 2018-10-11T00:10:00.418480Z 0.123 /test2 2018-10-11T00:12:00.512340Z 0.321 要算 p95 很简单, 把 log 按分钟数分组, 用 percentile_cont 在组内按 resp_time 排序计算 就能得到:
+select date_trunc(&#39;minute&#39;, time::timestamp) as ts, percentile_cont(0.95) within group(order by resp_time) as p95 from access_log group by 1 order by 1; 得到:
+ts | p95 ---------------------&#43;------------------- 2018-10-11 00:00:00 | 0.71904999999995 2018-10-11 00:01:00 | 0.555550000000034 2018-10-11 00:02:00 | 0.478999999999939 2018-10-11 00:03:00 | 0.507250000000081 2018-10-11 00:04:00 | 0.456000000000025 2018-10-11 00:05:00 | 0.458999999999949 2018-10-11 00:06:00 | 0.581000000000054 2018-10-11 00:07:00 | 0.585099999999937 2018-10-11 00:08:00 | 0.527999999999908 2018-10-11 00:09:00 | 0.570999999999936 2018-10-11 00:10:00 | 0.587950000000069 2018-10-11 00:11:00 | 0.648900000000077 2018-10-11 00:12:00 | 0.570000000000024 2018-10-11 00:13:00 | 0.592649999999954 2018-10-11 00:14:00 | 0.584149999999998 2018-10-11 00:15:00 | 3.00854999999952 2018-10-11 00:16:00 | 0.832999999999871 2018-10-11 00:17:00 | 1.07154999999991 2018-10-11 00:18:00 | 0.553600000000092 2018-10-11 00:19:00 | 0.605799999999997 2018-10-11 00:20:00 | 0.832000000000137 ... PERCENTILE_CONT 是逆分布函数, 给定一个百分比, 在一个连续分布模型上计算该百分比处的数值, 如果在该点处没有数据, 会根据最接近的前后值进行插值计算出实际值.
+"/>
   
 
   
@@ -67,7 +74,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -76,12 +83,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -105,25 +108,25 @@
 );
 </code></pre>
 <table>
-<thead>
-<tr>
-<th>url</th>
-<th>time</th>
-<th>resp_time</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>/test1</td>
-<td>2018-10-11T00:10:00.418480Z</td>
-<td>0.123</td>
-</tr>
-<tr>
-<td>/test2</td>
-<td>2018-10-11T00:12:00.512340Z</td>
-<td>0.321</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>url</th>
+          <th>time</th>
+          <th>resp_time</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>/test1</td>
+          <td>2018-10-11T00:10:00.418480Z</td>
+          <td>0.123</td>
+      </tr>
+      <tr>
+          <td>/test2</td>
+          <td>2018-10-11T00:12:00.512340Z</td>
+          <td>0.321</td>
+      </tr>
+  </tbody>
 </table>
 <p>要算 p95 很简单, 把 log 按分钟数分组, 用 <code>percentile_cont</code> 在组内按 <code>resp_time</code> 排序计算 就能得到:</p>
 <pre><code>select date_trunc('minute', time::timestamp) as ts,
@@ -181,7 +184,7 @@ order by 1;
         </div>
       </div>
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -264,17 +267,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

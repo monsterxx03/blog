@@ -7,10 +7,14 @@
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
-  <meta name="description" content="网上经常有人诟病 AWS 的计费模式复杂, 喜欢国内那种打包式的售卖方式, 这个可能受限于每个公司的财务流程, 预算制定方式, 合不合国情,本文不讨论. 仅从开发者的角度介绍下 AWS 部分常用 service 的计费方式. PS: 那些为了蹭一年 free plan 然后抱怨什么偷跑流量, 偷偷扣费的大哥就省省吧, AWS 根本不是给个人用的, 老老实实用 lightsail 得了. EC2 EC2 的价格是最复杂的, 一台 EC2 instance 的价格组成: instance fee, 实际支付的是 CPU&#43;RAM 的费用 EBS fee, server 的根分区都是 EBS volume, 按 EBS 计费(31GB 的 volume 使"/>
+  <meta name="description" content="网上经常有人诟病 AWS 的计费模式复杂, 喜欢国内那种打包式的售卖方式, 这个可能受限于每个公司的财务流程, 预算制定方式, 合不合国情,本文不讨论. 仅从开发者的角度介绍下 AWS 部分常用 service 的计费方式.
+PS: 那些为了蹭一年 free plan 然后抱怨什么偷跑流量, 偷偷扣费的大哥就省省吧, AWS 根本不是给个人用的, 老老实实用 lightsail 得了.
+EC2 EC2 的价格是最复杂的, 一台 EC2 instance 的价格组成:
+instance fee, 实际支付的是 CPU&#43;RAM 的费用 EBS fee, server 的根分区都是 EBS volume, 按 EBS 计费(31GB 的 volume 使用 1 小时, 和 1GB 的volume 使用 744 小时价格相同). data transfer fee, 这部分组成比较复杂，简单讲, 入流量免费, 出流量按 GiB 计费, 如果出流量是到 AWS 其他 region, 价格比一般公网便宜, 在内网传输流量, 同一个 available zone 是免费的, 跨 az 收费. EIP fee, 每台 instance 挂一个 EIP 是免费的(eip 使用状态不收费, 闲置收费), 超过一个 eip, 每个按小时再收费. instance fee 又分 on-demand/resersed/spot instance.
+"/>
   
 
   
@@ -67,7 +71,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -76,12 +80,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -188,7 +188,7 @@ on-demand 当然比 provisioned capacity 单位价格贵不少, 但它对突发�
         </div>
       </div>
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -271,17 +271,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

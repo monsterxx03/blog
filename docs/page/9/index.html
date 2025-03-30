@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.111.3">
+	<meta name="generator" content="Hugo 0.145.0">
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
 
@@ -68,7 +68,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -77,12 +77,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -91,6 +87,41 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2017/05/04/designing-data-intensive-application-reading-notes-part-1/'>Designing data intensive application, reading notes, Part 1</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p><p>Notes when reading chapter 2 “Data models and query languages”, chapter 3 “Storage and retrieval”</p>......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2017.05.04</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/book/">book</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/database/">Database</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -124,14 +155,39 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.
-You will come to:
-How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what’s the DHCP option set?), navigate around AWS console is okay, but not convenient. Who did what to which resource at when? AWS have a service called Config, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do. Ideally, we should manage AWS resources like code, all changes kept in VCS, so called Infrastructure as Code.
-I’ve tried three ways to do it:
-ansible CloudFormation terraform In this article, I&rsquo;ll compare them, however, the conclusion is to use terraform 🙂
-Ansible Provision tools, like ansible/chef/puppet, all can be used to create aws resources, but they have some common problems:
-Hard to track changes after bootstrap. No confident what it will do to existing resources. For example, I define a security group in ansibble:
-ec2_group: name: &quot;web&quot; description: &quot;security group in web&quot; vpc_id: &quot;vpc-xxx&quot; region: &quot;us-east-1&quot; rules: - proto: tcp from_port: 80 to_port: 80 cidr_ip: 0.......</p>
+      <p><p>Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.</p>
+<p>You will come to:</p>
+<ul>
+<li>How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what’s the DHCP option set?), navigate around AWS console is okay, but not convenient.</li>
+<li>Who did what to which resource at when? AWS have a service called <code>Config</code>, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do.</li>
+</ul>
+<p>Ideally, we should manage AWS resources like code, all changes kept in VCS, so called <code>Infrastructure as Code</code>.</p>
+<p>I’ve tried three ways to do it:</p>
+<ul>
+<li>ansible</li>
+<li>CloudFormation</li>
+<li>terraform</li>
+</ul>
+<p>In this article, I&rsquo;ll compare them, however, the conclusion is to use terraform 🙂</p>
+<h2 id="ansible">Ansible</h2>
+<p>Provision tools, like ansible/chef/puppet, all can be used to create aws resources, but they have some common problems:</p>
+<ul>
+<li>Hard to track changes after bootstrap.</li>
+<li>No confident what it will do to existing resources.</li>
+</ul>
+<p>For example, I define a security group in ansibble:</p>
+<pre><code>ec2_group:
+  name: &quot;web&quot;
+  description: &quot;security group in web&quot;
+  vpc_id: &quot;vpc-xxx&quot;
+  region: &quot;us-east-1&quot;
+  rules:
+    - proto: tcp
+      from_port: 80
+      to_port: 80
+      cidr_ip: 0.0.0.0/0
+</code></pre>
+<p>It will create a security group named “web” in vpc-xxx. At first glance, it’s convenient and straightforward.</p>......</p>
     </div>
   </div>
   
@@ -410,37 +466,6 @@ ec2_group: name: &quot;web&quot; description: &quot;security group in web&quot; 
   </div>
 </div>
 
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2016/08/06/witch-night/'>魔法使</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>最近心血来潮把&lt;魔法使之夜&gt;的游戏通关了, 都已经是5年?还是6年前发售的了, 因为当年汉化迟迟不发布, 就一直搁置了.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2016.08.06</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/type-moon/">type-moon</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
 
 <div class="pagination">
   
@@ -517,17 +542,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

@@ -7,10 +7,14 @@
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
-  <meta name="description" content="线上有个 redis 的缓存集群, 跑的还是 3.0, 前面套 twemproxy 做 sharding. 跑了好几年了都很稳定, 但一直有些很不爽的地方, 最近有点时间,决定 升级到redis 6, 并迁移到 redis cluster 方案. twemproxy 的工作模式 twemproxy 的原理很简单, 后面运行 N 个 redis 实例, 应用连到 twemproxy, twemproxy 解析应用发过来的 redis protocol, 根据 key 做 hash, 打散到后面 N 个 redis 实例上. 具体打散的方式可以是简单的 hash%N, 也可以用一致性 hash 算法. hash%N 的问题是, 增减节点的时候所有 cache 必然 miss. 一致性 hash, 在实现的时候会先弄一个 size 很大的 hash ring(eg: 2^32),"/>
+  <meta name="description" content="线上有个 redis 的缓存集群, 跑的还是 3.0, 前面套 twemproxy 做 sharding. 跑了好几年了都很稳定, 但一直有些很不爽的地方, 最近有点时间,决定 升级到redis 6, 并迁移到 redis cluster 方案.
+twemproxy 的工作模式 twemproxy 的原理很简单, 后面运行 N 个 redis 实例, 应用连到 twemproxy, twemproxy 解析应用发过来的 redis protocol, 根据 key 做 hash, 打散到后面 N 个 redis 实例上.
+具体打散的方式可以是简单的 hash%N, 也可以用一致性 hash 算法. hash%N 的问题是, 增减节点的时候所有 cache 必然 miss.
+一致性 hash, 在实现的时候会先弄一个 size 很大的 hash ring(eg: 2^32),这里每个节点被叫做一个虚拟节点, 把虚拟节点的数目叫做 X, 然后将 N 个 redis 实例均匀分布到这个环上, 每个 redis 把它叫做实节点吧, 分配 key 的时候 hash%X, 得到虚拟节点, 然后顺时针找下一个最近的实节点, 就找到了相应的 redis. 因为虚拟节点的数目是不变的, 增减 redis 实例的数目是改变了实节点的分布, 顺时针找下个实节点的时候还是有一定几率落在以前的 redis 实例上的, 这在一定程度上减少了 cache 的 miss. 可以看作 hash%N 的优化版本,但不解决本质问题.
+"/>
   
 
   
@@ -67,7 +71,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -76,12 +80,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -216,7 +216,7 @@ redis-cluster-cache-headless.default.svc.cluster.local.	5 IN A 10.0.41.14
         </div>
       </div>
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -299,17 +299,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

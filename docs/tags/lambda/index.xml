@@ -1,36 +1,27 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>lambda on Shining Moon</title>
+    <title>Lambda on Shining Moon</title>
     <link>https://blog.monsterxx03.com/tags/lambda/</link>
-    <description>Recent content in lambda on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Lambda on Shining Moon</description>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 23 Mar 2018 17:40:54 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/lambda/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 23 Mar 2018 17:40:54 +0800</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/tags/lambda/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>AWS lambda 的一些应用场景</title>
       <link>https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</link>
       <pubDate>Fri, 23 Mar 2018 17:40:54 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</guid>
-      <description>这几年吹 serverless 的比较多, 在公司内部也用 lambda , 记录一下, 这东西挺有用, 但远不到万能, 场景比较有限. lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平台, 我们就只在 aws lambda 上了. 我基本上就把 lambda 当成 trigger 和 web hook 用. 和 auto scaling group 一起用 线上所有分组的机器都是用 auto scaling group 管理的, 只不过 stateless 的 server 开了自动伸缩, 带状态的 (ElasticSearch cluster, redis cache cluster) 只用来维护固定 size. 在往一个 group 里加 server 的时候, 要做的事情挺多的, 给新 server 添加组内编号 tag, 添加内网域名, provision, 部署最新代码. 这些事都用</description>
+      <description>&lt;p&gt;这几年吹 serverless 的比较多,  在公司内部也用 lambda , 记录一下, 这东西挺有用, 但远不到万能, 场景比较有限.&lt;/p&gt;&#xA;&lt;p&gt;lambda 的代码的部署用的 &lt;a href=&#34;https://serverless.com&#34;&gt;serverless&lt;/a&gt; 框架, 本身支持多种 cloud 平台, 我们就只在 aws lambda 上了.&lt;/p&gt;&#xA;&lt;p&gt;我基本上就把 lambda 当成 trigger 和 web hook 用.&lt;/p&gt;&#xA;&lt;h2 id=&#34;和--auto-scaling-group-一起用&#34;&gt;和  auto scaling group 一起用&lt;/h2&gt;&#xA;&lt;p&gt;线上所有分组的机器都是用 auto scaling group 管理的, 只不过 stateless 的 server 开了自动伸缩, 带状态的 (ElasticSearch cluster, redis cache cluster) 只用来维护固定 size.&lt;/p&gt;&#xA;&lt;p&gt;在往一个 group 里加 server 的时候, 要做的事情挺多的, 给新 server 添加组内编号 tag, 添加内网域名, provision, 部署最新代码.&lt;/p&gt;&#xA;&lt;p&gt;这些事都用 jenkins 来做, 但怎么触发 jenkins job 呢?&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Access sensitive variables on AWS lambda</title>
       <link>https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/</link>
       <pubDate>Wed, 28 Feb 2018 21:45:23 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/02/28/access-sensitive-variables-on-aws-lambda/</guid>
-      <description>AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&amp;hellip;
-Usually, we inject secrets as environment variables, but they&amp;rsquo;re still visable on lambda console. I don&amp;rsquo;t use it in aws lambda.
-The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
-Code example:
-client = boto3.client(&#39;ssm&#39;) resp = client.get_parameter( Name=&#39;/redshift/admin/password&#39;, WithDecryption=True ) resp: { &amp;quot;Parameter&amp;quot;: { &amp;quot;Name&amp;quot;: &amp;quot;/redshift/admin/password&amp;quot;, &amp;quot;Type&amp;quot;: &amp;quot;SecureString&amp;quot;, &amp;quot;Value&amp;quot;: &amp;quot;password value&amp;quot;, &amp;quot;Version&amp;quot;: 1 } } Things you need to do to make it work:
-Create a new KMS key Use new created KMS key to encrypt your data in parameter store. Set a execution role for your lambda function. In the KMS key&amp;rsquo;s setting page, add the lambda execution role to the list which can read this KMS key. Then your lambda code can access encrypted data at runtime, and you needn&amp;rsquo;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.
-BTW, parameter store support hierarchy(at most 15 levels), splitted by /. You can retrive data under same level in one call, deltails can be found in doc, eg: http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path</description>
+      <description>&lt;p&gt;AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&amp;hellip;&lt;/p&gt;&#xA;&lt;p&gt;Usually, we inject secrets as environment variables, but they&amp;rsquo;re still visable on lambda console. I don&amp;rsquo;t use it in aws lambda.&lt;/p&gt;&#xA;&lt;p&gt;The better way is use &lt;a href=&#34;https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html&#34;&gt;aws parameter store&lt;/a&gt; as configuration center. It can work with KMS to encrypt your data.&lt;/p&gt;&#xA;&lt;p&gt;Code example:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;client = boto3.client(&#39;ssm&#39;)&#xA;resp = client.get_parameter(&#xA;    Name=&#39;/redshift/admin/password&#39;,&#xA;    WithDecryption=True&#xA;)&#xA;resp:&#xA;&#xA;    {&#xA;        &amp;quot;Parameter&amp;quot;: {&#xA;            &amp;quot;Name&amp;quot;: &amp;quot;/redshift/admin/password&amp;quot;,&#xA;            &amp;quot;Type&amp;quot;: &amp;quot;SecureString&amp;quot;,&#xA;            &amp;quot;Value&amp;quot;: &amp;quot;password value&amp;quot;,&#xA;            &amp;quot;Version&amp;quot;: 1&#xA;        }&#xA;    }&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;Things you need to do to make it work:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Create a new KMS key&lt;/li&gt;&#xA;&lt;li&gt;Use new created KMS key to encrypt your data in parameter store.&lt;/li&gt;&#xA;&lt;li&gt;Set a execution role for your lambda function.&lt;/li&gt;&#xA;&lt;li&gt;In the KMS key&amp;rsquo;s setting page, add the lambda execution role to the list which can read this KMS key.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Then your lambda code can access encrypted data at runtime, and you needn&amp;rsquo;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.&lt;/p&gt;&#xA;&lt;p&gt;BTW, parameter store support hierarchy(at most 15 levels), splitted by &lt;code&gt;/&lt;/code&gt;. You can retrive data under same level in one call, deltails can be found in doc, eg: &lt;a href=&#34;http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path&#34;&gt;http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path&lt;/a&gt;&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

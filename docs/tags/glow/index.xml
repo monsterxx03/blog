@@ -1,41 +1,34 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>glow on Shining Moon</title>
+    <title>Glow on Shining Moon</title>
     <link>https://blog.monsterxx03.com/tags/glow/</link>
-    <description>Recent content in glow on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Glow on Shining Moon</description>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 23 Feb 2018 23:25:13 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/glow/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 23 Feb 2018 23:25:13 +0800</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/tags/glow/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Glow Infra Evolution</title>
       <link>https://blog.monsterxx03.com/2018/02/23/glow-infra-evolution/</link>
       <pubDate>Fri, 23 Feb 2018 23:25:13 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/02/23/glow-infra-evolution/</guid>
-      <description>Glow data infrastructure 的演化 Glow 一向是一个 data driven 做决策的公司，稳定高效的平台是必不可少的支撑, 本文总结几年里公司 data infrastructure 的演进过程. 结合业务特点做技术选型和实现时候的几个原则: real time 分析的需求不高，时间 delta 控制在1 小时以内可接受 . 支持快速的交互式查询. 底层平台尽量选择 AWS 托管服务, 减少维护成本. 遇到故障, 数据可以 delay 但不能丢. 可回溯历史数据. 成本可控. 用到的 AWS 服务: 数据存储和查询: S3, Redshift (spectrum), Athena ETL: DMS, EMR, Kinesis, Firehose, Lambda 开源软件: td-agent, maxwell 数据来源: 线上</description>
+      <description>&lt;h1 id=&#34;glow-data-infrastructure-的演化&#34;&gt;Glow data infrastructure 的演化&lt;/h1&gt;&#xA;&lt;p&gt;Glow 一向是一个 data driven 做决策的公司，稳定高效的平台是必不可少的支撑, 本文总结几年里公司 data infrastructure 的演进过程.&lt;/p&gt;&#xA;&lt;p&gt;结合业务特点做技术选型和实现时候的几个原则:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;real time 分析的需求不高，时间 delta 控制在1 小时以内可接受 .&lt;/li&gt;&#xA;&lt;li&gt;支持快速的交互式查询.&lt;/li&gt;&#xA;&lt;li&gt;底层平台尽量选择 AWS 托管服务, 减少维护成本.&lt;/li&gt;&#xA;&lt;li&gt;遇到故障, 数据可以 delay 但不能丢.&lt;/li&gt;&#xA;&lt;li&gt;可回溯历史数据.&lt;/li&gt;&#xA;&lt;li&gt;成本可控.&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;用到的 AWS 服务:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;数据存储和查询:  S3, Redshift (spectrum), Athena&lt;/li&gt;&#xA;&lt;li&gt;ETL: DMS, EMR, Kinesis, Firehose, Lambda&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;开源软件: td-agent, maxwell&lt;/p&gt;&#xA;&lt;p&gt;数据来源:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;线上业务数据库&lt;/li&gt;&#xA;&lt;li&gt;用户活动产生的 metrics log&lt;/li&gt;&#xA;&lt;li&gt;从各种第三方服务 api 拉下来的数据 (email之类)&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h2 id=&#34;最早期&#34;&gt;最早期&lt;/h2&gt;&#xA;&lt;p&gt;刚开始的时候业务单纯，数据量也少, 所有数据都用 MySQL 存储，搭了台 slave, 分析查询都在 slave 上进行.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Python Web 应用性能调优</title>
       <link>https://blog.monsterxx03.com/2017/07/01/python-web-%E5%BA%94%E7%94%A8%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</link>
       <pubDate>Sat, 01 Jul 2017 23:38:24 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/07/01/python-web-%E5%BA%94%E7%94%A8%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</guid>
-      <description>Python web 应用性能调优 为了快速上线，早期很多代码基本是怎么方便怎么来，这样就留下了很多隐患，性能也不是很理想，python 因为 GIL 的原因，在性能上有天然劣势，即使用了 gevent/eventlet 这种协程方案，也很容易因为耗时的 CPU 操作阻塞住整个进程。前阵子对基础代码做了些重构，效果显著，记录一些。 设定目标: 性能提高了，最直接的效果当然是能用更少的机器处理相同流量，目标是关闭 20% 的 stateless webserver. 尽量在框架代码上做改动，不动业务逻辑代码。 低风险 (历</description>
+      <description>&lt;h1 id=&#34;python-web-应用性能调优&#34;&gt;Python web 应用性能调优&lt;/h1&gt;&#xA;&lt;p&gt;为了快速上线，早期很多代码基本是怎么方便怎么来，这样就留下了很多隐患，性能也不是很理想，python 因为 GIL 的原因，在性能上有天然劣势，即使用了 gevent/eventlet 这种协程方案，也很容易因为耗时的 CPU 操作阻塞住整个进程。前阵子对基础代码做了些重构，效果显著，记录一些。&lt;/p&gt;&#xA;&lt;p&gt;设定目标:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;性能提高了，最直接的效果当然是能用更少的机器处理相同流量，目标是关闭 20% 的 stateless webserver.&lt;/li&gt;&#xA;&lt;li&gt;尽量在框架代码上做改动，不动业务逻辑代码。&lt;/li&gt;&#xA;&lt;li&gt;低风险 (历史经验告诉我们，动态一时爽，重构火葬场&amp;hellip;.)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;治标&#34;&gt;治标&lt;/h2&gt;&#xA;&lt;p&gt;常见场景是大家开开心心做完一个 feature， sandbox 测试也没啥问题，上线了，结果 server load 飙升，各种 timeout 都来了，要么 rollback 代码，要么加机器。问题代码在哪?&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Redshift as data warehouse</title>
       <link>https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/</link>
       <pubDate>Sat, 16 Jul 2016 16:11:39 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/</guid>
-      <description>&lt;p&gt;Glow 的 server infrastructure 全部搭建在 AWS 上，一般要选择一些基础服务的时候，总是先看 AWS, 只要功能和成本符合要求，不会特意选择开源方案。&lt;/p&gt;
-&lt;p&gt;数据仓库我们选择了 AWS 的 Redshift.&lt;/p&gt;
-&lt;p&gt;在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Glow 的 server infrastructure 全部搭建在 AWS 上，一般要选择一些基础服务的时候，总是先看 AWS, 只要功能和成本符合要求，不会特意选择开源方案。&lt;/p&gt;&#xA;&lt;p&gt;数据仓库我们选择了 AWS 的 Redshift.&lt;/p&gt;&#xA;&lt;p&gt;在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

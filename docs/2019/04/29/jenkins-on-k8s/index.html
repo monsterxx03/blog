@@ -7,10 +7,16 @@
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
-  <meta name="description" content="最近在把 jenkins 迁移到 k8s, 具体怎么 setup 的不赘述了(helm chart, jenkins home 目录挂pvc, jenkins kubernetes-plugin). jenkins 跑 k8s 好处是可以方便得做分布式 build, 每次 trigger 一个 job 的时候自动起一个 pod 作为 jenkins slave agent, 结束了自动删掉. 在 aws 上结合 cluster-autoscaler 可以极大得扩展 ci 的并行能力, 降低成本. 记录一点过程中的坑. 装上 kubernetes-plugin 后,要想让 jenkins 的 job 在 pod 中跑, 必须用 pipeline 的方式编写 job 定义. script 和 declarative 两种方式都支持启动 pod. 如果用 shell 的方式编写, 不会跑在 pod 里，会直接在 master 的 workspace 里 build. declarative 方式的例子: pipeline { agent { kubernetes { label &#39;test-deploy&#39; yamlFile &#39;test-deploy.yaml&#39;"/>
+  <meta name="description" content="最近在把 jenkins 迁移到 k8s, 具体怎么 setup 的不赘述了(helm chart, jenkins home 目录挂pvc, jenkins kubernetes-plugin).
+jenkins 跑 k8s 好处是可以方便得做分布式 build, 每次 trigger 一个 job 的时候自动起一个 pod 作为 jenkins slave agent, 结束了自动删掉. 在 aws 上结合 cluster-autoscaler 可以极大得扩展 ci 的并行能力, 降低成本.
+记录一点过程中的坑.
+装上 kubernetes-plugin 后,要想让 jenkins 的 job 在 pod 中跑, 必须用 pipeline 的方式编写 job 定义. script 和 declarative 两种方式都支持启动 pod. 如果用 shell 的方式编写, 不会跑在 pod 里，会直接在　master 的　workspace 里 build.
+declarative 方式的例子:
+pipeline { agent { kubernetes { label &#39;test-deploy&#39; yamlFile &#39;test-deploy.yaml&#39; } } stages { stage(&#39;stage test&#39;) { steps(&#39;tests&#39;) { container(&#39;test&#39;) { sh &#39;ls&#39; } } } } } ls 命令就会在 test container 里执行, 如果不用 container() step 的话，默认会在 pod 的 default container 里执行.
+"/>
   
 
   
@@ -67,7 +73,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -76,12 +82,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -206,7 +208,7 @@ most-pods, least-waste)  来决定怎么起新 node 放置 pod.</p>
         </div>
       </div>
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -289,17 +291,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

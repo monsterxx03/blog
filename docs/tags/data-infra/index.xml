@@ -1,67 +1,48 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>data-infra on Shining Moon</title>
+    <title>Data-Infra on Shining Moon</title>
     <link>https://blog.monsterxx03.com/tags/data-infra/</link>
-    <description>Recent content in data-infra on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Data-Infra on Shining Moon</description>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 12 Oct 2018 14:49:13 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/data-infra/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 12 Oct 2018 14:49:13 +0800</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/tags/data-infra/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>在 redshift 中计算 p95 latency</title>
       <link>https://blog.monsterxx03.com/2018/10/12/%E5%9C%A8-redshift-%E4%B8%AD%E8%AE%A1%E7%AE%97-p95-latency/</link>
       <pubDate>Fri, 12 Oct 2018 14:49:13 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/10/12/%E5%9C%A8-redshift-%E4%B8%AD%E8%AE%A1%E7%AE%97-p95-latency/</guid>
-      <description>p95 latency 的定义: 把一段时间的 latency 按照从小到大排序, 砍掉最高的 %5, 剩下最大的值就是 p95 latency. p99, p90 同理. p95 latency 表示该时间段内 95% 的 reqeust 都比这个值快. 一般我直接看 CloudWatch, 和 datadog 算好的 p95 值. 这次看看怎么从 access log 里直接计算 p95 latency. 假设在 redshift 中有一张表存储了应用的 access log, 结构如下: CREATE TABLE access_log ( url string, time string, resp_time real ); url time resp_time /test1 2018-10-11T00:10:00.418480Z 0.123 /test2 2018-10-11T00:12:00.512340Z 0.321 要算 p95 很简单, 把 log 按分钟数分组, 用 percentile_cont 在组内按 resp_time 排序计算 就能得到: select date_trunc(&#39;minute&#39;, time::timestamp) as ts, percentile_cont(0.95) within group(order by resp_time) as p95 from access_log group by 1 order by 1; 得到: ts | p95 ---------------------+------------------- 2018-10-11 00:00:00 | 0.71904999999995 2018-10-11 00:01:00</description>
+      <description>&lt;p&gt;p95 latency 的定义: 把一段时间的 latency 按照从小到大排序, 砍掉最高的 %5, 剩下最大的值就是 p95 latency. p99, p90 同理.&lt;/p&gt;&#xA;&lt;p&gt;p95 latency 表示该时间段内 95% 的 reqeust 都比这个值快.&lt;/p&gt;&#xA;&lt;p&gt;一般我直接看 CloudWatch, 和 datadog 算好的 p95 值. 这次看看怎么从 access log 里直接计算 p95 latency.&lt;/p&gt;&#xA;&lt;p&gt;假设在 redshift 中有一张表存储了应用的 access log, 结构如下:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;CREATE TABLE access_log (&#xA;    url         string,&#xA;    time        string,&#xA;    resp_time   real&#xA;);&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;url&lt;/th&gt;&#xA;          &lt;th&gt;time&lt;/th&gt;&#xA;          &lt;th&gt;resp_time&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;/test1&lt;/td&gt;&#xA;          &lt;td&gt;2018-10-11T00:10:00.418480Z&lt;/td&gt;&#xA;          &lt;td&gt;0.123&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;/test2&lt;/td&gt;&#xA;          &lt;td&gt;2018-10-11T00:12:00.512340Z&lt;/td&gt;&#xA;          &lt;td&gt;0.321&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;要算 p95 很简单, 把 log 按分钟数分组, 用 &lt;code&gt;percentile_cont&lt;/code&gt; 在组内按 &lt;code&gt;resp_time&lt;/code&gt; 排序计算 就能得到:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;select date_trunc(&#39;minute&#39;, time::timestamp) as ts,&#xA;      percentile_cont(0.95) within group(order by resp_time) as p95&#xA;from access_log &#xA;group by 1&#xA;order by 1;&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;得到:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;     ts          |        p95&#xA;---------------------+-------------------&#xA; 2018-10-11 00:00:00 |  0.71904999999995&#xA; 2018-10-11 00:01:00 | 0.555550000000034&#xA; 2018-10-11 00:02:00 | 0.478999999999939&#xA; 2018-10-11 00:03:00 | 0.507250000000081&#xA; 2018-10-11 00:04:00 | 0.456000000000025&#xA; 2018-10-11 00:05:00 | 0.458999999999949&#xA; 2018-10-11 00:06:00 | 0.581000000000054&#xA; 2018-10-11 00:07:00 | 0.585099999999937&#xA; 2018-10-11 00:08:00 | 0.527999999999908&#xA; 2018-10-11 00:09:00 | 0.570999999999936&#xA; 2018-10-11 00:10:00 | 0.587950000000069&#xA; 2018-10-11 00:11:00 | 0.648900000000077&#xA; 2018-10-11 00:12:00 | 0.570000000000024&#xA; 2018-10-11 00:13:00 | 0.592649999999954&#xA; 2018-10-11 00:14:00 | 0.584149999999998&#xA; 2018-10-11 00:15:00 |  3.00854999999952&#xA; 2018-10-11 00:16:00 | 0.832999999999871&#xA; 2018-10-11 00:17:00 |  1.07154999999991&#xA; 2018-10-11 00:18:00 | 0.553600000000092&#xA; 2018-10-11 00:19:00 | 0.605799999999997&#xA; 2018-10-11 00:20:00 | 0.832000000000137&#xA; ...&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;&lt;code&gt;PERCENTILE_CONT&lt;/code&gt; 是逆分布函数, 给定一个百分比, 在一个连续分布模型上计算该百分比处的数值, 如果在该点处没有数据, 会根据最接近的前后值进行插值计算出实际值.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Glow Infra Evolution</title>
       <link>https://blog.monsterxx03.com/2018/02/23/glow-infra-evolution/</link>
       <pubDate>Fri, 23 Feb 2018 23:25:13 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/02/23/glow-infra-evolution/</guid>
-      <description>Glow data infrastructure 的演化 Glow 一向是一个 data driven 做决策的公司，稳定高效的平台是必不可少的支撑, 本文总结几年里公司 data infrastructure 的演进过程. 结合业务特点做技术选型和实现时候的几个原则: real time 分析的需求不高，时间 delta 控制在1 小时以内可接受 . 支持快速的交互式查询. 底层平台尽量选择 AWS 托管服务, 减少维护成本. 遇到故障, 数据可以 delay 但不能丢. 可回溯历史数据. 成本可控. 用到的 AWS 服务: 数据存储和查询: S3, Redshift (spectrum), Athena ETL: DMS, EMR, Kinesis, Firehose, Lambda 开源软件: td-agent, maxwell 数据来源: 线上</description>
+      <description>&lt;h1 id=&#34;glow-data-infrastructure-的演化&#34;&gt;Glow data infrastructure 的演化&lt;/h1&gt;&#xA;&lt;p&gt;Glow 一向是一个 data driven 做决策的公司，稳定高效的平台是必不可少的支撑, 本文总结几年里公司 data infrastructure 的演进过程.&lt;/p&gt;&#xA;&lt;p&gt;结合业务特点做技术选型和实现时候的几个原则:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;real time 分析的需求不高，时间 delta 控制在1 小时以内可接受 .&lt;/li&gt;&#xA;&lt;li&gt;支持快速的交互式查询.&lt;/li&gt;&#xA;&lt;li&gt;底层平台尽量选择 AWS 托管服务, 减少维护成本.&lt;/li&gt;&#xA;&lt;li&gt;遇到故障, 数据可以 delay 但不能丢.&lt;/li&gt;&#xA;&lt;li&gt;可回溯历史数据.&lt;/li&gt;&#xA;&lt;li&gt;成本可控.&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;用到的 AWS 服务:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;数据存储和查询:  S3, Redshift (spectrum), Athena&lt;/li&gt;&#xA;&lt;li&gt;ETL: DMS, EMR, Kinesis, Firehose, Lambda&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;开源软件: td-agent, maxwell&lt;/p&gt;&#xA;&lt;p&gt;数据来源:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;线上业务数据库&lt;/li&gt;&#xA;&lt;li&gt;用户活动产生的 metrics log&lt;/li&gt;&#xA;&lt;li&gt;从各种第三方服务 api 拉下来的数据 (email之类)&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h2 id=&#34;最早期&#34;&gt;最早期&lt;/h2&gt;&#xA;&lt;p&gt;刚开始的时候业务单纯，数据量也少, 所有数据都用 MySQL 存储，搭了台 slave, 分析查询都在 slave 上进行.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>AWS DMS notes</title>
       <link>https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/</link>
       <pubDate>Sat, 14 Oct 2017 22:33:36 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/</guid>
-      <description>AWS&amp;rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
-It works, but have some concerns. Take some notes when doing this project.
-Prerequisites Source RDS must:
-Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration(&#39;binlog retention hours&#39;, 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT , REPLICATION SLAVE , SELECT on replication target tables DDL on source table Redshift has some limits on change columns:
-New column only must be added in the end Can&amp;rsquo;t rename columns So for DDL on source MySQL, you can&amp;rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
-&amp;quot;ChangeProcessingDdlHandlingPolicy&amp;quot;:{ &amp;quot;HandleSourceTableDropped&amp;quot;:false, &amp;quot;HandleSourceTableTruncated&amp;quot;:false, &amp;quot;HandleSourceTableAltered&amp;quot;:false }, If source table schema changed, I just drop and reload target table on console.
-Control write speed on Redshift Since Redshift is an OLAP database, write operation is slow and concurrency is low, streaming data directly will have big impact on it.
-And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.
-So I need to batch apply changes on DMS.</description>
+      <description>&lt;p&gt;AWS&amp;rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.&lt;/p&gt;&#xA;&lt;p&gt;It works, but have some concerns. Take some notes when doing this project.&lt;/p&gt;&#xA;&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;&#xA;&lt;p&gt;Source RDS must:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Enable automatic backups&lt;/li&gt;&#xA;&lt;li&gt;Increase binlog remain time, &lt;code&gt;call mysql.rds_set_configuration(&#39;binlog retention hours&#39;, 24);&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;Set &lt;code&gt;binlog_format&lt;/code&gt; to &lt;code&gt;ROW&lt;/code&gt;.&lt;/li&gt;&#xA;&lt;li&gt;Privileges on source RDS: &lt;code&gt;REPLICATION CLIENT &lt;/code&gt;, &lt;code&gt;REPLICATION SLAVE &lt;/code&gt;, &lt;code&gt;SELECT&lt;/code&gt; on replication target tables&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;ddl-on-source-table&#34;&gt;DDL on source table&lt;/h2&gt;&#xA;&lt;p&gt;Redshift has some limits on change columns:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;New column only must be added in the end&lt;/li&gt;&#xA;&lt;li&gt;Can&amp;rsquo;t rename columns&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;So for DDL on source MySQL, you can&amp;rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;    &amp;quot;ChangeProcessingDdlHandlingPolicy&amp;quot;:{  &#xA;        &amp;quot;HandleSourceTableDropped&amp;quot;:false,&#xA;        &amp;quot;HandleSourceTableTruncated&amp;quot;:false,&#xA;        &amp;quot;HandleSourceTableAltered&amp;quot;:false&#xA;    },&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;If source table schema changed, I just drop and reload target table on console.&lt;/p&gt;&#xA;&lt;h2 id=&#34;control-write-speed-on-redshift&#34;&gt;Control write speed on Redshift&lt;/h2&gt;&#xA;&lt;p&gt;Since Redshift is an OLAP database, write operation is slow and concurrency is low, streaming data directly will have big impact on it.&lt;/p&gt;&#xA;&lt;p&gt;And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.&lt;/p&gt;&#xA;&lt;p&gt;So I need to batch apply changes on DMS. Follow settings need to tweak in task settings json:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Use redshift spectrum to do query on s3</title>
       <link>https://blog.monsterxx03.com/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/</link>
       <pubDate>Fri, 21 Jul 2017 03:10:58 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/</guid>
-      <description>使用 redshift spectrum 查询 S3 数据 通常使用 redshift 做数据仓库的时候要做大量的 ETL 工作，一般流程是把各种来源的数据捣鼓捣鼓丢到 S3 上去，再从 S3 倒腾进 redshift. 如果你有大量的历史数据要导进 redshift，这个过程就会很痛苦，redshift 对一次倒入大量数据并不友好，你要分批来做。 今年4月的时候， redshift 发布了一个新功能 spectrum, 可以从 redshift 里直接查询 s3 上的结构化数据。最近把部分数据仓库直接迁移到了 spectrum, 正好来讲讲。 动机 Glow 的数据仓库建在 redshift 上， 又分成了两个</description>
+      <description>&lt;h1 id=&#34;使用-redshift-spectrum-查询-s3-数据&#34;&gt;使用 redshift spectrum 查询 S3 数据&lt;/h1&gt;&#xA;&lt;p&gt;通常使用 redshift 做数据仓库的时候要做大量的 ETL 工作，一般流程是把各种来源的数据捣鼓捣鼓丢到 S3 上去，再从 S3 倒腾进 redshift. 如果你有大量的历史数据要导进 redshift，这个过程就会很痛苦，redshift 对一次倒入大量数据并不友好，你要分批来做。&lt;/p&gt;&#xA;&lt;p&gt;今年4月的时候， redshift 发布了一个新功能 spectrum, 可以从 redshift 里直接查询 s3 上的结构化数据。最近把部分数据仓库直接迁移到了 spectrum, 正好来讲讲。&lt;/p&gt;&#xA;&lt;h2 id=&#34;动机&#34;&gt;动机&lt;/h2&gt;&#xA;&lt;p&gt;Glow 的数据仓库建在 redshift 上， 又分成了两个集群，一个 ssd 的集群存放最近 4 个月的数据，供产品分析，metrics report, debug 等等 adhoc 的查询。4个月之前的数据存放在一个 hdd 的集群里，便宜容量大，查询慢。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Redshift as data warehouse</title>
       <link>https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/</link>
       <pubDate>Sat, 16 Jul 2016 16:11:39 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/</guid>
-      <description>&lt;p&gt;Glow 的 server infrastructure 全部搭建在 AWS 上，一般要选择一些基础服务的时候，总是先看 AWS, 只要功能和成本符合要求，不会特意选择开源方案。&lt;/p&gt;
-&lt;p&gt;数据仓库我们选择了 AWS 的 Redshift.&lt;/p&gt;
-&lt;p&gt;在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Glow 的 server infrastructure 全部搭建在 AWS 上，一般要选择一些基础服务的时候，总是先看 AWS, 只要功能和成本符合要求，不会特意选择开源方案。&lt;/p&gt;&#xA;&lt;p&gt;数据仓库我们选择了 AWS 的 Redshift.&lt;/p&gt;&#xA;&lt;p&gt;在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

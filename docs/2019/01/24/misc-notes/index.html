@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-cn" >
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  
+  <meta name="author"
+        content=""/>
+
+  
+  <meta name="description" content="Refactor 年前在对公司的代码做一次大的重构, 主要目的是把 repo 拆开, 以前虽然每个项目一个 repo, 但是因为很早期的原因， 所有 repo 之间都有很混乱的 import 关系.这次为了拆开 import 关系，　必须对所有代码做一次大重构, 过程中记录一些比较差的实现, 和怎么修改的.
+滥用 *args, **kwargs 在内部代码中经常能在一些接口函数中看到 *args, **kwargs, 这样子的接口暴露给别人用是极其没意义的, 某个函数我一路往下看了好几层代码，到最底层的 db 处理处才弄明白要往里面传什么参数.
+什么时候用 *args, **kwargs, 当该函数只作为一个 delegate 层时可以用, 此时该函数不应该尝试获取或修改 *args, **kwargs 的内容, 而仅仅将参数往下传递, 最常用的自然是在 decorator 中传参了.
+"/>
+  
+
+  
+
+  
+  <link rel="canonical" href="http://localhost:1313/2019/01/24/misc-notes/"/>
+
+  
+
+  <title>misc notes &middot; Shining Moon</title>
+
+  <link rel="shortcut icon" href="http://localhost:1313/images/favicon.ico"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/animate.min.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/remixicon.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/zozo.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/highlight.css"/>
+
+  
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/home.css">
+  
+</head>
+
+<body>
+<div class="main animated">
+  <div class="nav_container animated fadeInDown">
+  <div class="site_nav" id="site_nav">
+    <ul>
+      
+      <li>
+        <a href="/">Home</a>
+      </li>
+      
+      <li>
+        <a href="/posts/">Archive</a>
+      </li>
+      
+      <li>
+        <a href="/about/">About</a>
+      </li>
+      
+      <li>
+        <a href="/tags">Tags</a>
+      </li>
+      
+    </ul>
+  </div>
+  <div class="menu_icon">
+    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
+  </div>
+</div>
+
+  <div class="header animated fadeInDown">
+  <div class="site_title_container">
+    <div class="site_title">
+      <h1>
+        <a href="http://localhost:1313/">
+          <span>Shining Moon</span>
+          <img width="90px" src="http://localhost:1313/logo.png"/>
+        </a>
+      </h1>
+    </div>
+    <div class="description">
+      <p class="sub_title">百种弊病,皆从懒生</p>
+      <div class="my_socials">
+        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    <div class="post_page">
+      <div class="post animated fadeInDown">
+        <div class="post_title post_detail_title">
+          <h2><a href='/2019/01/24/misc-notes/'>misc notes</a></h2>
+          <span class="date">2019.01.24</span>
+        </div>
+        <div class="post_content markdown"><h1 id="refactor">Refactor</h1>
+<p>年前在对公司的代码做一次大的重构, 主要目的是把 repo 拆开, 以前虽然每个项目一个 repo, 但是因为很早期的原因， 所有 repo 之间都有很混乱的 import 关系.这次为了拆开 import 关系，　必须对所有代码做一次大重构, 过程中记录一些比较差的实现, 和怎么修改的.</p>
+<h2 id="滥用-args-kwargs">滥用 *args, **kwargs</h2>
+<p>在内部代码中经常能在一些接口函数中看到 <code>*args, **kwargs</code>, 这样子的接口暴露给别人用是极其没意义的, 某个函数我一路往下看了好几层代码，到最底层的
+db 处理处才弄明白要往里面传什么参数.</p>
+<p>什么时候用 <code>*args, **kwargs</code>, 当该函数只作为一个 delegate 层时可以用, 此时该函数不应该尝试获取或修改 <code>*args, **kwargs</code> 的内容, 而仅仅将参数往下传递,
+最常用的自然是在 <code>decorator</code> 中传参了.</p>
+<pre><code><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">demo_dec</span>(func):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">wrapper</span>(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> func(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> wrapper</span></span></code></pre></div>
+</code></pre>
+<p>接口函数务必把参数名定义清楚.</p>
+<h2 id="keyword-参数不写参数名">keyword 参数不写参数名</h2>
+<p>还有一种情况是函数定义了可选参数, 但调用方传参时候不写参数名.</p>
+<pre><code><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test</span>(a, b<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>test(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>)</span></span></code></pre></div>
+</code></pre>
+<p>我一直就觉得 python 里这个设计很失败, 给需要修改原始函数的人带来极大麻烦, test 函数如果添加一个可选参数在 a 和 b 之间, 调用方参数就传错了.</p>
+<p>还好 python3　里引入了 keyword only arguments, 可以把函数定义成:</p>
+<pre><code><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test</span>(a, <span style="color:#f92672">*</span>, b<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>test(<span style="color:#ae81ff">1</span>, b<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)</span></span></code></pre></div>
+</code></pre>
+<p>调用方必须显示写参数名，否则直接报错.</p>
+<h1 id="reading-notes-of-site-reliability-workbook">Reading notes of Site Reliability Workbook</h1>
+<h2 id="simplicity">Simplicity</h2>
+<ul>
+<li>training time</li>
+<li>explanation time</li>
+<li>Administrative diversity</li>
+<li>Diversity of deployed configurations</li>
+<li>age</li>
+</ul>
+<p>Don’t compare the expected result to your current system. Instead, compare the expected result to what your current system would look like if you invested the same effort in improving it.</p>
+<h2 id="postmortem">Postmortem</h2>
+<p>Bad postmortem</p>
+<ul>
+<li>missing context: should explain internal terminology, since postmortem audience may have different background.</li>
+<li>key details omitted:
+<ul>
+<li>problem summary should have numbers about impact(revenue, number of users), If you don&rsquo;t know how to measure it, then you can&rsquo;t know it&rsquo;s fixed.</li>
+<li>root causes and trigger</li>
+<li>recovery efforts</li>
+</ul>
+</li>
+</ul>
+<p>A postmortem is a factual artifact that should be free from personal judgments and subjective language.</p>
+</div>
+        <div class="post_footer">
+          
+          <div class="meta">
+            <div class="info">
+              <span class="field tags">
+                <i class="remixicon-stack-line"></i>
+                
+                <a href="http://localhost:1313/tags/python/">python</a>
+                
+              </span>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mx03" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      
+      
+    </div>
+  </div>
+  <a id="back_to_top" href="#" class="back_to_top"><span>△</span></a>
+</div>
+<footer class="footer">
+  <div class="powered_by">
+    <a href="https://zeuk.me">Designed by Zeuk,</a>
+    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
+  </div>
+
+  <div class="footer_slogan">
+    <span></span>
+  </div>
+</footer>
+
+
+
+<script src="http://localhost:1313/js/jquery-3.3.1.min.js"></script>
+<script src="http://localhost:1313/js/zozo.js"></script>
+<script src="http://localhost:1313/js/highlight.pack.js"></script>
+<link  href="http://localhost:1313/css/fancybox.min.css" rel="stylesheet">
+<script src="http://localhost:1313/js/fancybox.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
+
+
+</body>
+</html>

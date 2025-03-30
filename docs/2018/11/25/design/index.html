@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-cn" >
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  
+  <meta name="author"
+        content=""/>
+
+  
+  <meta name="description" content="最近读了一本书 &lt;a philosophy of software design&gt;,
+书里总结了很多常见的坏设计范例和一些建议. 看完倒没有那种眼前一亮打开新世界的感觉, 有过几年编程经验的, 多多少少都碰到过书里的问题, 但作者用很棒的语言把这些 bad simle 总结了出来.
+以往碰到同事写出类似代码的时候, 我直觉上觉得不好, 但又很难用简练的话说出哪里不对, 难以说服别人, 看了这本书算是好好得整理了一下思路. 结合自己以往的经验, 讨论下其中的一些内容.
+Complexity 作者全书的大观点是, 软件开发的各种技巧, 规范, 最终目标都是控制项目的复杂度 (complexity).
+"/>
+  
+
+  
+
+  
+  <link rel="canonical" href="http://localhost:1313/2018/11/25/design/"/>
+
+  
+
+  <title>Design &middot; Shining Moon</title>
+
+  <link rel="shortcut icon" href="http://localhost:1313/images/favicon.ico"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/animate.min.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/remixicon.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/zozo.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/highlight.css"/>
+
+  
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/home.css">
+  
+</head>
+
+<body>
+<div class="main animated">
+  <div class="nav_container animated fadeInDown">
+  <div class="site_nav" id="site_nav">
+    <ul>
+      
+      <li>
+        <a href="/">Home</a>
+      </li>
+      
+      <li>
+        <a href="/posts/">Archive</a>
+      </li>
+      
+      <li>
+        <a href="/about/">About</a>
+      </li>
+      
+      <li>
+        <a href="/tags">Tags</a>
+      </li>
+      
+    </ul>
+  </div>
+  <div class="menu_icon">
+    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
+  </div>
+</div>
+
+  <div class="header animated fadeInDown">
+  <div class="site_title_container">
+    <div class="site_title">
+      <h1>
+        <a href="http://localhost:1313/">
+          <span>Shining Moon</span>
+          <img width="90px" src="http://localhost:1313/logo.png"/>
+        </a>
+      </h1>
+    </div>
+    <div class="description">
+      <p class="sub_title">百种弊病,皆从懒生</p>
+      <div class="my_socials">
+        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    <div class="post_page">
+      <div class="post animated fadeInDown">
+        <div class="post_title post_detail_title">
+          <h2><a href='/2018/11/25/design/'>Design</a></h2>
+          <span class="date">2018.11.25</span>
+        </div>
+        <div class="post_content markdown"><p>最近读了一本书 <code>&lt;a philosophy of software design&gt;</code>,</p>
+<p>书里总结了很多常见的坏设计范例和一些建议. 看完倒没有那种眼前一亮打开新世界的感觉, 有过几年编程经验的, 多多少少都碰到过书里的问题, 但作者用很棒的语言把这些 bad simle 总结了出来.</p>
+<p>以往碰到同事写出类似代码的时候, 我直觉上觉得不好, 但又很难用简练的话说出哪里不对, 难以说服别人, 看了这本书算是好好得整理了一下思路. 结合自己以往的经验, 讨论下其中的一些内容.</p>
+<h2 id="complexity">Complexity</h2>
+<p>作者全书的大观点是, 软件开发的各种技巧, 规范, 最终目标都是控制项目的复杂度 (complexity).</p>
+<p>Complexity 会带来两个问题: 难以理解, 难以修改.</p>
+<p>这个观点相当赞同, 做了一段时间 infra 后, 感觉系统设计大部分时间其实都在做 tradeoff. 我做 tradeoff 的目的是什么? 控制 complexity!写代码也是一个理.</p>
+<p>复杂度怎么来的? 作者观点是来自 dependency 和 vagueness 的积累.</p>
+<h2 id="red-flags">Red flags</h2>
+<h2 id="doc-and-comment">Doc and comment</h2>
+</div>
+        <div class="post_footer">
+          
+          <div class="meta">
+            <div class="info">
+              <span class="field tags">
+                <i class="remixicon-stack-line"></i>
+                
+                <a href="http://localhost:1313/tags/book/">book</a>
+                
+              </span>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mx03" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      
+      
+    </div>
+  </div>
+  <a id="back_to_top" href="#" class="back_to_top"><span>△</span></a>
+</div>
+<footer class="footer">
+  <div class="powered_by">
+    <a href="https://zeuk.me">Designed by Zeuk,</a>
+    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
+  </div>
+
+  <div class="footer_slogan">
+    <span></span>
+  </div>
+</footer>
+
+
+
+<script src="http://localhost:1313/js/jquery-3.3.1.min.js"></script>
+<script src="http://localhost:1313/js/zozo.js"></script>
+<script src="http://localhost:1313/js/highlight.pack.js"></script>
+<link  href="http://localhost:1313/css/fancybox.min.css" rel="stylesheet">
+<script src="http://localhost:1313/js/fancybox.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
+
+
+</body>
+</html>

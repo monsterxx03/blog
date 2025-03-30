@@ -1,30 +1,34 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>gospy on Shining Moon</title>
+    <title>Gospy on Shining Moon</title>
     <link>https://blog.monsterxx03.com/tags/gospy/</link>
-    <description>Recent content in gospy on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Gospy on Shining Moon</description>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sun, 29 Sep 2019 15:07:11 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/gospy/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 30 Mar 2025 19:05:11 +0800</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/tags/gospy/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>gospy dev note2 (rewrite with aider)</title>
+      <link>https://blog.monsterxx03.com/2025/03/30/gospy-dev-note2-rewrite-with-aider/</link>
+      <pubDate>Sun, 30 Mar 2025 19:05:11 +0800</pubDate>
+      <guid>https://blog.monsterxx03.com/2025/03/30/gospy-dev-note2-rewrite-with-aider/</guid>
+      <description>&lt;p&gt;几年前写过个工具 &lt;a href=&#34;https://github.com/monsterxx03/gospy&#34;&gt;gospy&lt;/a&gt;, 用于从旁路 dump 一个 golang 进程的 runtime 信息(包括 goroutine, memory 等), 大致原理见以前的&lt;a href=&#34;https://blog.monsterxx03.com/tags/gospy/&#34;&gt;文章&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;基本功能能用, 但没继续做下去, 除了没时间外, 其他还有几个问题:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;不支持 MacOS (主要是没搞懂 MacOS 下怎么读取进程内存).&lt;/li&gt;&#xA;&lt;li&gt;DWARF 解析写的过于繁琐, golang 版本更新时, 解析逻辑很难调整.&lt;/li&gt;&#xA;&lt;li&gt;对写 UI (包括 terminal UI 和前端) 实在没兴趣, 不写又没法暴露功能, 也懒得去做通过 http 接口暴露数据.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;前阵子试了下通过 &lt;a href=&#34;https://aider.chat/&#34;&gt;aider&lt;/a&gt; 来写代码, 效果非常惊艳, 对我来说, 比 curosr 还顺手. 于是花了两个周末的时间, 把 gospy 整个重写了.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>gospy dev note</title>
       <link>https://blog.monsterxx03.com/2019/09/29/gospy-dev-note/</link>
       <pubDate>Sun, 29 Sep 2019 15:07:11 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/09/29/gospy-dev-note/</guid>
-      <description>前文讲了下 gospy 的大致用法, 这篇记录具体实现和过程中碰到的一些问题. 原理 要从外部获取 golang 进程的 runtime 信息, 需要做得是从进程的 binary 中的 debug 信息里 parse 出需要的一些变量的虚拟内存地址, 读取目标进程的内存, 得到相应的数据, 将两者映射起来就好了.只支持了 linux 上的 ELF 格式 binary, debug 信息是 go 在编译时候弄进去的, 格式是通用的 DWARF. ELF 和 DWARF 格式本身不细究(汗, 文档几百页也实在看不动), go 标准库里自带相应的 parser: debug/elf, debug/dwarf, debug/gosym. 一个基本的读取例子: f, _ := os.Open(path) b, _ :=</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://blog.monsterxx03.com/2019/09/20/gospy-non-invasive-goroutine-inspector/&#34;&gt;前文&lt;/a&gt;讲了下 gospy 的大致用法, 这篇记录具体实现和过程中碰到的一些问题.&lt;/p&gt;&#xA;&lt;h2 id=&#34;原理&#34;&gt;原理&lt;/h2&gt;&#xA;&lt;p&gt;要从外部获取 golang 进程的 runtime 信息, 需要做得是从进程的 binary 中的 debug 信息里 parse 出需要的一些变量的虚拟内存地址, 读取目标进程的内存, 得到相应的数据,&#xA;将两者映射起来就好了.只支持了 linux 上的 ELF 格式 binary, debug 信息是 go 在编译时候弄进去的, 格式是通用的 DWARF.&lt;/p&gt;&#xA;&lt;p&gt;ELF 和 DWARF 格式本身不细究(汗, 文档几百页也实在看不动), go 标准库里自带相应的 parser: &lt;code&gt;debug/elf, debug/dwarf, debug/gosym&lt;/code&gt;. 一个基本的读取例子:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;f, _ := os.Open(path)&#xA;b, _ := elf.NewFile(f)&#xA;lndata, _ := b.Section(&amp;quot;.gopclntab&amp;quot;).Data()&#xA;ln := gosym.NewLineTable(lndata, b.Section(&amp;quot;.text&amp;quot;).Addr)&#xA;symtab, _ := gosym.NewTable([]byte{}, ln)&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;在 go 1.3 之前, elf binary 里有一节 session: &lt;code&gt;.gosymtab&lt;/code&gt;, 1.3 开始不需要了,　为了 api 兼容, &lt;code&gt;gosym.NewTable&lt;/code&gt; 还需要这个参数,传个空　byte slice 进去就行.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>gospy: Non-invasive goroutine inspector</title>
       <link>https://blog.monsterxx03.com/2019/09/20/gospy-non-invasive-goroutine-inspector/</link>
       <pubDate>Fri, 20 Sep 2019 14:07:12 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/09/20/gospy-non-invasive-goroutine-inspector/</guid>
-      <description>go 自带的 profiling 工具很强大(pprof, trace, GODEBUG &amp;hellip;), 但有时我还是想不修改目标进程的源码获取它的一些 runtime 信息, 最近研究了一下 py-spy 和 delve, 发现还是可实现的, 就做了个小东西gospy. 用法 目前就两个命令: gospy summary 和 gospy top sudo ./gospy summary --pid 1234, 可以 dump 目标进程的一些信息和当前活动 goroutine 正在执行的函数信息, 比如对一个 prometheus 进程做一次 snapshot: bin: /home/will/Downloads/prometheus-2.12.0.linux-amd64/prometheus, goVer: 1.12.8, gomaxprocs: 6 P0 idle, schedtick: 642, syscalltick: 81 P1 idle, schedtick: 959, syscalltick: 67 P2 idle, schedtick: 992, syscalltick: 32 P3 idle, schedtick: 581, syscalltick: 17 P4 idle, schedtick: 89, syscalltick: 8 P5 idle, schedtick: 231, syscalltick: 5 Threads: 14 total, 0 running, 14 sleeping, 0 stopped, 0 zombie Goroutines: 44 total, 0 idle, 0 running, 5</description>
+      <description>&lt;p&gt;go 自带的 profiling 工具很强大(pprof, trace, GODEBUG &amp;hellip;), 但有时我还是想不修改目标进程的源码获取它的一些&#xA;runtime 信息, 最近研究了一下 py-spy 和 delve, 发现还是可实现的, 就做了个小东西&lt;a href=&#34;https://github.com/monsterxx03/gospy&#34;&gt;gospy&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;h2 id=&#34;用法&#34;&gt;用法&lt;/h2&gt;&#xA;&lt;p&gt;目前就两个命令: &lt;code&gt;gospy summary&lt;/code&gt; 和 &lt;code&gt;gospy top&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;sudo ./gospy summary --pid 1234&lt;/code&gt;, 可以 dump 目标进程的一些信息和当前活动 goroutine 正在执行的函数信息,&#xA;比如对一个 prometheus 进程做一次 snapshot:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;bin: /home/will/Downloads/prometheus-2.12.0.linux-amd64/prometheus, goVer: 1.12.8, gomaxprocs: 6&#xA;P0 idle, schedtick: 642, syscalltick: 81&#xA;P1 idle, schedtick: 959, syscalltick: 67&#xA;P2 idle, schedtick: 992, syscalltick: 32&#xA;P3 idle, schedtick: 581, syscalltick: 17&#xA;P4 idle, schedtick: 89, syscalltick: 8&#xA;P5 idle, schedtick: 231, syscalltick: 5&#xA;Threads: 14 total, 0 running, 14 sleeping, 0 stopped, 0 zombie&#xA;Goroutines: 44 total, 0 idle, 0 running, 5 syscall, 39 waiting&#xA;&#xA;goroutines:&#xA;&#xA;1 - waiting for chan receive: rt0_go (/usr/local/go/src/runtime/asm_amd64.s:202) &#xA;2 - waiting for force gc (idle): 5 (/usr/local/go/src/runtime/proc.go:240) &#xA;3 - waiting for GC sweep wait: gcenable (/usr/local/go/src/runtime/mgc.go:209) &#xA;8 - syscall: addtimerLocked (/usr/local/go/src/runtime/time.go:169) &#xA;9 - waiting for select: 0 (/app/vendor/go.opencensus.io/stats/view/worker.go:33) &#xA;16 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) &#xA;17 - waiting for finalizer wait: createfing (/usr/local/go/src/runtime/mfinal.go:156) &#xA;19 - syscall: 0 (/usr/local/go/src/os/signal/signal_unix.go:30) &#xA;22 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) &#xA;23 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) &#xA;38 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) &#xA;49 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) &#xA;50 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) &#xA;74 - waiting for select: sync (/app/scrape/scrape.go:408) &#xA;75 - syscall: addtimerLocked (/usr/local/go/src/runtime/time.go:169) &#xA;84 - syscall: addtimerLocked (/usr/local/go/src/runtime/time.go:169) &#xA;85 - waiting for select: Run (/app/vendor/github.com/oklog/run/group.go:36) &#xA;...&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;P0, P1 &amp;hellip;, 是 go 的 GMP schedule 模型里的 P, 可以简单理解成对一个物理核心的逻辑抽象. 个数可由环境变量 GOMAXPROCS 控制,&#xA;默认是机器核心数.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

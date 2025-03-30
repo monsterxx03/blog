@@ -7,10 +7,14 @@
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
-  <meta name="description" content="patroni 的安装跳过, 它只是个 python 包, 把依赖装好就行, 同时要求装好 postgres-server, patroni 运行过程中会调用 pg_ctl 等命令: https://patroni.readthedocs.io/en/latest/README.html 每个 patroni 管理一个 pg 实例, 两者必须部署在同一节点上, patroni 需要能: 访问 pg 的监听端口 读写 pg data dir (patroni 会重写 postgres.conf, pg_hba.conf 等文件) 配置文件 配置文件是yaml 格式, 具体见 https://patroni.readthedocs.io/en/latest/SETTINGS.html 使用 patroni postgres.yaml 命令启动一个 patroni 实例 # 集群名字, 同一集群内的 patroni 必须设置一样, 会成为 postgres.conf 内的 cluster_name参数 scope: xsky-test # patroni 会将一些动态配置存在 DCS 内, namespace 是在 DCS 内的存储路径, eg: 使用"/>
+  <meta name="description" content="patroni 的安装跳过, 它只是个 python 包, 把依赖装好就行, 同时要求装好 postgres-server, patroni 运行过程中会调用 pg_ctl 等命令: https://patroni.readthedocs.io/en/latest/README.html 每个 patroni 管理一个 pg 实例, 两者必须部署在同一节点上, patroni 需要能:
+访问 pg 的监听端口 读写 pg data dir (patroni 会重写 postgres.conf, pg_hba.conf 等文件) 配置文件 配置文件是yaml 格式, 具体见 https://patroni.readthedocs.io/en/latest/SETTINGS.html
+使用 patroni postgres.yaml 命令启动一个 patroni 实例
+# 集群名字, 同一集群内的 patroni 必须设置一样, 会成为 postgres.conf 内的 cluster_name参数 scope: xsky-test # patroni 会将一些动态配置存在 DCS 内, namespace 是在 DCS 内的存储路径, eg: 使用 etcdv3 作为 DCS, 可以通过 etdctl get /service --prefix 看到 patroni 在 DCS 内存了什么 namespace: /service # 管理的 pg 的实例名, 同一集群内每个实例必须都不同, eg: pg0, pg1, pg2 name: pg0 # 日志相关配置 log: level: INFO ... # patroni restapi 相关配置 restapi: listen: 0.0.0.0:8008 ... # 用创建 pg 实例, 生成 pg 的 data dir, postgres.conf, pg_hba.conf 等文件 bootstrap: # dcs 下内容会写入 DCS 的 {namespace}/{scope}/config key 中,只有在初始化集群的时候被使用一次, 后续修改不会生效, 可以通过 patrionctl edit-config 或 rest api 来修改存在 dcs 中的值 dcs: loop_wait: 10 ttl: 30 ... # 初始化集群时生成 pg_bha.conf, 后续改动不会生效 pg_hba: - host replication replicator 127.0.0.1/32 md5 # 在初始化集群时需要创建的用户, 后续改动不会生效 users: ... # 使用 etcd v2 api 作为 dcs etcd: ... # 使用 etcd v3 api 作为 dcs etcd3: ... # 用于 patroni 运行时连接 pg postgresql: listen: 0.0.0.0:5432 ... # patronictl.py 连接 restapi 时 http参数(ssl相关) ctl: ... # 通过 linux 的 softdog 模块, 在 patroni 控制的 pg 挂掉时重启 server watchdog: ... # 通过nofailover 等 tag 可以控制行为(eg: 不允许某个 patrion 实例成为 leader, 也可以添加自定义tag作为元数据 tags: ... 用 patroni bootstrap pg 集群 假设有三节点, 上面已经部署好 etcd(v3) 作为 dcs, 三节点 ip为: 10.252.90.217, 10.252.90.218, 10.252.90.219 217 节点上 patroni 的 postgres.yml 配置, 其他节点类似, 把 ip 改下:
+"/>
   
 
   
@@ -67,7 +71,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -76,12 +80,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -516,7 +516,7 @@ etcd 中的 /service/xsky-test/leader key ttl 是30s, patroni 每隔10s会刷新
         </div>
       </div>
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -599,17 +599,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

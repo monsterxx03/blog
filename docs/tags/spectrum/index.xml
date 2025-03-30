@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>spectrum on Shining Moon</title>
+    <title>Spectrum on Shining Moon</title>
     <link>https://blog.monsterxx03.com/tags/spectrum/</link>
-    <description>Recent content in spectrum on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Spectrum on Shining Moon</description>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 23 Feb 2018 23:25:13 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/spectrum/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 23 Feb 2018 23:25:13 +0800</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/tags/spectrum/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Glow Infra Evolution</title>
       <link>https://blog.monsterxx03.com/2018/02/23/glow-infra-evolution/</link>
       <pubDate>Fri, 23 Feb 2018 23:25:13 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/02/23/glow-infra-evolution/</guid>
-      <description>Glow data infrastructure 的演化 Glow 一向是一个 data driven 做决策的公司，稳定高效的平台是必不可少的支撑, 本文总结几年里公司 data infrastructure 的演进过程. 结合业务特点做技术选型和实现时候的几个原则: real time 分析的需求不高，时间 delta 控制在1 小时以内可接受 . 支持快速的交互式查询. 底层平台尽量选择 AWS 托管服务, 减少维护成本. 遇到故障, 数据可以 delay 但不能丢. 可回溯历史数据. 成本可控. 用到的 AWS 服务: 数据存储和查询: S3, Redshift (spectrum), Athena ETL: DMS, EMR, Kinesis, Firehose, Lambda 开源软件: td-agent, maxwell 数据来源: 线上</description>
+      <description>&lt;h1 id=&#34;glow-data-infrastructure-的演化&#34;&gt;Glow data infrastructure 的演化&lt;/h1&gt;&#xA;&lt;p&gt;Glow 一向是一个 data driven 做决策的公司，稳定高效的平台是必不可少的支撑, 本文总结几年里公司 data infrastructure 的演进过程.&lt;/p&gt;&#xA;&lt;p&gt;结合业务特点做技术选型和实现时候的几个原则:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;real time 分析的需求不高，时间 delta 控制在1 小时以内可接受 .&lt;/li&gt;&#xA;&lt;li&gt;支持快速的交互式查询.&lt;/li&gt;&#xA;&lt;li&gt;底层平台尽量选择 AWS 托管服务, 减少维护成本.&lt;/li&gt;&#xA;&lt;li&gt;遇到故障, 数据可以 delay 但不能丢.&lt;/li&gt;&#xA;&lt;li&gt;可回溯历史数据.&lt;/li&gt;&#xA;&lt;li&gt;成本可控.&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;用到的 AWS 服务:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;数据存储和查询:  S3, Redshift (spectrum), Athena&lt;/li&gt;&#xA;&lt;li&gt;ETL: DMS, EMR, Kinesis, Firehose, Lambda&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;开源软件: td-agent, maxwell&lt;/p&gt;&#xA;&lt;p&gt;数据来源:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;线上业务数据库&lt;/li&gt;&#xA;&lt;li&gt;用户活动产生的 metrics log&lt;/li&gt;&#xA;&lt;li&gt;从各种第三方服务 api 拉下来的数据 (email之类)&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h2 id=&#34;最早期&#34;&gt;最早期&lt;/h2&gt;&#xA;&lt;p&gt;刚开始的时候业务单纯，数据量也少, 所有数据都用 MySQL 存储，搭了台 slave, 分析查询都在 slave 上进行.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

@@ -7,10 +7,15 @@
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
-  <meta name="description" content="追了一下 kube-scheduler 的源码, 记录一点, 基于 tag v1.16.0-alpha.2. 一句话概括 kube-scheduler 的职责是: 找到 pending 的 pod, 挑选一个合适的 node, 将 pod bind 上去. Get pending pod 在 scheduler 的初始化过程中给 pod/node/pv/pvc/service/storageClassInformer 添加回调函数, 功能大致都是在这些资源发生变化时更新本地的 cache 和 ScheduleQueue scheduler.go:New. ScheduleQueue 是关键, 内部实现是一个 PriorityQueue, 它有三个 sub queue: activeQ 用来存放等待 schedule 的 pods, kube-schedule 实际工作时候从这个 queue 中取 pod, 实现上是一个 heap, 如果 pod 定义了 priority, 则按照 priority 由高到低排序, 否则按 pod 到达的时间排序: activeQComp podBackoffQ 存放正在经历 backoff 的 pod, 也是 heap, 按 pod 上次 backoff 的时间排序: podsCompareBackoffCompleted"/>
+  <meta name="description" content="追了一下 kube-scheduler 的源码, 记录一点, 基于 tag v1.16.0-alpha.2.
+一句话概括 kube-scheduler 的职责是: 找到 pending 的 pod, 挑选一个合适的 node, 将 pod bind 上去.
+Get pending pod 在 scheduler 的初始化过程中给 pod/node/pv/pvc/service/storageClassInformer 添加回调函数, 功能大致都是在这些资源发生变化时更新本地的 cache 和 ScheduleQueue scheduler.go:New.
+ScheduleQueue 是关键, 内部实现是一个 PriorityQueue, 它有三个 sub queue:
+activeQ 用来存放等待 schedule 的 pods, kube-schedule 实际工作时候从这个 queue 中取 pod, 实现上是一个 heap, 如果 pod 定义了 priority, 则按照 priority 由高到低排序, 否则按 pod 到达的时间排序: activeQComp podBackoffQ 存放正在经历 backoff 的 pod, 也是 heap, 按 pod 上次 backoff 的时间排序: podsCompareBackoffCompleted unschedulableQ 存放 schedule 失败的 pod, 只需要能根据 pod 的 identity (podName_namespace) 找到 pod 就行, 不需要排序, 内部是个 map. 由 podInformer 的 eventHandler 将新的 pod 加到 activeQ 中.
+"/>
   
 
   
@@ -67,7 +72,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -76,12 +81,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -131,7 +132,7 @@
         </div>
       </div>
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -214,17 +215,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

@@ -7,10 +7,15 @@
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
-  <meta name="description" content="这篇记录对 ingress 的测试. ingress 用来将外部流量导入 k8s 内的 service. 将 service 的类型设置为 LoadBalancer / NodePort 也可以将单个 service 暴露到公网, 但用 ingress 可以只使用一个公网入口,根据 host name 或 url path 来将请求分发到不同的 service. 一般 k8s 内的资源都会由一个 controller 来负责它的状态管理, 都由 kube-controller-manager 负责， 但 ingress controller 不是它的一部分，需要是视情况自己选择合适的 ingress controller. 在 eks 上我主要需要 ingress-nginx 和 aws-alb-ingress-controller. 注意, nginx inc 还维护一个 kubernetes-ingress, 和官方那个不是一个东西， 没测试过. 这里主要只测试了 ingress-nginx, 看了下内部实现, 数据的转发真扭曲"/>
+  <meta name="description" content="这篇记录对 ingress 的测试.
+ingress 用来将外部流量导入　k8s 内的　service. 将 service 的类型设置为 LoadBalancer / NodePort 也可以将单个 service 暴露到公网, 但用 ingress 可以只使用一个公网入口,根据　host name 或　url path 来将请求分发到不同的 service.
+一般　k8s 内的资源都会由一个 controller 来负责它的状态管理, 都由 kube-controller-manager 负责，　但 ingress controller 不是它的一部分，需要是视情况自己选择合适的 ingress controller.
+在 eks 上我主要需要 ingress-nginx 和 aws-alb-ingress-controller. 注意, nginx inc 还维护一个 kubernetes-ingress, 和官方那个不是一个东西， 没测试过.
+这里主要只测试了 ingress-nginx, 看了下内部实现, 数据的转发真扭曲&hellip;.
+"/>
   
 
   
@@ -67,7 +72,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -76,12 +81,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -128,31 +129,31 @@ ingress       pod/mean-quetzal-nginx-ingress-default-backend-75696ffd5d-x7ld5   
 <p><code>nginx-ingress-default-backend</code> service type 是 LoadBalancer, 在 aws 上默认会创建一个 classic ELB.</p>
 <p>这个 ELB 的 liseners 配置如下:</p>
 <table>
-<thead>
-<tr>
-<th>Load Balancer Protocol</th>
-<th>Load Balancer Port</th>
-<th>Instance Protocol</th>
-<th>Instance Port</th>
-<th>SSL Certificate</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>HTTPS</td>
-<td>443</td>
-<td>HTTP</td>
-<td>32273</td>
-<td>xxxxx (ACM)</td>
-</tr>
-<tr>
-<td>HTTP</td>
-<td>80</td>
-<td>HTTP</td>
-<td>30312</td>
-<td>N/A</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>Load Balancer Protocol</th>
+          <th>Load Balancer Port</th>
+          <th>Instance Protocol</th>
+          <th>Instance Port</th>
+          <th>SSL Certificate</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>HTTPS</td>
+          <td>443</td>
+          <td>HTTP</td>
+          <td>32273</td>
+          <td>xxxxx (ACM)</td>
+      </tr>
+      <tr>
+          <td>HTTP</td>
+          <td>80</td>
+          <td>HTTP</td>
+          <td>30312</td>
+          <td>N/A</td>
+      </tr>
+  </tbody>
 </table>
 <p>在 helm charts 的默认值基础上做了些修改:</p>
 <ul>
@@ -259,7 +260,7 @@ server {
         </div>
       </div>
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -342,17 +343,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

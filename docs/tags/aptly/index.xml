@@ -1,27 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>aptly on Shining Moon</title>
+    <title>Aptly on Shining Moon</title>
     <link>https://blog.monsterxx03.com/tags/aptly/</link>
-    <description>Recent content in aptly on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Aptly on Shining Moon</description>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 23 Jun 2017 09:40:58 +0000</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/aptly/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 23 Jun 2017 09:40:58 +0000</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/tags/aptly/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Build deb repository with fpm , aptly and s3</title>
       <link>https://blog.monsterxx03.com/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/</link>
       <pubDate>Fri, 23 Jun 2017 09:40:58 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/06/23/build-deb-repository-with-fpm-aptly-and-s3/</guid>
-      <description>I’m lazy, I don’t want to be deb/rpm expert, I don’t want to maintain repo server. I want as less maintenance effort as possible. 🙂
-Combine tools fpm, aptly with aws s3, we can do it.
-Use fpm to convert python package to deb fpm can transform python/gem/npm/dir/… to deb/rpm/solaris/… packages
-Example:
-fpm -s python -t deb -m xyj.asmy@gmail.com --verbose -v 0.10.1 --python-pip /usr/local/pip Flask It will transform Flask 0.10.1 package to deb. Output package will be python-flask_0.10.1_all.deb
-Notes:
-If python packages rely on some c libs like MySQLdb (libmysqlclient-dev), you need to install them on the machine to build deb binary. By default fpm use easy_install to build packages, some packages like httplib2 have permission bug with easy_install, so I use pip By default, msgpack-python will be convert to python-msgpack-python, I don’t like it, so add -n python-msgpack to normalize the package name. Some package’s dependencies’ version number is not valid(eg: celery 3.1.25 deps pytz &amp;gt;= dev), so I replace the dependencies with --python-disable-dependency pytz -d &#39;pytz &amp;gt;= 2016.7&#39; fpm will not dowload package’s dependency automatically, you need to do it by your self Use aptly to setup deb repository aptly can help build a self host deb repository and publish it on s3.</description>
+      <description>&lt;p&gt;I’m lazy, I don’t want to be deb/rpm expert, I don’t want to maintain repo server. I want as less maintenance effort as possible. 🙂&lt;/p&gt;&#xA;&lt;p&gt;Combine tools fpm, aptly with aws s3, we can do it.&lt;/p&gt;&#xA;&lt;h2 id=&#34;use-fpm-to-convert-python-package-to-deb&#34;&gt;Use fpm to convert python package to deb&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://fpm.readthedocs.io/en/latest/&#34;&gt;fpm&lt;/a&gt; can transform python/gem/npm/dir/… to deb/rpm/solaris/… packages&lt;/p&gt;&#xA;&lt;p&gt;Example:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;fpm -s python -t  deb -m xyj.asmy@gmail.com --verbose  -v 0.10.1 --python-pip /usr/local/pip Flask&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;It will transform Flask 0.10.1 package to deb. Output package will be &lt;code&gt;python-flask_0.10.1_all.deb&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;Notes:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;If python packages rely on some c libs like &lt;code&gt;MySQLdb&lt;/code&gt; (libmysqlclient-dev), you need to install them on the machine to build deb binary.&lt;/li&gt;&#xA;&lt;li&gt;By default fpm use easy_install to build packages, some packages like httplib2 have permission bug with easy_install, so I use pip&lt;/li&gt;&#xA;&lt;li&gt;By default, msgpack-python will be convert to &lt;code&gt;python-msgpack-python&lt;/code&gt;, I don’t like it, so add &lt;code&gt;-n python-msgpack&lt;/code&gt; to normalize the package name.&lt;/li&gt;&#xA;&lt;li&gt;Some package’s dependencies’ version number is not valid(eg: celery 3.1.25 deps pytz &amp;gt;= dev), so I replace the dependencies with &lt;code&gt;--python-disable-dependency pytz -d &#39;pytz &amp;gt;= 2016.7&#39;&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;fpm will not dowload package’s dependency automatically, you need to do it by your self&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;use-aptly-to-setup-deb-repository&#34;&gt;Use aptly to setup deb repository&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://www.aptly.info/&#34;&gt;aptly&lt;/a&gt; can help build a self host deb repository and publish it on s3.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

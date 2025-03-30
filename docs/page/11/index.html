@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-cn" >
+<head>
+	<meta name="generator" content="Hugo 0.145.0"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  
+  <meta name="author"
+        content=""/>
+
+  
+
+  
+
+  
+  <link rel="canonical" href="http://localhost:1313/"/>
+
+  
+  <link rel="alternate" type="application/rss&#43;xml" href="http://localhost:1313/index.xml">
+  
+
+  <title>Shining Moon</title>
+
+  <link rel="shortcut icon" href="http://localhost:1313/images/favicon.ico"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/animate.min.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/remixicon.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/zozo.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/highlight.css"/>
+
+  
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/home.css">
+  
+</head>
+
+<body>
+<div class="main animated">
+  <div class="nav_container animated fadeInDown">
+  <div class="site_nav" id="site_nav">
+    <ul>
+      
+      <li>
+        <a href="/">Home</a>
+      </li>
+      
+      <li>
+        <a href="/posts/">Archive</a>
+      </li>
+      
+      <li>
+        <a href="/about/">About</a>
+      </li>
+      
+      <li>
+        <a href="/tags">Tags</a>
+      </li>
+      
+    </ul>
+  </div>
+  <div class="menu_icon">
+    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
+  </div>
+</div>
+
+  <div class="header animated fadeInDown">
+  <div class="site_title_container">
+    <div class="site_title">
+      <h1>
+        <a href="http://localhost:1313/">
+          <span>Shining Moon</span>
+          <img width="90px" src="http://localhost:1313/logo.png"/>
+        </a>
+      </h1>
+    </div>
+    <div class="description">
+      <p class="sub_title">百种弊病,皆从懒生</p>
+      <div class="my_socials">
+        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    
+
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2016/10/28/migrate-to-encrypted-rds/'>Migrate to encrypted RDS</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p><p>最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.</p>
+<p>比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.</p>......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2016.10.28</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="http://localhost:1313/tags/aws/">AWS</a>
+          
+          <a href="http://localhost:1313/tags/database/">Database</a>
+          
+          <a href="http://localhost:1313/tags/mysql/">MySQL</a>
+          
+          <a href="http://localhost:1313/tags/server-infra/">server-infra</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2016/08/06/witch-night/'>魔法使</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p><p>最近心血来潮把&lt;魔法使之夜&gt;的游戏通关了, 都已经是5年?还是6年前发售的了, 因为当年汉化迟迟不发布, 就一直搁置了.</p>......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2016.08.06</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="http://localhost:1313/tags/type-moon/">type-moon</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2016/07/26/mysql-index-optimization/'>MySQL 索引优化</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p><p>什么是索引,索引怎么建这些基本的就跳过不谈了,整理一些前段时间优化线上 SQL 查询时碰到的一些问题. 主要解决下面几个问题:</p>
+<ul>
+<li>建立索引怎样选择合适的列.</li>
+<li>怎样让 SQL 能有效利用索引.</li>
+<li>如果对 SQL 效率进行评估(即设置索引前后是否真的有性能提升).</li>
+</ul>......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2016.07.26</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="http://localhost:1313/tags/database/">Database</a>
+          
+          <a href="http://localhost:1313/tags/mysql/">MySQL</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2016/07/16/redshift-as-data-warehouse/'>Redshift as data warehouse</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p><p>Glow 的 server infrastructure 全部搭建在 AWS 上，一般要选择一些基础服务的时候，总是先看 AWS, 只要功能和成本符合要求，不会特意选择开源方案。</p>
+<p>数据仓库我们选择了 AWS 的 Redshift.</p>
+<p>在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.</p>......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2016.07.16</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="http://localhost:1313/tags/aws/">AWS</a>
+          
+          <a href="http://localhost:1313/tags/database/">Database</a>
+          
+          <a href="http://localhost:1313/tags/redshift/">Redshift</a>
+          
+          <a href="http://localhost:1313/tags/glow/">glow</a>
+          
+          <a href="http://localhost:1313/tags/data-infra/">data-infra</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2016/07/16/mysql-innodb-buffer-pool/'>MySQL innodb buffer pool</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p><p>最近在对公司的 MySQL 服务器做性能优化, 一直对 innodb 的内存使用方式不是很清楚, 乘这机会做点总结.</p>
+<p>在配置 MySQL 的时候, 一般都会需要设置 <em>innodb_buffer_pool_size</em>, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.</p>
+<p>之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?</p>......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2016.07.16</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="http://localhost:1313/tags/database/">Database</a>
+          
+          <a href="http://localhost:1313/tags/mysql/">MySQL</a>
+          
+          <a href="http://localhost:1313/tags/server-infra/">server-infra</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/about/'>About Me</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p><p>Work with tech, belive in magic, live on fun :)</p>
+<h3 id="side-projects">Side projects</h3>
+<ul>
+<li><a href="https://github.com/monsterxx03/gospy">https://github.com/monsterxx03/gospy</a>  non-Invasive goroutine inspector</li>
+<li><a href="https://github.com/monsterxx03/snet">https://github.com/monsterxx03/snet</a>  transparent tcp proxy(mainly used in China), works on Linux &amp; MacOS</li>
+</ul>
+<h2 id="work-expenrience">Work expenrience</h2>
+<h3 id="20216--now--xsky-ltd-">2021.6 ~ Now  XSky Ltd (<a href="https://www.xsky.com/">https://www.xsky.com/</a>)</h3>
+<p>Work as senior architect, participated in the design and development of HCI(Hyperconverged infrastructure) system from 0 to 1.</p>
+<p>It&rsquo;s a vm scheduling and management system.</p>
+<p>Main tech stack:</p>
+<ul>
+<li>Postgresql as DB, use logical replication as msg queue.</li>
+<li>VictoriaMetrics for monitoring.</li>
+<li>Etcd for leader election.</li>
+<li>code in golang</li>
+</ul>
+<p>Major achievements:</p>
+<ul>
+<li>Write a terraform provider for the product, which generates the terraform schema definition from an OpenAPI spec using code generation, uses reflection to implement generic Terraform CRUD.</li>
+<li>Designed and developed a HA solution for Postgresql based on Patroni(by client side service discovering)</li>
+<li>Build alerting system based on VictoriaMetrics, support both metrics &amp; event based alerting.</li>
+<li>Design and implement the upgrade path for the product.</li>
+</ul>
+<h3 id="201411--20215-glow-inc-">2014.11 ~ 2021.5 Glow Inc (<a href="https://glowing.com">https://glowing.com</a>)</h3>
+<p>Work as company&rsquo;s infrastructure architect:</p>
+<ul>
+<li>Responsible for AWS-based infrastructure design, selection, maintenance, and refactoring. System capacity planning, cost management.</li>
+<li>Identify bottlenecks in system performance and architecture scalability, refactor existing code, increase user base by 10X while keeping IT cost increase to only two times.</li>
+<li>Regular team training and technical sharing, as well as code quality control.</li>
+</ul>
+<h4 id="server-infra">Server Infra</h4>
+<ul>
+<li>Develop and achieve SLOs for the business, including:
+<ul>
+<li>Availability: service uptime &gt;=99.99%</li>
+<li>Quality: p95 latency &lt; 200ms</li>
+<li>Core service p95 latency &lt; 50ms.</li>
+</ul>
+</li>
+<li>Implement infrastructure as code and use Terraform to codify the management of AWS infrastructure components such as VPC, Autoscaling Group, IAM permissions, DMS tasks, RDS, etc. All historical changes should be tracking.</li>
+<li>Fully migrating the architecture to EKS (AWS-managed Kubernetes) and upgrading it from version 1.10 to 1.18 without any downtime, such as containerizing the business applications and refactoring the monitoring and alerting solution from Datadog to Prometheus+Grafana.</li>
+<li>Based on Jenkins, using Groovy to write pipelines, achieve self-service deployment and rollback of business, and integrate SonarQube to ensure code quality control for the team.</li>
+<li>Database selection and optimization, e.g., using MySQL on RDS or AWS Aurora for relational databases, DynamoDB for key-value databases, Sentinel Redis for message queue brokers, Redis Cluster for caching, and ElasticSearch for search and analytics</li>
+<li>Performing daily troubleshooting and performance tuning in the production environment, and improving related toolchains, such as using Sentry for bug reporting, Jaeger for OpenTracing, and FluentBit + Loki + Syslog-ng for logging.</li>
+<li>Developing a management tool for EKS worker node groups using Golang, enabling seamless migration of stateless applications (such as web services and some message queue consumers) and stateful applications (such as Redis Sentinel HA and Redis Cluster).</li>
+<li>Assisting the company in achieving HIPAA compliance, which primarily involves implementing technical measures such as data-at-rest encryption, log anonymization, and access control for internal data.</li>
+</ul>
+<h3 id="code-framework-design-and-refactor">Code framework design and refactor</h3>
+<ul>
+<li>Upgrading a Python project with over 600,000 lines of code from Python 2.7 to Python 3.6, performing a gradual rollout to production within three months without any downtime and without adding extra burden to business development. This was achieved by using SonarQube to perform syntax checks in the CI phase to prevent developers from submitting Python 2.7 incompatible code.</li>
+<li>Splitting a code repository was necessary as the early codebase consisted of over a dozen Python repositories that imported each other, leading to significant deployment and troubleshooting issues. To address this, the API frontend layer and business RPC layer were cleanly separated, and the RPC client was generated through code to synchronize with each repository (using AST traversal for syntax checks).</li>
+<li>Refactor the deduplication module in the business with Bloom filter to reduce the latency and storage of related business to around 1/10 of the original.</li>
+</ul>
+<h3 id="data-warehourse">Data warehourse</h3>
+<ul>
+<li>Build a data warehouse based on Redshift/Spectrum and S3</li>
+<li>Design and implement ETL process using DMS, fluentd, argo-workflow, and Spark.</li>
+<li>Refactor an early complex reporting system (with over 10,000 lines of Python code) by separating the definition and calculation logic of metrics. After the transformation, the core Python code was reduced to 1,000 lines, and the rest was written in YAML. The system had not been significantly modified for five years. The purpose of the refactoring was to enable PAs (Product Analysts) who are not proficient in Python to define and launch business metrics independently.</li>
+</ul>
+<h3 id="20131--201410--unitedstackprevious-ustackcom-current-tfcloudcom">2013.1 ~ 2014.10  UnitedStack(previous ustack.com, current tfcloud.com)</h3>
+<p>Main work is build a privatized OpenStack distribution, including:</p>......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2016.01.01</span>
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="pagination">
+  
+  
+  <a href="/page/10/" class="pre">
+    返回上一页
+  </a>
+  
+  
+  
+</div>
+
+  </div>
+</div>
+<footer class="footer">
+  <div class="powered_by">
+    <a href="https://zeuk.me">Designed by Zeuk,</a>
+    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
+  </div>
+
+  <div class="footer_slogan">
+    <span></span>
+  </div>
+</footer>
+
+
+
+<script src="http://localhost:1313/js/jquery-3.3.1.min.js"></script>
+<script src="http://localhost:1313/js/zozo.js"></script>
+<script src="http://localhost:1313/js/highlight.pack.js"></script>
+<link  href="http://localhost:1313/css/fancybox.min.css" rel="stylesheet">
+<script src="http://localhost:1313/js/fancybox.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
+
+
+</body>
+</html>

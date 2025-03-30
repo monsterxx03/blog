@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>type-moon on Shining Moon</title>
+    <title>Type-Moon on Shining Moon</title>
     <link>https://blog.monsterxx03.com/tags/type-moon/</link>
-    <description>Recent content in type-moon on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Type-Moon on Shining Moon</description>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sat, 06 Aug 2016 16:16:23 +0000</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/type-moon/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 06 Aug 2016 16:16:23 +0000</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/tags/type-moon/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>魔法使</title>
       <link>https://blog.monsterxx03.com/2016/08/06/witch-night/</link>
       <pubDate>Sat, 06 Aug 2016 16:16:23 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2016/08/06/witch-night/</guid>
       <description>&lt;p&gt;最近心血来潮把&amp;lt;魔法使之夜&amp;gt;的游戏通关了, 都已经是5年?还是6年前发售的了, 因为当年汉化迟迟不发布, 就一直搁置了.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

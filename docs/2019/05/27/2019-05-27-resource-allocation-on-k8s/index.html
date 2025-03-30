@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-cn" >
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  
+  <meta name="author"
+        content=""/>
+
+  
+  <meta name="description" content="requests/limits and QoS class 查看节点资源分配情况:
+kubectl describe node nod1 scheduler 根据 requests 的 resource 来调度而不是当前使用率.
+如果 pod1 request 了 100M 的 cpu, pod2 request 200M 的 cpu, 总 cpu 是1000M.
+如果两个 pod 都全力使用 cpu, 剩下的 700M cpu 会在两个 pod 之间以 1:2 的比例分配.
+如果一个　pod2 是 idle, pod1 全力跑, pod1 仍旧可以使用剩下的全部 cpu 资源.
+extended resource
+QoS class: Guaranteed &gt; Burstable &gt; BestEffort
+单 container 的 pod, container 的 QoS class 就是 pod 的 QoS class.
+Requests/Limits 都没设置, QoS class 是 BestEffort.
+Requests &lt; Limits, 或只设置 Requests, QoS class 是 Burstable.
+Requests 和Limits 都设置了,并且相等, QoS class 是 Guaranteed.
+只设置 Limits, 没 Requests, Requests 自动设置成等于 Limits, QoS class 是 Guaranteed.
+"/>
+  
+
+  
+
+  
+  <link rel="canonical" href="http://localhost:1313/2019/05/27/2019-05-27-resource-allocation-on-k8s/"/>
+
+  
+
+  <title>2019 05 27 Resource Allocation on K8s &middot; Shining Moon</title>
+
+  <link rel="shortcut icon" href="http://localhost:1313/images/favicon.ico"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/animate.min.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/remixicon.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/zozo.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/highlight.css"/>
+
+  
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/home.css">
+  
+</head>
+
+<body>
+<div class="main animated">
+  <div class="nav_container animated fadeInDown">
+  <div class="site_nav" id="site_nav">
+    <ul>
+      
+      <li>
+        <a href="/">Home</a>
+      </li>
+      
+      <li>
+        <a href="/posts/">Archive</a>
+      </li>
+      
+      <li>
+        <a href="/about/">About</a>
+      </li>
+      
+      <li>
+        <a href="/tags">Tags</a>
+      </li>
+      
+    </ul>
+  </div>
+  <div class="menu_icon">
+    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
+  </div>
+</div>
+
+  <div class="header animated fadeInDown">
+  <div class="site_title_container">
+    <div class="site_title">
+      <h1>
+        <a href="http://localhost:1313/">
+          <span>Shining Moon</span>
+          <img width="90px" src="http://localhost:1313/logo.png"/>
+        </a>
+      </h1>
+    </div>
+    <div class="description">
+      <p class="sub_title">百种弊病,皆从懒生</p>
+      <div class="my_socials">
+        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    <div class="post_page">
+      <div class="post animated fadeInDown">
+        <div class="post_title post_detail_title">
+          <h2><a href='/2019/05/27/2019-05-27-resource-allocation-on-k8s/'>2019 05 27 Resource Allocation on K8s</a></h2>
+          <span class="date">2019.05.27</span>
+        </div>
+        <div class="post_content markdown"><h1 id="requestslimits-and-qos-class">requests/limits and QoS class</h1>
+<p>查看节点资源分配情况:</p>
+<pre><code>kubectl describe node nod1
+</code></pre>
+<p>scheduler 根据 requests 的 resource 来调度而不是当前使用率.</p>
+<p>如果 pod1 request 了 100M 的 cpu, pod2 request 200M 的 cpu, 总 cpu 是1000M.</p>
+<p>如果两个 pod 都全力使用 cpu, 剩下的 700M cpu 会在两个 pod 之间以 1:2 的比例分配.</p>
+<p>如果一个　pod2 是 idle, pod1 全力跑, pod1 仍旧可以使用剩下的全部 cpu 资源.</p>
+<p>extended resource</p>
+<p>QoS class: Guaranteed &gt; Burstable &gt; BestEffort</p>
+<p>单 container 的 pod, container 的 QoS class 就是 pod 的 QoS class.</p>
+<p>Requests/Limits 都没设置, QoS class 是 BestEffort.</p>
+<p>Requests &lt; Limits, 或只设置 Requests, QoS class 是 Burstable.</p>
+<p>Requests 和Limits 都设置了,并且相等, QoS class 是 Guaranteed.</p>
+<p>只设置 Limits, 没 Requests, Requests 自动设置成等于 Limits, QoS class 是 Guaranteed.</p>
+<p>多 container 的 pod, 如果所有 container QoS class 都一样, pod 的 QoS class 也一样.</p>
+<p>任意一个 container 的 QoS class 不一样, pod 的 QoS class 就是 Burstable.</p>
+<p>当 node 内存耗尽时, 低 QoS class 的 pod 会被先踢走.</p>
+<p>当 QoS class 相同的 pod 有多个时, OOM score 高的进程会被踢走.</p>
+<p>OOM score 由两部分组成:</p>
+<ul>
+<li>进程消耗它 requests 的 memory 的百分比</li>
+<li>由 QoS class 决定的一个固定值.</li>
+</ul>
+<p>所以同 QoS class 时候, 消耗了 80% requests memory 的 pod 会先比消耗 70% requests memory 的 pod 先被踢走,即使它实际使用的内存比较少.</p>
+<h1 id="allocatable-resources">allocatable resources</h1>
+<p>allocatable = capacity - kube-revresed - system-reserved - eviction-threshold</p>
+<p><a href="https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources/#feature-availability">https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources/#feature-availability</a></p>
+<p><a href="https://kubedex.com/90-days-of-aws-eks-in-production/">https://kubedex.com/90-days-of-aws-eks-in-production/</a></p>
+</div>
+        <div class="post_footer">
+          
+          <div class="meta">
+            <div class="info">
+              <span class="field tags">
+                <i class="remixicon-stack-line"></i>
+                
+                <a href="http://localhost:1313/tags/k8s/">k8s</a>
+                
+                <a href="http://localhost:1313/tags/eks/">eks</a>
+                
+              </span>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mx03" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      
+      
+    </div>
+  </div>
+  <a id="back_to_top" href="#" class="back_to_top"><span>△</span></a>
+</div>
+<footer class="footer">
+  <div class="powered_by">
+    <a href="https://zeuk.me">Designed by Zeuk,</a>
+    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
+  </div>
+
+  <div class="footer_slogan">
+    <span></span>
+  </div>
+</footer>
+
+
+
+<script src="http://localhost:1313/js/jquery-3.3.1.min.js"></script>
+<script src="http://localhost:1313/js/zozo.js"></script>
+<script src="http://localhost:1313/js/highlight.pack.js"></script>
+<link  href="http://localhost:1313/css/fancybox.min.css" rel="stylesheet">
+<script src="http://localhost:1313/js/fancybox.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
+
+
+</body>
+</html>

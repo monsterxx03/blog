@@ -1,40 +1,27 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>linux on Shining Moon</title>
+    <title>Linux on Shining Moon</title>
     <link>https://blog.monsterxx03.com/tags/linux/</link>
-    <description>Recent content in linux on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Linux on Shining Moon</description>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Wed, 26 Aug 2020 23:06:01 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 26 Aug 2020 23:06:01 +0800</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux 进程虚拟内存分布</title>
       <link>https://blog.monsterxx03.com/2020/08/26/linux-%E8%BF%9B%E7%A8%8B%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%88%86%E5%B8%83/</link>
       <pubDate>Wed, 26 Aug 2020 23:06:01 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2020/08/26/linux-%E8%BF%9B%E7%A8%8B%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%88%86%E5%B8%83/</guid>
-      <description>巩固下基础知识. 现代系统都运行在保护模式(protected mode)下, x86_64 下用户态程序启动时候都会被分配一片虚拟内存, 大小是 2^47 (128TiB), 但目前 cpu 只能映射 2^46 (64TiB), 通过 page table 将虚拟内存中的地址(vma)和物理地址映射起来. 以前的 BIOS 跑在 实模式下(real mode), 直接访问物理内存, 不过只能访问前 2^20(1MiB) 的空间. Linux 下 /proc/$pid/maps 文件内容就是进程的虚拟内存分布. 每一列含义通过 man 5 proc 看, 不重复了. 网上的例子都有点过时, 在比较新的 linux 发行版里, 默认</description>
+      <description>&lt;p&gt;巩固下基础知识.&lt;/p&gt;&#xA;&lt;p&gt;现代系统都运行在保护模式(protected mode)下, x86_64 下用户态程序启动时候都会被分配一片虚拟内存, 大小是 2^47 (128TiB), 但目前 cpu 只能映射 2^46 (64TiB), 通过 page table 将虚拟内存中的地址(vma)和物理地址映射起来.&#xA;以前的 BIOS 跑在 实模式下(real mode), 直接访问物理内存, 不过只能访问前 2^20(1MiB) 的空间.&lt;/p&gt;&#xA;&lt;p&gt;Linux 下 /proc/$pid/maps 文件内容就是进程的虚拟内存分布. 每一列含义通过 &lt;code&gt;man 5 proc&lt;/code&gt; 看, 不重复了.&lt;/p&gt;&#xA;&lt;p&gt;网上的例子都有点过时, 在比较新的 linux 发行版里, 默认开启了ASLR(地址空间随机化), 自带的二进制文件都是 PIE(Position Independent Executable) build 的. 这两结合起来让进程在虚拟内存中的基地址随机化, heap 和 stack 的开始位置也随机化, 目的是为了防止远程注入漏洞猜到一些软件的vma.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Debug Skills on Linux</title>
       <link>https://blog.monsterxx03.com/2018/12/03/debug-skills-on-linux/</link>
       <pubDate>Mon, 03 Dec 2018 22:47:51 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/12/03/debug-skills-on-linux/</guid>
-      <description>This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04, some tools are not installed by default, you can installl by sudo apt install xxx. Some commands must be used via sudo.
-System resources can be classified in three main categories: compute, storage, and network. Usually, when you come to a performance issue, it&amp;rsquo;s always caused by exhaustion of those resources.
-Universal metric: System load There&amp;rsquo;re several ways to get system load, w, uptime, top, cat /proc/loadavg
-uptime example:
-03:34:23 up 20:31, 1 user, load average: 1.02, 0.65, 0.45 Top right corner three values named load average is system load.
-They means: average system load during last minute/last 5 minutes/last 15 minutes periods.
-If load/(# of cpu core) &amp;gt; 1 means there&amp;rsquo;re tasks pending in cpu queue. Usually, you will feel slow.
-It&amp;rsquo;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.
-If system load is high, means tasks are pending in CPU queue, maybe a result of:
-High cpu usage. Poor disk performance(disk io). Exhaustion of ram. &amp;hellip; free free -k/-m/-g show memory usage in KB/MB/GB
-free -h humanize output (automatically show in KB/MB/GB&amp;hellip;)</description>
+      <description>&lt;p&gt;This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04,&#xA;some tools are not installed by default, you can installl by &lt;code&gt;sudo apt install xxx&lt;/code&gt;.&#xA;Some commands must be used via &lt;code&gt;sudo&lt;/code&gt;.&lt;/p&gt;&#xA;&lt;p&gt;System resources can be classified in three main categories: compute, storage, and network.&#xA;Usually, when you come to a performance issue, it&amp;rsquo;s always caused by exhaustion of those&#xA;resources.&lt;/p&gt;&#xA;&lt;h2 id=&#34;universal-metric-system-load&#34;&gt;Universal metric: System load&lt;/h2&gt;&#xA;&lt;p&gt;There&amp;rsquo;re several ways to get system load, &lt;code&gt;w&lt;/code&gt;, &lt;code&gt;uptime&lt;/code&gt;, &lt;code&gt;top&lt;/code&gt;, &lt;code&gt;cat /proc/loadavg&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;uptime&lt;/code&gt; example:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;03:34:23 up 20:31,  1 user,  load average: 1.02, 0.65, 0.45&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;Top right corner three values named &lt;code&gt;load average&lt;/code&gt; is system load.&lt;/p&gt;&#xA;&lt;p&gt;They means: average system load during last minute/last 5 minutes/last 15 minutes periods.&lt;/p&gt;&#xA;&lt;p&gt;If &lt;code&gt;load/(# of cpu core) &amp;gt; 1&lt;/code&gt;  means there&amp;rsquo;re tasks pending in cpu queue. Usually, you will feel &lt;strong&gt;slow&lt;/strong&gt;.&lt;/p&gt;&#xA;&lt;p&gt;It&amp;rsquo;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.&lt;/p&gt;&#xA;&lt;p&gt;If system load is high, means tasks are pending in CPU queue, maybe a result of:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;High cpu usage.&lt;/li&gt;&#xA;&lt;li&gt;Poor disk performance(disk io).&lt;/li&gt;&#xA;&lt;li&gt;Exhaustion of ram.&lt;/li&gt;&#xA;&lt;li&gt;&amp;hellip;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;free&#34;&gt;free&lt;/h2&gt;&#xA;&lt;p&gt;&lt;code&gt;free -k/-m/-g&lt;/code&gt; show memory usage in KB/MB/GB&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;free -h&lt;/code&gt;  humanize output (automatically show in KB/MB/GB&amp;hellip;)&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

@@ -1,87 +1,55 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>MySQL on Shining Moon</title>
+    <title>Mysql on Shining Moon</title>
     <link>https://blog.monsterxx03.com/tags/mysql/</link>
-    <description>Recent content in MySQL on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Mysql on Shining Moon</description>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Thu, 31 Oct 2019 11:45:44 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/mysql/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 31 Oct 2019 11:45:44 +0800</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/tags/mysql/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>老代码里和 MySQL 的事务隔离相关的一个bug</title>
       <link>https://blog.monsterxx03.com/2019/10/31/%E8%80%81%E4%BB%A3%E7%A0%81%E9%87%8C%E5%92%8C-mysql-%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%80%E4%B8%AAbug/</link>
       <pubDate>Thu, 31 Oct 2019 11:45:44 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/10/31/%E8%80%81%E4%BB%A3%E7%A0%81%E9%87%8C%E5%92%8C-mysql-%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%80%E4%B8%AAbug/</guid>
-      <description>这两天在调试代码的时候, 发现 db 层的代码在每次把 connection 放回 db pool 的时候,即使之前执行的是 select 语句,也会 rollback 一下, 这代码很古老, 我也不知道为啥, 尝试把 rollback 去掉, 结果单元测试挂了一堆, 大多都是数据不一致的问题, debug 了一下, 最后发现这坑还挺大的. 为什么去掉 select 的 rollback 后会出现数据不一致? pymysql 默认关闭了 autocommit, connection A 进行 select 之后, 其实 MySQL 内部为 select 也开启了一个 transaction(Repeatable Read), 可以通过 SELECT * FROM information_schema.innodb_trx\G 查看. 所以当 connection A 先 select 一次, connection B 在 transaction 内更新数据并 commit, connection A 再次 select (之前</description>
+      <description>&lt;p&gt;这两天在调试代码的时候, 发现 db 层的代码在每次把 connection 放回 db pool 的时候,即使之前执行的是 select 语句,也会 rollback 一下,&#xA;这代码很古老, 我也不知道为啥, 尝试把 rollback 去掉, 结果单元测试挂了一堆, 大多都是数据不一致的问题, debug 了一下, 最后发现这坑还挺大的.&lt;/p&gt;&#xA;&lt;p&gt;为什么去掉 select 的 rollback 后会出现数据不一致?&lt;/p&gt;&#xA;&lt;p&gt;pymysql 默认关闭了 autocommit, connection A 进行 select 之后, 其实 MySQL 内部为 select 也开启了一个 transaction(Repeatable Read),&#xA;可以通过 &lt;code&gt;SELECT * FROM information_schema.innodb_trx\G&lt;/code&gt;  查看.&lt;/p&gt;&#xA;&lt;p&gt;所以当 connection A 先 select 一次, connection B 在 transaction 内更新数据并 commit, connection A 再次 select (之前的 transaction 并没 rollback 或 commit),&#xA;得到了老的数据. MySQL 在 repeatable read 下, 为了 consistent read 会使用一个 snapshot, 时间是第一次 read 发生的时间: &lt;a href=&#34;https://dev.mysql.com/doc/refman/5.7/en/glossary.html#glos_consistent_read&#34;&gt;https://dev.mysql.com/doc/refman/5.7/en/glossary.html#glos_consistent_read&lt;/a&gt;&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>AWS Aurora DB</title>
       <link>https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/</link>
       <pubDate>Wed, 31 Oct 2018 15:23:45 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/</guid>
-      <description>最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比. Paper notes 存储计算分离 redo log 下推到存储层 副本: 6 副本 3 AZ(2 per az), 失去一个 AZ + 1 additoinal node 不会丢数据(可读不可写). 失去一个 AZ (或任意2 node) 不影响数据写入. 10GB 一个 segment, 每个 segment 6 副本一个 PG (protection group), 一 AZ 两副本. 在 10Gbps 的网络上, 修复一个 10GB 的segment 需要 10s. MySQL 一个应用层的写会在底层产生很多额外的写操作，会带来写放大问题: redo log 用来 crash recovery, binlog 会上传 s3 用于 point in time restore. 在 aurora 里，只</description>
+      <description>&lt;p&gt;最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比.&lt;/p&gt;&#xA;&lt;h2 id=&#34;paper-notes&#34;&gt;Paper notes&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;存储计算分离&lt;/li&gt;&#xA;&lt;li&gt;redo log 下推到存储层&lt;/li&gt;&#xA;&lt;li&gt;副本: 6 副本 3 AZ(2 per az), 失去一个 AZ + 1 additoinal node 不会丢数据(可读不可写). 失去一个 AZ (或任意2 node) 不影响数据写入.&lt;/li&gt;&#xA;&lt;li&gt;10GB 一个 segment, 每个 segment 6 副本一个 PG (protection group), 一 AZ　两副本.&lt;/li&gt;&#xA;&lt;li&gt;在 10Gbps 的网络上, 修复一个 10GB 的segment 需要 10s.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;MySQL 一个应用层的写会在底层产生很多额外的写操作，会带来写放大问题:&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://blog.monsterxx03.com/posts/images/aurora-mysql-replication.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;redo log 用来 crash recovery, binlog 会上传 s3　用于 point in time restore.&lt;/p&gt;&#xA;&lt;p&gt;在 aurora 里，只有 redo log 会通过网络复制到各个 replica, master 会等待 4/6 replicas 完成 redo log 的写入就认为写入成功 (所以失去3副本就无法写入数据了). 其他副本会根据 redo log 重建数据(单独的 redo log applicator 进程).&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>MySQL partition table</title>
       <link>https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/</link>
       <pubDate>Wed, 05 Apr 2017 16:23:32 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/</guid>
-      <description>&lt;h1 id=&#34;overview&#34;&gt;Overview&lt;/h1&gt;
-&lt;p&gt;MySQL has buildin partition table support, which can help split data accross multi tables,&lt;/p&gt;
-&lt;p&gt;and provide a unified query interface as normal tables.&lt;/p&gt;
-&lt;p&gt;Benefit:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly.&lt;/li&gt;
-&lt;li&gt;Speed up query based on partition key(partitoin pruning)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Limit:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;For partition table, every unique key must use every column in table’s partition expression(include primary key)&lt;/li&gt;
-&lt;li&gt;For innodb engine, paritioned table can’t have foreign key,and can’t have columns referenced by foreign keys.&lt;/li&gt;
-&lt;li&gt;For MyISAM engine, mysql version &amp;lt;= 5.6.5, DML operation will lock all partition as a whole.&lt;/li&gt;
-&lt;/ul&gt;</description>
+      <description>&lt;h1 id=&#34;overview&#34;&gt;Overview&lt;/h1&gt;&#xA;&lt;p&gt;MySQL has buildin partition table support, which can help split data accross multi tables,&lt;/p&gt;&#xA;&lt;p&gt;and provide a unified query interface as normal tables.&lt;/p&gt;&#xA;&lt;p&gt;Benefit:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly.&lt;/li&gt;&#xA;&lt;li&gt;Speed up query based on partition key(partitoin pruning)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Limit:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;For partition table, every unique key must use every column in table’s partition expression(include primary key)&lt;/li&gt;&#xA;&lt;li&gt;For innodb engine, paritioned table can’t have foreign key,and can’t have columns referenced by foreign keys.&lt;/li&gt;&#xA;&lt;li&gt;For MyISAM engine, mysql version &amp;lt;= 5.6.5, DML operation will lock all partition as a whole.&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
     </item>
-    
     <item>
       <title>Migrate to encrypted RDS</title>
       <link>https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/</link>
       <pubDate>Fri, 28 Oct 2016 16:17:30 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/</guid>
-      <description>&lt;p&gt;最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.&lt;/p&gt;
-&lt;p&gt;比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.&lt;/p&gt;</description>
+      <description>&lt;p&gt;最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.&lt;/p&gt;&#xA;&lt;p&gt;比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>MySQL 索引优化</title>
       <link>https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/</link>
       <pubDate>Tue, 26 Jul 2016 16:13:54 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/</guid>
-      <description>&lt;p&gt;什么是索引,索引怎么建这些基本的就跳过不谈了,整理一些前段时间优化线上 SQL 查询时碰到的一些问题. 主要解决下面几个问题:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;建立索引怎样选择合适的列.&lt;/li&gt;
-&lt;li&gt;怎样让 SQL 能有效利用索引.&lt;/li&gt;
-&lt;li&gt;如果对 SQL 效率进行评估(即设置索引前后是否真的有性能提升).&lt;/li&gt;
-&lt;/ul&gt;</description>
+      <description>&lt;p&gt;什么是索引,索引怎么建这些基本的就跳过不谈了,整理一些前段时间优化线上 SQL 查询时碰到的一些问题. 主要解决下面几个问题:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;建立索引怎样选择合适的列.&lt;/li&gt;&#xA;&lt;li&gt;怎样让 SQL 能有效利用索引.&lt;/li&gt;&#xA;&lt;li&gt;如果对 SQL 效率进行评估(即设置索引前后是否真的有性能提升).&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
     </item>
-    
     <item>
       <title>MySQL innodb buffer pool</title>
       <link>https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/</link>
       <pubDate>Sat, 16 Jul 2016 16:07:14 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/</guid>
-      <description>&lt;p&gt;最近在对公司的 MySQL 服务器做性能优化, 一直对 innodb 的内存使用方式不是很清楚, 乘这机会做点总结.&lt;/p&gt;
-&lt;p&gt;在配置 MySQL 的时候, 一般都会需要设置 &lt;em&gt;innodb_buffer_pool_size&lt;/em&gt;, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.&lt;/p&gt;
-&lt;p&gt;之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?&lt;/p&gt;</description>
+      <description>&lt;p&gt;最近在对公司的 MySQL 服务器做性能优化, 一直对 innodb 的内存使用方式不是很清楚, 乘这机会做点总结.&lt;/p&gt;&#xA;&lt;p&gt;在配置 MySQL 的时候, 一般都会需要设置 &lt;em&gt;innodb_buffer_pool_size&lt;/em&gt;, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.&lt;/p&gt;&#xA;&lt;p&gt;之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

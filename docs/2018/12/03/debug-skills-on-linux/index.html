@@ -7,20 +7,21 @@
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
   <meta name="description" content="This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04, some tools are not installed by default, you can installl by sudo apt install xxx. Some commands must be used via sudo.
-System resources can be classified in three main categories: compute, storage, and network. Usually, when you come to a performance issue, it&amp;rsquo;s always caused by exhaustion of those resources.
-Universal metric: System load There&amp;rsquo;re several ways to get system load, w, uptime, top, cat /proc/loadavg
+System resources can be classified in three main categories: compute, storage, and network. Usually, when you come to a performance issue, it&rsquo;s always caused by exhaustion of those resources.
+Universal metric: System load There&rsquo;re several ways to get system load, w, uptime, top, cat /proc/loadavg
 uptime example:
 03:34:23 up 20:31, 1 user, load average: 1.02, 0.65, 0.45 Top right corner three values named load average is system load.
 They means: average system load during last minute/last 5 minutes/last 15 minutes periods.
-If load/(# of cpu core) &amp;gt; 1 means there&amp;rsquo;re tasks pending in cpu queue. Usually, you will feel slow.
-It&amp;rsquo;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.
+If load/(# of cpu core) &gt; 1 means there&rsquo;re tasks pending in cpu queue. Usually, you will feel slow.
+It&rsquo;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.
 If system load is high, means tasks are pending in CPU queue, maybe a result of:
-High cpu usage. Poor disk performance(disk io). Exhaustion of ram. &amp;hellip; free free -k/-m/-g show memory usage in KB/MB/GB
-free -h humanize output (automatically show in KB/MB/GB&amp;hellip;)"/>
+High cpu usage. Poor disk performance(disk io). Exhaustion of ram. &hellip; free free -k/-m/-g show memory usage in KB/MB/GB
+free -h humanize output (automatically show in KB/MB/GB&hellip;)
+"/>
   
 
   
@@ -77,7 +78,7 @@ free -h humanize output (automatically show in KB/MB/GB&amp;hellip;)"/>
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -86,12 +87,8 @@ free -h humanize output (automatically show in KB/MB/GB&amp;hellip;)"/>
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -358,7 +355,7 @@ rt_sigsuspend([], 8
         </div>
       </div>
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -441,17 +438,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

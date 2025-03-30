@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.111.3">
+	<meta name="generator" content="Hugo 0.145.0">
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
 
@@ -68,7 +68,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -77,12 +77,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -94,12 +90,103 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2018/05/23/use-sns-sqs-to-build-pub/sub-system/'>Use SNS &amp; SQS to build Pub/Sub System</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p><p>Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, take some notes.</p>
+<p>Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s
+really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex
+pubsub logic, eg: topic based distribution. It don&rsquo;t support redelivery as well, if subscribers failed to process
+the message, message will be dropped.</p>
+<p>There&rsquo;re three obvious choices in my mind:</p>
+<ol>
+<li>kafka</li>
+<li>AMQP based system (rabbitmq,activemq &hellip;)</li>
+<li>SNS + SQS</li>
+</ol>
+<p>My demands for this system are:</p>
+<ul>
+<li>Support message persistence.</li>
+<li>Support topic based message distribution.</li>
+<li>Easy to manage.</li>
+</ul>
+<p>The data volume won&rsquo;t be very large, so performance and throughput won&rsquo;t be critical concerns.</p>
+<p>I choose SNS + SQS, main concerns are from operation side:</p>
+<ul>
+<li>kafka need zookeeper to support cluster.</li>
+<li>rabbitmq need extra configuration for HA, and AMQP model is relatively complex for programming.</li>
+</ul>
+<p>So my decision is:</p>
+<ul>
+<li>application publish message to SNS topic</li>
+<li>Setup multi SQS queues to subscribe SNS topic</li>
+<li>Let different application processes to subscribe to different queues to finish its logic.</li>
+</ul>
+<p>SQS and SNS is very simple, not too much to say, just some notes:</p>
+<ul>
+<li>SQS queue have two types, FIFO queue and standard queue. FIFO queue will ensure message order, and ensure exactly once delivery, tps is limited(3000/s)
+standard queue is at least once delivery, message order is not ensured, tps is unlimited. In my case, I use standard queue, order is not very important.</li>
+<li>SQS message size limit is 256KB.</li>
+<li>Use <a href="https://github.com/p4tin/goaws">goaws</a> for local development, it has problem on processing message attributes, but I just use message body. messages only store in ram,
+will be cleared after restarted.</li>
+<li>If you failed to deliver message to sqs from sns, can setup topic&rsquo;s <code>sqs failure feedback role</code> to log to cloudwatch, in most case it&rsquo;s caused by iam permission.</li>
+<li>Message in sqs can retain at most 14 days.</li>
+<li>Once a message is received by a client, it will be invisible to other clients in <code>visibility_timeout_seconds</code>(default 30s). It means if your client failed to process
+the message, it will be redelivered after 30s.</li>
+<li>SQS client use long polling to receive message, set <code>receive_wait_time_seconds</code> to reduce api call to reduce fee.</li>
+<li>If your client failed to process a message due to bug, the message will be redelivered looply, set <code>redrive_policy</code> for the queue to limit retry count, and set a dead letter
+queue to store those messages. You can decide how to handle them late.</li>
+</ul>
+<p>I setup SNS and SQS via terraform, used following resources:</p>......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2018.05.23</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/sns/">SNS</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/sqs/">SQS</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2018/05/20/migrate-to-sqlalchemy/'>Migrate to Sqlalchemy</a></h2>
   </div>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些. 原来的 db 层代码历史非常古老(10年以上&hellip;), 最早写代码的人早就不在了, 问题很多: 完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表......</p>
+      <p><p>最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些.</p>
+<p>原来的 db 层代码历史非常古老(10年以上&hellip;), 最早写代码的人早就不在了, 问题很多:</p>
+<ul>
+<li>完全没有单元测试.</li>
+<li>暴露出的接口命名很混乱, 多数是为了兼容一些历史问题.</li>
+<li>里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便.</li>
+<li>老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表结构，只能直接看数据库.</li>
+</ul>
+<p>重写时候要考虑到的:</p>......</p>
     </div>
   </div>
   
@@ -134,7 +221,21 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别. K8S 集群对网络有几个基本要求: container 之间网络必须可达，且不通过 NAT 所有 node 必须可以和所有 container 通信, 且不通过 NAT container 自己看到的 IP, 必须和其他 container 看到的它的 ip 相同. Flannel in VPC flannel 是 K8S 的一个 CNI 插件, 在 VPC 里使用 flannel 的话, 有几个选择: 通过 VXLAN/UDP 进行封包, 封包影响网络性能, 而且不好 debug 用 aws vpc backend, 这种方式会把每台主机的 docker 网段添加进 vpc routing table, 但默认 routing table 里只能有50条规则......</p>
+      <p><p>EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别.</p>
+<p>K8S 集群对网络有几个基本要求:</p>
+<ul>
+<li>container 之间网络必须可达，且不通过 NAT</li>
+<li>所有 node 必须可以和所有 container 通信, 且不通过 NAT</li>
+<li>container 自己看到的 IP, 必须和其他 container 看到的它的 ip 相同.</li>
+</ul>
+<h2 id="flannel-in-vpc">Flannel in VPC</h2>
+<p>flannel 是 K8S 的一个 CNI 插件, 在 VPC 里使用 flannel 的话, 有几个选择:</p>
+<ol>
+<li>通过 VXLAN/UDP 进行封包, 封包影响网络性能, 而且不好 debug</li>
+<li>用 aws vpc backend, 这种方式会把每台主机的 docker 网段添加进 vpc routing table, 但默认 routing table 里只能有50条规则, 所以只能 50 个 node, 可以发 ticket 提升, 但数量太多会影响 vpc 性能.</li>
+<li>host-gw, 在每个 node 上直接维护集群中所有节点的路由, 没测试过, 感觉出问题也很难 debug, 假如用 autoscaling group 管理 node 集群, 能否让 K8S 在 scale in/out 的时候修改所有节点的路由?</li>
+</ol>
+<p>以上方式都只能利用 EC2 上的单网卡, security group 也没法作用在 pod 上.</p>......</p>
     </div>
   </div>
   
@@ -171,7 +272,13 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>这几年吹 serverless 的比较多, 在公司内部也用 lambda , 记录一下, 这东西挺有用, 但远不到万能, 场景比较有限. lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平台, 我们就只在 aws lambda 上了. 我基本上就把 lambda 当成 trigger 和 web hook 用. 和 auto scaling group 一起用 线上所有分组的机器都是用 auto scaling group 管理的, 只不过 stateless 的 server 开了自动伸缩, 带状态的 (ElasticSearch cluster, redis cache cluster) 只用来维护固定 size. 在往一个 group 里加 server 的时候, 要做的事情挺多的, 给新 server 添加组内编号 tag, 添加内网域名, provision, 部署最新代码. 这些事都用......</p>
+      <p><p>这几年吹 serverless 的比较多,  在公司内部也用 lambda , 记录一下, 这东西挺有用, 但远不到万能, 场景比较有限.</p>
+<p>lambda 的代码的部署用的 <a href="https://serverless.com">serverless</a> 框架, 本身支持多种 cloud 平台, 我们就只在 aws lambda 上了.</p>
+<p>我基本上就把 lambda 当成 trigger 和 web hook 用.</p>
+<h2 id="和--auto-scaling-group-一起用">和  auto scaling group 一起用</h2>
+<p>线上所有分组的机器都是用 auto scaling group 管理的, 只不过 stateless 的 server 开了自动伸缩, 带状态的 (ElasticSearch cluster, redis cache cluster) 只用来维护固定 size.</p>
+<p>在往一个 group 里加 server 的时候, 要做的事情挺多的, 给新 server 添加组内编号 tag, 添加内网域名, provision, 部署最新代码.</p>
+<p>这些事都用 jenkins 来做, 但怎么触发 jenkins job 呢?</p>......</p>
     </div>
   </div>
   
@@ -206,7 +313,8 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>一叶障目, 不见泰山. 前阵子一直在排查一个性能问题, 结果由于一些惯性思维, 费了好大劲才弄明白原因, 而且原因非常简单&hellip;.把这事记录下来,免得以后再掉坑里去. 现象是到了晚上10点多, server lantency 突然一瞬间变高, 但持续时间很短，马上就会恢复, timeout 的请求也不多，影响不大.问题其实从蛮久前就出现了, 但一直也没很重视, 因为持续时间短,影响也不大,简单看了下也没看出明显的问题, 就一直搁置着. 直到最近，觉得问题......</p>
+      <p><p>一叶障目, 不见泰山. 前阵子一直在排查一个性能问题, 结果由于一些惯性思维, 费了好大劲才弄明白原因, 而且原因非常简单&hellip;.把这事记录下来,免得以后再掉坑里去.</p>
+<p>现象是到了晚上10点多, server lantency 突然一瞬间变高, 但持续时间很短，马上就会恢复, timeout 的请求也不多，影响不大.问题其实从蛮久前就出现了, 但一直也没很重视, 因为持续时间短,影响也不大,简单看了下也没看出明显的问题, 就一直搁置着. 直到最近，觉得问题变严重了, latency 变的更高了，而且在10～11点间多次变高, 开始认真看为什么.</p>......</p>
     </div>
   </div>
   
@@ -230,13 +338,35 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&hellip;
-Usually, we inject secrets as environment variables, but they&rsquo;re still visable on lambda console. I don&rsquo;t use it in aws lambda.
-The better way is use aws parameter store as configuration center. It can work with KMS to encrypt your data.
-Code example:
-client = boto3.client('ssm') resp = client.get_parameter( Name='/redshift/admin/password', WithDecryption=True ) resp: { &quot;Parameter&quot;: { &quot;Name&quot;: &quot;/redshift/admin/password&quot;, &quot;Type&quot;: &quot;SecureString&quot;, &quot;Value&quot;: &quot;password value&quot;, &quot;Version&quot;: 1 } } Things you need to do to make it work:
-Create a new KMS key Use new created KMS key to encrypt your data in parameter store. Set a execution role for your lambda function. In the KMS key&rsquo;s setting page, add the lambda execution role to the list which can read this KMS key. Then your lambda code can access encrypted data at runtime, and you needn&rsquo;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.
-BTW, parameter store support hierarchy(at most 15 levels), splitted by /. You can retrive data under same level in one call, deltails can be found in doc, eg: http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path......</p>
+      <p><p>AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&hellip;</p>
+<p>Usually, we inject secrets as environment variables, but they&rsquo;re still visable on lambda console. I don&rsquo;t use it in aws lambda.</p>
+<p>The better way is use <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html">aws parameter store</a> as configuration center. It can work with KMS to encrypt your data.</p>
+<p>Code example:</p>
+<pre><code>client = boto3.client('ssm')
+resp = client.get_parameter(
+    Name='/redshift/admin/password',
+    WithDecryption=True
+)
+resp:
+
+    {
+        &quot;Parameter&quot;: {
+            &quot;Name&quot;: &quot;/redshift/admin/password&quot;,
+            &quot;Type&quot;: &quot;SecureString&quot;,
+            &quot;Value&quot;: &quot;password value&quot;,
+            &quot;Version&quot;: 1
+        }
+    }
+</code></pre>
+<p>Things you need to do to make it work:</p>
+<ul>
+<li>Create a new KMS key</li>
+<li>Use new created KMS key to encrypt your data in parameter store.</li>
+<li>Set a execution role for your lambda function.</li>
+<li>In the KMS key&rsquo;s setting page, add the lambda execution role to the list which can read this KMS key.</li>
+</ul>
+<p>Then your lambda code can access encrypted data at runtime, and you needn&rsquo;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.</p>
+<p>BTW, parameter store support hierarchy(at most 15 levels), splitted by <code>/</code>. You can retrive data under same level in one call, deltails can be found in doc, eg: <a href="http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path">http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path</a></p>......</p>
     </div>
   </div>
   
@@ -271,7 +401,31 @@ BTW, parameter store support hierarchy(at most 15 levels), splitted by /. You ca
   
   <div class="list">
     <div class="post_content markdown">
-      <p>Glow data infrastructure 的演化 Glow 一向是一个 data driven 做决策的公司，稳定高效的平台是必不可少的支撑, 本文总结几年里公司 data infrastructure 的演进过程. 结合业务特点做技术选型和实现时候的几个原则: real time 分析的需求不高，时间 delta 控制在1 小时以内可接受 . 支持快速的交互式查询. 底层平台尽量选择 AWS 托管服务, 减少维护成本. 遇到故障, 数据可以 delay 但不能丢. 可回溯历史数据. 成本可控. 用到的 AWS 服务: 数据存储和查询: S3, Redshift (spectrum), Athena ETL: DMS, EMR, Kinesis, Firehose, Lambda 开源软件: td-agent, maxwell 数据来源: 线上......</p>
+      <p><h1 id="glow-data-infrastructure-的演化">Glow data infrastructure 的演化</h1>
+<p>Glow 一向是一个 data driven 做决策的公司，稳定高效的平台是必不可少的支撑, 本文总结几年里公司 data infrastructure 的演进过程.</p>
+<p>结合业务特点做技术选型和实现时候的几个原则:</p>
+<ol>
+<li>real time 分析的需求不高，时间 delta 控制在1 小时以内可接受 .</li>
+<li>支持快速的交互式查询.</li>
+<li>底层平台尽量选择 AWS 托管服务, 减少维护成本.</li>
+<li>遇到故障, 数据可以 delay 但不能丢.</li>
+<li>可回溯历史数据.</li>
+<li>成本可控.</li>
+</ol>
+<p>用到的 AWS 服务:</p>
+<ul>
+<li>数据存储和查询:  S3, Redshift (spectrum), Athena</li>
+<li>ETL: DMS, EMR, Kinesis, Firehose, Lambda</li>
+</ul>
+<p>开源软件: td-agent, maxwell</p>
+<p>数据来源:</p>
+<ol>
+<li>线上业务数据库</li>
+<li>用户活动产生的 metrics log</li>
+<li>从各种第三方服务 api 拉下来的数据 (email之类)</li>
+</ol>
+<h2 id="最早期">最早期</h2>
+<p>刚开始的时候业务单纯，数据量也少, 所有数据都用 MySQL 存储，搭了台 slave, 分析查询都在 slave 上进行.</p>......</p>
     </div>
   </div>
   
@@ -310,18 +464,33 @@ BTW, parameter store support hierarchy(at most 15 levels), splitted by /. You ca
   
   <div class="list">
     <div class="post_content markdown">
-      <p>If you run a webserver on AWS, get real client ip will be tricky if you didn&rsquo;t configure server right and write code correctly.
-Things related to client real ip:
-CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application). Request sequence diagram will be like following:
-User&rsquo;s real client ip is forwarded by front proxies one by one in head X-Forwarded-For.
-For CloudFront:
-If user&rsquo;s req header don&rsquo;t have X-Forwarded-For, it will set user&rsquo;s ip(from tcp connection) in X-Forwarded-For If user&rsquo;s req already have X-Forwarded-For, it will append user&rsquo;s ip(from tcp connection) to the end of X-Forwarded-For For ALB, rule is same as CloudFront, so the X-Forwarded-For header pass to nginx will be the value received from CloudFront + CloudFront&rsquo;s ip.
-For nginx, things will be tricky depends on your config.
-Things maybe involved in nginx:
-real ip module proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; If you didn&rsquo;t use real ip module, you need to pass X-Forwarded-For head explictly.
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; will append ALB&rsquo;s ip to the end of X-Forwarded-For header received from ALB.
-So X-Forwarded-For header your webserver received will be user ip,cloudfront ip, alb ip
-Or you can use real ip module to trust the value passed from ALB.......</p>
+      <p><p>If you run a webserver on AWS, get real client ip will be tricky if you didn&rsquo;t configure server right and write code correctly.</p>
+<p>Things related to client real ip:</p>
+<ul>
+<li>CloudFront (cdn)</li>
+<li>ALB (loadbalancer)</li>
+<li>nginx (on ec2)</li>
+<li>webserver (maybe a python flask application).</li>
+</ul>
+<p>Request sequence diagram will be like following:</p>
+<p><img src="/posts/images/cf-alb-nginx.png" alt="req"></p>
+<p>User&rsquo;s real client ip is forwarded by front proxies one by one in head <code>X-Forwarded-For</code>.</p>
+<p>For CloudFront:</p>
+<ul>
+<li>If user&rsquo;s req header don&rsquo;t  have <code>X-Forwarded-For</code>, it will set user&rsquo;s ip(from tcp connection) in <code>X-Forwarded-For</code></li>
+<li>If user&rsquo;s req already have <code>X-Forwarded-For</code>, it will append user&rsquo;s ip(from tcp connection) to the end of <code>X-Forwarded-For</code></li>
+</ul>
+<p>For ALB, rule is same as CloudFront, so the <code>X-Forwarded-For</code> header pass to nginx will be the value received from CloudFront + CloudFront&rsquo;s ip.</p>
+<p>For nginx, things will be tricky depends on your config.</p>
+<p>Things maybe involved in nginx:</p>
+<ul>
+<li>real ip module</li>
+<li>proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</li>
+</ul>
+<p>If you didn&rsquo;t use real ip module, you need to pass X-Forwarded-For head explictly.</p>
+<p><code>proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</code> will append ALB&rsquo;s ip to the end of <code>X-Forwarded-For</code> header received from ALB.</p>
+<p>So <code>X-Forwarded-For</code> header your webserver received will be <code>user ip,cloudfront ip, alb ip</code></p>
+<p>Or you can use real ip module to trust the value passed from ALB.</p>......</p>
     </div>
   </div>
   
@@ -358,7 +527,26 @@ Or you can use real ip module to trust the value passed from ALB.......</p>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>DynamoDB 是 AWS 的托管 NoSQL 数据库，可以当作简单的 KV 数据库使用，也可以作为文档数据库使用. Data model 组织数据的单位是 table, 每张 table 必须设置 primary key, 可以设置可选的 sort key 来做索引. 每条数据记作一个 item, 每个 item 含有一个或多个 attribute, 其中必须包括 primary key. attribute 对应的 value 支持以下几种类型: Number, 由于 DynamoDB 的传输协议是 http + json, 为了跨语言的兼容性, number 一律会被转成 string 传输. Binary, 用来表示任意的二进制数据，会用 base64 encode 后传输. Boolean, true or false Null Document 类型包含 List 和 Map, 可以互相嵌套. List, 个数无限制, 总大小......</p>
+      <p><p>DynamoDB 是 AWS 的托管 NoSQL 数据库，可以当作简单的 KV 数据库使用，也可以作为文档数据库使用.</p>
+<h2 id="data-model">Data model</h2>
+<p>组织数据的单位是 table, 每张 table 必须设置 primary key, 可以设置可选的 sort key 来做索引.</p>
+<p>每条数据记作一个 item, 每个 item 含有一个或多个 attribute, 其中必须包括 primary key.</p>
+<p>attribute 对应的 value 支持以下几种类型:</p>
+<ul>
+<li>Number, 由于 DynamoDB 的传输协议是 http + json, 为了跨语言的兼容性, number 一律会被转成 string 传输.</li>
+<li>Binary, 用来表示任意的二进制数据，会用 base64 encode 后传输.</li>
+<li>Boolean, true or false</li>
+<li>Null</li>
+<li>Document 类型包含 List 和 Map, 可以互相嵌套.
+<ul>
+<li>List, 个数无限制, 总大小不超过 400KB</li>
+<li>Map, 属性个数无限制，总大小不超过 400 KB, 嵌套层级不超过 32 级.</li>
+</ul>
+</li>
+<li>Set,  一个 set 内元素数目无限制, 无序，不超过 400KB, 但必须属于同一类型, 支持 number set, binary set, string set.</li>
+</ul>
+<h2 id="选择-primary-key">选择 primary key</h2>
+<p>Table 的 primary key 支持单一的 partition key 或复合的 partition key + sort key. 不管哪种，最后的组成的primary key 在一张表中必须唯一.</p>......</p>
     </div>
   </div>
   
@@ -395,11 +583,17 @@ Or you can use real ip module to trust the value passed from ALB.......</p>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&rsquo;m working on a long term solution. I learned some important things from this accident.
-The outage I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&rsquo;s health check failed due to high load.
-I did following:
-Check monitor Identify the problem is caused by KV system Okay, problem is here, I know the problem is KV system&rsquo;s performance issue. But I can&rsquo;t figure out the root case right now, I need a temporary solution. Straightward way is redirect traffic to slave instance. But I know it won&rsquo;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&rsquo;t work.
-The real down time was not long, performance recovered to some degree soon, but latency was still high, not normal. I monitored it for long time, and tried to find out the root case until morning. Since traffic was growing when peak hour coming, performance became problem again.......</p>
+      <p><p>A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&rsquo;m working on a long term solution. I learned some important things from this accident.</p>
+<h2 id="the-outage">The outage</h2>
+<p>I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&rsquo;s health check failed due to high load.</p>
+<p>I did following:</p>
+<ol>
+<li>Check monitor</li>
+<li>Identify the problem is caused by KV system</li>
+</ol>
+<p>Okay, problem is here, I know the problem is KV system&rsquo;s performance issue. But I can&rsquo;t figure out the root case right now, I need a temporary solution.
+Straightward way is redirect traffic to slave instance. But I know it won&rsquo;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&rsquo;t work.</p>
+<p>The real down time was not long, performance recovered to some degree soon, but latency was still high, not normal. I monitored it for long time, and tried to find out the root case until morning. Since traffic was growing when peak hour coming, performance became problem again.</p>......</p>
     </div>
   </div>
   
@@ -417,51 +611,6 @@ The real down time was not long, performance recovered to some degree soon, but 
           <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
           
           <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/10/14/aws-dms-notes/'>AWS DMS notes</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>AWS&rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
-It works, but have some concerns. Take some notes when doing this project.
-Prerequisites Source RDS must:
-Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration('binlog retention hours', 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT , REPLICATION SLAVE , SELECT on replication target tables DDL on source table Redshift has some limits on change columns:
-New column only must be added in the end Can&rsquo;t rename columns So for DDL on source MySQL, you can&rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
-&quot;ChangeProcessingDdlHandlingPolicy&quot;:{ &quot;HandleSourceTableDropped&quot;:false, &quot;HandleSourceTableTruncated&quot;:false, &quot;HandleSourceTableAltered&quot;:false }, If source table schema changed, I just drop and reload target table on console.
-Control write speed on Redshift Since Redshift is an OLAP database, write operation is slow and concurrency is low, streaming data directly will have big impact on it.
-And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.
-So I need to batch apply changes on DMS.......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.10.14</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/dms/">DMS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/data-infra/">data-infra</a>
           
         </span>
         
@@ -546,17 +695,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

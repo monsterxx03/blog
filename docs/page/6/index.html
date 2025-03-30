@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.111.3">
+	<meta name="generator" content="Hugo 0.145.0">
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
 
@@ -68,7 +68,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -77,12 +77,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -94,12 +90,101 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2018/09/26/eks-%E8%AF%84%E6%B5%8B-part-3/'>EkS 评测 part-3</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p><p>这篇记录对 ingress 的测试.</p>
+<p>ingress 用来将外部流量导入　k8s 内的　service. 将 service 的类型设置为 LoadBalancer / NodePort 也可以将单个 service 暴露到公网, 但用 ingress 可以只使用一个公网入口,根据　host name 或　url path 来将请求分发到不同的 service.</p>
+<p>一般　k8s 内的资源都会由一个 controller 来负责它的状态管理, 都由 kube-controller-manager 负责，　但 ingress controller 不是它的一部分，需要是视情况自己选择合适的 ingress controller.</p>
+<p>在 eks 上我主要需要 <a href="https://github.com/kubernetes/ingress-nginx">ingress-nginx</a> 和 <a href="https://github.com/kubernetes-sigs/aws-alb-ingress-controller">aws-alb-ingress-controller</a>. 注意, nginx inc 还维护一个 <a href="https://github.com/nginxinc/kubernetes-ingress">kubernetes-ingress</a>, 和官方那个不是一个东西， 没测试过.</p>
+<p>这里主要只测试了 ingress-nginx, 看了下内部实现, 数据的转发真扭曲&hellip;.</p>......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2018.09.26</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2018/09/21/eks-%E8%AF%84%E6%B5%8B-part-2/'>eks 评测 part-2</a></h2>
   </div>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>上文测试了一下 EKS 和 cluster autoscaler, 本文记录对 persisten volume 的测试. PersistentVolume 创建 gp2 类型的 storageclass, 并用 annotations 设置为默认 sc, dynamic volume provision 会用到: kind: StorageClass apiVersion: storage.k8s.io/v1 metadata: name: gp2 annotations: storageclass.kubernetes.io/is-default-class: &quot;true&quot; provisioner: kubernetes.io/aws-ebs reclaimPolicy: Retain parameters: type: gp2 fsType: ext4 encrypted: &quot;true&quot; 因为 eks 是基于 1.10.3 的, volume expansion 还是 alpha 状态, 没法自动开启(没法改 api server 配置), 所以 storageclass 的 allowVolumeExpansion, 设置了也没用. 这里 encrypted 的值必须是字符串, 否则会创建失败, 而且报错莫名其妙. 创建 pod 的时候指定一个已存在的 ebs volume apiVersion: v1 kind: Pod metadata: name: test spec: volumes: - name: test awsElasticBlockStore: fsType: ext4 volumeID: vol-03670d6294ccf29fd containers: - image: nginx name: nginx volumeMounts: - name: test mountPath: /mnt kubectl -it test -- /bin/bash 进去看一下: root@test:/# df -h......</p>
+      <p><p>上文测试了一下 EKS 和 cluster autoscaler, 本文记录对 persisten volume 的测试.</p>
+<h1 id="persistentvolume">PersistentVolume</h1>
+<p>创建 gp2 类型的 storageclass, 并用 annotations 设置为默认 sc, dynamic volume provision 会用到:</p>
+<pre><code>kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+    name: gp2
+    annotations:
+        storageclass.kubernetes.io/is-default-class: &quot;true&quot;
+provisioner: kubernetes.io/aws-ebs
+reclaimPolicy: Retain
+parameters:
+    type: gp2
+    fsType: ext4
+    encrypted: &quot;true&quot;
+</code></pre>
+<p>因为 eks 是基于 1.10.3 的, volume expansion 还是 alpha 状态, 没法自动开启(没法改 api server 配置), 所以 storageclass 的 allowVolumeExpansion, 设置了也没用.
+这里 <code>encrypted</code> 的值必须是字符串, 否则会创建失败, 而且报错莫名其妙.</p>
+<h2 id="创建-pod-的时候指定一个已存在的-ebs-volume">创建 pod 的时候指定一个已存在的 ebs volume</h2>
+<pre><code>apiVersion: v1
+kind: Pod
+metadata:
+    name: test
+spec:
+    volumes:
+        - name: test
+          awsElasticBlockStore:
+              fsType: ext4
+              volumeID: vol-03670d6294ccf29fd
+    containers:
+        - image: nginx
+          name: nginx
+          volumeMounts:
+              - name: test
+                mountPath: /mnt
+</code></pre>
+<p><code>kubectl -it test -- /bin/bash</code>  进去看一下:</p>
+<pre><code>root@test:/# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          20G  2.2G   18G  11% /
+tmpfs           3.9G     0  3.9G   0% /dev
+tmpfs           3.9G     0  3.9G   0% /sys/fs/cgroup
+/dev/xvdcz      976M  2.6M  907M   1% /mnt
+/dev/xvda1       20G  2.2G   18G  11% /etc/hosts
+shm              64M     0   64M   0% /dev/shm
+tmpfs           3.9G   12K  3.9G   1% /run/secrets/kubernetes.io/serviceaccount
+tmpfs           3.9G     0  3.9G   0% /sys/firmware
+</code></pre>
+<p>那块 volume 的确绑定在 <code>/mnt</code></p>......</p>
     </div>
   </div>
   
@@ -136,7 +221,26 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>EKS 正式 launch 还没有正经用过, 最近总算试了一把, 记录一点. Setup AWS 官方的 Guide 只提供了一个 cloudformation template 来设置 worker node, 我喜欢用 terraform, 可以跟着这个文档尝试:https://www.terraform.io/docs/providers/aws/guides/eks-getting-started.html 来设置完整的 eks cluster 和管理 worker node 的 autoscaling group. 设置完 EKS 后需要添加一条 ConfigMap: apiVersion: v1 kind: ConfigMap metadata: name: aws-auth namespace: kube-system data: mapRoles: | - rolearn: arn:aws:iam::&lt;account-id&gt;:role/eksNodeRole username: system:node:{{EC2PrivateDNSName}} groups: - system:bootstrappers - system:nodes 这样 worker node 节点才能加入集群. 网......</p>
+      <p><p>EKS 正式 launch 还没有正经用过, 最近总算试了一把, 记录一点.</p>
+<h2 id="setup">Setup</h2>
+<p>AWS 官方的 Guide 只提供了一个 cloudformation template 来设置 worker node, 我喜欢用 terraform, 可以跟着这个文档尝试:https://www.terraform.io/docs/providers/aws/guides/eks-getting-started.html 来设置完整的 eks cluster 和管理 worker node 的 autoscaling  group.</p>
+<p>设置完 EKS 后需要添加一条 ConfigMap:</p>
+<pre><code>apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-auth
+  namespace: kube-system
+data:
+  mapRoles: |
+    - rolearn: arn:aws:iam::&lt;account-id&gt;:role/eksNodeRole
+      username: system:node:{{EC2PrivateDNSName}}
+      groups:
+        - system:bootstrappers
+        - system:nodes
+</code></pre>
+<p>这样 worker node 节点才能加入集群.</p>
+<h2 id="网络">网络</h2>
+<p>之前一直没有在 AWS 上尝试构建 k8s 的一个原因, 就是不喜欢 overlay 网络, 给系统带来了额外的复杂度和管理开销, VPC flowlog 看不到 pod 之间流量, 封包后 tcpdump 不好 debug 应用层流量.</p>......</p>
     </div>
   </div>
   
@@ -173,19 +277,33 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>Miscellaneous notes when reading &lt;Kubernetes in Action&gt;.
-api group and api version core api group need&rsquo;t specified in apiVersion field.
-For example, ReplicationController is on core api group, so only:
-apiVersion: v1 kind: ReplicationController ... ReplicationSet is added later in app group, v1beta2 version (k8s v1.8):
-apiVersion: apps/v1beta2 1 kind: ReplicaSet https://kubernetes.io/docs/concepts/overview/kubernetes-api/
-ReplicationController VS ReplicationSet ReplicationController is replaced by ReplicationSet, which has more expressive pod selectors.
-ReplicationController&rsquo;s label selector only allows matching pods that include a certain label, ReplicationSet can meet multi labels at same time.
-rs also support operator on key value: In, NotIn, Exists, DoesNotExist
-If migrate from rc to rs, can delete rc with --cascade=false option, it will delete rc only, but left pods running, then we can create a rs with same selector to make pods under management.
-DaemonSet DaemonSet ensures pod run exact one copy on one node, useful for processes like monitor agent and log collector. Use node-selector to make ds only run on specific nodes.
-If node is made unschedulable, normal pods won&rsquo;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass scheduler.
-Job Job is used to run a single completable task.
-Use activeDeadlineSeconds to control job timeout.......</p>
+      <p><p>Miscellaneous notes when reading <code>&lt;Kubernetes in Action&gt;</code>.</p>
+<h2 id="api-group-and-api-version">api group and api version</h2>
+<p>core api group need&rsquo;t specified in <code>apiVersion</code> field.</p>
+<p>For example, <code>ReplicationController</code> is on core api group, so only:</p>
+<pre><code>apiVersion: v1
+kind: ReplicationController
+...
+</code></pre>
+<p><code>ReplicationSet</code> is added later in <code>app</code> group, <code>v1beta2</code> version (k8s v1.8):</p>
+<pre><code>apiVersion: apps/v1beta2            1
+kind: ReplicaSet           
+</code></pre>
+<p><a href="https://kubernetes.io/docs/concepts/overview/kubernetes-api/">https://kubernetes.io/docs/concepts/overview/kubernetes-api/</a></p>
+<h3 id="replicationcontroller-vs-replicationset">ReplicationController VS ReplicationSet</h3>
+<p>ReplicationController is replaced by ReplicationSet, which has more expressive pod selectors.</p>
+<p>ReplicationController&rsquo;s label selector only allows matching pods that include a certain label, ReplicationSet can
+meet multi labels at same time.</p>
+<p>rs also support operator on key value: <code>In, NotIn, Exists, DoesNotExist</code></p>
+<p>If migrate from rc to rs, can delete rc with <code>--cascade=false</code> option, it will delete
+rc only, but left pods running, then we can create a rs with same selector to make pods under management.</p>
+<h3 id="daemonset">DaemonSet</h3>
+<p>DaemonSet ensures pod run exact one copy on one node, useful for processes like monitor agent and log collector. Use <code>node-selector</code>
+to make ds only run on specific nodes.</p>
+<p>If node is made unschedulable, normal pods won&rsquo;t be scheduled to deploy on them, but ds will still be deployed to it, since ds will bypass
+scheduler.</p>
+<h3 id="job">Job</h3>
+<p>Job is used to run a single completable task.</p>......</p>
     </div>
   </div>
   
@@ -220,7 +338,12 @@ Use activeDeadlineSeconds to control job timeout.......</p>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>忙了好一阵, 两个月没写了, 工作上的事告一段落, 也该补上这笔帐了, 老规矩, 随便写写 :) 最近在做什么? 把公司的代码环境从 python 2.7 升级到 python3.6, 前后忙了 3 个月, 50w 行代码, 也是够呛, 好歹算是顺利完成了, 具体的过程6月零散写过 几篇文章, 大差不差, 后续又碰了不少坑, 但也都能解决. 下一步打算基于 python3 的一些特性对代码做些重构, 从基础库开始吧. 最近看了什么书? &lt;特别的猫&gt;, 特别喜欢的一本书, 不是那种猫奴一昧赞美猫咪多......</p>
+      <p><p>忙了好一阵, 两个月没写了, 工作上的事告一段落, 也该补上这笔帐了, 老规矩, 随便写写 :)</p>
+<h2 id="最近在做什么">最近在做什么?</h2>
+<p>把公司的代码环境从 python 2.7 升级到 python3.6, 前后忙了 3 个月, 50w 行代码, 也是够呛, 好歹算是顺利完成了, 具体的过程6月零散写过
+几篇文章, 大差不差, 后续又碰了不少坑, 但也都能解决. 下一步打算基于 python3 的一些特性对代码做些重构, 从基础库开始吧.</p>
+<h2 id="最近看了什么书">最近看了什么书?</h2>
+<p>&lt;特别的猫&gt;, 特别喜欢的一本书, 不是那种猫奴一昧赞美猫咪多么多么可爱的文字, 作者和猫咪过了一辈子, 把它们当成自己的朋友, 家人一样对待, 迫于无奈对猫做过残酷的事情, 也尽力照顾过病痛中的猫,把它从死亡边缘拉回来过, 猫给她带来的快乐和烦恼都在这本书里. 读着读着, 会产生一种错觉, 那一个个精灵古怪的小东西就自己脚边转悠. 作者是一个懂生活的人, 太羡慕了.</p>......</p>
     </div>
   </div>
   
@@ -244,7 +367,10 @@ Use activeDeadlineSeconds to control job timeout.......</p>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>在把代码往 python3 迁移的过程中需要升级一些第三方库, 升级了 gevent 后发现 celery 有问题, 于是尝试把 celery 从3.1.25 升级到 4.2.0, 中间碰到了很多问题, 记录一点. 配置的变化 CELERY_ACCEPT_CONENT 之前默认是都允许的, 4.0 开始默认值只允许 json, 因为我用的是msgpack, 所以需要修改这个配置让它接受 msgpack. CELERY_RESULT_SERIALIZER 之前默认是pickle, 现在默认也变成了json, 如果task 的返回结果是 binary 的话, json 无法处理,要么把结果 base64 编码, 要么把CELERY_RESULT_SERI......</p>
+      <p><p>在把代码往 python3 迁移的过程中需要升级一些第三方库, 升级了 gevent 后发现 celery 有问题, 于是尝试把 celery 从3.1.25 升级到 4.2.0, 中间碰到了很多问题, 记录一点.</p>
+<h2 id="配置的变化">配置的变化</h2>
+<p><code>CELERY_ACCEPT_CONENT</code> 之前默认是都允许的,  4.0 开始默认值只允许 json, 因为我用的是msgpack, 所以需要修改这个配置让它接受 msgpack.</p>
+<p><code>CELERY_RESULT_SERIALIZER</code> 之前默认是pickle, 现在默认也变成了json, 如果task 的返回结果是 binary 的话, json 无法处理,要么把结果 base64 编码, 要么把<code>CELERY_RESULT_SERIALIZER</code> 配置成 msgpack,  pickle 明显 py2 / 3 不兼容, 没用.</p>......</p>
     </div>
   </div>
   
@@ -279,7 +405,16 @@ Use activeDeadlineSeconds to control job timeout.......</p>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>上一篇 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情. _future_ python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件. 首先是几个在 python 2.7 里不用特意写，已经默认开启的特性: from __future__ import nested_scopes 2.2 开始就默认开启了，用于修改嵌套函数内的变量搜索作用域, 在此之前, 全局模块的优先级比被嵌套函数的父函数要高, 现......</p>
+      <p><p><a href="https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/">上一篇</a> 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情.</p>
+<h2 id="_future_">_<em>future</em>_</h2>
+<p>python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件.</p>
+<p>首先是几个在 python 2.7 里不用特意写，已经默认开启的特性:</p>
+<ul>
+<li><code>from __future__ import nested_scopes</code> 2.2 开始就默认开启了，用于修改嵌套函数内的变量搜索作用域, 在此之前, 全局模块的优先级比被嵌套函数的父函数要高, 现在都没这个问题了.</li>
+<li><code>from __future__ import generators</code>, yield 关键词, 2.3 默认支持.</li>
+<li><code>from __future__ import with_statement</code>, with 关键词, 2.6 默认支持.</li>
+</ul>
+<p>我显示开启的两个特性:</p>......</p>
     </div>
   </div>
   
@@ -312,7 +447,9 @@ Use activeDeadlineSeconds to control job timeout.......</p>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>去年在 kindle 上买了套松本清张的合集, 总共有10本, 断断续续看到现在终于看完了第 9 本&lt;隐花平原&gt;, 随便扯一点(喂，为什么不看完最后一本! 松本清张 (1909 ~ 1992), 社会派推理开创人, 这套书里的作品各个年代都有, 最有名的&lt;砂之器&gt;(貌似仲间姐姐拍过剧?) 和 &lt;点与线&gt; 却没收录. 本格派讲究逻辑的精巧， 整个故事就像在玩密室逃脱一样, 一环扣一环, 最后谜底揭开的时候让人惊呼&quot;卧槽&q......</p>
+      <p><p>去年在 kindle 上买了套松本清张的合集, 总共有10本, 断断续续看到现在终于看完了第 9 本&lt;隐花平原&gt;, 随便扯一点(喂，为什么不看完最后一本!</p>
+<p>松本清张 (1909 ~ 1992), 社会派推理开创人, 这套书里的作品各个年代都有, 最有名的&lt;砂之器&gt;(貌似仲间姐姐拍过剧?) 和 &lt;点与线&gt; 却没收录.</p>
+<p>本格派讲究逻辑的精巧， 整个故事就像在玩密室逃脱一样, 一环扣一环, 最后谜底揭开的时候让人惊呼&quot;卧槽&quot;, 写的就很棒了, 但如果被提前剧透了, 就丧失了大半乐趣.</p>......</p>
     </div>
   </div>
   
@@ -336,11 +473,23 @@ Use activeDeadlineSeconds to control job timeout.......</p>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>This article won&rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the problems I come to, and my choices. I haven&rsquo;t finished this project, also I haven&rsquo;t gave up so far :).
-Won&rsquo;t explain too much about the differences between py2 and py3, will write down some corner cases which are easy to miss.
-The codebase I&rsquo;m working on:
-Only support python2.7, don&rsquo;t consider python2.6 1X repos, about half a million lines of code in total (calculated by cloc). These repos will import each other, bad design from early days, not easy to resolve, which means I can&rsquo;t switch to py3 one by one, I need write py2/3 compatiblility code for them, and switch together(I&rsquo;m also considering solve the import problem first). Test coverage is not good, best is around 80%, lowest is 30%. Tools 2to3, a command line tools packaged with py2, it&rsquo;s a oneway porting to convert your code to py3, new code won&rsquo;t work under py2, since I need be compatible with py2 and py3 for long time, didn&rsquo;t try it.
-future, it tries to make you write single clean python3.x code without ugly hack with six. I used it it first, but come to many problems, will explain later.......</p>
+      <p><p>This article won&rsquo;t provide perfect guide for porting py2 code to py3, just list the solutions I tried, the
+problems I come to, and my choices. I haven&rsquo;t finished this project, also I haven&rsquo;t gave up so far :).</p>
+<p>Won&rsquo;t explain too much about the differences between py2 and py3, will write down some corner
+cases which are easy to miss.</p>
+<p>The codebase I&rsquo;m working on:</p>
+<ul>
+<li>Only support python2.7, don&rsquo;t consider python2.6</li>
+<li>1X repos, about half a million lines of code in total (calculated by cloc).</li>
+<li>These repos will import each other, bad design from early days, not easy to resolve, which means I can&rsquo;t switch to py3 one by one, I need write
+py2/3 compatiblility code for them, and switch together(I&rsquo;m also considering solve the import problem first).</li>
+<li>Test coverage is not good, best is around 80%, lowest is 30%.</li>
+</ul>
+<h2 id="tools">Tools</h2>
+<p><code>2to3</code>, a command line tools packaged with py2, it&rsquo;s a oneway porting to convert your code to py3, new code won&rsquo;t work under
+py2, since I need be compatible with py2 and py3 for long time, didn&rsquo;t try it.</p>
+<p><a href="http://python-future.org/">future</a>, it tries to make you write single clean python3.x code without ugly hack with six. I used it it first,
+but come to many problems, will explain later.</p>......</p>
     </div>
   </div>
   
@@ -375,7 +524,10 @@ future, it tries to make you write single clean python3.x code without ugly hack
   
   <div class="list">
     <div class="post_content markdown">
-      <p>最近着手准备从 python2.7 迁移到 python3.7, 还没开始就碰到一个问题. 老系统里有一部分竟然是将 python 内置 hash 函数的结果存进了数据库, 这个做法绝对是错的, hash 的结果本来就没有保证过在各个版本的 python 中保证一致. 而且 python3 中算法完全变了, 默认在进程初始化的时候会用随机种子加进 hash 过程, 所以python 进程 一重启结果就不一样了. 木已成舟， 目前看将数据库里的值全部改掉是不可能了, 只能在 python3 中重新实现一下这个算法. python2.7 中的hash 算法是 fnv (有修改),......</p>
+      <p><p>最近着手准备从 python2.7 迁移到 python3.7, 还没开始就碰到一个问题. 老系统里有一部分竟然是将 python 内置 hash 函数的结果存进了数据库, 这个做法绝对是错的,
+hash 的结果本来就没有保证过在各个版本的 python 中保证一致. 而且 python3 中算法完全变了, 默认在进程初始化的时候会用随机种子加进 hash 过程, 所以python 进程
+一重启结果就不一样了. 木已成舟， 目前看将数据库里的值全部改掉是不可能了, 只能在 python3 中重新实现一下这个算法.</p>
+<p>python2.7 中的hash 算法是 fnv (有修改), python3 中变成了 sip, <a href="https://www.python.org/dev/peps/pep-0456">pep-456</a>.</p>......</p>
     </div>
   </div>
   
@@ -391,53 +543,6 @@ future, it tries to make you write single clean python3.x code without ugly hack
           <i class="remixicon-stack-line"></i>
           
           <a href="https://blog.monsterxx03.com/tags/python/">python</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/05/23/use-sns-sqs-to-build-pub/sub-system/'>Use SNS &amp; SQS to build Pub/Sub System</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, take some notes.
-Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex pubsub logic, eg: topic based distribution. It don&rsquo;t support redelivery as well, if subscribers failed to process the message, message will be dropped.
-There&rsquo;re three obvious choices in my mind:
-kafka AMQP based system (rabbitmq,activemq &hellip;) SNS + SQS My demands for this system are:
-Support message persistence. Support topic based message distribution. Easy to manage. The data volume won&rsquo;t be very large, so performance and throughput won&rsquo;t be critical concerns.
-I choose SNS + SQS, main concerns are from operation side:
-kafka need zookeeper to support cluster. rabbitmq need extra configuration for HA, and AMQP model is relatively complex for programming. So my decision is:
-application publish message to SNS topic Setup multi SQS queues to subscribe SNS topic Let different application processes to subscribe to different queues to finish its logic. SQS and SNS is very simple, not too much to say, just some notes:
-SQS queue have two types, FIFO queue and standard queue.......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.05.23</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/sns/">SNS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/sqs/">SQS</a>
           
           <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
           
@@ -524,17 +629,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

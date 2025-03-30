@@ -4,122 +4,80 @@
     <title>Database on Shining Moon</title>
     <link>https://blog.monsterxx03.com/tags/database/</link>
     <description>Recent content in Database on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Wed, 12 Apr 2023 09:25:34 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/database/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 12 Apr 2023 09:25:34 +0800</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/tags/database/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>整理几个碰到的 etcd bug</title>
       <link>https://blog.monsterxx03.com/2023/04/12/%E6%95%B4%E7%90%86%E5%87%A0%E4%B8%AA%E7%A2%B0%E5%88%B0%E7%9A%84-etcd-bug/</link>
       <pubDate>Wed, 12 Apr 2023 09:25:34 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2023/04/12/%E6%95%B4%E7%90%86%E5%87%A0%E4%B8%AA%E7%A2%B0%E5%88%B0%E7%9A%84-etcd-bug/</guid>
-      <description>产品里用了一年多的 etcd, 碰到过一些 bug, 整理下，其中用些在最新版本里已经修复了, 会标注下. 添加 etcd 节点相关 bug 添加 etcd 节点的过程一般是先 member add, 然后启动新节点上的 etcd，这样的问题是在 member add 和新 etcd 启动 之间整个 etcd 集群处于 quorum - 1 的状态, 此过程增加了集群的不稳定性，如果新节点由于配置错误起不来，现存节点再挂一个 就可能导致整个集群不可用. 从 3.4 开始 etcd 引入了 learner 的概念, member add &amp;ndash;learner, 可以将新节点添加成 leaner 角色，只同步 raft log, 不参与 quorum vote, 即现有集</description>
+      <description>&lt;p&gt;产品里用了一年多的 etcd, 碰到过一些 bug, 整理下，其中用些在最新版本里已经修复了, 会标注下.&lt;/p&gt;&#xA;&lt;h2 id=&#34;添加-etcd-节点相关-bug&#34;&gt;添加 etcd 节点相关 bug&lt;/h2&gt;&#xA;&lt;p&gt;添加 etcd 节点的过程一般是先 member add, 然后启动新节点上的 etcd，这样的问题是在 member add 和新 etcd 启动&#xA;之间整个 etcd 集群处于 quorum - 1 的状态, 此过程增加了集群的不稳定性，如果新节点由于配置错误起不来，现存节点再挂一个&#xA;就可能导致整个集群不可用.&lt;/p&gt;&#xA;&lt;p&gt;从 3.4 开始 etcd 引入了 learner 的概念, member add &amp;ndash;learner, 可以将新节点添加成 leaner 角色，只同步 raft log, 不参与 quorum vote,&#xA;即现有集群的 quorum size 不会变化. 等新节点起来后再通过 member promote 将新节点提升为正常节点，参与 quorum vote.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>用 Patroni 来做 PostgreSQL 的 HA</title>
       <link>https://blog.monsterxx03.com/2022/01/26/%E7%94%A8-patroni-%E6%9D%A5%E5%81%9A-postgresql-%E7%9A%84-ha/</link>
       <pubDate>Wed, 26 Jan 2022 14:06:09 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2022/01/26/%E7%94%A8-patroni-%E6%9D%A5%E5%81%9A-postgresql-%E7%9A%84-ha/</guid>
-      <description>patroni 的安装跳过, 它只是个 python 包, 把依赖装好就行, 同时要求装好 postgres-server, patroni 运行过程中会调用 pg_ctl 等命令: https://patroni.readthedocs.io/en/latest/README.html 每个 patroni 管理一个 pg 实例, 两者必须部署在同一节点上, patroni 需要能: 访问 pg 的监听端口 读写 pg data dir (patroni 会重写 postgres.conf, pg_hba.conf 等文件) 配置文件 配置文件是yaml 格式, 具体见 https://patroni.readthedocs.io/en/latest/SETTINGS.html 使用 patroni postgres.yaml 命令启动一个 patroni 实例 # 集群名字, 同一集群内的 patroni 必须设置一样, 会成为 postgres.conf 内的 cluster_name参数 scope: xsky-test # patroni 会将一些动态配置存在 DCS 内, namespace 是在 DCS 内的存储路径, eg: 使用</description>
+      <description>&lt;p&gt;patroni 的安装跳过, 它只是个 python 包, 把依赖装好就行, 同时要求装好 postgres-server, patroni 运行过程中会调用 pg_ctl 等命令: &lt;a href=&#34;https://patroni.readthedocs.io/en/latest/README.html&#34;&gt;https://patroni.readthedocs.io/en/latest/README.html&lt;/a&gt;&#xA;每个 patroni 管理一个 pg 实例, 两者必须部署在同一节点上, patroni 需要能:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;访问 pg 的监听端口&lt;/li&gt;&#xA;&lt;li&gt;读写 pg data dir (patroni 会重写 postgres.conf, pg_hba.conf 等文件)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://blog.monsterxx03.com/posts/images/patroni-ha.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;配置文件&#34;&gt;配置文件&lt;/h2&gt;&#xA;&lt;p&gt;配置文件是yaml 格式, 具体见 &lt;a href=&#34;https://patroni.readthedocs.io/en/latest/SETTINGS.html&#34;&gt;https://patroni.readthedocs.io/en/latest/SETTINGS.html&lt;/a&gt;&lt;br&gt;&#xA;使用 patroni postgres.yaml 命令启动一个 patroni 实例&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 集群名字, 同一集群内的 patroni 必须设置一样, 会成为 postgres.conf 内的 cluster_name参数&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;scope&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;xsky-test&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# patroni 会将一些动态配置存在 DCS 内, namespace 是在 DCS 内的存储路径, eg: 使用 etcdv3 作为 DCS, 可以通过 etdctl get /service --prefix 看到 patroni 在 DCS 内存了什么&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;/service  &lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 管理的 pg 的实例名, 同一集群内每个实例必须都不同, eg: pg0, pg1, pg2&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;pg0&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#  日志相关配置&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;log&lt;/span&gt;:  &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;level&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;INFO &lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# patroni restapi 相关配置&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;restapi&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;listen&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;0.0.0.0&lt;/span&gt;:&lt;span style=&#34;color:#ae81ff&#34;&gt;8008&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 用创建 pg 实例, 生成 pg 的 data dir, postgres.conf, pg_hba.conf 等文件&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;bootstrap&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#75715e&#34;&gt;# dcs 下内容会写入 DCS 的 {namespace}/{scope}/config key 中,只有在初始化集群的时候被使用一次, 后续修改不会生效, 可以通过 patrionctl edit-config 或 rest api 来修改存在 dcs 中的值&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;dcs&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;loop_wait&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;ttl&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;30&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#75715e&#34;&gt;# 初始化集群时生成 pg_bha.conf, 后续改动不会生效&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;pg_hba&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   - &lt;span style=&#34;color:#ae81ff&#34;&gt;host replication replicator 127.0.0.1/32 md5&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#75715e&#34;&gt;# 在初始化集群时需要创建的用户, 后续改动不会生效&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;users&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 使用 etcd v2 api 作为 dcs&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;etcd&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 使用 etcd v3 api 作为 dcs&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;etcd3&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 用于 patroni 运行时连接 pg&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;postgresql&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;listen&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;0.0.0.0&lt;/span&gt;:&lt;span style=&#34;color:#ae81ff&#34;&gt;5432&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# patronictl.py 连接 restapi 时 http参数(ssl相关)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;ctl&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 通过 linux 的 softdog 模块, 在 patroni 控制的 pg 挂掉时重启 server&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;watchdog&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 通过nofailover 等 tag 可以控制行为(eg: 不允许某个 patrion 实例成为 leader, 也可以添加自定义tag作为元数据&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;tags&lt;/span&gt;:&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;用-patroni-bootstrap-pg-集群&#34;&gt;用 patroni bootstrap pg 集群&lt;/h2&gt;&#xA;&lt;p&gt;假设有三节点, 上面已经部署好 etcd(v3) 作为 dcs, 三节点 ip为: 10.252.90.217, 10.252.90.218, 10.252.90.219&#xA;217 节点上 patroni 的 postgres.yml 配置, 其他节点类似, 把 ip 改下:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>AWS Aurora DB</title>
       <link>https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/</link>
       <pubDate>Wed, 31 Oct 2018 15:23:45 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2018/10/31/aws-aurora-db/</guid>
-      <description>最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比. Paper notes 存储计算分离 redo log 下推到存储层 副本: 6 副本 3 AZ(2 per az), 失去一个 AZ + 1 additoinal node 不会丢数据(可读不可写). 失去一个 AZ (或任意2 node) 不影响数据写入. 10GB 一个 segment, 每个 segment 6 副本一个 PG (protection group), 一 AZ 两副本. 在 10Gbps 的网络上, 修复一个 10GB 的segment 需要 10s. MySQL 一个应用层的写会在底层产生很多额外的写操作，会带来写放大问题: redo log 用来 crash recovery, binlog 会上传 s3 用于 point in time restore. 在 aurora 里，只</description>
+      <description>&lt;p&gt;最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比.&lt;/p&gt;&#xA;&lt;h2 id=&#34;paper-notes&#34;&gt;Paper notes&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;存储计算分离&lt;/li&gt;&#xA;&lt;li&gt;redo log 下推到存储层&lt;/li&gt;&#xA;&lt;li&gt;副本: 6 副本 3 AZ(2 per az), 失去一个 AZ + 1 additoinal node 不会丢数据(可读不可写). 失去一个 AZ (或任意2 node) 不影响数据写入.&lt;/li&gt;&#xA;&lt;li&gt;10GB 一个 segment, 每个 segment 6 副本一个 PG (protection group), 一 AZ　两副本.&lt;/li&gt;&#xA;&lt;li&gt;在 10Gbps 的网络上, 修复一个 10GB 的segment 需要 10s.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;MySQL 一个应用层的写会在底层产生很多额外的写操作，会带来写放大问题:&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://blog.monsterxx03.com/posts/images/aurora-mysql-replication.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;redo log 用来 crash recovery, binlog 会上传 s3　用于 point in time restore.&lt;/p&gt;&#xA;&lt;p&gt;在 aurora 里，只有 redo log 会通过网络复制到各个 replica, master 会等待 4/6 replicas 完成 redo log 的写入就认为写入成功 (所以失去3副本就无法写入数据了). 其他副本会根据 redo log 重建数据(单独的 redo log applicator 进程).&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>DynamoDB</title>
       <link>https://blog.monsterxx03.com/2017/12/15/dynamodb/</link>
       <pubDate>Fri, 15 Dec 2017 22:24:36 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/12/15/dynamodb/</guid>
-      <description>DynamoDB 是 AWS 的托管 NoSQL 数据库，可以当作简单的 KV 数据库使用，也可以作为文档数据库使用. Data model 组织数据的单位是 table, 每张 table 必须设置 primary key, 可以设置可选的 sort key 来做索引. 每条数据记作一个 item, 每个 item 含有一个或多个 attribute, 其中必须包括 primary key. attribute 对应的 value 支持以下几种类型: Number, 由于 DynamoDB 的传输协议是 http + json, 为了跨语言的兼容性, number 一律会被转成 string 传输. Binary, 用来表示任意的二进制数据，会用 base64 encode 后传输. Boolean, true or false Null Document 类型包含 List 和 Map, 可以互相嵌套. List, 个数无限制, 总大小</description>
+      <description>&lt;p&gt;DynamoDB 是 AWS 的托管 NoSQL 数据库，可以当作简单的 KV 数据库使用，也可以作为文档数据库使用.&lt;/p&gt;&#xA;&lt;h2 id=&#34;data-model&#34;&gt;Data model&lt;/h2&gt;&#xA;&lt;p&gt;组织数据的单位是 table, 每张 table 必须设置 primary key, 可以设置可选的 sort key 来做索引.&lt;/p&gt;&#xA;&lt;p&gt;每条数据记作一个 item, 每个 item 含有一个或多个 attribute, 其中必须包括 primary key.&lt;/p&gt;&#xA;&lt;p&gt;attribute 对应的 value 支持以下几种类型:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Number, 由于 DynamoDB 的传输协议是 http + json, 为了跨语言的兼容性, number 一律会被转成 string 传输.&lt;/li&gt;&#xA;&lt;li&gt;Binary, 用来表示任意的二进制数据，会用 base64 encode 后传输.&lt;/li&gt;&#xA;&lt;li&gt;Boolean, true or false&lt;/li&gt;&#xA;&lt;li&gt;Null&lt;/li&gt;&#xA;&lt;li&gt;Document 类型包含 List 和 Map, 可以互相嵌套.&#xA;&lt;ul&gt;&#xA;&lt;li&gt;List, 个数无限制, 总大小不超过 400KB&lt;/li&gt;&#xA;&lt;li&gt;Map, 属性个数无限制，总大小不超过 400 KB, 嵌套层级不超过 32 级.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;Set,  一个 set 内元素数目无限制, 无序，不超过 400KB, 但必须属于同一类型, 支持 number set, binary set, string set.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;选择-primary-key&#34;&gt;选择 primary key&lt;/h2&gt;&#xA;&lt;p&gt;Table 的 primary key 支持单一的 partition key 或复合的 partition key + sort key. 不管哪种，最后的组成的primary key 在一张表中必须唯一.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Designing data intensive application, reading notes, Part 1</title>
       <link>https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/</link>
       <pubDate>Thu, 04 May 2017 16:27:52 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/05/04/designing-data-intensive-application-reading-notes-part-1/</guid>
       <description>&lt;p&gt;Notes when reading chapter 2 “Data models and query languages”, chapter 3 “Storage and retrieval”&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>MySQL partition table</title>
       <link>https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/</link>
       <pubDate>Wed, 05 Apr 2017 16:23:32 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/04/05/mysql-partition-table/</guid>
-      <description>&lt;h1 id=&#34;overview&#34;&gt;Overview&lt;/h1&gt;
-&lt;p&gt;MySQL has buildin partition table support, which can help split data accross multi tables,&lt;/p&gt;
-&lt;p&gt;and provide a unified query interface as normal tables.&lt;/p&gt;
-&lt;p&gt;Benefit:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly.&lt;/li&gt;
-&lt;li&gt;Speed up query based on partition key(partitoin pruning)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Limit:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;For partition table, every unique key must use every column in table’s partition expression(include primary key)&lt;/li&gt;
-&lt;li&gt;For innodb engine, paritioned table can’t have foreign key,and can’t have columns referenced by foreign keys.&lt;/li&gt;
-&lt;li&gt;For MyISAM engine, mysql version &amp;lt;= 5.6.5, DML operation will lock all partition as a whole.&lt;/li&gt;
-&lt;/ul&gt;</description>
+      <description>&lt;h1 id=&#34;overview&#34;&gt;Overview&lt;/h1&gt;&#xA;&lt;p&gt;MySQL has buildin partition table support, which can help split data accross multi tables,&lt;/p&gt;&#xA;&lt;p&gt;and provide a unified query interface as normal tables.&lt;/p&gt;&#xA;&lt;p&gt;Benefit:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly.&lt;/li&gt;&#xA;&lt;li&gt;Speed up query based on partition key(partitoin pruning)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Limit:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;For partition table, every unique key must use every column in table’s partition expression(include primary key)&lt;/li&gt;&#xA;&lt;li&gt;For innodb engine, paritioned table can’t have foreign key,and can’t have columns referenced by foreign keys.&lt;/li&gt;&#xA;&lt;li&gt;For MyISAM engine, mysql version &amp;lt;= 5.6.5, DML operation will lock all partition as a whole.&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
     </item>
-    
     <item>
       <title>Migrate to encrypted RDS</title>
       <link>https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/</link>
       <pubDate>Fri, 28 Oct 2016 16:17:30 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2016/10/28/migrate-to-encrypted-rds/</guid>
-      <description>&lt;p&gt;最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.&lt;/p&gt;
-&lt;p&gt;比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.&lt;/p&gt;</description>
+      <description>&lt;p&gt;最近公司在做 HIPAA Compliance 相关的事情，其中要求之一是所有db需要开启encryption.&lt;/p&gt;&#xA;&lt;p&gt;比较麻烦的是rds 的encryption 只能在创建的时候设定，无法之后修改, 所以必须对线上的db 做一次 migration.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>MySQL 索引优化</title>
       <link>https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/</link>
       <pubDate>Tue, 26 Jul 2016 16:13:54 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2016/07/26/mysql-index-optimization/</guid>
-      <description>&lt;p&gt;什么是索引,索引怎么建这些基本的就跳过不谈了,整理一些前段时间优化线上 SQL 查询时碰到的一些问题. 主要解决下面几个问题:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;建立索引怎样选择合适的列.&lt;/li&gt;
-&lt;li&gt;怎样让 SQL 能有效利用索引.&lt;/li&gt;
-&lt;li&gt;如果对 SQL 效率进行评估(即设置索引前后是否真的有性能提升).&lt;/li&gt;
-&lt;/ul&gt;</description>
+      <description>&lt;p&gt;什么是索引,索引怎么建这些基本的就跳过不谈了,整理一些前段时间优化线上 SQL 查询时碰到的一些问题. 主要解决下面几个问题:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;建立索引怎样选择合适的列.&lt;/li&gt;&#xA;&lt;li&gt;怎样让 SQL 能有效利用索引.&lt;/li&gt;&#xA;&lt;li&gt;如果对 SQL 效率进行评估(即设置索引前后是否真的有性能提升).&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
     </item>
-    
     <item>
       <title>Redshift as data warehouse</title>
       <link>https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/</link>
       <pubDate>Sat, 16 Jul 2016 16:11:39 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2016/07/16/redshift-as-data-warehouse/</guid>
-      <description>&lt;p&gt;Glow 的 server infrastructure 全部搭建在 AWS 上，一般要选择一些基础服务的时候，总是先看 AWS, 只要功能和成本符合要求，不会特意选择开源方案。&lt;/p&gt;
-&lt;p&gt;数据仓库我们选择了 AWS 的 Redshift.&lt;/p&gt;
-&lt;p&gt;在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Glow 的 server infrastructure 全部搭建在 AWS 上，一般要选择一些基础服务的时候，总是先看 AWS, 只要功能和成本符合要求，不会特意选择开源方案。&lt;/p&gt;&#xA;&lt;p&gt;数据仓库我们选择了 AWS 的 Redshift.&lt;/p&gt;&#xA;&lt;p&gt;在一年多的使用过程中 Redshift 的性能和稳定性都不错, 当然也有一些坑, 这里整理下在使用 redshift 的过程中的一些经验和遇到的坑.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>MySQL innodb buffer pool</title>
       <link>https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/</link>
       <pubDate>Sat, 16 Jul 2016 16:07:14 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2016/07/16/mysql-innodb-buffer-pool/</guid>
-      <description>&lt;p&gt;最近在对公司的 MySQL 服务器做性能优化, 一直对 innodb 的内存使用方式不是很清楚, 乘这机会做点总结.&lt;/p&gt;
-&lt;p&gt;在配置 MySQL 的时候, 一般都会需要设置 &lt;em&gt;innodb_buffer_pool_size&lt;/em&gt;, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.&lt;/p&gt;
-&lt;p&gt;之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?&lt;/p&gt;</description>
+      <description>&lt;p&gt;最近在对公司的 MySQL 服务器做性能优化, 一直对 innodb 的内存使用方式不是很清楚, 乘这机会做点总结.&lt;/p&gt;&#xA;&lt;p&gt;在配置 MySQL 的时候, 一般都会需要设置 &lt;em&gt;innodb_buffer_pool_size&lt;/em&gt;, 在将 MySQL 设置在单独的服务器上时, 一般会设置为物理内存的80%.&lt;/p&gt;&#xA;&lt;p&gt;之前一直疑惑 MySQL 是怎么缓存数据的(不是指query cache), 直觉应该是LRU, 但如果 query 一下从磁盘上读取大量的数据的话(全表扫描或是 mysqldump), 是不是很容易就会把热数据给踢出去?&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

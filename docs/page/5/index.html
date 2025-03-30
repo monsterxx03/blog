@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.111.3">
+	<meta name="generator" content="Hugo 0.145.0">
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
 
@@ -68,7 +68,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -77,12 +77,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -94,12 +90,63 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/'>管理负载</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p><p>最近在看 google 的 <code>&lt;The Site Reliablity Workbook&gt;</code>, 其中有一章是&quot;Manage load&quot;, 内容还挺详细的, 结合在 aws 上的经验做点笔记.</p>
+<h2 id="load-balancing">Load Balancing</h2>
+<p>流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存.</p>
+<p>google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency.</p>
+<p>但只依赖 BGP 会带来两个问题:</p>
+<ul>
+<li>某个地区的用户过多会给最近的 frontend server 带来过高的负载</li>
+<li>ISP 的 BGP 路由会重计算, 当 BGP routing 变化后, 进行中的 tcp connection 会被 reset(同一个 connection 上的后续数据包被发送到不同的 server, tcp session 不存在于新 server 上)</li>
+</ul>
+<p>为了解决原生 BGP anycast 的问题, google 开发了 Maglev, 即使路由发生了变化(routing flap), connection 也不断开, 把这种方式叫做 stablized anycast.</p>......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2019.02.12</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/gce/">gce</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/book/">book</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2018/12/29/%E4%BB%8E%E5%8E%BB%E5%B9%B4%E7%9A%84%E4%B8%80%E4%B8%AApatch%E8%AF%B4%E8%B5%B7/'>从去年的一个patch说起</a></h2>
   </div>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>去年对线上业务做了一些性能优化, 当时把 http client 从 requests 换成了 geventhttpclient , 上线后发起 rpc 调用的 server 整体负载低了很多, 但 client 端 latency 却高了很多, 经过 debug 觉得问题是 geventhttpclient 把 header 和 body 通过两次 sock send 发出的额外开销造成的, 尝试 修改成一次 send 后 latency 就恢复了: https://github.com/gwik/geventhttpclient/pull/85 最近在调试 gunicorn 的代码时候, 看到它建立 socket 的时候设置了 TCP_NODELAY, 在很多项目里看到过这个 tcp option, 但没细究过, man tcp 得知是用来关闭 tcp 里的 nagle 算法的. nagle 在 linux 的 默认 tcp 协议栈里是开启的, 当发送的数据包 size 小于 mss 的时候会在内存里 buffer......</p>
+      <p><p>去年对线上业务做了一些性能优化, 当时把 http client 从 requests 换成了 geventhttpclient ,
+上线后发起 rpc 调用的 server 整体负载低了很多, 但 client 端 latency 却高了很多, 经过 debug
+觉得问题是 geventhttpclient 把 header 和 body 通过两次 sock send 发出的额外开销造成的, 尝试
+修改成一次 send 后 latency 就恢复了: <a href="https://github.com/gwik/geventhttpclient/pull/85">https://github.com/gwik/geventhttpclient/pull/85</a></p>
+<p>最近在调试 gunicorn 的代码时候, 看到它建立 socket 的时候设置了 TCP_NODELAY, 在很多项目里看到过这个
+tcp option, 但没细究过, <code>man tcp</code> 得知是用来关闭 tcp 里的 nagle 算法的. nagle 在 linux 的
+默认 tcp 协议栈里是开启的, 当发送的数据包 size 小于 mss 的时候会在内存里 buffer 起来, 积累起来后再发送,
+目的是提高带宽利用率, 毕竟 payload 只发一次字节也要带上 40 字节的 ip+tcp header.</p>......</p>
     </div>
   </div>
   
@@ -134,7 +181,18 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>定义 pod 的时候通过添加 node selector 可以让 pod 调度到有特定 label 的 node 上去, 这是最简单的调度方式. 其他还有更复杂的调度方式: node-taints/tolerations, node-affinity, pod-affinity, 来达到让某些类型的 pod 调度到一起, 让某些类型的 pod 不跑一起的效果. Taints and Tolerations 如果 node 有 taints, 那只有能 tolerate 这些 taints 的 pod 才能调度到上面. taint 的基本格式是: &lt;key&gt;&lt;operator&gt;&lt;value&gt;:&lt;effect&gt; kubectl describe node xxx 可以看到节点的 taints, 比如 master 节点上会有: Taints: node-role.kubernetes.io/master:NoSchedule 这里 key 是 node-role.kubernetes.io/master, 没有等号和 value, operator 就是 Exists , effect 是 NoSchedule. master 节点上的这条 taint 就定义了只有能 tolerate 它的 pod 能调度到上面, 一般都是些系统 pod. 比如看......</p>
+      <p><p>定义 pod 的时候通过添加 node selector 可以让 pod 调度到有特定 label 的 node 上去, 这是最简单的调度方式.
+其他还有更复杂的调度方式: node-taints/tolerations, node-affinity, pod-affinity, 来达到让某些类型的 pod 调度到一起,
+让某些类型的 pod 不跑一起的效果.</p>
+<h2 id="taints-and-tolerations">Taints and Tolerations</h2>
+<p>如果 node 有 taints, 那只有能 tolerate 这些 taints 的 pod 才能调度到上面.</p>
+<p>taint 的基本格式是: <code>&lt;key&gt;&lt;operator&gt;&lt;value&gt;:&lt;effect&gt;</code></p>
+<p><code>kubectl describe node xxx</code> 可以看到节点的 taints, 比如 master 节点上会有:</p>
+<pre><code>Taints:       node-role.kubernetes.io/master:NoSchedule 
+</code></pre>
+<p>这里 key 是 <code>node-role.kubernetes.io/master</code>, 没有等号和 value, operator 就是 <code>Exists</code> , effect 是 <code>NoSchedule</code>.</p>
+<p>master 节点上的这条 taint 就定义了只有能 tolerate 它的 pod 能调度到上面, 一般都是些系统 pod.</p>
+<p>比如看下 kube-proxy: <code>kubectl describe pod kube-proxy-efiv -n kube-system</code></p>......</p>
     </div>
   </div>
   
@@ -165,17 +223,31 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04, some tools are not installed by default, you can installl by sudo apt install xxx. Some commands must be used via sudo.
-System resources can be classified in three main categories: compute, storage, and network. Usually, when you come to a performance issue, it&rsquo;s always caused by exhaustion of those resources.
-Universal metric: System load There&rsquo;re several ways to get system load, w, uptime, top, cat /proc/loadavg
-uptime example:
-03:34:23 up 20:31, 1 user, load average: 1.02, 0.65, 0.45 Top right corner three values named load average is system load.
-They means: average system load during last minute/last 5 minutes/last 15 minutes periods.
-If load/(# of cpu core) &gt; 1 means there&rsquo;re tasks pending in cpu queue. Usually, you will feel slow.
-It&rsquo;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.
-If system load is high, means tasks are pending in CPU queue, maybe a result of:
-High cpu usage. Poor disk performance(disk io). Exhaustion of ram. &hellip; free free -k/-m/-g show memory usage in KB/MB/GB
-free -h humanize output (automatically show in KB/MB/GB&hellip;)......</p>
+      <p><p>This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04,
+some tools are not installed by default, you can installl by <code>sudo apt install xxx</code>.
+Some commands must be used via <code>sudo</code>.</p>
+<p>System resources can be classified in three main categories: compute, storage, and network.
+Usually, when you come to a performance issue, it&rsquo;s always caused by exhaustion of those
+resources.</p>
+<h2 id="universal-metric-system-load">Universal metric: System load</h2>
+<p>There&rsquo;re several ways to get system load, <code>w</code>, <code>uptime</code>, <code>top</code>, <code>cat /proc/loadavg</code></p>
+<p><code>uptime</code> example:</p>
+<pre><code>03:34:23 up 20:31,  1 user,  load average: 1.02, 0.65, 0.45
+</code></pre>
+<p>Top right corner three values named <code>load average</code> is system load.</p>
+<p>They means: average system load during last minute/last 5 minutes/last 15 minutes periods.</p>
+<p>If <code>load/(# of cpu core) &gt; 1</code>  means there&rsquo;re tasks pending in cpu queue. Usually, you will feel <strong>slow</strong>.</p>
+<p>It&rsquo;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.</p>
+<p>If system load is high, means tasks are pending in CPU queue, maybe a result of:</p>
+<ul>
+<li>High cpu usage.</li>
+<li>Poor disk performance(disk io).</li>
+<li>Exhaustion of ram.</li>
+<li>&hellip;</li>
+</ul>
+<h2 id="free">free</h2>
+<p><code>free -k/-m/-g</code> show memory usage in KB/MB/GB</p>
+<p><code>free -h</code>  humanize output (automatically show in KB/MB/GB&hellip;)</p>......</p>
     </div>
   </div>
   
@@ -206,7 +278,12 @@ free -h humanize output (automatically show in KB/MB/GB&hellip;)......</p>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>屋里有两个钟，一个快 5 分钟， 一个慢 5 分钟, 一直懒得把它们调正, 有种莫名的时间撕裂感, 好像还挺喜欢.还有一个月 2018 就过去了, 我想想最近都干嘛了. 最近看的书 读完了 &lt;a philosophy of software design&gt;, 书是好书, 就是好贵(花了我260&hellip;). 本来想专门写一篇的,但开了个头发却发现没太多可写的. 书里提到的问题都碰到过, 解决方法和建议其实也一直在用, 没有什么银弹, 等再践行一段时间再说吧. PS: 收益最大的是讲注释的章节. 昨晚看完了......</p>
+      <p><p>屋里有两个钟，一个快 5 分钟，　一个慢 5 分钟,　一直懒得把它们调正, 有种莫名的时间撕裂感, 好像还挺喜欢.还有一个月 2018 就过去了,
+我想想最近都干嘛了.</p>
+<h2 id="最近看的书">最近看的书</h2>
+<p>读完了 <code>&lt;a philosophy of software design&gt;</code>, 书是好书, 就是好贵(花了我260&hellip;). 本来想专门写一篇的,但开了个头发却发现没太多可写的. 书里提到的问题都碰到过, 解决方法和建议其实也一直在用,
+没有什么银弹, 等再践行一段时间再说吧. PS: 收益最大的是讲注释的章节.</p>
+<p>昨晚看完了 <code>&lt;夜行&gt;</code>. 森见登美彦的书, 改编的动画倒是看过不少, 书以前只看过 <code>&lt;有顶天家族&gt;</code>. 这本风格差得挺远,　通篇五里雾中的感觉, 有点　<code>&lt;1Q84&gt;</code>　的意思. &ldquo;世界是一场夜&rdquo;, 后半部分看到这句话的时候, 起了鸡皮疙瘩,　夜行和曙光世界里的岸田过着完全不同的生活, 契机只是鞍马火祭上的偶遇. 是不是真的存在一个和现实完全对立的世界, 跨越的分界线只是那一点点契机?那个世界的自己又过得到好还是差呢?　</p>......</p>
     </div>
   </div>
   
@@ -230,7 +307,8 @@ free -h humanize output (automatically show in KB/MB/GB&hellip;)......</p>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>之前产品里有一个功能是每天给用户推荐一批文章,要保证最后推给用户的文章每天不重复. 原先的实现很直接, 每次推送时候记录下用户 id 和 topic id 的键值对, 拿到新 topic 列表后,取出曾经给该用户推送过的文章列表, 两个 set 去重. 这个实现的问题很明显, 存储空间量太大(M * N), user id (int64) + topic id (int64) = 16 bytes, 1 million 的用户, 每天给用户推送10篇文章, 一年要存储: 16 * 10 * 365 * 1M = 54.4GB. 查询效率也很低,要么一次取所有已读 topic id, 要么把要推送的 topic id 都丢进数据......</p>
+      <p><p>之前产品里有一个功能是每天给用户推荐一批文章,要保证最后推给用户的文章每天不重复. 原先的实现很直接, 每次推送时候记录下用户 id 和 topic id 的键值对, 拿到新 topic 列表后,取出曾经给该用户推送过的文章列表, 两个 set 去重.</p>
+<p>这个实现的问题很明显, 存储空间量太大(M * N), user id (int64) + topic id (int64) = 16 bytes, 1 million 的用户, 每天给用户推送10篇文章, 一年要存储: 16 * 10 * 365 * 1M = 54.4GB. 查询效率也很低,要么一次取所有已读 topic id, 要么把要推送的 topic id 都丢进数据库去重.</p>......</p>
     </div>
   </div>
   
@@ -265,7 +343,11 @@ free -h humanize output (automatically show in KB/MB/GB&hellip;)......</p>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>上月休假去濑户内海溜达了一圈, 一个比想象中美太多的地方. 对濑户内海的印象, 要追溯到高中时看的一部搞笑番 &lt;濑户花嫁&gt;, 挺有意思的片子, 爆笑之余, 对濑户内海这个地方有了模模糊糊的印象. 去年去了青森和九州, 就想着再去个日本犄角旮旯的地吧, 四国就被提上了日程, 稍做攻略, 发现濑户内海就这里, 兴趣来了. 明年三月的时候濑户内海有艺术祭, 那会估计就被世界各地的人给挤爆了, 不凑这热闹, 还是10月去吧. 大......</p>
+      <p><p>上月休假去濑户内海溜达了一圈, 一个比想象中美太多的地方.</p>
+<p>对濑户内海的印象, 要追溯到高中时看的一部搞笑番 &lt;濑户花嫁&gt;, 挺有意思的片子, 爆笑之余, 对濑户内海这个地方有了模模糊糊的印象.</p>
+<p>去年去了青森和九州, 就想着再去个日本犄角旮旯的地吧, 四国就被提上了日程, 稍做攻略, 发现濑户内海就这里, 兴趣来了.</p>
+<p>明年三月的时候濑户内海有艺术祭, 那会估计就被世界各地的人给挤爆了, 不凑这热闹, 还是10月去吧.</p>
+<p>大致行程: 上海 -&gt; 高松 -&gt; 小豆岛 -&gt; 丰岛 -&gt; 直岛. 除了在小豆岛上呆了一晚上，其他时候都住在了高松.</p>......</p>
     </div>
   </div>
   
@@ -289,7 +371,19 @@ free -h humanize output (automatically show in KB/MB/GB&hellip;)......</p>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比. Paper notes 存储计算分离 redo log 下推到存储层 副本: 6 副本 3 AZ(2 per az), 失去一个 AZ + 1 additoinal node 不会丢数据(可读不可写). 失去一个 AZ (或任意2 node) 不影响数据写入. 10GB 一个 segment, 每个 segment 6 副本一个 PG (protection group), 一 AZ 两副本. 在 10Gbps 的网络上, 修复一个 10GB 的segment 需要 10s. MySQL 一个应用层的写会在底层产生很多额外的写操作，会带来写放大问题: redo log 用来 crash recovery, binlog 会上传 s3 用于 point in time restore. 在 aurora 里，只......</p>
+      <p><p>最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比.</p>
+<h2 id="paper-notes">Paper notes</h2>
+<ul>
+<li>存储计算分离</li>
+<li>redo log 下推到存储层</li>
+<li>副本: 6 副本 3 AZ(2 per az), 失去一个 AZ + 1 additoinal node 不会丢数据(可读不可写). 失去一个 AZ (或任意2 node) 不影响数据写入.</li>
+<li>10GB 一个 segment, 每个 segment 6 副本一个 PG (protection group), 一 AZ　两副本.</li>
+<li>在 10Gbps 的网络上, 修复一个 10GB 的segment 需要 10s.</li>
+</ul>
+<p>MySQL 一个应用层的写会在底层产生很多额外的写操作，会带来写放大问题:</p>
+<p><img src="/posts/images/aurora-mysql-replication.png" alt=""></p>
+<p>redo log 用来 crash recovery, binlog 会上传 s3　用于 point in time restore.</p>
+<p>在 aurora 里，只有 redo log 会通过网络复制到各个 replica, master 会等待 4/6 replicas 完成 redo log 的写入就认为写入成功 (所以失去3副本就无法写入数据了). 其他副本会根据 redo log 重建数据(单独的 redo log applicator 进程).</p>......</p>
     </div>
   </div>
   
@@ -326,7 +420,18 @@ free -h humanize output (automatically show in KB/MB/GB&hellip;)......</p>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>通常我们使用云服务的时候, 服务提供商会提供 SLA(Service Level Aggrement),作为他们提供的服务质量的标准(常说的几个9),达不到会进行赔偿. 比如 AWS 的计算类服务: https://aws.amazon.com/compute/sla/ . 对公司自己 host 的 service, 我们内部也需要一些技术指标来 track 我们为客户提供的服务质量如何, 这个叫做 SLO(Service Level Objective). 也可以把他当成一个对内的,没有赔偿协议的SLA. 定义指标 我主要 track 两个指标: Availability (服务的可用性) Quality (服务质量) Availability 的定义, 以前用简单的 service uptime 来定义, 在集群外部用一......</p>
+      <p><p>通常我们使用云服务的时候, 服务提供商会提供 SLA(Service Level Aggrement),作为他们提供的服务质量的标准(常说的几个9),达不到会进行赔偿.
+比如 AWS 的计算类服务: <a href="https://aws.amazon.com/compute/sla/">https://aws.amazon.com/compute/sla/</a> .</p>
+<p>对公司自己 host 的 service, 我们内部也需要一些技术指标来 track 我们为客户提供的服务质量如何, 这个叫做
+SLO(Service Level Objective). 也可以把他当成一个对内的,没有赔偿协议的SLA.</p>
+<h2 id="定义指标">定义指标</h2>
+<p>我主要 track 两个指标:</p>
+<ul>
+<li>Availability (服务的可用性)</li>
+<li>Quality (服务质量)</li>
+</ul>
+<p>Availability 的定义, 以前用简单的 service  uptime 来定义, 在集群外部用一个 service check 定时 ping 我们 service　的 check endpoint,
+失败就定义为 failure.</p>......</p>
     </div>
   </div>
   
@@ -357,7 +462,71 @@ free -h humanize output (automatically show in KB/MB/GB&hellip;)......</p>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>p95 latency 的定义: 把一段时间的 latency 按照从小到大排序, 砍掉最高的 %5, 剩下最大的值就是 p95 latency. p99, p90 同理. p95 latency 表示该时间段内 95% 的 reqeust 都比这个值快. 一般我直接看 CloudWatch, 和 datadog 算好的 p95 值. 这次看看怎么从 access log 里直接计算 p95 latency. 假设在 redshift 中有一张表存储了应用的 access log, 结构如下: CREATE TABLE access_log ( url string, time string, resp_time real ); url time resp_time /test1 2018-10-11T00:10:00.418480Z 0.123 /test2 2018-10-11T00:12:00.512340Z 0.321 要算 p95 很简单, 把 log 按分钟数分组, 用 percentile_cont 在组内按 resp_time 排序计算 就能得到: select date_trunc('minute', time::timestamp) as ts, percentile_cont(0.95) within group(order by resp_time) as p95 from access_log group by 1 order by 1; 得到: ts | p95 ---------------------+------------------- 2018-10-11 00:00:00 | 0.71904999999995 2018-10-11 00:01:00......</p>
+      <p><p>p95 latency 的定义: 把一段时间的 latency 按照从小到大排序, 砍掉最高的 %5, 剩下最大的值就是 p95 latency. p99, p90 同理.</p>
+<p>p95 latency 表示该时间段内 95% 的 reqeust 都比这个值快.</p>
+<p>一般我直接看 CloudWatch, 和 datadog 算好的 p95 值. 这次看看怎么从 access log 里直接计算 p95 latency.</p>
+<p>假设在 redshift 中有一张表存储了应用的 access log, 结构如下:</p>
+<pre><code>CREATE TABLE access_log (
+    url         string,
+    time        string,
+    resp_time   real
+);
+</code></pre>
+<table>
+  <thead>
+      <tr>
+          <th>url</th>
+          <th>time</th>
+          <th>resp_time</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>/test1</td>
+          <td>2018-10-11T00:10:00.418480Z</td>
+          <td>0.123</td>
+      </tr>
+      <tr>
+          <td>/test2</td>
+          <td>2018-10-11T00:12:00.512340Z</td>
+          <td>0.321</td>
+      </tr>
+  </tbody>
+</table>
+<p>要算 p95 很简单, 把 log 按分钟数分组, 用 <code>percentile_cont</code> 在组内按 <code>resp_time</code> 排序计算 就能得到:</p>
+<pre><code>select date_trunc('minute', time::timestamp) as ts,
+      percentile_cont(0.95) within group(order by resp_time) as p95
+from access_log 
+group by 1
+order by 1;
+</code></pre>
+<p>得到:</p>
+<pre><code>     ts          |        p95
+---------------------+-------------------
+ 2018-10-11 00:00:00 |  0.71904999999995
+ 2018-10-11 00:01:00 | 0.555550000000034
+ 2018-10-11 00:02:00 | 0.478999999999939
+ 2018-10-11 00:03:00 | 0.507250000000081
+ 2018-10-11 00:04:00 | 0.456000000000025
+ 2018-10-11 00:05:00 | 0.458999999999949
+ 2018-10-11 00:06:00 | 0.581000000000054
+ 2018-10-11 00:07:00 | 0.585099999999937
+ 2018-10-11 00:08:00 | 0.527999999999908
+ 2018-10-11 00:09:00 | 0.570999999999936
+ 2018-10-11 00:10:00 | 0.587950000000069
+ 2018-10-11 00:11:00 | 0.648900000000077
+ 2018-10-11 00:12:00 | 0.570000000000024
+ 2018-10-11 00:13:00 | 0.592649999999954
+ 2018-10-11 00:14:00 | 0.584149999999998
+ 2018-10-11 00:15:00 |  3.00854999999952
+ 2018-10-11 00:16:00 | 0.832999999999871
+ 2018-10-11 00:17:00 |  1.07154999999991
+ 2018-10-11 00:18:00 | 0.553600000000092
+ 2018-10-11 00:19:00 | 0.605799999999997
+ 2018-10-11 00:20:00 | 0.832000000000137
+ ...
+</code></pre>
+<p><code>PERCENTILE_CONT</code> 是逆分布函数, 给定一个百分比, 在一个连续分布模型上计算该百分比处的数值, 如果在该点处没有数据, 会根据最接近的前后值进行插值计算出实际值.</p>......</p>
     </div>
   </div>
   
@@ -377,43 +546,6 @@ free -h humanize output (automatically show in KB/MB/GB&hellip;)......</p>
           <a href="https://blog.monsterxx03.com/tags/data-infra/">data-infra</a>
           
           <a href="https://blog.monsterxx03.com/tags/redshift/">redshift</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/09/26/eks-%E8%AF%84%E6%B5%8B-part-3/'>EkS 评测 part-3</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>这篇记录对 ingress 的测试. ingress 用来将外部流量导入 k8s 内的 service. 将 service 的类型设置为 LoadBalancer / NodePort 也可以将单个 service 暴露到公网, 但用 ingress 可以只使用一个公网入口,根据 host name 或 url path 来将请求分发到不同的 service. 一般 k8s 内的资源都会由一个 controller 来负责它的状态管理, 都由 kube-controller-manager 负责， 但 ingress controller 不是它的一部分，需要是视情况自己选择合适的 ingress controller. 在 eks 上我主要需要 ingress-nginx 和 aws-alb-ingress-controller. 注意, nginx inc 还维护一个 kubernetes-ingress, 和官方那个不是一个东西， 没测试过. 这里主要只测试了 ingress-nginx, 看了下内部实现, 数据的转发真扭曲......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.09.26</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
           
         </span>
         
@@ -498,17 +630,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

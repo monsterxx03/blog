@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.111.3">
+	<meta name="generator" content="Hugo 0.145.0">
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
 
@@ -68,7 +68,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -77,12 +77,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -94,12 +90,58 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2025/03/30/gospy-dev-note2-rewrite-with-aider/'>gospy dev note2 (rewrite with aider)</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p><p>几年前写过个工具 <a href="https://github.com/monsterxx03/gospy">gospy</a>, 用于从旁路 dump 一个 golang 进程的 runtime 信息(包括 goroutine, memory 等), 大致原理见以前的<a href="/tags/gospy/">文章</a>.</p>
+<p>基本功能能用, 但没继续做下去, 除了没时间外, 其他还有几个问题:</p>
+<ul>
+<li>不支持 MacOS (主要是没搞懂 MacOS 下怎么读取进程内存).</li>
+<li>DWARF 解析写的过于繁琐, golang 版本更新时, 解析逻辑很难调整.</li>
+<li>对写 UI (包括 terminal UI 和前端) 实在没兴趣, 不写又没法暴露功能, 也懒得去做通过 http 接口暴露数据.</li>
+</ul>
+<p>前阵子试了下通过 <a href="https://aider.chat/">aider</a> 来写代码, 效果非常惊艳, 对我来说, 比 curosr 还顺手. 于是花了两个周末的时间, 把 gospy 整个重写了.</p>......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2025.03.30</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/gospy/">gospy</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/golang/">golang</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2023/04/12/%E6%95%B4%E7%90%86%E5%87%A0%E4%B8%AA%E7%A2%B0%E5%88%B0%E7%9A%84-etcd-bug/'>整理几个碰到的 etcd bug</a></h2>
   </div>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>产品里用了一年多的 etcd, 碰到过一些 bug, 整理下，其中用些在最新版本里已经修复了, 会标注下. 添加 etcd 节点相关 bug 添加 etcd 节点的过程一般是先 member add, 然后启动新节点上的 etcd，这样的问题是在 member add 和新 etcd 启动 之间整个 etcd 集群处于 quorum - 1 的状态, 此过程增加了集群的不稳定性，如果新节点由于配置错误起不来，现存节点再挂一个 就可能导致整个集群不可用. 从 3.4 开始 etcd 引入了 learner 的概念, member add &ndash;learner, 可以将新节点添加成 leaner 角色，只同步 raft log, 不参与 quorum vote, 即现有集......</p>
+      <p><p>产品里用了一年多的 etcd, 碰到过一些 bug, 整理下，其中用些在最新版本里已经修复了, 会标注下.</p>
+<h2 id="添加-etcd-节点相关-bug">添加 etcd 节点相关 bug</h2>
+<p>添加 etcd 节点的过程一般是先 member add, 然后启动新节点上的 etcd，这样的问题是在 member add 和新 etcd 启动
+之间整个 etcd 集群处于 quorum - 1 的状态, 此过程增加了集群的不稳定性，如果新节点由于配置错误起不来，现存节点再挂一个
+就可能导致整个集群不可用.</p>
+<p>从 3.4 开始 etcd 引入了 learner 的概念, member add &ndash;learner, 可以将新节点添加成 leaner 角色，只同步 raft log, 不参与 quorum vote,
+即现有集群的 quorum size 不会变化. 等新节点起来后再通过 member promote 将新节点提升为正常节点，参与 quorum vote.</p>......</p>
     </div>
   </div>
   
@@ -130,7 +172,66 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>patroni 的安装跳过, 它只是个 python 包, 把依赖装好就行, 同时要求装好 postgres-server, patroni 运行过程中会调用 pg_ctl 等命令: https://patroni.readthedocs.io/en/latest/README.html 每个 patroni 管理一个 pg 实例, 两者必须部署在同一节点上, patroni 需要能: 访问 pg 的监听端口 读写 pg data dir (patroni 会重写 postgres.conf, pg_hba.conf 等文件) 配置文件 配置文件是yaml 格式, 具体见 https://patroni.readthedocs.io/en/latest/SETTINGS.html 使用 patroni postgres.yaml 命令启动一个 patroni 实例 # 集群名字, 同一集群内的 patroni 必须设置一样, 会成为 postgres.conf 内的 cluster_name参数 scope: xsky-test # patroni 会将一些动态配置存在 DCS 内, namespace 是在 DCS 内的存储路径, eg: 使用......</p>
+      <p><p>patroni 的安装跳过, 它只是个 python 包, 把依赖装好就行, 同时要求装好 postgres-server, patroni 运行过程中会调用 pg_ctl 等命令: <a href="https://patroni.readthedocs.io/en/latest/README.html">https://patroni.readthedocs.io/en/latest/README.html</a>
+每个 patroni 管理一个 pg 实例, 两者必须部署在同一节点上, patroni 需要能:</p>
+<ul>
+<li>访问 pg 的监听端口</li>
+<li>读写 pg data dir (patroni 会重写 postgres.conf, pg_hba.conf 等文件)</li>
+</ul>
+<p><img src="/posts/images/patroni-ha.png" alt=""></p>
+<h2 id="配置文件">配置文件</h2>
+<p>配置文件是yaml 格式, 具体见 <a href="https://patroni.readthedocs.io/en/latest/SETTINGS.html">https://patroni.readthedocs.io/en/latest/SETTINGS.html</a><br>
+使用 patroni postgres.yaml 命令启动一个 patroni 实例</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># 集群名字, 同一集群内的 patroni 必须设置一样, 会成为 postgres.conf 内的 cluster_name参数</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">scope</span>: <span style="color:#ae81ff">xsky-test</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># patroni 会将一些动态配置存在 DCS 内, namespace 是在 DCS 内的存储路径, eg: 使用 etcdv3 作为 DCS, 可以通过 etdctl get /service --prefix 看到 patroni 在 DCS 内存了什么</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">/service  </span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 管理的 pg 的实例名, 同一集群内每个实例必须都不同, eg: pg0, pg1, pg2</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">name</span>: <span style="color:#ae81ff">pg0</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  日志相关配置</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">log</span>:  
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">level</span>: <span style="color:#ae81ff">INFO </span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># patroni restapi 相关配置</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">restapi</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">listen</span>: <span style="color:#ae81ff">0.0.0.0</span>:<span style="color:#ae81ff">8008</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用创建 pg 实例, 生成 pg 的 data dir, postgres.conf, pg_hba.conf 等文件</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">bootstrap</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># dcs 下内容会写入 DCS 的 {namespace}/{scope}/config key 中,只有在初始化集群的时候被使用一次, 后续修改不会生效, 可以通过 patrionctl edit-config 或 rest api 来修改存在 dcs 中的值</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">dcs</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">loop_wait</span>: <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ttl</span>: <span style="color:#ae81ff">30</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 初始化集群时生成 pg_bha.conf, 后续改动不会生效</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">pg_hba</span>:
+</span></span><span style="display:flex;"><span>   - <span style="color:#ae81ff">host replication replicator 127.0.0.1/32 md5</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 在初始化集群时需要创建的用户, 后续改动不会生效</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">users</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 使用 etcd v2 api 作为 dcs</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">etcd</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 使用 etcd v3 api 作为 dcs</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">etcd3</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用于 patroni 运行时连接 pg</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">postgresql</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">listen</span>: <span style="color:#ae81ff">0.0.0.0</span>:<span style="color:#ae81ff">5432</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># patronictl.py 连接 restapi 时 http参数(ssl相关)</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">ctl</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 通过 linux 的 softdog 模块, 在 patroni 控制的 pg 挂掉时重启 server</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">watchdog</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 通过nofailover 等 tag 可以控制行为(eg: 不允许某个 patrion 实例成为 leader, 也可以添加自定义tag作为元数据</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">tags</span>:
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">...</span>
+</span></span></code></pre></div><h2 id="用-patroni-bootstrap-pg-集群">用 patroni bootstrap pg 集群</h2>
+<p>假设有三节点, 上面已经部署好 etcd(v3) 作为 dcs, 三节点 ip为: 10.252.90.217, 10.252.90.218, 10.252.90.219
+217 节点上 patroni 的 postgres.yml 配置, 其他节点类似, 把 ip 改下:</p>......</p>
     </div>
   </div>
   
@@ -161,7 +262,26 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>EKS control plane 的升级是比较简单的, 直接在 aws console 上点下就可以了, 但 worker node 是自己用 asg(autoscaling group) 管理的, 升级 worker node 又不想影响业务是有讲究的. 跑在 EKS 里, 且希望不被中断 traffic 的有: stateless 的 api server, queue consumer 被 redis sentinel 监控着的 redis master/slave 用于 cache 的 redis cluster 写了个内部工具, 把下面的流程全部自动化了. 这样升级 eks 版本, 需要更换 worker node 时候就轻松多了. 因为这个工具对部署情况做了很多假设和限制, 开源的价值不是很大. Stateless application stateless 的应用全部用 deployment 部署. 一般建议的流程是: 修改 asg 的 launch configuration, 指向新版本......</p>
+      <p><p>EKS control plane 的升级是比较简单的, 直接在 aws console 上点下就可以了, 但 worker node 是自己用 asg(autoscaling group) 管理的, 升级 worker node 又不想影响业务是有讲究的.</p>
+<p>跑在 EKS 里, 且希望不被中断 traffic 的有:</p>
+<ul>
+<li>stateless 的 api server, queue consumer</li>
+<li>被 redis sentinel 监控着的 redis master/slave</li>
+<li>用于 cache 的 redis cluster</li>
+</ul>
+<p>写了个内部工具, 把下面的流程全部自动化了. 这样升级 eks 版本, 需要更换 worker node 时候就轻松多了. 因为这个工具对部署情况做了很多假设和限制, 开源的价值不是很大.</p>
+<h2 id="stateless-application">Stateless application</h2>
+<p>stateless 的应用全部用 deployment 部署.</p>
+<p>一般建议的流程是:</p>
+<ul>
+<li>修改 asg 的 launch configuration, 指向新版本的 ami</li>
+<li>把所有老的 worker node 用 kubectl cordon 标记成 unschedulable</li>
+<li>关闭 cluster-autoscaler</li>
+<li>修改 asg 的 desired count, 让 asg 用新 ami 启动新的 worker node</li>
+<li>用 kubectl drain 把老 worker node 上的 pod evict 掉, 让它们 schedule 到新的 worker node 上.</li>
+<li>重新开启 cluster autoscaler, 等它把老的闲置 worker node 关闭.</li>
+</ul>
+<p>这里有些问题:</p>......</p>
     </div>
   </div>
   
@@ -200,7 +320,17 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>k8s 1.20 的 release note 里说 deprecated docker: https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.20.md#deprecation 对 docker 和 k8s 关系比较了解的人一看就知道是废弃 dockershim, 正常操作, 具体有什么影响, 建议阅读: https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/ https://kubernetes.io/blog/2020/12/02/dockershim-faq/ 但容器圈里那堆名词的确很让人困惑, docker, dockershim, containerd, containerd-shim, runc, cri, oci, csi, cni, cri-o, 或许曾经还听说过 runv, rkt, clear containers, 后来又来了 kata containers, firecracker, gvisor. 论造名词, 造项目, 都快赶上前端圈的脚趾头了. 这篇比较水, 就解释下它们大致的关系, 前提是你大概知道 docker, namespace, cgroup, container, k8s pod 之间的关系, 不做额外解释. 从 docker 说起 在我现在这台机器上的 ubuntu 18.04, 安装 docker, 添加官方源之后, 安装的 deb package(version 19.03) 是......</p>
+      <p><p>k8s 1.20 的 release note 里说 deprecated docker: <a href="https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.20.md#deprecation">https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.20.md#deprecation</a></p>
+<p>对 docker 和 k8s 关系比较了解的人一看就知道是废弃 dockershim, 正常操作, 具体有什么影响, 建议阅读:</p>
+<ul>
+<li><a href="https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/">https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/</a></li>
+<li><a href="https://kubernetes.io/blog/2020/12/02/dockershim-faq/">https://kubernetes.io/blog/2020/12/02/dockershim-faq/</a></li>
+</ul>
+<p>但容器圈里那堆名词的确很让人困惑, docker, dockershim, containerd, containerd-shim, runc, cri, oci, csi, cni, cri-o, 或许曾经还听说过 runv, rkt, clear containers, 后来又来了 kata containers, firecracker, gvisor. 论造名词, 造项目, 都快赶上前端圈的脚趾头了.</p>
+<p>这篇比较水, 就解释下它们大致的关系, 前提是你大概知道 docker, namespace, cgroup, container, k8s pod 之间的关系, 不做额外解释.</p>
+<h2 id="从-docker-说起">从 docker 说起</h2>
+<p>在我现在这台机器上的 ubuntu 18.04, 安装 docker, 添加官方源之后, 安装的 deb package(version 19.03) 是 docker-ce</p>
+<p><code>apt show docker-ce</code>  看依赖:</p>......</p>
     </div>
   </div>
   
@@ -233,7 +363,20 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>天气渐凉, 无奈得拿出了秋裤. 偷懒好久没写博客了, 回顾下这阵子做了什么. 工作 年底打算把之前用的 dedicated ec2 instance 全部换掉, 几年前为了 HIPAA 合规做的, 但 AWS 的 BBA 里后来不要求 dedicated instance 了, 换成普通的, 可以省掉每月1400多刀的固定 dedicated fee, 同类型的 ec2 instance 可以再省10%左右. 为了这个, 打算把部分遗留在 vm 上的东西迁移到 k8s 里, 减少之后更换 instance 的工作量. cronjob 尝试用 argo 来调度 cronjob. 还是有不少坑的: cron workflow 到点后有一定几率会 trigger 重复的workflow, 目前还没有......</p>
+      <p><p>天气渐凉, 无奈得拿出了秋裤. 偷懒好久没写博客了, 回顾下这阵子做了什么.</p>
+<h2 id="工作">工作</h2>
+<p>年底打算把之前用的 dedicated ec2 instance 全部换掉, 几年前为了 HIPAA 合规做的, 但 AWS 的 BBA 里后来不要求 dedicated instance 了, 换成普通的, 可以省掉每月1400多刀的固定 dedicated fee, 同类型的 ec2 instance 可以再省10%左右. 为了这个, 打算把部分遗留在 vm 上的东西迁移到 k8s 里, 减少之后更换 instance 的工作量.</p>
+<h3 id="cronjob">cronjob</h3>
+<p>尝试用 <a href="https://github.com/argoproj/argo">argo</a> 来调度 cronjob.</p>
+<p>还是有不少坑的:</p>
+<ul>
+<li>cron workflow 到点后有一定几率会 trigger 重复的workflow, 目前还没有修复<a href="https://github.com/argoproj/argo/issues/4558">#4558</a>, 临时在所有 cronjob 的代码里加了个保护, 在 redis 里上个锁, 没抢到锁的 cronjob 直接抛异常失败. 目前看每天还是有 7,8 次重复的 workflow 会触发.</li>
+<li>WorkflowTemplate 可以用来复用 pod 的定义, 但外部往里面传参的方式很搓, 不是所有字段都能直接覆盖, 比如activeDeadlineSeconds, resources 等, 必须用 podSpecPatch 的方式, 文档里又不说清楚, 只能自己去翻issue.</li>
+<li>exit-handler 用来在 workflow 状态改变的时候触发一个 callback, 但没法获取触发它的那个 workflow 的详细信息, 比如一个 workflow 由很多个 step 构成, 失败时我希望能从 exit-handler 里拿到是哪个step 挂了, 现在做不到. 也没法往 exit-handler 里传参(只能取一些global paramaters).</li>
+<li>如果一个 workflow 由多个 step 构成, 当其中一个 step 挂了, 可以设置 continueOn 控制是否继续后面的step, 但如果我选择了继续, 整个 workflow 的最终状态又是 success 的, 导致在 exit-handler 里没法区分, 最好有个 partial success 的状态.</li>
+</ul>
+<h3 id="日志">日志</h3>
+<p>应用里的日志, 之前是打到部署在 vm 上的一台 rsyslog 上. 在 k8s 环境下我用 fluent-bit 做 daemonset 来收集 pod 日志. fluent-bit 在最近的版本里支持了转发到 loki, 我就部署了 loki 来收集pod 日志, 可以方便在 grafana 里进行查看. 问题也很多:</p>......</p>
     </div>
   </div>
   
@@ -257,7 +400,11 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>巩固下基础知识. 现代系统都运行在保护模式(protected mode)下, x86_64 下用户态程序启动时候都会被分配一片虚拟内存, 大小是 2^47 (128TiB), 但目前 cpu 只能映射 2^46 (64TiB), 通过 page table 将虚拟内存中的地址(vma)和物理地址映射起来. 以前的 BIOS 跑在 实模式下(real mode), 直接访问物理内存, 不过只能访问前 2^20(1MiB) 的空间. Linux 下 /proc/$pid/maps 文件内容就是进程的虚拟内存分布. 每一列含义通过 man 5 proc 看, 不重复了. 网上的例子都有点过时, 在比较新的 linux 发行版里, 默认......</p>
+      <p><p>巩固下基础知识.</p>
+<p>现代系统都运行在保护模式(protected mode)下, x86_64 下用户态程序启动时候都会被分配一片虚拟内存, 大小是 2^47 (128TiB), 但目前 cpu 只能映射 2^46 (64TiB), 通过 page table 将虚拟内存中的地址(vma)和物理地址映射起来.
+以前的 BIOS 跑在 实模式下(real mode), 直接访问物理内存, 不过只能访问前 2^20(1MiB) 的空间.</p>
+<p>Linux 下 /proc/$pid/maps 文件内容就是进程的虚拟内存分布. 每一列含义通过 <code>man 5 proc</code> 看, 不重复了.</p>
+<p>网上的例子都有点过时, 在比较新的 linux 发行版里, 默认开启了ASLR(地址空间随机化), 自带的二进制文件都是 PIE(Position Independent Executable) build 的. 这两结合起来让进程在虚拟内存中的基地址随机化, heap 和 stack 的开始位置也随机化, 目的是为了防止远程注入漏洞猜到一些软件的vma.</p>......</p>
     </div>
   </div>
   
@@ -288,7 +435,23 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>在 k8s 上部署 redis cluster 后, 感觉 redis-cli 管理 redis cluster 非常别扭, 写了个 kubectl 的插件 kubectl-rc 来辅助管理 redis-cluster. redis-cli 难用在哪 不直观 &amp; 不统一 部分 cluster 信息是直接通过 redis protocol 获得的, 比如 cluster nodes, cluster slots, 但部分管理命令又是通过 redis-cli --cluster 执行的. cluster nodes, cluster slots 这些命令输出的又是 ip 和 node id, k8s 环境下我更关心实际的 pod name. 做 failover 的时候又不是通过 --cluster 执行的, 必须连到 slave 上通过 cluster failover 来执行 传参在 k8s 环境下特别麻烦 举个例子, 添加节点: redis-cli --cluster add-node new_host:new_port existing_host:existing_port --cluster-slave --cluster-master-id &lt;arg&gt; 需要知道操作 pod 的 ip, 如果要变成某个指定 pod 的 slave, 又要传 node id. 在......</p>
+      <p><p>在 k8s 上部署 redis cluster 后, 感觉 redis-cli 管理 redis cluster 非常别扭, 写了个 kubectl 的插件 <a href="https://github.com/monsterxx03/kubectl-rc">kubectl-rc</a> 来辅助管理 redis-cluster.</p>
+<h2 id="redis-cli-难用在哪">redis-cli 难用在哪</h2>
+<ol>
+<li>不直观 &amp; 不统一</li>
+</ol>
+<p>部分 cluster 信息是直接通过 redis protocol 获得的, 比如 <code>cluster nodes</code>, <code>cluster slots</code>, 但部分管理命令又是通过 <code>redis-cli --cluster</code> 执行的.</p>
+<p><code>cluster nodes</code>, <code>cluster slots</code> 这些命令输出的又是 ip 和 node id, k8s 环境下我更关心实际的 pod name.</p>
+<p>做 failover 的时候又不是通过 <code>--cluster</code> 执行的, 必须连到 slave 上通过 <code>cluster failover</code> 来执行</p>
+<ol start="2">
+<li>传参在 k8s 环境下特别麻烦</li>
+</ol>
+<p>举个例子, 添加节点:</p>
+<pre><code>redis-cli --cluster add-node new_host:new_port existing_host:existing_port
+    --cluster-slave --cluster-master-id &lt;arg&gt;
+</code></pre>
+<p>需要知道操作 pod 的 ip, 如果要变成某个指定 pod 的 slave, 又要传 node id.</p>
+<p>在 k8s 环境下实际操作的时候流程就会变成:</p>......</p>
     </div>
   </div>
   
@@ -321,7 +484,14 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>线上有个 redis 的缓存集群, 跑的还是 3.0, 前面套 twemproxy 做 sharding. 跑了好几年了都很稳定, 但一直有些很不爽的地方, 最近有点时间,决定 升级到redis 6, 并迁移到 redis cluster 方案. twemproxy 的工作模式 twemproxy 的原理很简单, 后面运行 N 个 redis 实例, 应用连到 twemproxy, twemproxy 解析应用发过来的 redis protocol, 根据 key 做 hash, 打散到后面 N 个 redis 实例上. 具体打散的方式可以是简单的 hash%N, 也可以用一致性 hash 算法. hash%N 的问题是, 增减节点的时候所有 cache 必然 miss. 一致性 hash, 在实现的时候会先弄一个 size 很大的 hash ring(eg: 2^32),......</p>
+      <p><p>线上有个 redis 的缓存集群, 跑的还是 3.0, 前面套 twemproxy 做 sharding. 跑了好几年了都很稳定, 但一直有些很不爽的地方, 最近有点时间,决定
+升级到redis 6, 并迁移到 redis cluster 方案.</p>
+<h3 id="twemproxy-的工作模式">twemproxy 的工作模式</h3>
+<p>twemproxy 的原理很简单, 后面运行 N 个 redis 实例, 应用连到 twemproxy, twemproxy 解析应用发过来的 redis protocol, 根据 key 做 hash, 打散到后面 N 个 redis 实例上.</p>
+<p>具体打散的方式可以是简单的 hash%N, 也可以用一致性 hash 算法. hash%N 的问题是, 增减节点的时候所有 cache 必然 miss.</p>
+<p>一致性 hash, 在实现的时候会先弄一个 size 很大的 hash ring(eg: 2^32),这里每个节点被叫做一个虚拟节点, 把虚拟节点的数目叫做 X, 然后将 N 个 redis 实例均匀分布到这个环上, 每个 redis 把它叫做实节点吧, 分配 key
+的时候 hash%X, 得到虚拟节点, 然后顺时针找下一个最近的实节点, 就找到了相应的 redis. 因为虚拟节点的数目是不变的, 增减 redis 实例的数目是改变了实节点的分布, 顺时针找下个实节点的时候还是有一定几率落在以前的
+redis 实例上的, 这在一定程度上减少了 cache 的 miss. 可以看作 hash%N 的优化版本,但不解决本质问题.</p>......</p>
     </div>
   </div>
   
@@ -356,7 +526,31 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>从 0.10.0 版本开始给 snet 加了 stats api 来暴露内部的一些统计数据. 设置 &quot;enable-stats&quot;: true 开启, 默认监听 8810 端口, curl http://localhost:8810/stats { &quot;Uptime&quot;: &quot;26m42s&quot;, &quot;Total&quot;: { &quot;RxSize&quot;: 161539743, &quot;TxSize&quot;: 1960171 }, &quot;Hosts&quot;: [ { &quot;Host&quot;: &quot;112.113.115.113&quot;, &quot;Port&quot;: 443, &quot;RxRate&quot;: 0, &quot;TxRate&quot;: 0, &quot;RxSize&quot;: 840413, &quot;TxSize&quot;: 172528 }, ... ] } 分 host, 统计从该地址接收的字节数(RxSize), 发送字节数(TxSize), 和相应的 rate/s (RxRate, TxRate). 默认只记录 ip, 可以设置 &quot;stats-enable-tls-sni-sniffer&quot;: true, 开启对去往 443 端口的流量进行 sni sniffer, 尝试解析出域名. &quot;stats-enable-http-host-sniffer&quot;: true, 对发往 80 端口流量尝试解析 http host 字段, 两者都会给连接建立过程增加一些 overhead. server 开启 stats api 后, 用 ./snet -top 可以显示一......</p>
+      <p><p>从 <a href="https://github.com/monsterxx03/snet/releases">0.10.0</a> 版本开始给 snet 加了 stats api 来暴露内部的一些统计数据.</p>
+<p>设置 <code>&quot;enable-stats&quot;: true</code> 开启, 默认监听 8810 端口, <code>curl http://localhost:8810/stats</code></p>
+<pre><code>    {
+        &quot;Uptime&quot;: &quot;26m42s&quot;,
+        &quot;Total&quot;: {
+            &quot;RxSize&quot;: 161539743,
+            &quot;TxSize&quot;: 1960171
+        },
+        &quot;Hosts&quot;: [
+            {
+                &quot;Host&quot;: &quot;112.113.115.113&quot;,
+                &quot;Port&quot;: 443,
+                &quot;RxRate&quot;: 0,
+                &quot;TxRate&quot;: 0,
+                &quot;RxSize&quot;: 840413,
+                &quot;TxSize&quot;: 172528
+            },
+            ...
+        ]
+    }
+</code></pre>
+<p>分 host, 统计从该地址接收的字节数(RxSize), 发送字节数(TxSize), 和相应的 rate/s (RxRate, TxRate).</p>
+<p>默认只记录 ip, 可以设置 <code>&quot;stats-enable-tls-sni-sniffer&quot;: true</code>, 开启对去往 443 端口的流量进行 sni sniffer, 尝试解析出域名.
+<code>&quot;stats-enable-http-host-sniffer&quot;: true</code>, 对发往 80 端口流量尝试解析 http host 字段, 两者都会给连接建立过程增加一些 overhead.</p>
+<p>server 开启 stats api 后, 用 <code>./snet -top</code> 可以显示一个类似 top 的 terminal UI 作流量监控.</p>......</p>
     </div>
   </div>
   
@@ -376,41 +570,6 @@
           <a href="https://blog.monsterxx03.com/tags/network/">network</a>
           
           <a href="https://blog.monsterxx03.com/tags/golang/">golang</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2020/06/16/%E8%A7%A3%E5%86%B3-k8s-1.16-apiversion-deprecation-%E9%80%A0%E6%88%90%E7%9A%84-helm-revision-%E5%86%B2%E7%AA%81/'>解决 k8s 1.16 apiVersion deprecation 造成的 helm revision 冲突</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>最近开始把线上的 k8s 从 1.15 升级到 1.16, 1.16 里有一些 api verison 被彻底废弃, 需要迁移到新的 api version, 具体有: https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.16.md#deprecations-and-removals 有两个问题: 集群中使用的一些第三方 controller(nginx-ingress, external-dns-controller&hellip;), 调用的 apiVersion 需要升级. 已存在集群中的 objects(Deployment/ReplicaSet&hellip;), 是否需要处理, eg: Deployment: extensions/v1beta1 -&gt; apps/v1. 第一个问题好解决, 升级一下对应的 image 版本就行了, 只要还在维护的 controller, 都已经升级到支持 1.16. 自己写的工具链也排查下是否有还在使用老版本 api 的, 因为我用的是 aws eks, 开下 control-plane-logs 里的 audit log, 可以看还有什么在调用老的 api. 第二个问题是不需要改, 已存在的 objects 无法......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2020.06.16</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
           
         </span>
         
@@ -491,17 +650,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

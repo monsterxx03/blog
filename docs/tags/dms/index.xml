@@ -4,26 +4,17 @@
     <title>DMS on Shining Moon</title>
     <link>https://blog.monsterxx03.com/tags/dms/</link>
     <description>Recent content in DMS on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sat, 14 Oct 2017 22:33:36 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/dms/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 14 Oct 2017 22:33:36 +0800</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/tags/dms/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>AWS DMS notes</title>
       <link>https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/</link>
       <pubDate>Sat, 14 Oct 2017 22:33:36 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/10/14/aws-dms-notes/</guid>
-      <description>AWS&amp;rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.
-It works, but have some concerns. Take some notes when doing this project.
-Prerequisites Source RDS must:
-Enable automatic backups Increase binlog remain time, call mysql.rds_set_configuration(&#39;binlog retention hours&#39;, 24); Set binlog_format to ROW. Privileges on source RDS: REPLICATION CLIENT , REPLICATION SLAVE , SELECT on replication target tables DDL on source table Redshift has some limits on change columns:
-New column only must be added in the end Can&amp;rsquo;t rename columns So for DDL on source MySQL, you can&amp;rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:
-&amp;quot;ChangeProcessingDdlHandlingPolicy&amp;quot;:{ &amp;quot;HandleSourceTableDropped&amp;quot;:false, &amp;quot;HandleSourceTableTruncated&amp;quot;:false, &amp;quot;HandleSourceTableAltered&amp;quot;:false }, If source table schema changed, I just drop and reload target table on console.
-Control write speed on Redshift Since Redshift is an OLAP database, write operation is slow and concurrency is low, streaming data directly will have big impact on it.
-And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.
-So I need to batch apply changes on DMS.</description>
+      <description>&lt;p&gt;AWS&amp;rsquo;s DMS (Data migration service) can be used to do incremental ETL between databases. I use it to load data from RDS (MySQL) to Redshift.&lt;/p&gt;&#xA;&lt;p&gt;It works, but have some concerns. Take some notes when doing this project.&lt;/p&gt;&#xA;&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;&#xA;&lt;p&gt;Source RDS must:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Enable automatic backups&lt;/li&gt;&#xA;&lt;li&gt;Increase binlog remain time, &lt;code&gt;call mysql.rds_set_configuration(&#39;binlog retention hours&#39;, 24);&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;Set &lt;code&gt;binlog_format&lt;/code&gt; to &lt;code&gt;ROW&lt;/code&gt;.&lt;/li&gt;&#xA;&lt;li&gt;Privileges on source RDS: &lt;code&gt;REPLICATION CLIENT &lt;/code&gt;, &lt;code&gt;REPLICATION SLAVE &lt;/code&gt;, &lt;code&gt;SELECT&lt;/code&gt; on replication target tables&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;ddl-on-source-table&#34;&gt;DDL on source table&lt;/h2&gt;&#xA;&lt;p&gt;Redshift has some limits on change columns:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;New column only must be added in the end&lt;/li&gt;&#xA;&lt;li&gt;Can&amp;rsquo;t rename columns&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;So for DDL on source MySQL, you can&amp;rsquo;t add columns at non end postition, otherwise data in target table will corrupt. I disabled ddl changes target db:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;    &amp;quot;ChangeProcessingDdlHandlingPolicy&amp;quot;:{  &#xA;        &amp;quot;HandleSourceTableDropped&amp;quot;:false,&#xA;        &amp;quot;HandleSourceTableTruncated&amp;quot;:false,&#xA;        &amp;quot;HandleSourceTableAltered&amp;quot;:false&#xA;    },&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;If source table schema changed, I just drop and reload target table on console.&lt;/p&gt;&#xA;&lt;h2 id=&#34;control-write-speed-on-redshift&#34;&gt;Control write speed on Redshift&lt;/h2&gt;&#xA;&lt;p&gt;Since Redshift is an OLAP database, write operation is slow and concurrency is low, streaming data directly will have big impact on it.&lt;/p&gt;&#xA;&lt;p&gt;And we have may analysis jobs running on redshift all the time, directly streaming will lock target table and make my analysis jobs timeout.&lt;/p&gt;&#xA;&lt;p&gt;So I need to batch apply changes on DMS. Follow settings need to tweak in task settings json:&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

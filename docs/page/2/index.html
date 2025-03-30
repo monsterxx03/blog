@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.111.3">
+	<meta name="generator" content="Hugo 0.145.0">
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
 
@@ -68,7 +68,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -77,12 +77,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -94,12 +90,64 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2020/06/16/%E8%A7%A3%E5%86%B3-k8s-1.16-apiversion-deprecation-%E9%80%A0%E6%88%90%E7%9A%84-helm-revision-%E5%86%B2%E7%AA%81/'>解决 k8s 1.16 apiVersion deprecation 造成的 helm revision 冲突</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p><p>最近开始把线上的 k8s 从 1.15 升级到 1.16, 1.16 里有一些 api verison 被彻底废弃, 需要迁移到新的 api version, 具体有: <a href="https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.16.md#deprecations-and-removals">https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.16.md#deprecations-and-removals</a></p>
+<p>有两个问题:</p>
+<ul>
+<li>集群中使用的一些第三方 controller(nginx-ingress, external-dns-controller&hellip;), 调用的 apiVersion 需要升级.</li>
+<li>已存在集群中的 objects(Deployment/ReplicaSet&hellip;), 是否需要处理, eg: Deployment: extensions/v1beta1 -&gt; apps/v1.</li>
+</ul>
+<p>第一个问题好解决, 升级一下对应的 image 版本就行了, 只要还在维护的 controller, 都已经升级到支持 1.16. 自己写的工具链也排查下是否有还在使用老版本 api 的, 因为我用的是 aws eks, 开下 <a href="https://docs.aws.amazon.com/eks/latest/userguide/control-plane-logs.html">control-plane-logs</a> 里的 audit log, 可以看还有什么在调用老的 api.</p>
+<p>第二个问题是不需要改, 已存在的 objects 无法修改 apiVersion, 集群升级到 1.16 后， 从新的 apiVersion 里能 pull 到之前的数据, apiVersion 字段自动就升级了.</p>......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2020.06.16</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2020/04/16/%E5%9C%A8-eks-%E4%B8%AD%E6%AD%A3%E7%A1%AE%E8%AE%BE%E7%BD%AE-iam-%E6%9D%83%E9%99%90/'>在 eks 中正确设置 IAM 权限</a></h2>
   </div>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>在代码中调用 aws api 的时候常用两种方法: 直接传入 aws accessKey/secretKey 使用 instance profile 前者一般是创建一个 IAM 用户, 绑定对应权限, 生成 keypair, 在 k8s 环境里, 把 keypair 放在 Secrets 里, 或通过环境变量注入. 好处是可以每个应用单独设置, 但需要自己管理 keypair. 后者创建一个 IAM role, 绑定对应权限, 创建 ec2 的时候选择对应的 role. 跑在该 ec2 instance 上的程序自动能拿到对应的 IAM 权限. 好处是不必自己管理 keypair, 缺点是跑在同一 server 上的程序权限都一样. eks 1.14 里有个两全齐美的办法: serviceaccount role: https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html 可以把 IAM role 绑定在 pod 使用的......</p>
+      <p><p>在代码中调用 aws api 的时候常用两种方法:</p>
+<ul>
+<li>直接传入 aws accessKey/secretKey</li>
+<li>使用 instance profile</li>
+</ul>
+<p>前者一般是创建一个 IAM 用户, 绑定对应权限, 生成 keypair, 在 k8s 环境里, 把 keypair 放在 Secrets 里, 或通过环境变量注入. 好处是可以每个应用单独设置,
+但需要自己管理 keypair.</p>
+<p>后者创建一个 IAM role, 绑定对应权限, 创建 ec2 的时候选择对应的 role. 跑在该 ec2 instance 上的程序自动能拿到对应的 IAM 权限. 好处是不必自己管理 keypair,
+缺点是跑在同一 server 上的程序权限都一样.</p>
+<p>eks 1.14 里有个两全齐美的办法: serviceaccount role: <a href="https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html">https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html</a></p>
+<p>可以把 IAM role 绑定在 pod 使用的 ServiceAccount 上, 既避免了管理 keypair 的麻烦, 也可以 per 应用得设置权限.</p>......</p>
     </div>
   </div>
   
@@ -132,7 +180,24 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>最近对业务里发送 apple APNS, google FCM 部分的代码进行了重构, 抽出了一个单独的 service, 本文记录下整个过程. 存在的问题 我们有好几个 mobile app, 每个 app 会有一套对应的 server 端 service 做业务逻辑, 因为历史原因, 每个 service 里面其实有很多重复代码, 大多只是一些配置和错误处理上有差异. 给 app 发推送是个典型, 原来的做法是当要发推送的时候, 往 python 的 celery 队列里扔一个 task, 由 celery 异步得去发. 有如下问题: celery 性能不佳, worker class 用的是 gevent, 但在高峰时候任务队列里还是有大量 pending, 代码上之前做过......</p>
+      <p><p>最近对业务里发送 apple APNS, google FCM 部分的代码进行了重构, 抽出了一个单独的 service, 本文记录下整个过程.</p>
+<h2 id="存在的问题">存在的问题</h2>
+<p>我们有好几个 mobile app, 每个 app 会有一套对应的 server 端 service 做业务逻辑, 因为历史原因, 每个 service 里面其实有很多重复代码, 大多只是一些配置和错误处理上有差异.
+给 app 发推送是个典型, 原来的做法是当要发推送的时候, 往 python 的 celery 队列里扔一个 task, 由 celery 异步得去发.</p>
+<p>有如下问题:</p>
+<ul>
+<li>celery 性能不佳, worker class 用的是 gevent, 但在高峰时候任务队列里还是有大量 pending, 代码上之前做过多次优化, 但收效甚微.</li>
+<li>当 pending 了大量发推送的 task 之后, 会导致其他异步 task 跟着延时, 造成用户体验上的一些问题.</li>
+<li>历史代码的问题, 每个 app 里对接 APNS/FCM 都有一套单独的代码, 在部分错误处理和统计 metrics 上有差异.</li>
+</ul>
+<h2 id="解决方案">解决方案</h2>
+<ul>
+<li>问题1, 目前已经迁移到 k8s, 其实可以无脑开 HPA, 做 auto scaling, 来提高发送效率. 问题是 python 性能实在太差, 峰值时候估计会 scale 到原先的好多倍, 而 celery 里
+除了发推送还有很多 task 有 db 操作, scale 过多, 会带来其他问题, 那是另一个问题, 不想在当前这个问题里解决.</li>
+<li>问题２, celery 里可以设 routing, 简单说可以用单独的 celery instance 来专门处理推送相关 task, 也可以规避1里的 db 问题.</li>
+<li>问题3, 单纯代码问题, 统一用一套代码重构就行了.</li>
+</ul>
+<p>讲真, 碰到的 celery 的 bug 实在太多了, 存量代码用用就行了, 新做业务实在不想用. 而发推送是个很独立的业务, 最后打算拿 go 来单独跑推送.</p>......</p>
     </div>
   </div>
   
@@ -163,7 +228,53 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>这几天测试了下 aws 的 personalize service, 看看能不能替换掉产品里现有的一些推荐逻辑. 大致的流程: 导入数据 选择 recipe 进行 training, 得到一个 solution version 选择最佳 solution version 创建 compaign 调用 api, 根据 compaign 得到 recommendations 一些 iam 权限相关的设置就不写了, 具体看文档吧, 这里只记录下主要步骤. 导入数据 首先需要准备用来 training 的数据, 分成三种数据集: User Item User-Item interaction 其中 User-Item interaction 是必须的 dataset, 所有 recipe 都会用到, User 和 Item 被称作 metadata dataset, 只有个别 recipe 会用到. 每个 dataset 创建的时候需要建立一个 schema, 来描述各自的结构(avro 格式).......</p>
+      <p><p>这几天测试了下 aws 的 personalize service, 看看能不能替换掉产品里现有的一些推荐逻辑.</p>
+<p>大致的流程:</p>
+<ul>
+<li>导入数据</li>
+<li>选择 recipe 进行 training, 得到一个 solution version</li>
+<li>选择最佳 solution version 创建 compaign</li>
+<li>调用 api, 根据 compaign 得到 recommendations</li>
+</ul>
+<p>一些 iam 权限相关的设置就不写了, 具体看文档吧, 这里只记录下主要步骤.</p>
+<h2 id="导入数据">导入数据</h2>
+<p>首先需要准备用来 training 的数据, 分成三种数据集:</p>
+<ul>
+<li>User</li>
+<li>Item</li>
+<li>User-Item interaction</li>
+</ul>
+<p>其中 User-Item interaction 是必须的 dataset, 所有 recipe 都会用到, User 和 Item 被称作 metadata dataset, 只有个别 recipe 会用到.</p>
+<p>每个 dataset 创建的时候需要建立一个 schema, 来描述各自的结构(avro 格式).</p>
+<p>example User schema:</p>
+<pre><code>{
+    &quot;type&quot;: &quot;record&quot;,
+    &quot;name&quot;: &quot;Users&quot;,与与
+    &quot;namespace&quot;: &quot;com.amazonaws.personalize.schema&quot;,
+    &quot;fields&quot;: [
+        {
+            &quot;name&quot;: &quot;user_id&quot;,
+            &quot;type&quot;: &quot;string&quot;
+        },
+        {
+            &quot;name&quot;: &quot;birthday&quot;,
+            &quot;type&quot;: &quot;int与
+        },
+        {
+            &quot;name&quot;: &quot;gender&quot;,
+            &quot;type&quot;: &quot;string&quot;,
+            &quot;categorical&quot;: true
+        },
+        {
+            &quot;name&quot;: &quot;location&quot;,
+            &quot;type&quot;: &quot;string&quot;,
+            &quot;categorical&quot;: true
+        }
+    ],
+    &quot;version&quot;: &quot;1.0&quot;
+}
+</code></pre>
+<p>其中 <code>user_id</code> 是必填字段, 其他都是可选的自定义字段, 其他字段如果是 string, 必须加上<code>&quot;categorical&quot;: true</code>, 表示它是用来分类的.</p>......</p>
     </div>
   </div>
   
@@ -196,7 +307,12 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>过了个短暂的春节, 怕之后高铁也停了, 早早回了上海. 算起来到今天，已经有半个月没和人当面说三句以上的话了. 莫名得还挺享受的. 最近怎么过的 一觉睡到八点多起床, 早饭炒两个蛋加一杯牛奶， 偶尔喝粥. 盒马买的米真是巨贵, 煮饭也没多好吃, 煮粥倒不错. 打开电脑, 处理点工作或看看新闻, 恩, 基本没什么好新闻, 微博上要么加油体, 要么撕逼, 都是信息垃圾, 不评论了. 新买的桌子不太行,便宜没好货哦, 打字用力点都会晃, 考虑把餐......</p>
+      <p><p>过了个短暂的春节, 怕之后高铁也停了, 早早回了上海.</p>
+<p>算起来到今天，已经有半个月没和人当面说三句以上的话了. 莫名得还挺享受的.</p>
+<h2 id="最近怎么过的">最近怎么过的</h2>
+<p>一觉睡到八点多起床, 早饭炒两个蛋加一杯牛奶， 偶尔喝粥. 盒马买的米真是巨贵, 煮饭也没多好吃, 煮粥倒不错.</p>
+<p>打开电脑, 处理点工作或看看新闻, 恩, 基本没什么好新闻, 微博上要么加油体, 要么撕逼, 都是信息垃圾, 不评论了.</p>
+<p>新买的桌子不太行,便宜没好货哦, 打字用力点都会晃, 考虑把餐桌拿来办公, 这张桌子吃饭吧.</p>......</p>
     </div>
   </div>
   
@@ -220,7 +336,17 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>成功的经验总是带有点运气成份, 失败则是必然的:). 工作中， 线上环境的问题千奇百怪, 有的来自自己代码 bug, 有的是配置错误, 有时候是第三方的 vendor 成了猪队友. 对于一些排查过程比较困难或具有代表性的问题, 需要记录下来, 一般把这个过程叫做 postmortem(验尸). 这篇写一下自己做 postmortem 的过程, 并记录一个最近处理的故障. Postmortem process 我大体分以下几个部分: 用尽量简练的语句描述清楚在什么时间发生了什么,谁参与了问题的处理(wh......</p>
+      <p><p>成功的经验总是带有点运气成份, 失败则是必然的:). 工作中， 线上环境的问题千奇百怪, 有的来自自己代码 bug, 有的是配置错误, 有时候是第三方的 vendor 成了猪队友. 对于一些排查过程比较困难或具有代表性的问题, 需要记录下来, 一般把这个过程叫做 postmortem(验尸).</p>
+<p>这篇写一下自己做 postmortem 的过程, 并记录一个最近处理的故障.</p>
+<h2 id="postmortem-process">Postmortem process</h2>
+<p>我大体分以下几个部分:</p>
+<ul>
+<li>用尽量简练的语句描述清楚在什么时间发生了什么,谁参与了问题的处理(when, what, who)?</li>
+<li>详细描述解决问题的过程, 包括但不限于:  debug 的过程, 中间的推测, 用到的工具&hellip; (How)</li>
+<li>如果找到了 root case, 记录下来, 没找到, 记录下当时的 workaround, 有什么副作用. (Why)</li>
+</ul>
+<h2 id="postmortem-case">Postmortem case</h2>
+<p>实际的 postmorten 写得更简单一点, 这里把过程中的一些思考也记下来.</p>......</p>
     </div>
   </div>
   
@@ -255,7 +381,19 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>网上经常有人诟病 AWS 的计费模式复杂, 喜欢国内那种打包式的售卖方式, 这个可能受限于每个公司的财务流程, 预算制定方式, 合不合国情,本文不讨论. 仅从开发者的角度介绍下 AWS 部分常用 service 的计费方式. PS: 那些为了蹭一年 free plan 然后抱怨什么偷跑流量, 偷偷扣费的大哥就省省吧, AWS 根本不是给个人用的, 老老实实用 lightsail 得了. EC2 EC2 的价格是最复杂的, 一台 EC2 instance 的价格组成: instance fee, 实际支付的是 CPU+RAM 的费用 EBS fee, server 的根分区都是 EBS volume, 按 EBS 计费(31GB 的 volume 使......</p>
+      <p><p>网上经常有人诟病 AWS 的计费模式复杂, 喜欢国内那种打包式的售卖方式, 这个可能受限于每个公司的财务流程, 预算制定方式, 合不合国情,本文不讨论.
+仅从开发者的角度介绍下 AWS 部分常用 service 的计费方式.</p>
+<p>PS: 那些为了蹭一年 free plan 然后抱怨什么偷跑流量, 偷偷扣费的大哥就省省吧, AWS 根本不是给个人用的, 老老实实用 lightsail 得了.</p>
+<h2 id="ec2">EC2</h2>
+<p>EC2 的价格是最复杂的, 一台 EC2 instance 的价格组成:</p>
+<ul>
+<li>instance fee, 实际支付的是 CPU+RAM 的费用</li>
+<li>EBS fee, server 的根分区都是 EBS volume, 按 EBS 计费(31GB 的 volume 使用 1 小时, 和 1GB 的volume 使用 744 小时价格相同).</li>
+<li>data transfer fee, 这部分组成比较复杂，简单讲, 入流量免费, 出流量按 GiB 计费, 如果出流量是到 AWS 其他 region, 价格比一般公网便宜, 在内网传输流量, 同一个 available zone 是免费的,
+跨 az 收费.</li>
+<li>EIP fee, 每台 instance 挂一个 EIP 是免费的(eip 使用状态不收费, 闲置收费), 超过一个 eip, 每个按小时再收费.</li>
+</ul>
+<p>instance fee 又分 on-demand/resersed/spot instance.</p>......</p>
     </div>
   </div>
   
@@ -288,7 +426,12 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>snet: 0.5 ~ 0.6.1, 整理从上一篇以来的一些更新. 新增选项 proxy-scope, 默认 bypassCN, 可选 global. bypassCN 会做国内外分流, global 直接让所有流量去往国外. host-map, 为域名指定 ip. 之前在测试一个功能的时候需要在内网让手机对某个域名的解析切换到我的测试 ip 上, 坑爹的是公司的路由器竟然没这功能, 索性在 snet 里写了这个功能, 让我的台式机发射 wifi, 手机连上来, snet 的 mode 切换成 router, listen-host 改为 0.0.0.0 就好了. block-hosts, 因为 block-host-file 里的域名是从一个现成的列表生成出来的, 不好支持通配符, 所以加了这个, 比如 [&quot;*.hpplay.cn&quot;], 就能把电......</p>
+      <p><p><a href="https://github.com/monsterxx03/snet">snet</a>: 0.5 ~ 0.6.1, 整理从<a href="/2019/06/20/snet-dev-note-support-macos/">上一篇</a>以来的一些更新.</p>
+<h2 id="新增选项">新增选项</h2>
+<p><code>proxy-scope</code>, 默认 <code>bypassCN</code>, 可选 <code>global</code>. <code>bypassCN</code> 会做国内外分流, <code>global</code> 直接让所有流量去往国外.</p>
+<p><code>host-map</code>, 为域名指定 ip. 之前在测试一个功能的时候需要在内网让手机对某个域名的解析切换到我的测试 ip 上, 坑爹的是公司的路由器竟然没这功能, 索性在 snet 里写了这个功能, 让我的台式机发射 wifi, 手机连上来, snet 的 <code>mode</code> 切换成 <code>router</code>, <code>listen-host</code> 改为 <code>0.0.0.0</code> 就好了.</p>
+<p><code>block-hosts</code>, 因为 <code>block-host-file</code> 里的域名是从一个现成的列表生成出来的, 不好支持通配符, 所以加了这个, 比如 <code>[&quot;*.hpplay.cn&quot;]</code>, 就能把电视上所有乐播投屏的广告干掉.</p>
+<p><code>proxy-type</code> 新增 <code>tls</code>, 一个基于 tls 的简单自定义协议, 使用这个需要部署一个 snet 的 server 端, 详细看 README 吧.</p>......</p>
     </div>
   </div>
   
@@ -323,7 +466,10 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>前两天落枕了, 起床后脖子特别疼, 久坐不动的恶果, 这周末去了附近一家盲人按摩推拿了一下, 舒坦了不少, 这还是第一次近距离接触一个盲人, 感触颇深. 给我推拿的是个大姐, 大我几岁, 刚进门的时候我还没意识到她是个盲人, 动作特别利落, 屋里也收拾得井井有条(惭愧!), 直到看到她用手机才确定是真的看不见. 一般在外面我不太喜欢和店员搭话, 比如理发师话多的话绝对不会去第二次, 这次虽然对盲人的生活有点好奇, 也没多问, 不清......</p>
+      <p><p>前两天落枕了, 起床后脖子特别疼, 久坐不动的恶果, 这周末去了附近一家盲人按摩推拿了一下, 舒坦了不少, 这还是第一次近距离接触一个盲人, 感触颇深.</p>
+<p>给我推拿的是个大姐, 大我几岁, 刚进门的时候我还没意识到她是个盲人, 动作特别利落, 屋里也收拾得井井有条(惭愧!), 直到看到她用手机才确定是真的看不见.
+一般在外面我不太喜欢和店员搭话, 比如理发师话多的话绝对不会去第二次, 这次虽然对盲人的生活有点好奇, 也没多问, 不清楚她是先天还是后天,
+是否全盲还是有光感. 追着人家问这些也不太礼貌.</p>......</p>
     </div>
   </div>
   
@@ -347,7 +493,11 @@
   
   <div class="list">
     <div class="post_content markdown">
-      <p>之前用过 datadog 的 tracing 功能, 非常好用, 但是很贵(单台30$), 迁移到 k8s 后, 监控迁移到了 prometheus, 也把 datadog 的 tracing 去掉了.datadog 的 tracing 也是 opentracing 的一种实现, 索性就换上开源实现. tracing 系统是分布式系统中很好用的 performance tuning 工具, opentracing 只是一个标准，里面定义了 span, scope, tracer 等概念，但不规定 tracing 数据应该怎么 encoding, 怎么存储, 跨进程的 span 数据怎么串起来. 首先要挑选一个开源的 tracer 实现，tracer 用来接受业务系统发出的 encode 过的 span 数据,并存储，提供一个界面供查询. 我选......</p>
+      <p><p>之前用过 datadog 的 tracing 功能, 非常好用, 但是很贵(单台30$), 迁移到 k8s 后, 监控迁移到了 prometheus, 也把 datadog 的 tracing 去掉了.datadog 的 tracing 也是 opentracing 的一种实现, 索性就换上开源实现.</p>
+<p>tracing 系统是分布式系统中很好用的 performance tuning 工具, opentracing 只是一个标准，里面定义了 span, scope, tracer 等概念，但不规定 tracing
+数据应该怎么 encoding, 怎么存储, 跨进程的 span 数据怎么串起来.</p>
+<p>首先要挑选一个开源的 tracer 实现，tracer 用来接受业务系统发出的 encode 过的 span 数据,并存储，提供一个界面供查询. 我选的是 jaeger, go实现的,部署起来比较轻量级,
+也是 cncf 的项目, 还有个 jaeger-operator 方便部署.</p>......</p>
     </div>
   </div>
   
@@ -367,39 +517,6 @@
           <a href="https://blog.monsterxx03.com/tags/opentracing/">opentracing</a>
           
           <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2019/10/31/%E8%80%81%E4%BB%A3%E7%A0%81%E9%87%8C%E5%92%8C-mysql-%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%80%E4%B8%AAbug/'>老代码里和 MySQL 的事务隔离相关的一个bug</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>这两天在调试代码的时候, 发现 db 层的代码在每次把 connection 放回 db pool 的时候,即使之前执行的是 select 语句,也会 rollback 一下, 这代码很古老, 我也不知道为啥, 尝试把 rollback 去掉, 结果单元测试挂了一堆, 大多都是数据不一致的问题, debug 了一下, 最后发现这坑还挺大的. 为什么去掉 select 的 rollback 后会出现数据不一致? pymysql 默认关闭了 autocommit, connection A 进行 select 之后, 其实 MySQL 内部为 select 也开启了一个 transaction(Repeatable Read), 可以通过 SELECT * FROM information_schema.innodb_trx\G 查看. 所以当 connection A 先 select 一次, connection B 在 transaction 内更新数据并 commit, connection A 再次 select (之前......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2019.10.31</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/mysql/">mysql</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
           
         </span>
         
@@ -484,17 +601,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

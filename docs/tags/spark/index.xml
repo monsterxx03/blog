@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>spark on Shining Moon</title>
+    <title>Spark on Shining Moon</title>
     <link>https://blog.monsterxx03.com/tags/spark/</link>
-    <description>Recent content in spark on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Spark on Shining Moon</description>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Fri, 21 Jul 2017 03:10:58 +0000</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/spark/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 21 Jul 2017 03:10:58 +0000</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/tags/spark/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Use redshift spectrum to do query on s3</title>
       <link>https://blog.monsterxx03.com/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/</link>
       <pubDate>Fri, 21 Jul 2017 03:10:58 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/07/21/use-redshift-spectrum-to-do-query-on-s3/</guid>
-      <description>使用 redshift spectrum 查询 S3 数据 通常使用 redshift 做数据仓库的时候要做大量的 ETL 工作，一般流程是把各种来源的数据捣鼓捣鼓丢到 S3 上去，再从 S3 倒腾进 redshift. 如果你有大量的历史数据要导进 redshift，这个过程就会很痛苦，redshift 对一次倒入大量数据并不友好，你要分批来做。 今年4月的时候， redshift 发布了一个新功能 spectrum, 可以从 redshift 里直接查询 s3 上的结构化数据。最近把部分数据仓库直接迁移到了 spectrum, 正好来讲讲。 动机 Glow 的数据仓库建在 redshift 上， 又分成了两个</description>
+      <description>&lt;h1 id=&#34;使用-redshift-spectrum-查询-s3-数据&#34;&gt;使用 redshift spectrum 查询 S3 数据&lt;/h1&gt;&#xA;&lt;p&gt;通常使用 redshift 做数据仓库的时候要做大量的 ETL 工作，一般流程是把各种来源的数据捣鼓捣鼓丢到 S3 上去，再从 S3 倒腾进 redshift. 如果你有大量的历史数据要导进 redshift，这个过程就会很痛苦，redshift 对一次倒入大量数据并不友好，你要分批来做。&lt;/p&gt;&#xA;&lt;p&gt;今年4月的时候， redshift 发布了一个新功能 spectrum, 可以从 redshift 里直接查询 s3 上的结构化数据。最近把部分数据仓库直接迁移到了 spectrum, 正好来讲讲。&lt;/p&gt;&#xA;&lt;h2 id=&#34;动机&#34;&gt;动机&lt;/h2&gt;&#xA;&lt;p&gt;Glow 的数据仓库建在 redshift 上， 又分成了两个集群，一个 ssd 的集群存放最近 4 个月的数据，供产品分析，metrics report, debug 等等 adhoc 的查询。4个月之前的数据存放在一个 hdd 的集群里，便宜容量大，查询慢。&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

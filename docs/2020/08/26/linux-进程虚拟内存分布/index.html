@@ -7,10 +7,14 @@
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
-  <meta name="description" content="巩固下基础知识. 现代系统都运行在保护模式(protected mode)下, x86_64 下用户态程序启动时候都会被分配一片虚拟内存, 大小是 2^47 (128TiB), 但目前 cpu 只能映射 2^46 (64TiB), 通过 page table 将虚拟内存中的地址(vma)和物理地址映射起来. 以前的 BIOS 跑在 实模式下(real mode), 直接访问物理内存, 不过只能访问前 2^20(1MiB) 的空间. Linux 下 /proc/$pid/maps 文件内容就是进程的虚拟内存分布. 每一列含义通过 man 5 proc 看, 不重复了. 网上的例子都有点过时, 在比较新的 linux 发行版里, 默认"/>
+  <meta name="description" content="巩固下基础知识.
+现代系统都运行在保护模式(protected mode)下, x86_64 下用户态程序启动时候都会被分配一片虚拟内存, 大小是 2^47 (128TiB), 但目前 cpu 只能映射 2^46 (64TiB), 通过 page table 将虚拟内存中的地址(vma)和物理地址映射起来. 以前的 BIOS 跑在 实模式下(real mode), 直接访问物理内存, 不过只能访问前 2^20(1MiB) 的空间.
+Linux 下 /proc/$pid/maps 文件内容就是进程的虚拟内存分布. 每一列含义通过 man 5 proc 看, 不重复了.
+网上的例子都有点过时, 在比较新的 linux 发行版里, 默认开启了ASLR(地址空间随机化), 自带的二进制文件都是 PIE(Position Independent Executable) build 的. 这两结合起来让进程在虚拟内存中的基地址随机化, heap 和 stack 的开始位置也随机化, 目的是为了防止远程注入漏洞猜到一些软件的vma.
+"/>
   
 
   
@@ -67,7 +71,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -76,12 +80,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -187,7 +187,7 @@ int main() {
         </div>
       </div>
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -270,17 +270,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

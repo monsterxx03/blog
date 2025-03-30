@@ -1,84 +1,76 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>golang on Shining Moon</title>
+    <title>Golang on Shining Moon</title>
     <link>https://blog.monsterxx03.com/tags/golang/</link>
-    <description>Recent content in golang on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Golang on Shining Moon</description>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Tue, 30 Jun 2020 14:40:01 +0800</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 30 Mar 2025 19:05:11 +0800</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>gospy dev note2 (rewrite with aider)</title>
+      <link>https://blog.monsterxx03.com/2025/03/30/gospy-dev-note2-rewrite-with-aider/</link>
+      <pubDate>Sun, 30 Mar 2025 19:05:11 +0800</pubDate>
+      <guid>https://blog.monsterxx03.com/2025/03/30/gospy-dev-note2-rewrite-with-aider/</guid>
+      <description>&lt;p&gt;几年前写过个工具 &lt;a href=&#34;https://github.com/monsterxx03/gospy&#34;&gt;gospy&lt;/a&gt;, 用于从旁路 dump 一个 golang 进程的 runtime 信息(包括 goroutine, memory 等), 大致原理见以前的&lt;a href=&#34;https://blog.monsterxx03.com/tags/gospy/&#34;&gt;文章&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;基本功能能用, 但没继续做下去, 除了没时间外, 其他还有几个问题:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;不支持 MacOS (主要是没搞懂 MacOS 下怎么读取进程内存).&lt;/li&gt;&#xA;&lt;li&gt;DWARF 解析写的过于繁琐, golang 版本更新时, 解析逻辑很难调整.&lt;/li&gt;&#xA;&lt;li&gt;对写 UI (包括 terminal UI 和前端) 实在没兴趣, 不写又没法暴露功能, 也懒得去做通过 http 接口暴露数据.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;前阵子试了下通过 &lt;a href=&#34;https://aider.chat/&#34;&gt;aider&lt;/a&gt; 来写代码, 效果非常惊艳, 对我来说, 比 curosr 还顺手. 于是花了两个周末的时间, 把 gospy 整个重写了.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>snet dev note: stats api and terminal UI</title>
       <link>https://blog.monsterxx03.com/2020/06/30/snet-dev-note-stats-api-and-terminal-ui/</link>
       <pubDate>Tue, 30 Jun 2020 14:40:01 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2020/06/30/snet-dev-note-stats-api-and-terminal-ui/</guid>
-      <description>从 0.10.0 版本开始给 snet 加了 stats api 来暴露内部的一些统计数据. 设置 &amp;quot;enable-stats&amp;quot;: true 开启, 默认监听 8810 端口, curl http://localhost:8810/stats { &amp;quot;Uptime&amp;quot;: &amp;quot;26m42s&amp;quot;, &amp;quot;Total&amp;quot;: { &amp;quot;RxSize&amp;quot;: 161539743, &amp;quot;TxSize&amp;quot;: 1960171 }, &amp;quot;Hosts&amp;quot;: [ { &amp;quot;Host&amp;quot;: &amp;quot;112.113.115.113&amp;quot;, &amp;quot;Port&amp;quot;: 443, &amp;quot;RxRate&amp;quot;: 0, &amp;quot;TxRate&amp;quot;: 0, &amp;quot;RxSize&amp;quot;: 840413, &amp;quot;TxSize&amp;quot;: 172528 }, ... ] } 分 host, 统计从该地址接收的字节数(RxSize), 发送字节数(TxSize), 和相应的 rate/s (RxRate, TxRate). 默认只记录 ip, 可以设置 &amp;quot;stats-enable-tls-sni-sniffer&amp;quot;: true, 开启对去往 443 端口的流量进行 sni sniffer, 尝试解析出域名. &amp;quot;stats-enable-http-host-sniffer&amp;quot;: true, 对发往 80 端口流量尝试解析 http host 字段, 两者都会给连接建立过程增加一些 overhead. server 开启 stats api 后, 用 ./snet -top 可以显示一</description>
+      <description>&lt;p&gt;从 &lt;a href=&#34;https://github.com/monsterxx03/snet/releases&#34;&gt;0.10.0&lt;/a&gt; 版本开始给 snet 加了 stats api 来暴露内部的一些统计数据.&lt;/p&gt;&#xA;&lt;p&gt;设置 &lt;code&gt;&amp;quot;enable-stats&amp;quot;: true&lt;/code&gt; 开启, 默认监听 8810 端口, &lt;code&gt;curl http://localhost:8810/stats&lt;/code&gt;&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;    {&#xA;        &amp;quot;Uptime&amp;quot;: &amp;quot;26m42s&amp;quot;,&#xA;        &amp;quot;Total&amp;quot;: {&#xA;            &amp;quot;RxSize&amp;quot;: 161539743,&#xA;            &amp;quot;TxSize&amp;quot;: 1960171&#xA;        },&#xA;        &amp;quot;Hosts&amp;quot;: [&#xA;            {&#xA;                &amp;quot;Host&amp;quot;: &amp;quot;112.113.115.113&amp;quot;,&#xA;                &amp;quot;Port&amp;quot;: 443,&#xA;                &amp;quot;RxRate&amp;quot;: 0,&#xA;                &amp;quot;TxRate&amp;quot;: 0,&#xA;                &amp;quot;RxSize&amp;quot;: 840413,&#xA;                &amp;quot;TxSize&amp;quot;: 172528&#xA;            },&#xA;            ...&#xA;        ]&#xA;    }&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;分 host, 统计从该地址接收的字节数(RxSize), 发送字节数(TxSize), 和相应的 rate/s (RxRate, TxRate).&lt;/p&gt;&#xA;&lt;p&gt;默认只记录 ip, 可以设置 &lt;code&gt;&amp;quot;stats-enable-tls-sni-sniffer&amp;quot;: true&lt;/code&gt;, 开启对去往 443 端口的流量进行 sni sniffer, 尝试解析出域名.&#xA;&lt;code&gt;&amp;quot;stats-enable-http-host-sniffer&amp;quot;: true&lt;/code&gt;, 对发往 80 端口流量尝试解析 http host 字段, 两者都会给连接建立过程增加一些 overhead.&lt;/p&gt;&#xA;&lt;p&gt;server 开启 stats api 后, 用 &lt;code&gt;./snet -top&lt;/code&gt; 可以显示一个类似 top 的 terminal UI 作流量监控.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>snet dev note</title>
       <link>https://blog.monsterxx03.com/2019/11/29/snet-dev-note/</link>
       <pubDate>Fri, 29 Nov 2019 12:00:01 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/11/29/snet-dev-note/</guid>
-      <description>snet: 0.5 ~ 0.6.1, 整理从上一篇以来的一些更新. 新增选项 proxy-scope, 默认 bypassCN, 可选 global. bypassCN 会做国内外分流, global 直接让所有流量去往国外. host-map, 为域名指定 ip. 之前在测试一个功能的时候需要在内网让手机对某个域名的解析切换到我的测试 ip 上, 坑爹的是公司的路由器竟然没这功能, 索性在 snet 里写了这个功能, 让我的台式机发射 wifi, 手机连上来, snet 的 mode 切换成 router, listen-host 改为 0.0.0.0 就好了. block-hosts, 因为 block-host-file 里的域名是从一个现成的列表生成出来的, 不好支持通配符, 所以加了这个, 比如 [&amp;quot;*.hpplay.cn&amp;quot;], 就能把电</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/monsterxx03/snet&#34;&gt;snet&lt;/a&gt;: 0.5 ~ 0.6.1, 整理从&lt;a href=&#34;https://blog.monsterxx03.com/2019/06/20/snet-dev-note-support-macos/&#34;&gt;上一篇&lt;/a&gt;以来的一些更新.&lt;/p&gt;&#xA;&lt;h2 id=&#34;新增选项&#34;&gt;新增选项&lt;/h2&gt;&#xA;&lt;p&gt;&lt;code&gt;proxy-scope&lt;/code&gt;, 默认 &lt;code&gt;bypassCN&lt;/code&gt;, 可选 &lt;code&gt;global&lt;/code&gt;. &lt;code&gt;bypassCN&lt;/code&gt; 会做国内外分流, &lt;code&gt;global&lt;/code&gt; 直接让所有流量去往国外.&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;host-map&lt;/code&gt;, 为域名指定 ip. 之前在测试一个功能的时候需要在内网让手机对某个域名的解析切换到我的测试 ip 上, 坑爹的是公司的路由器竟然没这功能, 索性在 snet 里写了这个功能, 让我的台式机发射 wifi, 手机连上来, snet 的 &lt;code&gt;mode&lt;/code&gt; 切换成 &lt;code&gt;router&lt;/code&gt;, &lt;code&gt;listen-host&lt;/code&gt; 改为 &lt;code&gt;0.0.0.0&lt;/code&gt; 就好了.&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;block-hosts&lt;/code&gt;, 因为 &lt;code&gt;block-host-file&lt;/code&gt; 里的域名是从一个现成的列表生成出来的, 不好支持通配符, 所以加了这个, 比如 &lt;code&gt;[&amp;quot;*.hpplay.cn&amp;quot;]&lt;/code&gt;, 就能把电视上所有乐播投屏的广告干掉.&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;proxy-type&lt;/code&gt; 新增 &lt;code&gt;tls&lt;/code&gt;, 一个基于 tls 的简单自定义协议, 使用这个需要部署一个 snet 的 server 端, 详细看 README 吧.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>gospy dev note</title>
       <link>https://blog.monsterxx03.com/2019/09/29/gospy-dev-note/</link>
       <pubDate>Sun, 29 Sep 2019 15:07:11 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/09/29/gospy-dev-note/</guid>
-      <description>前文讲了下 gospy 的大致用法, 这篇记录具体实现和过程中碰到的一些问题. 原理 要从外部获取 golang 进程的 runtime 信息, 需要做得是从进程的 binary 中的 debug 信息里 parse 出需要的一些变量的虚拟内存地址, 读取目标进程的内存, 得到相应的数据, 将两者映射起来就好了.只支持了 linux 上的 ELF 格式 binary, debug 信息是 go 在编译时候弄进去的, 格式是通用的 DWARF. ELF 和 DWARF 格式本身不细究(汗, 文档几百页也实在看不动), go 标准库里自带相应的 parser: debug/elf, debug/dwarf, debug/gosym. 一个基本的读取例子: f, _ := os.Open(path) b, _ :=</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://blog.monsterxx03.com/2019/09/20/gospy-non-invasive-goroutine-inspector/&#34;&gt;前文&lt;/a&gt;讲了下 gospy 的大致用法, 这篇记录具体实现和过程中碰到的一些问题.&lt;/p&gt;&#xA;&lt;h2 id=&#34;原理&#34;&gt;原理&lt;/h2&gt;&#xA;&lt;p&gt;要从外部获取 golang 进程的 runtime 信息, 需要做得是从进程的 binary 中的 debug 信息里 parse 出需要的一些变量的虚拟内存地址, 读取目标进程的内存, 得到相应的数据,&#xA;将两者映射起来就好了.只支持了 linux 上的 ELF 格式 binary, debug 信息是 go 在编译时候弄进去的, 格式是通用的 DWARF.&lt;/p&gt;&#xA;&lt;p&gt;ELF 和 DWARF 格式本身不细究(汗, 文档几百页也实在看不动), go 标准库里自带相应的 parser: &lt;code&gt;debug/elf, debug/dwarf, debug/gosym&lt;/code&gt;. 一个基本的读取例子:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;f, _ := os.Open(path)&#xA;b, _ := elf.NewFile(f)&#xA;lndata, _ := b.Section(&amp;quot;.gopclntab&amp;quot;).Data()&#xA;ln := gosym.NewLineTable(lndata, b.Section(&amp;quot;.text&amp;quot;).Addr)&#xA;symtab, _ := gosym.NewTable([]byte{}, ln)&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;在 go 1.3 之前, elf binary 里有一节 session: &lt;code&gt;.gosymtab&lt;/code&gt;, 1.3 开始不需要了,　为了 api 兼容, &lt;code&gt;gosym.NewTable&lt;/code&gt; 还需要这个参数,传个空　byte slice 进去就行.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>gospy: Non-invasive goroutine inspector</title>
       <link>https://blog.monsterxx03.com/2019/09/20/gospy-non-invasive-goroutine-inspector/</link>
       <pubDate>Fri, 20 Sep 2019 14:07:12 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/09/20/gospy-non-invasive-goroutine-inspector/</guid>
-      <description>go 自带的 profiling 工具很强大(pprof, trace, GODEBUG &amp;hellip;), 但有时我还是想不修改目标进程的源码获取它的一些 runtime 信息, 最近研究了一下 py-spy 和 delve, 发现还是可实现的, 就做了个小东西gospy. 用法 目前就两个命令: gospy summary 和 gospy top sudo ./gospy summary --pid 1234, 可以 dump 目标进程的一些信息和当前活动 goroutine 正在执行的函数信息, 比如对一个 prometheus 进程做一次 snapshot: bin: /home/will/Downloads/prometheus-2.12.0.linux-amd64/prometheus, goVer: 1.12.8, gomaxprocs: 6 P0 idle, schedtick: 642, syscalltick: 81 P1 idle, schedtick: 959, syscalltick: 67 P2 idle, schedtick: 992, syscalltick: 32 P3 idle, schedtick: 581, syscalltick: 17 P4 idle, schedtick: 89, syscalltick: 8 P5 idle, schedtick: 231, syscalltick: 5 Threads: 14 total, 0 running, 14 sleeping, 0 stopped, 0 zombie Goroutines: 44 total, 0 idle, 0 running, 5</description>
+      <description>&lt;p&gt;go 自带的 profiling 工具很强大(pprof, trace, GODEBUG &amp;hellip;), 但有时我还是想不修改目标进程的源码获取它的一些&#xA;runtime 信息, 最近研究了一下 py-spy 和 delve, 发现还是可实现的, 就做了个小东西&lt;a href=&#34;https://github.com/monsterxx03/gospy&#34;&gt;gospy&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;h2 id=&#34;用法&#34;&gt;用法&lt;/h2&gt;&#xA;&lt;p&gt;目前就两个命令: &lt;code&gt;gospy summary&lt;/code&gt; 和 &lt;code&gt;gospy top&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;sudo ./gospy summary --pid 1234&lt;/code&gt;, 可以 dump 目标进程的一些信息和当前活动 goroutine 正在执行的函数信息,&#xA;比如对一个 prometheus 进程做一次 snapshot:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;bin: /home/will/Downloads/prometheus-2.12.0.linux-amd64/prometheus, goVer: 1.12.8, gomaxprocs: 6&#xA;P0 idle, schedtick: 642, syscalltick: 81&#xA;P1 idle, schedtick: 959, syscalltick: 67&#xA;P2 idle, schedtick: 992, syscalltick: 32&#xA;P3 idle, schedtick: 581, syscalltick: 17&#xA;P4 idle, schedtick: 89, syscalltick: 8&#xA;P5 idle, schedtick: 231, syscalltick: 5&#xA;Threads: 14 total, 0 running, 14 sleeping, 0 stopped, 0 zombie&#xA;Goroutines: 44 total, 0 idle, 0 running, 5 syscall, 39 waiting&#xA;&#xA;goroutines:&#xA;&#xA;1 - waiting for chan receive: rt0_go (/usr/local/go/src/runtime/asm_amd64.s:202) &#xA;2 - waiting for force gc (idle): 5 (/usr/local/go/src/runtime/proc.go:240) &#xA;3 - waiting for GC sweep wait: gcenable (/usr/local/go/src/runtime/mgc.go:209) &#xA;8 - syscall: addtimerLocked (/usr/local/go/src/runtime/time.go:169) &#xA;9 - waiting for select: 0 (/app/vendor/go.opencensus.io/stats/view/worker.go:33) &#xA;16 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) &#xA;17 - waiting for finalizer wait: createfing (/usr/local/go/src/runtime/mfinal.go:156) &#xA;19 - syscall: 0 (/usr/local/go/src/os/signal/signal_unix.go:30) &#xA;22 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) &#xA;23 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) &#xA;38 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) &#xA;49 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) &#xA;50 - waiting for GC worker (idle): gcBgMarkStartWorkers (/usr/local/go/src/runtime/mgc.go:1785) &#xA;74 - waiting for select: sync (/app/scrape/scrape.go:408) &#xA;75 - syscall: addtimerLocked (/usr/local/go/src/runtime/time.go:169) &#xA;84 - syscall: addtimerLocked (/usr/local/go/src/runtime/time.go:169) &#xA;85 - waiting for select: Run (/app/vendor/github.com/oklog/run/group.go:36) &#xA;...&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;P0, P1 &amp;hellip;, 是 go 的 GMP schedule 模型里的 P, 可以简单理解成对一个物理核心的逻辑抽象. 个数可由环境变量 GOMAXPROCS 控制,&#xA;默认是机器核心数.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>snet dev note: support MacOS</title>
       <link>https://blog.monsterxx03.com/2019/06/20/snet-dev-note-support-macos/</link>
       <pubDate>Thu, 20 Jun 2019 16:03:56 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/06/20/snet-dev-note-support-macos/</guid>
-      <description>这两天得了空, 让 snet 支持了下 MacOS. snet 的大致原理是通过系统防火墙的流量重定向功能,将所有去往国外的流量导到 snet 监听的端口, 在程序内部 将流量传递给上游的 proxy server(ss, http), 拿到响应后再回给客户端. 实现关键是要在 snet 内部获取到流量的原目标地址, 因为重定向之后 tcp connnection 的目标地址变成了 snet 监听 的地址. Linux 上的实现，以前讲过: https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/ 是通过 SO_ORIGINAL_DST 这个 socket option 实现的. MacOS 上没有 iptables, 类似的工具是系统自带的 pfctl, 捣鼓了一下也能实现一样的功能. 用 pfctl 做流量重定向 pfctl 的文档可</description>
+      <description>&lt;p&gt;这两天得了空, 让 snet 支持了下 MacOS.&lt;/p&gt;&#xA;&lt;p&gt;snet 的大致原理是通过系统防火墙的流量重定向功能,将所有去往国外的流量导到 snet 监听的端口, 在程序内部&#xA;将流量传递给上游的 proxy server(ss, http), 拿到响应后再回给客户端.&lt;/p&gt;&#xA;&lt;p&gt;实现关键是要在 snet 内部获取到流量的原目标地址, 因为重定向之后 tcp connnection 的目标地址变成了 snet 监听&#xA;的地址.&lt;/p&gt;&#xA;&lt;p&gt;Linux 上的实现，以前讲过: &lt;a href=&#34;https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/&#34;&gt;https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/&lt;/a&gt;&#xA;是通过 &lt;code&gt;SO_ORIGINAL_DST&lt;/code&gt; 这个 socket option 实现的.&lt;/p&gt;&#xA;&lt;p&gt;MacOS 上没有 iptables, 类似的工具是系统自带的 pfctl, 捣鼓了一下也能实现一样的功能.&lt;/p&gt;&#xA;&lt;h2 id=&#34;用-pfctl-做流量重定向&#34;&gt;用 pfctl 做流量重定向&lt;/h2&gt;&#xA;&lt;p&gt;pfctl 的文档可以通过 &lt;code&gt;man pfctl&lt;/code&gt;, &lt;code&gt;man pf.conf&lt;/code&gt; 查看. 我也只是看了个大概, 细节并不清楚.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>snet dev note</title>
       <link>https://blog.monsterxx03.com/2019/04/10/snet-dev-note/</link>
       <pubDate>Wed, 10 Apr 2019 22:33:49 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/04/10/snet-dev-note/</guid>
-      <description>完成 SNET 初版后又做了些后续更新, 记录一点. 支持 http tunnel 配置文件里增加一个 proxy-type 选项, 默认为 ss, 可改成 http, 这样可以将 支持 http tunnel 的代理服务器作为 upstream(例如 squid). 填上 http-proxy- 开头 的选项就行. 实现上 client 端要对接 http tunnel 非常简单: client 发送请求: Connect tgt-host:tgt-port HTTP/1.1 server response: HTTP/1.1 200, 即表示 server 端支持 http tunnel client 后续向该 tcp connection 写入的数据都会被 server 转发到 tgt-host:tgt-port 改动的时候把 upstream proxy 的部分重构了一下, 抽了个 Proxy interface 出来, 后续想对接其他协议方便扩展. 对 udp 支持的尝试 对 tcp 流量的转发能通过 iptables REDIRECT</description>
+      <description>&lt;p&gt;完成 &lt;a href=&#34;https://github.com/monsterxx03/snet&#34;&gt;SNET&lt;/a&gt; 初版后又做了些后续更新,　记录一点.&lt;/p&gt;&#xA;&lt;h2 id=&#34;支持-http-tunnel&#34;&gt;支持 http tunnel&lt;/h2&gt;&#xA;&lt;p&gt;配置文件里增加一个 &lt;code&gt;proxy-type&lt;/code&gt; 选项, 默认为 &lt;code&gt;ss&lt;/code&gt;, 可改成 &lt;code&gt;http&lt;/code&gt;, 这样可以将&#xA;支持 http tunnel 的代理服务器作为 upstream(例如 squid). 填上 &lt;code&gt;http-proxy-&lt;/code&gt; 开头&#xA;的选项就行.&lt;/p&gt;&#xA;&lt;p&gt;实现上 client 端要对接 http tunnel 非常简单:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;client 发送请求: &lt;code&gt;Connect tgt-host:tgt-port HTTP/1.1&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;server response: &lt;code&gt;HTTP/1.1 200&lt;/code&gt;, 即表示 server 端支持 http tunnel&lt;/li&gt;&#xA;&lt;li&gt;client 后续向该 tcp connection 写入的数据都会被 server 转发到 tgt-host:tgt-port&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;改动的时候把 upstream proxy 的部分重构了一下, 抽了个 &lt;code&gt;Proxy&lt;/code&gt; interface 出来, 后续想对接其他协议方便扩展.&lt;/p&gt;&#xA;&lt;h2 id=&#34;对-udp-支持的尝试&#34;&gt;对 udp 支持的尝试&lt;/h2&gt;&#xA;&lt;p&gt;对 tcp 流量的转发能通过 iptables REDIRECT 实现的, 通过 getsockoption 可以知道 tcp connection&#xA;的原目标, 但这对 udp 行不通, REDIRECT 之后拿不到原 target.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>snet: transparent ss proxy on Linux</title>
       <link>https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/</link>
       <pubDate>Sun, 31 Mar 2019 22:19:46 +0800</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/</guid>
-      <description>日常使用 Linux 工作, Linux 下实现全局透明代理可以用 iptables + ss-redir, 要有比较好的上网体验还需要 ChinaDNS 配合 dnsmasq, 这一整套在路由器上搞一遍就算了, 在本地太麻烦了. 仔细想想这几个加起来的功能实现起来也并不复杂, 前阵子就写了个小东西, 用一个进程完成全局透明代理 + ChinaDNS + 国内外分流: https://github.com/monsterxx03/snet 目前的限制: 不支持 ipv6 只支持 tcp (因为我的测试服务器不支持 udp, 以后再加上吧) 上游 server 只支持 ss 目的是一个进程 + 一个配置文件完成所有事情. 需要的 iptable 规则也全部内置了(包括</description>
+      <description>&lt;p&gt;日常使用 Linux 工作, Linux 下实现全局透明代理可以用 iptables + ss-redir, 要有比较好的上网体验还需要 ChinaDNS 配合 dnsmasq,&#xA;这一整套在路由器上搞一遍就算了, 在本地太麻烦了. 仔细想想这几个加起来的功能实现起来也并不复杂, 前阵子就写了个小东西,&#xA;用一个进程完成全局透明代理 + ChinaDNS + 国内外分流: &lt;a href=&#34;https://github.com/monsterxx03/snet&#34;&gt;https://github.com/monsterxx03/snet&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;目前的限制:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;不支持 ipv6&lt;/li&gt;&#xA;&lt;li&gt;只支持 tcp (因为我的测试服务器不支持 udp, 以后再加上吧)&lt;/li&gt;&#xA;&lt;li&gt;上游 server 只支持 ss&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;目的是一个进程 + 一个配置文件完成所有事情. 需要的 iptable 规则也全部内置了(包括 CN ip 段), 缺少灵活但对我够用了, 以后有需要再加上选项不自动配吧.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Concurrency in Go, Reading Notes</title>
       <link>https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/</link>
       <pubDate>Wed, 19 Apr 2017 16:26:58 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/04/19/concurrency-in-go-reading-notes/</guid>
       <description>&lt;p&gt;A few notes taken when reading &lt;!-- raw HTML omitted --&gt;&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

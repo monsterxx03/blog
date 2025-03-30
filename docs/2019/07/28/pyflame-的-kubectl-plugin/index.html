@@ -7,10 +7,13 @@
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
-  <meta name="description" content="pyflame 可以比较方便得生成 python 进程的调用函数栈火焰图, 来 debug 一些性能瓶颈, 做了个 kubectl 的小插件, 来方便得对 k8s pod 中的 python 进程进行 debug: https://github.com/monsterxx03/kube-pyflame 直接把 svg 文件下载到本地. 要对 pod 中的 python 进程进行 profiling, 大致思路有两种: 直接在 container 内使用 pyflame, 但这样要把 pyflame 做到所有的 base 镜像里去, 而且目标 container要在 SecurityContext 加上 SYS_PTRACE 在 host 上用 pyflame debug 对应进程, pyflame 自身是能识别跑在 container 里的进程, 自动执行 setns 的. 我希望保持线上环境干净, 最后的做法是, 把 pyflame 单独做一个镜像, 先用 kubectl 找到目"/>
+  <meta name="description" content="pyflame 可以比较方便得生成 python 进程的调用函数栈火焰图, 来 debug 一些性能瓶颈, 做了个 kubectl 的小插件, 来方便得对 k8s pod 中的 python 进程进行 debug: https://github.com/monsterxx03/kube-pyflame 直接把 svg 文件下载到本地.
+要对 pod 中的 python 进程进行 profiling, 大致思路有两种:
+直接在 container 内使用 pyflame, 但这样要把 pyflame 做到所有的 base 镜像里去, 而且目标 container要在 SecurityContext 加上 SYS_PTRACE 在 host 上用 pyflame debug 对应进程, pyflame 自身是能识别跑在 container 里的进程, 自动执行 setns 的. 我希望保持线上环境干净, 最后的做法是, 把 pyflame 单独做一个镜像, 先用 kubectl 找到目标 pod 所在节点, 然后用 nodeSelector 在对应节点上起一个 pyflame 的 pod, 因为要能看到其他 namespace 的进程, 需要设置 hostPID: true, pyflame 要能执行 setns, 这个 debug pod 要设置 privileged: true. 执行完成后把 svg 下载下来, 并删除 debug pod.
+"/>
   
 
   
@@ -67,7 +70,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -76,12 +79,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -134,7 +133,7 @@ pyflame 的 pod, 因为要能看到其他 namespace 的进程, 需要设置 <cod
         </div>
       </div>
     <div id="disqus_thread"></div>
-<script type="application/javascript">
+<script>
     window.disqus_config = function () {
     
     
@@ -217,17 +216,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.111.3">
+	<meta name="generator" content="Hugo 0.145.0">
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
   
   <meta name="author"
-        content="monsterxx03"/>
+        content=""/>
 
   
 
@@ -68,7 +68,7 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com">
+        <a href="https://blog.monsterxx03.com/">
           <span>Shining Moon</span>
           <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
         </a>
@@ -77,12 +77,8 @@
     <div class="description">
       <p class="sub_title">百种弊病,皆从懒生</p>
       <div class="my_socials">
-        
-        
         <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        
-        
-        <a href="https://blog.monsterxx03.com/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
+        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
       </div>
     </div>
   </div>
@@ -94,20 +90,109 @@
 
 <div class="post animated fadeInDown">
   <div class="post_title">
+    <h2><a href='/2019/06/20/snet-dev-note-support-macos/'>snet dev note: support MacOS</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p><p>这两天得了空, 让 snet 支持了下 MacOS.</p>
+<p>snet 的大致原理是通过系统防火墙的流量重定向功能,将所有去往国外的流量导到 snet 监听的端口, 在程序内部
+将流量传递给上游的 proxy server(ss, http), 拿到响应后再回给客户端.</p>
+<p>实现关键是要在 snet 内部获取到流量的原目标地址, 因为重定向之后 tcp connnection 的目标地址变成了 snet 监听
+的地址.</p>
+<p>Linux 上的实现，以前讲过: <a href="https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/">https://blog.monsterxx03.com/2019/03/31/snet-transparent-ss-proxy-on-linux/</a>
+是通过 <code>SO_ORIGINAL_DST</code> 这个 socket option 实现的.</p>
+<p>MacOS 上没有 iptables, 类似的工具是系统自带的 pfctl, 捣鼓了一下也能实现一样的功能.</p>
+<h2 id="用-pfctl-做流量重定向">用 pfctl 做流量重定向</h2>
+<p>pfctl 的文档可以通过 <code>man pfctl</code>, <code>man pf.conf</code> 查看. 我也只是看了个大概, 细节并不清楚.</p>......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2019.06.20</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="https://blog.monsterxx03.com/tags/network/">network</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/golang/">golang</a>
+          
+          <a href="https://blog.monsterxx03.com/tags/snet/">snet</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
     <h2><a href='/2019/05/30/random-talk/'>Random Talk</a></h2>
   </div>
   
   <div class="list">
     <div class="post_content markdown">
-      <p>Just some random complains and notes about server infra management. I think those are my motivations to move to kubernetes.
-Won&rsquo;t explain k8s or docker in detail, and how they solve those problems in this post.
-Infrastructure level(on AWS) We use following services provided by AWS.
-Compute: EC2 AutoScaling Group Lambda network: VPC (SDN network) DNS (route53) CDN (CloudFront) Loadbalancer: ELB (L4) NLB (L4, ELB successor, support static IP) ALB (L7) Storage: EBS (block storage) EFS (hosted NFS) RDS(MySQl/PostgreSQL &hellip;) Redshift (data warehouse) DynamoDB (KV) S3 (object storage) Glacier (cheap archive storage) Web Firewall (WAF) Monitor (CloudWatch) DMS (ETL) &hellip; For infra management, in early days, we just click, click, click&hellip; or write some simple scripts to call AWS api.
-With infra resources growing, management became complex, a concept called Infrastructure as Code rising.
-AWS provides CloudFormation as orchestration tool, but we use terraform (for short: CloudFormation sucks, for long: Infrastructure as Code)
-So far, not bad.(tweak those services internally is another story&hellip; never belive work out of box)
-Application level configuration management (setup nginx, jenkins, redis, twemproxy, ElasticSearch or WTF..) CI/CD dependency management They&rsquo;re complicated, people developped bunch of tools to handle: puppet, chef, ansible, saltstack &hellip;
-They&rsquo;re great and working, but writing correct code still a challenge when changes involves:......</p>
+      <p><p>Just some random complains and notes about server infra management. I think those are my motivations to move to kubernetes.</p>
+<p>Won&rsquo;t explain k8s or docker in detail, and how they solve those problems in this post.</p>
+<h2 id="infrastructure-levelon-aws">Infrastructure level(on AWS)</h2>
+<p>We use following services provided by AWS.</p>
+<ul>
+<li>Compute:
+<ul>
+<li>EC2</li>
+<li>AutoScaling Group</li>
+<li>Lambda</li>
+</ul>
+</li>
+<li>network:
+<ul>
+<li>VPC (SDN network)</li>
+<li>DNS (route53)</li>
+<li>CDN (CloudFront)</li>
+</ul>
+</li>
+<li>Loadbalancer:
+<ul>
+<li>ELB (L4)</li>
+<li>NLB (L4, ELB successor, support static IP)</li>
+<li>ALB (L7)</li>
+</ul>
+</li>
+<li>Storage:
+<ul>
+<li>EBS (block storage)</li>
+<li>EFS (hosted NFS)</li>
+<li>RDS(MySQl/PostgreSQL &hellip;)</li>
+<li>Redshift (data warehouse)</li>
+<li>DynamoDB (KV)</li>
+<li>S3 (object storage)</li>
+<li>Glacier (cheap archive storage)</li>
+</ul>
+</li>
+<li>Web Firewall (WAF)</li>
+<li>Monitor (CloudWatch)</li>
+<li>DMS (ETL)
+&hellip;</li>
+</ul>
+<p>For infra management, in early days, we just click, click, click&hellip; or write some simple scripts to call AWS api.</p>
+<p>With infra resources growing, management became complex, a concept called <code>Infrastructure as Code</code> rising.</p>
+<p>AWS provides CloudFormation as orchestration tool, but we use <a href="https://www.terraform.io/">terraform</a> (for short: CloudFormation sucks, for long: <a href="https://blog.monsterxx03.com/2017/04/21/infrastructure-as-code/">Infrastructure as Code</a>)</p>
+<p>So far, not bad.(tweak those services internally is another story&hellip; never belive <code>work out of box</code>)</p>
+<h2 id="application-level">Application level</h2>
+<ul>
+<li>configuration management (setup nginx, jenkins, redis, twemproxy, ElasticSearch or WTF..)</li>
+<li>CI/CD</li>
+<li>dependency management</li>
+</ul>
+<p>They&rsquo;re complicated, people developped bunch of tools to handle: puppet, chef, ansible, saltstack &hellip;</p>
+<p>They&rsquo;re great and working, but writing correct code still a challenge when changes involves:</p>......</p>
     </div>
   </div>
   
@@ -140,7 +225,10 @@ They&rsquo;re great and working, but writing correct code still a challenge when
   
   <div class="list">
     <div class="post_content markdown">
-      <p>搞定了监控, 下一步在 k8s 上要做的是中心化日志, 大体看了下, 感兴趣的有两个选择: ELK 套件, 或fluent-bit + fluentd. ELK 那套好处是, 可以把监控和日志一体化, filebeat 收集日志, metricbeat 收集 metrics, 统一存储在 ElasticSearch 里, 通过第三方项目elastalert 可以做报警，也能在 kibana 里集成界面. 坏处是 ElasticSearch 存储成本高, 吃资源. 我们对存储的日志使用需求基本就是 debug, 没有特别复杂的BI需求, 上一整套 ELK 还是太重了. 选择 fluent-bit + fluentd 还有个好处是, 之前内部有套收集 m......</p>
+      <p><p>搞定了监控, 下一步在 k8s 上要做的是中心化日志, 大体看了下, 感兴趣的有两个选择: ELK 套件, 或fluent-bit + fluentd.</p>
+<p>ELK 那套好处是, 可以把监控和日志一体化, filebeat 收集日志, metricbeat 收集 metrics, 统一存储在 ElasticSearch 里, 通过第三方项目<a href="https://github.com/Yelp/elastalert">elastalert</a>
+可以做报警，也能在 kibana 里集成界面. 坏处是 ElasticSearch 存储成本高, 吃资源. 我们对存储的日志使用需求基本就是 debug, 没有特别复杂的BI需求, 上一整套 ELK 还是太重了.</p>
+<p>选择 fluent-bit + fluentd 还有个好处是, 之前内部有套收集 metrics(用于统计 DAU, retention 之类指标) 的系统本来就是基于 fluentd 的, 用这套就不用改 metrics 那边的 ETL 了.</p>......</p>
     </div>
   </div>
   
@@ -177,7 +265,18 @@ They&rsquo;re great and working, but writing correct code still a challenge when
   
   <div class="list">
     <div class="post_content markdown">
-      <p>Why move to prometheus? 把生产环境迁移到 k8s 的第一步是要搞定监控, 目前线上监控用的是商业的 datadog, 在 container 环境下 datadog 监控还要按 container 数目收费, 单 host 只有 10 个的额度, 超过要加钱, 高密度部署下很不划算. 一个 server 跑 20 个以上 container 是很正常的事情, 单台 server 的监控费用立马翻倍. tracing 这块之前用的也是 datadog, 但太贵了,一直也想换开源实现, 索性监控报警也换了, 踩一把坑吧. vendor lock 总是不爽的&hellip; Metrics in k8s 先不提 prometheus, k8s 中 metrics 来源有那么几个: metrics-serever metrics-server (取代 heapster), 从 node 上 kubelet 的 summary api 抓取......</p>
+      <p><h1 id="why-move-to-prometheus">Why move to prometheus?</h1>
+<p>把生产环境迁移到 k8s 的第一步是要搞定监控, 目前线上监控用的是商业的 datadog, 在 container 环境下
+datadog 监控还要按 container 数目收费, 单 host 只有 10 个的额度, 超过要加钱, 高密度部署下很不划算.
+一个 server 跑 20 个以上 container 是很正常的事情, 单台 server 的监控费用立马翻倍.</p>
+<p>tracing 这块之前用的也是 datadog, 但太贵了,一直也想换开源实现, 索性监控报警也换了, 踩一把坑吧.</p>
+<p>vendor lock 总是不爽的&hellip;</p>
+<h1 id="metrics-in-k8s">Metrics in k8s</h1>
+<p>先不提 prometheus, k8s 中 metrics 来源有那么几个:</p>
+<h2 id="metrics-serever">metrics-serever</h2>
+<p><a href="https://github.com/kubernetes-incubator/metrics-server">metrics-server</a> (取代 heapster), 从 node
+上 kubelet 的 <a href="https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/apis/stats/v1alpha1/types.go">summary api</a> 抓取数据(node/pod 的 cpu/memory 信息), kubectl top 和 kube-dashboard 的 metrics 数据来源就是它, horizontal pod
+autoscaler 做 scale up/down 决策的数据来源也是它, metrics-server 只在内存里保留 node 和 pod 的最新值.</p>......</p>
     </div>
   </div>
   
@@ -214,7 +313,17 @@ They&rsquo;re great and working, but writing correct code still a challenge when
   
   <div class="list">
     <div class="post_content markdown">
-      <p>我有两个 EKS 集群 (sandbox + production), 这两个集群分处两个 aws 帐号中. 所以管理的时候也需要两套 aws credential. 同时我用 helm-secrets 来管理 helm charts 中需要加密的一些配置. helm-secrets 只是 sops 的一个 shell wrapper, 实际加密是通过 sops 进行的. sops 支持 aws KMS, gcp KMS, azure key vault.. 等加密服务. 我用的是 aws KMS, 在 KMS 里创建一个 key, 授权允许我这个 iam 帐号能用它来进行加解密. 这带来了一个问题, kubectl 和 helm-secrets 都需要 aws credential, 如果两边用的不一样就会执行失败. 我统一使用 aws 的 named profiles 来管理 credential. 不在环境变量里设 aws 的 access key/secret key(如果设置了, 优先......</p>
+      <p><p>我有两个 EKS 集群 (sandbox + production), 这两个集群分处两个 aws 帐号中.
+所以管理的时候也需要两套 aws credential.</p>
+<p>同时我用 <a href="https://github.com/futuresimple/helm-secrets">helm-secrets</a> 来管理 helm charts
+中需要加密的一些配置. helm-secrets 只是 <a href="https://github.com/mozilla/sops">sops</a> 的一个 shell
+wrapper, 实际加密是通过 sops 进行的.</p>
+<p>sops 支持 aws KMS, gcp KMS, azure key vault.. 等加密服务. 我用的是 aws KMS, 在 KMS 里创建一个 key,
+授权允许我这个 iam 帐号能用它来进行加解密.</p>
+<p>这带来了一个问题, kubectl 和 helm-secrets 都需要 aws credential, 如果两边用的不一样就会执行失败.</p>
+<p>我统一使用 aws 的 <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html">named profiles</a>
+来管理 credential. 不在环境变量里设 aws 的 access key/secret key(如果设置了, 优先级比 named profile 高)</p>
+<p>目录结构:</p>......</p>
     </div>
   </div>
   
@@ -245,7 +354,32 @@ They&rsquo;re great and working, but writing correct code still a challenge when
   
   <div class="list">
     <div class="post_content markdown">
-      <p>最近在把 jenkins 迁移到 k8s, 具体怎么 setup 的不赘述了(helm chart, jenkins home 目录挂pvc, jenkins kubernetes-plugin). jenkins 跑 k8s 好处是可以方便得做分布式 build, 每次 trigger 一个 job 的时候自动起一个 pod 作为 jenkins slave agent, 结束了自动删掉. 在 aws 上结合 cluster-autoscaler 可以极大得扩展 ci 的并行能力, 降低成本. 记录一点过程中的坑. 装上 kubernetes-plugin 后,要想让 jenkins 的 job 在 pod 中跑, 必须用 pipeline 的方式编写 job 定义. script 和 declarative 两种方式都支持启动 pod. 如果用 shell 的方式编写, 不会跑在 pod 里，会直接在 master 的 workspace 里 build. declarative 方式的例子: pipeline { agent { kubernetes { label 'test-deploy' yamlFile 'test-deploy.yaml'......</p>
+      <p><p>最近在把 jenkins 迁移到 k8s, 具体怎么 setup 的不赘述了(helm chart, jenkins home 目录挂pvc, jenkins kubernetes-plugin).</p>
+<p>jenkins 跑 k8s 好处是可以方便得做分布式 build, 每次 trigger 一个 job 的时候自动起一个 pod 作为 jenkins slave agent, 结束了自动删掉.
+在 aws 上结合 cluster-autoscaler 可以极大得扩展 ci 的并行能力, 降低成本.</p>
+<p>记录一点过程中的坑.</p>
+<p>装上 <a href="https://github.com/jenkinsci/kubernetes-plugin">kubernetes-plugin</a> 后,要想让 jenkins 的 job 在 pod 中跑, 必须用 pipeline 的方式编写 job 定义. script 和 declarative
+两种方式都支持启动 pod. 如果用 shell 的方式编写, 不会跑在 pod 里，会直接在　master 的　workspace 里 build.</p>
+<p>declarative 方式的例子:</p>
+<pre><code>pipeline {
+    agent {
+        kubernetes  {
+            label 'test-deploy'
+            yamlFile 'test-deploy.yaml'
+        }
+    }
+    stages {
+        stage('stage test') {
+            steps('tests') {
+                container('test') {
+                    sh 'ls'
+                }
+            }
+        }
+    }
+}
+</code></pre>
+<p><code>ls</code> 命令就会在 test container 里执行, 如果不用 <code>container()</code> step 的话，默认会在 pod 的 default container 里执行.</p>......</p>
     </div>
   </div>
   
@@ -280,7 +414,50 @@ They&rsquo;re great and working, but writing correct code still a challenge when
   
   <div class="list">
     <div class="post_content markdown">
-      <p>从 k8s 1.8 开始支持 PersistentVolumeClaimResize. 但 api 是 alpha 状态, 默认不开启, eks launch 的时候版本是 1.10, 因为没法改 control plane, 所以没法直接在 k8s 内做 ebs 扩容. 后来升级到了 1.11, 这个 feature 默认被打开了, 尝试了下直接在 EKS 内做 ebs 的扩容. 注意: 这个 feature 只能对通过 pvc 管理的 volume 做扩容, 如果直接挂的是 pv, 只能自己按传统的 ebs 扩容流程在 eks 之外做. 用来创建 pvc 的 storageclass 上必须设置 allowVolumeExpansion 为 true 在 eks 上使用 pv/pvc, 对于需要 retain 的 volume, 我一般的流程是: 在 eks 之外手工创建 ebs volume. 在 eks 中创建 pv, 指向 ebs 的 volume id 在 eks 中创建 pvc, 指向 pv 示例 yaml:......</p>
+      <p><p>从 k8s 1.8 开始支持 <a href="https://kubernetes.io/blog/2018/07/12/resizing-persistent-volumes-using-kubernetes/">PersistentVolumeClaimResize</a>. 但 api 是 alpha 状态, 默认不开启, eks launch
+的时候版本是 1.10, 因为没法改 control plane, 所以没法直接在 k8s 内做 ebs 扩容. 后来升级到了
+1.11, 这个 feature 默认被打开了, 尝试了下直接在 EKS 内做 ebs 的扩容.</p>
+<p>注意:</p>
+<ul>
+<li>这个 feature 只能对通过 pvc 管理的 volume 做扩容, 如果直接挂的是 pv, 只能自己按传统的 ebs 扩容流程在 eks 之外做.</li>
+<li>用来创建 pvc 的 storageclass 上必须设置 <code>allowVolumeExpansion</code> 为 true</li>
+</ul>
+<p>在 eks 上使用 pv/pvc,　对于需要 retain 的 volume, 我一般的流程是:</p>
+<ul>
+<li>在 eks 之外手工创建 ebs volume.</li>
+<li>在 eks 中创建 pv, 指向 ebs 的 volume id</li>
+<li>在 eks 中创建 pvc, 指向 pv</li>
+</ul>
+<p>示例 yaml:</p>
+<pre><code>---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: test
+spec:
+  storageClassName: gp2
+  persistentVolumeReclaimPolicy: Retain
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 5Gi
+  awsElasticBlockStore:
+    fsType: ext4
+    volumeID: vol-xxxx   # create in aws manually
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: test-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  volumeName: test
+</code></pre>
+<p>假如现在要扩容到 10Gi, 流程是:</p>......</p>
     </div>
   </div>
   
@@ -315,7 +492,21 @@ They&rsquo;re great and working, but writing correct code still a challenge when
   
   <div class="list">
     <div class="post_content markdown">
-      <p>完成 SNET 初版后又做了些后续更新, 记录一点. 支持 http tunnel 配置文件里增加一个 proxy-type 选项, 默认为 ss, 可改成 http, 这样可以将 支持 http tunnel 的代理服务器作为 upstream(例如 squid). 填上 http-proxy- 开头 的选项就行. 实现上 client 端要对接 http tunnel 非常简单: client 发送请求: Connect tgt-host:tgt-port HTTP/1.1 server response: HTTP/1.1 200, 即表示 server 端支持 http tunnel client 后续向该 tcp connection 写入的数据都会被 server 转发到 tgt-host:tgt-port 改动的时候把 upstream proxy 的部分重构了一下, 抽了个 Proxy interface 出来, 后续想对接其他协议方便扩展. 对 udp 支持的尝试 对 tcp 流量的转发能通过 iptables REDIRECT......</p>
+      <p><p>完成 <a href="https://github.com/monsterxx03/snet">SNET</a> 初版后又做了些后续更新,　记录一点.</p>
+<h2 id="支持-http-tunnel">支持 http tunnel</h2>
+<p>配置文件里增加一个 <code>proxy-type</code> 选项, 默认为 <code>ss</code>, 可改成 <code>http</code>, 这样可以将
+支持 http tunnel 的代理服务器作为 upstream(例如 squid). 填上 <code>http-proxy-</code> 开头
+的选项就行.</p>
+<p>实现上 client 端要对接 http tunnel 非常简单:</p>
+<ul>
+<li>client 发送请求: <code>Connect tgt-host:tgt-port HTTP/1.1</code></li>
+<li>server response: <code>HTTP/1.1 200</code>, 即表示 server 端支持 http tunnel</li>
+<li>client 后续向该 tcp connection 写入的数据都会被 server 转发到 tgt-host:tgt-port</li>
+</ul>
+<p>改动的时候把 upstream proxy 的部分重构了一下, 抽了个 <code>Proxy</code> interface 出来, 后续想对接其他协议方便扩展.</p>
+<h2 id="对-udp-支持的尝试">对 udp 支持的尝试</h2>
+<p>对 tcp 流量的转发能通过 iptables REDIRECT 实现的, 通过 getsockoption 可以知道 tcp connection
+的原目标, 但这对 udp 行不通, REDIRECT 之后拿不到原 target.</p>......</p>
     </div>
   </div>
   
@@ -350,7 +541,16 @@ They&rsquo;re great and working, but writing correct code still a challenge when
   
   <div class="list">
     <div class="post_content markdown">
-      <p>日常使用 Linux 工作, Linux 下实现全局透明代理可以用 iptables + ss-redir, 要有比较好的上网体验还需要 ChinaDNS 配合 dnsmasq, 这一整套在路由器上搞一遍就算了, 在本地太麻烦了. 仔细想想这几个加起来的功能实现起来也并不复杂, 前阵子就写了个小东西, 用一个进程完成全局透明代理 + ChinaDNS + 国内外分流: https://github.com/monsterxx03/snet 目前的限制: 不支持 ipv6 只支持 tcp (因为我的测试服务器不支持 udp, 以后再加上吧) 上游 server 只支持 ss 目的是一个进程 + 一个配置文件完成所有事情. 需要的 iptable 规则也全部内置了(包括......</p>
+      <p><p>日常使用 Linux 工作, Linux 下实现全局透明代理可以用 iptables + ss-redir, 要有比较好的上网体验还需要 ChinaDNS 配合 dnsmasq,
+这一整套在路由器上搞一遍就算了, 在本地太麻烦了. 仔细想想这几个加起来的功能实现起来也并不复杂, 前阵子就写了个小东西,
+用一个进程完成全局透明代理 + ChinaDNS + 国内外分流: <a href="https://github.com/monsterxx03/snet">https://github.com/monsterxx03/snet</a></p>
+<p>目前的限制:</p>
+<ul>
+<li>不支持 ipv6</li>
+<li>只支持 tcp (因为我的测试服务器不支持 udp, 以后再加上吧)</li>
+<li>上游 server 只支持 ss</li>
+</ul>
+<p>目的是一个进程 + 一个配置文件完成所有事情. 需要的 iptable 规则也全部内置了(包括 CN ip 段), 缺少灵活但对我够用了, 以后有需要再加上选项不自动配吧.</p>......</p>
     </div>
   </div>
   
@@ -385,7 +585,24 @@ They&rsquo;re great and working, but writing correct code still a challenge when
   
   <div class="list">
     <div class="post_content markdown">
-      <p>之前用 celery 做的 task 都是一些很简单轻量级的 task, 从来没触发过 timeout, 最近加入了一些复杂很耗时的 task, 碰到一些 time limit 的坑. celery 中 time limit 有两种, soft_time_limit 和 hard_time_limit, 区别是 soft_time_limit 会在内部抛一个 Exception, task 可以 catch 自行处理. hard time limit 没法被 catch. 使用如下: from myapp import app from celery.exceptions import SoftTimeLimitExceeded @app.task def mytask(): try: do_work() except SoftTimeLimitExceeded: clean_up_in_a_hurry() 我 celery pool 用的是 gevent, 实际上在现在的实现里 gevent 做 worker pool 的时候会忽略 soft_time_limit, 只有 hard_time_limit 会被触发(通过 gevent.Timeout 实现). 坑爹的是文档里写的是错的: http://docs.celeryproject.org/en/latest/userguide/workers.html#time-limit soft_time_limit 只在 prefork pool 里支持. 我现在想让 celery 把这个 hard timeout 的情况 report 到 sentry, 看了圈代码并没法......</p>
+      <p><p>之前用 celery 做的 task 都是一些很简单轻量级的 task, 从来没触发过 timeout, 最近加入了一些复杂很耗时的 task, 碰到一些 time limit 的坑.</p>
+<p>celery 中 time limit 有两种, soft_time_limit 和 hard_time_limit, 区别是 soft_time_limit 会在内部抛一个 Exception, task 可以 catch 自行处理.
+hard time limit 没法被 catch.</p>
+<p>使用如下:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> myapp <span style="color:#f92672">import</span> app
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> celery.exceptions <span style="color:#f92672">import</span> SoftTimeLimitExceeded
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@app.task</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mytask</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        do_work()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> SoftTimeLimitExceeded:
+</span></span><span style="display:flex;"><span>        clean_up_in_a_hurry()</span></span></code></pre></div>
+<p>我 celery pool 用的是 gevent, 实际上在现在的实现里 gevent 做 worker pool 的时候会忽略 soft_time_limit, 只有 hard_time_limit 会被触发(通过 gevent.Timeout 实现).</p>
+<p>坑爹的是文档里写的是错的: <a href="http://docs.celeryproject.org/en/latest/userguide/workers.html#time-limit">http://docs.celeryproject.org/en/latest/userguide/workers.html#time-limit</a></p>
+<p>soft_time_limit 只在 prefork pool 里支持.</p>
+<p>我现在想让 celery 把这个 hard timeout 的情况 report 到 sentry, 看了圈代码并没法从外面 override timeout 的 callback. 只能很丑得做了个 monkey patch, 在初始化 celeryapp
+的代码里:</p>......</p>
     </div>
   </div>
   
@@ -405,41 +622,6 @@ They&rsquo;re great and working, but writing correct code still a challenge when
           <a href="https://blog.monsterxx03.com/tags/celery/">celery</a>
           
           <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/'>管理负载</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p>最近在看 google 的 &lt;The Site Reliablity Workbook&gt;, 其中有一章是&quot;Manage load&quot;, 内容还挺详细的, 结合在 aws 上的经验做点笔记. Load Balancing 流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存. google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency. 但只依赖 BGP 会带来两个问题: 某个地区的用户过多会给最近的 frontend server 带来过高的负......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2019.02.12</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/gce/">gce</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/book/">book</a>
           
         </span>
         
@@ -524,17 +706,20 @@ code.has-jax {
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-P32CTT1G2G', { 'anonymize_ip': false });
-}
-</script>
-
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 
 
 </body>

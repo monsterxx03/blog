@@ -4,22 +4,17 @@
     <title>S3 on Shining Moon</title>
     <link>https://blog.monsterxx03.com/tags/s3/</link>
     <description>Recent content in S3 on Shining Moon</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sat, 19 Aug 2017 07:28:16 +0000</lastBuildDate><atom:link href="https://blog.monsterxx03.com/tags/s3/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 19 Aug 2017 07:28:16 +0000</lastBuildDate>
+    <atom:link href="https://blog.monsterxx03.com/tags/s3/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Build private static website on S3</title>
       <link>https://blog.monsterxx03.com/2017/08/19/build-private-staticwebsite-on-s3/</link>
       <pubDate>Sat, 19 Aug 2017 07:28:16 +0000</pubDate>
-      
       <guid>https://blog.monsterxx03.com/2017/08/19/build-private-staticwebsite-on-s3/</guid>
-      <description>Build static website on S3 is very easy, but by default, it can be accessed by open internet.It will be super helpful if we can build website only available in VPC. Then we can use it to host internal deb repo, doc site…
-Steps are very easy, you only need VPC endpoints and S3 bucket policy.
-AWS api is open to internet, if you need to access S3 in VPC, your requests will pass through VPC’s internet gateway or NAT gateway. With VPC endpoints(can be found in VPC console), your requests to S3 will go through AWS’s internal network. Currently, VPC endpoints only support S3, support for dynamodb is in test.
-To restrict S3 bucket only available in your VPC, need to set bucket policy (to host static website, enable static website support first). At first, I didn’t check doc, try to restrict access by my VPC ip cidr, but it didn’t work, I need to restrict by VPC endpoint id:
-{ &amp;quot;Version&amp;quot;: &amp;quot;2012-10-17&amp;quot;, &amp;quot;Id&amp;quot;: &amp;quot;Policy1415115909152&amp;quot;, &amp;quot;Statement&amp;quot;: [ { &amp;quot;Sid&amp;quot;: &amp;quot;Access-to-specific-VPCE-only&amp;quot;, &amp;quot;Principal&amp;quot;: &amp;quot;*&amp;quot;, &amp;quot;Action&amp;quot;: &amp;quot;s3:GetObject&amp;quot;, &amp;quot;Effect&amp;quot;: &amp;quot;Allow&amp;quot;, &amp;quot;Resource&amp;quot;: [&amp;quot;arn:aws:s3:::my_secure_bucket&amp;quot;, &amp;quot;arn:aws:s3:::my_secure_bucket/*&amp;quot;], &amp;quot;Condition&amp;quot;: { &amp;quot;StringEquals&amp;quot;: { &amp;quot;aws:sourceVpce&amp;quot;: &amp;quot;vpce-1a2b3c4d&amp;quot; } } } ] } BTW, if you can config bucket policy restrict on VPC directly, with VPC endpoint you can limit to subnets.</description>
+      <description>&lt;p&gt;Build static website on S3 is very easy, but by default, it can be accessed by open internet.It will be super helpful if we can build website only available in VPC. Then we can use it to host internal deb repo, doc site…&lt;/p&gt;&#xA;&lt;p&gt;Steps are very easy, you only need VPC endpoints and S3 bucket policy.&lt;/p&gt;&#xA;&lt;p&gt;AWS api is open to internet, if you need to access S3 in VPC, your requests will pass through VPC’s internet gateway or NAT gateway. With VPC endpoints(can be found in VPC console), your requests to S3 will go through AWS’s internal network. Currently, VPC endpoints only support S3, support for dynamodb is in test.&lt;/p&gt;&#xA;&lt;p&gt;To restrict S3 bucket only available in your VPC, need to set bucket policy (to host static website, enable static website support first). At first, I didn’t check doc, try to restrict access by my VPC ip cidr, but it didn’t work, I need to restrict by VPC endpoint id:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;{&#xA;  &amp;quot;Version&amp;quot;: &amp;quot;2012-10-17&amp;quot;,&#xA;  &amp;quot;Id&amp;quot;: &amp;quot;Policy1415115909152&amp;quot;,&#xA;  &amp;quot;Statement&amp;quot;: [&#xA;    {&#xA;      &amp;quot;Sid&amp;quot;: &amp;quot;Access-to-specific-VPCE-only&amp;quot;,&#xA;      &amp;quot;Principal&amp;quot;: &amp;quot;*&amp;quot;,&#xA;      &amp;quot;Action&amp;quot;: &amp;quot;s3:GetObject&amp;quot;,&#xA;      &amp;quot;Effect&amp;quot;: &amp;quot;Allow&amp;quot;,&#xA;      &amp;quot;Resource&amp;quot;: [&amp;quot;arn:aws:s3:::my_secure_bucket&amp;quot;,&#xA;                   &amp;quot;arn:aws:s3:::my_secure_bucket/*&amp;quot;],&#xA;      &amp;quot;Condition&amp;quot;: {&#xA;        &amp;quot;StringEquals&amp;quot;: {&#xA;          &amp;quot;aws:sourceVpce&amp;quot;: &amp;quot;vpce-1a2b3c4d&amp;quot;&#xA;        }&#xA;      }&#xA;    }&#xA;  ]&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;BTW, if you can config bucket policy restrict on VPC directly, with VPC endpoint you can limit to subnets. Details can be found in doc: &lt;a href=&#34;http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-endpoints-s3.html&#34;&gt;http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-endpoints-s3.html&lt;/a&gt;&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>
