@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.145.0">
+	<meta name="generator" content="Hugo 0.155.3"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -15,23 +15,23 @@
   
 
   
-  <link rel="canonical" href="https://blog.monsterxx03.com/"/>
+  <link rel="canonical" href="http://localhost:1313/"/>
 
   
-  <link rel="alternate" type="application/rss&#43;xml" href="https://blog.monsterxx03.com/index.xml">
+  <link rel="alternate" type="application/rss&#43;xml" href="http://localhost:1313/index.xml">
   
 
   <title>Shining Moon</title>
 
-  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
+  <link rel="shortcut icon" href="http://localhost:1313/images/favicon.ico"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/animate.min.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/remixicon.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/zozo.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/highlight.css"/>
 
   
   
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/home.css">
+  <link rel="stylesheet" href="http://localhost:1313/css/home.css">
   
 </head>
 
@@ -68,9 +68,9 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com/">
+        <a href="http://localhost:1313/">
           <span>Shining Moon</span>
-          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
+          <img width="90px" src="http://localhost:1313/logo.png"/>
         </a>
       </h1>
     </div>
@@ -87,6 +87,42 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/'>在python3.7 中实现python2.7 的内置 hash 函数</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p><p>最近着手准备从 python2.7 迁移到 python3.7, 还没开始就碰到一个问题. 老系统里有一部分竟然是将 python 内置 hash 函数的结果存进了数据库, 这个做法绝对是错的,
+hash 的结果本来就没有保证过在各个版本的 python 中保证一致. 而且 python3 中算法完全变了, 默认在进程初始化的时候会用随机种子加进 hash 过程, 所以python 进程
+一重启结果就不一样了. 木已成舟， 目前看将数据库里的值全部改掉是不可能了, 只能在 python3 中重新实现一下这个算法.</p>
+<p>python2.7 中的hash 算法是 fnv (有修改), python3 中变成了 sip, <a href="https://www.python.org/dev/peps/pep-0456">pep-456</a>.</p>......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2018.06.01</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="http://localhost:1313/tags/python/">python</a>
+          
+          <a href="http://localhost:1313/tags/code-infra/">code-infra</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -154,15 +190,15 @@ queue to store those messages. You can decide how to handle them late.</li>
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
+          <a href="http://localhost:1313/tags/lang-en/">lang-en</a>
           
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
+          <a href="http://localhost:1313/tags/aws/">AWS</a>
           
-          <a href="https://blog.monsterxx03.com/tags/sns/">SNS</a>
+          <a href="http://localhost:1313/tags/sns/">SNS</a>
           
-          <a href="https://blog.monsterxx03.com/tags/sqs/">SQS</a>
+          <a href="http://localhost:1313/tags/sqs/">SQS</a>
           
-          <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
+          <a href="http://localhost:1313/tags/code-infra/">code-infra</a>
           
         </span>
         
@@ -201,11 +237,11 @@ queue to store those messages. You can decide how to handle them late.</li>
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/python/">python</a>
+          <a href="http://localhost:1313/tags/python/">python</a>
           
-          <a href="https://blog.monsterxx03.com/tags/sqlalchemy/">sqlalchemy</a>
+          <a href="http://localhost:1313/tags/sqlalchemy/">sqlalchemy</a>
           
-          <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
+          <a href="http://localhost:1313/tags/code-infra/">code-infra</a>
           
         </span>
         
@@ -250,13 +286,13 @@ queue to store those messages. You can decide how to handle them late.</li>
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
+          <a href="http://localhost:1313/tags/aws/">AWS</a>
           
-          <a href="https://blog.monsterxx03.com/tags/vpc/">vpc</a>
+          <a href="http://localhost:1313/tags/vpc/">vpc</a>
           
-          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
+          <a href="http://localhost:1313/tags/k8s/">k8s</a>
           
-          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
+          <a href="http://localhost:1313/tags/server-infra/">server-infra</a>
           
         </span>
         
@@ -293,11 +329,11 @@ queue to store those messages. You can decide how to handle them late.</li>
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
+          <a href="http://localhost:1313/tags/aws/">AWS</a>
           
-          <a href="https://blog.monsterxx03.com/tags/lambda/">lambda</a>
+          <a href="http://localhost:1313/tags/lambda/">lambda</a>
           
-          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
+          <a href="http://localhost:1313/tags/server-infra/">server-infra</a>
           
         </span>
         
@@ -381,11 +417,11 @@ resp:
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
+          <a href="http://localhost:1313/tags/lang-en/">lang-en</a>
           
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
+          <a href="http://localhost:1313/tags/aws/">AWS</a>
           
-          <a href="https://blog.monsterxx03.com/tags/lambda/">lambda</a>
+          <a href="http://localhost:1313/tags/lambda/">lambda</a>
           
         </span>
         
@@ -440,15 +476,15 @@ resp:
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/redshift/">redshift</a>
+          <a href="http://localhost:1313/tags/redshift/">redshift</a>
           
-          <a href="https://blog.monsterxx03.com/tags/spectrum/">spectrum</a>
+          <a href="http://localhost:1313/tags/spectrum/">spectrum</a>
           
-          <a href="https://blog.monsterxx03.com/tags/athena/">athena</a>
+          <a href="http://localhost:1313/tags/athena/">athena</a>
           
-          <a href="https://blog.monsterxx03.com/tags/glow/">glow</a>
+          <a href="http://localhost:1313/tags/glow/">glow</a>
           
-          <a href="https://blog.monsterxx03.com/tags/data-infra/">data-infra</a>
+          <a href="http://localhost:1313/tags/data-infra/">data-infra</a>
           
         </span>
         
@@ -505,13 +541,13 @@ resp:
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
+          <a href="http://localhost:1313/tags/lang-en/">lang-en</a>
           
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
+          <a href="http://localhost:1313/tags/aws/">AWS</a>
           
-          <a href="https://blog.monsterxx03.com/tags/cloudfront/">CloudFront</a>
+          <a href="http://localhost:1313/tags/cloudfront/">CloudFront</a>
           
-          <a href="https://blog.monsterxx03.com/tags/alb/">ALB</a>
+          <a href="http://localhost:1313/tags/alb/">ALB</a>
           
         </span>
         
@@ -561,56 +597,13 @@ resp:
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
+          <a href="http://localhost:1313/tags/aws/">AWS</a>
           
-          <a href="https://blog.monsterxx03.com/tags/database/">Database</a>
+          <a href="http://localhost:1313/tags/database/">Database</a>
           
-          <a href="https://blog.monsterxx03.com/tags/nosql/">NoSQL</a>
+          <a href="http://localhost:1313/tags/nosql/">NoSQL</a>
           
-          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/12/10/handle-outage/'>Handle outage</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>A few weeks ago, production environment came to an outage, solve it cost me 8 hours (from 3am to 11am) although total down time is not long, really a bad expenrience. Finally, impact was mitigated, and I&rsquo;m working on a long term solution. I learned some important things from this accident.</p>
-<h2 id="the-outage">The outage</h2>
-<p>I received alarms about live performance issue at 3am, first is server latency increaing, soon some service&rsquo;s health check failed due to high load.</p>
-<p>I did following:</p>
-<ol>
-<li>Check monitor</li>
-<li>Identify the problem is caused by KV system</li>
-</ol>
-<p>Okay, problem is here, I know the problem is KV system&rsquo;s performance issue. But I can&rsquo;t figure out the root case right now, I need a temporary solution.
-Straightward way is redirect traffic to slave instance. But I know it won&rsquo;t work (actually it is true), I come to similar issue before, did a fix for it, but seems it doesn&rsquo;t work.</p>
-<p>The real down time was not long, performance recovered to some degree soon, but latency was still high, not normal. I monitored it for long time, and tried to find out the root case until morning. Since traffic was growing when peak hour coming, performance became problem again.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.12.10</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
+          <a href="http://localhost:1313/tags/server-infra/">server-infra</a>
           
         </span>
         
@@ -650,11 +643,11 @@ Straightward way is redirect traffic to slave instance. But I know it won&rsquo;
 
 
 
-<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
-<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
-<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
-<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
-<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
+<script src="http://localhost:1313/js/jquery-3.3.1.min.js"></script>
+<script src="http://localhost:1313/js/zozo.js"></script>
+<script src="http://localhost:1313/js/highlight.pack.js"></script>
+<link  href="http://localhost:1313/css/fancybox.min.css" rel="stylesheet">
+<script src="http://localhost:1313/js/fancybox.min.js"></script>
 
 <script>hljs.initHighlightingOnLoad()</script>
 
@@ -698,7 +691,7 @@ code.has-jax {
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
       <script>
         var doNotTrack = false;
-        if ( false ) {
+        if ( true ) {
           var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
           var doNotTrack = (dnt == "1" || dnt == "yes");
         }

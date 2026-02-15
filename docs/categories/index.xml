@@ -2,32 +2,32 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Shining Moon</title>
-    <link>https://blog.monsterxx03.com/categories/</link>
+    <link>http://localhost:1313/categories/</link>
     <description>Recent content in Categories on Shining Moon</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sun, 30 Mar 2025 19:05:11 +0800</lastBuildDate>
-    <atom:link href="https://blog.monsterxx03.com/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 15 Feb 2026 19:25:07 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Tech</title>
-      <link>https://blog.monsterxx03.com/categories/tech/</link>
-      <pubDate>Sun, 30 Mar 2025 19:05:11 +0800</pubDate>
-      <guid>https://blog.monsterxx03.com/categories/tech/</guid>
+      <link>http://localhost:1313/categories/tech/</link>
+      <pubDate>Sun, 15 Feb 2026 19:25:07 +0800</pubDate>
+      <guid>http://localhost:1313/categories/tech/</guid>
       <description></description>
     </item>
     <item>
       <title>Life</title>
-      <link>https://blog.monsterxx03.com/categories/life/</link>
+      <link>http://localhost:1313/categories/life/</link>
       <pubDate>Wed, 02 Dec 2020 16:00:13 +0800</pubDate>
-      <guid>https://blog.monsterxx03.com/categories/life/</guid>
+      <guid>http://localhost:1313/categories/life/</guid>
       <description></description>
     </item>
     <item>
       <title>Lang-En</title>
-      <link>https://blog.monsterxx03.com/categories/lang-en/</link>
+      <link>http://localhost:1313/categories/lang-en/</link>
       <pubDate>Mon, 03 Dec 2018 22:47:51 +0800</pubDate>
-      <guid>https://blog.monsterxx03.com/categories/lang-en/</guid>
+      <guid>http://localhost:1313/categories/lang-en/</guid>
       <description></description>
     </item>
   </channel>

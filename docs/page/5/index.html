@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.145.0">
+	<meta name="generator" content="Hugo 0.155.3"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -15,23 +15,23 @@
   
 
   
-  <link rel="canonical" href="https://blog.monsterxx03.com/"/>
+  <link rel="canonical" href="http://localhost:1313/"/>
 
   
-  <link rel="alternate" type="application/rss&#43;xml" href="https://blog.monsterxx03.com/index.xml">
+  <link rel="alternate" type="application/rss&#43;xml" href="http://localhost:1313/index.xml">
   
 
   <title>Shining Moon</title>
 
-  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
+  <link rel="shortcut icon" href="http://localhost:1313/images/favicon.ico"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/animate.min.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/remixicon.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/zozo.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/highlight.css"/>
 
   
   
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/home.css">
+  <link rel="stylesheet" href="http://localhost:1313/css/home.css">
   
 </head>
 
@@ -68,9 +68,9 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com/">
+        <a href="http://localhost:1313/">
           <span>Shining Moon</span>
-          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
+          <img width="90px" src="http://localhost:1313/logo.png"/>
         </a>
       </h1>
     </div>
@@ -87,6 +87,58 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2019/03/28/celery-time-limit-%E7%9A%84%E5%9D%91/'>Celery Time Limit 的坑</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p><p>之前用 celery 做的 task 都是一些很简单轻量级的 task, 从来没触发过 timeout, 最近加入了一些复杂很耗时的 task, 碰到一些 time limit 的坑.</p>
+<p>celery 中 time limit 有两种, soft_time_limit 和 hard_time_limit, 区别是 soft_time_limit 会在内部抛一个 Exception, task 可以 catch 自行处理.
+hard time limit 没法被 catch.</p>
+<p>使用如下:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> myapp <span style="color:#f92672">import</span> app
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> celery.exceptions <span style="color:#f92672">import</span> SoftTimeLimitExceeded
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@app.task</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mytask</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        do_work()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> SoftTimeLimitExceeded:
+</span></span><span style="display:flex;"><span>        clean_up_in_a_hurry()</span></span></code></pre></div>
+<p>我 celery pool 用的是 gevent, 实际上在现在的实现里 gevent 做 worker pool 的时候会忽略 soft_time_limit, 只有 hard_time_limit 会被触发(通过 gevent.Timeout 实现).</p>
+<p>坑爹的是文档里写的是错的: <a href="http://docs.celeryproject.org/en/latest/userguide/workers.html#time-limit">http://docs.celeryproject.org/en/latest/userguide/workers.html#time-limit</a></p>
+<p>soft_time_limit 只在 prefork pool 里支持.</p>
+<p>我现在想让 celery 把这个 hard timeout 的情况 report 到 sentry, 看了圈代码并没法从外面 override timeout 的 callback. 只能很丑得做了个 monkey patch, 在初始化 celeryapp
+的代码里:</p>......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2019.03.28</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="http://localhost:1313/tags/python/">python</a>
+          
+          <a href="http://localhost:1313/tags/celery/">celery</a>
+          
+          <a href="http://localhost:1313/tags/code-infra/">code-infra</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -119,11 +171,11 @@
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/gce/">gce</a>
+          <a href="http://localhost:1313/tags/gce/">gce</a>
           
-          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
+          <a href="http://localhost:1313/tags/aws/">aws</a>
           
-          <a href="https://blog.monsterxx03.com/tags/book/">book</a>
+          <a href="http://localhost:1313/tags/book/">book</a>
           
         </span>
         
@@ -161,11 +213,11 @@ tcp option, 但没细究过, <code>man tcp</code> 得知是用来关闭 tcp 里�
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/http/">http</a>
+          <a href="http://localhost:1313/tags/http/">http</a>
           
-          <a href="https://blog.monsterxx03.com/tags/tcp/">tcp</a>
+          <a href="http://localhost:1313/tags/tcp/">tcp</a>
           
-          <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
+          <a href="http://localhost:1313/tags/code-infra/">code-infra</a>
           
         </span>
         
@@ -207,7 +259,7 @@ tcp option, 但没细究过, <code>man tcp</code> 得知是用来关闭 tcp 里�
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
+          <a href="http://localhost:1313/tags/k8s/">k8s</a>
           
         </span>
         
@@ -262,7 +314,7 @@ resources.</p>
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/linux/">linux</a>
+          <a href="http://localhost:1313/tags/linux/">linux</a>
           
         </span>
         
@@ -323,11 +375,11 @@ resources.</p>
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/algorithm/">algorithm</a>
+          <a href="http://localhost:1313/tags/algorithm/">algorithm</a>
           
-          <a href="https://blog.monsterxx03.com/tags/bloomfilter/">bloomfilter</a>
+          <a href="http://localhost:1313/tags/bloomfilter/">bloomfilter</a>
           
-          <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
+          <a href="http://localhost:1313/tags/code-infra/">code-infra</a>
           
         </span>
         
@@ -398,13 +450,13 @@ resources.</p>
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
+          <a href="http://localhost:1313/tags/aws/">aws</a>
           
-          <a href="https://blog.monsterxx03.com/tags/mysql/">mysql</a>
+          <a href="http://localhost:1313/tags/mysql/">mysql</a>
           
-          <a href="https://blog.monsterxx03.com/tags/database/">database</a>
+          <a href="http://localhost:1313/tags/database/">database</a>
           
-          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
+          <a href="http://localhost:1313/tags/server-infra/">server-infra</a>
           
         </span>
         
@@ -446,106 +498,7 @@ SLO(Service Level Objective). 也可以把他当成一个对内的,没有赔偿�
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/10/12/%E5%9C%A8-redshift-%E4%B8%AD%E8%AE%A1%E7%AE%97-p95-latency/'>在 redshift 中计算 p95 latency</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>p95 latency 的定义: 把一段时间的 latency 按照从小到大排序, 砍掉最高的 %5, 剩下最大的值就是 p95 latency. p99, p90 同理.</p>
-<p>p95 latency 表示该时间段内 95% 的 reqeust 都比这个值快.</p>
-<p>一般我直接看 CloudWatch, 和 datadog 算好的 p95 值. 这次看看怎么从 access log 里直接计算 p95 latency.</p>
-<p>假设在 redshift 中有一张表存储了应用的 access log, 结构如下:</p>
-<pre><code>CREATE TABLE access_log (
-    url         string,
-    time        string,
-    resp_time   real
-);
-</code></pre>
-<table>
-  <thead>
-      <tr>
-          <th>url</th>
-          <th>time</th>
-          <th>resp_time</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>/test1</td>
-          <td>2018-10-11T00:10:00.418480Z</td>
-          <td>0.123</td>
-      </tr>
-      <tr>
-          <td>/test2</td>
-          <td>2018-10-11T00:12:00.512340Z</td>
-          <td>0.321</td>
-      </tr>
-  </tbody>
-</table>
-<p>要算 p95 很简单, 把 log 按分钟数分组, 用 <code>percentile_cont</code> 在组内按 <code>resp_time</code> 排序计算 就能得到:</p>
-<pre><code>select date_trunc('minute', time::timestamp) as ts,
-      percentile_cont(0.95) within group(order by resp_time) as p95
-from access_log 
-group by 1
-order by 1;
-</code></pre>
-<p>得到:</p>
-<pre><code>     ts          |        p95
----------------------+-------------------
- 2018-10-11 00:00:00 |  0.71904999999995
- 2018-10-11 00:01:00 | 0.555550000000034
- 2018-10-11 00:02:00 | 0.478999999999939
- 2018-10-11 00:03:00 | 0.507250000000081
- 2018-10-11 00:04:00 | 0.456000000000025
- 2018-10-11 00:05:00 | 0.458999999999949
- 2018-10-11 00:06:00 | 0.581000000000054
- 2018-10-11 00:07:00 | 0.585099999999937
- 2018-10-11 00:08:00 | 0.527999999999908
- 2018-10-11 00:09:00 | 0.570999999999936
- 2018-10-11 00:10:00 | 0.587950000000069
- 2018-10-11 00:11:00 | 0.648900000000077
- 2018-10-11 00:12:00 | 0.570000000000024
- 2018-10-11 00:13:00 | 0.592649999999954
- 2018-10-11 00:14:00 | 0.584149999999998
- 2018-10-11 00:15:00 |  3.00854999999952
- 2018-10-11 00:16:00 | 0.832999999999871
- 2018-10-11 00:17:00 |  1.07154999999991
- 2018-10-11 00:18:00 | 0.553600000000092
- 2018-10-11 00:19:00 | 0.605799999999997
- 2018-10-11 00:20:00 | 0.832000000000137
- ...
-</code></pre>
-<p><code>PERCENTILE_CONT</code> 是逆分布函数, 给定一个百分比, 在一个连续分布模型上计算该百分比处的数值, 如果在该点处没有数据, 会根据最接近的前后值进行插值计算出实际值.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.10.12</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/data-infra/">data-infra</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/redshift/">redshift</a>
+          <a href="http://localhost:1313/tags/server-infra/">server-infra</a>
           
         </span>
         
@@ -585,11 +538,11 @@ order by 1;
 
 
 
-<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
-<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
-<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
-<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
-<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
+<script src="http://localhost:1313/js/jquery-3.3.1.min.js"></script>
+<script src="http://localhost:1313/js/zozo.js"></script>
+<script src="http://localhost:1313/js/highlight.pack.js"></script>
+<link  href="http://localhost:1313/css/fancybox.min.css" rel="stylesheet">
+<script src="http://localhost:1313/js/fancybox.min.js"></script>
 
 <script>hljs.initHighlightingOnLoad()</script>
 
@@ -633,7 +586,7 @@ code.has-jax {
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
       <script>
         var doNotTrack = false;
-        if ( false ) {
+        if ( true ) {
           var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
           var doNotTrack = (dnt == "1" || dnt == "yes");
         }

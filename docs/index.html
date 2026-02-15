@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" >
 <head>
-	<meta name="generator" content="Hugo 0.145.0">
+	<meta name="generator" content="Hugo 0.155.3"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -15,23 +15,23 @@
   
 
   
-  <link rel="canonical" href="https://blog.monsterxx03.com/"/>
+  <link rel="canonical" href="http://localhost:1313/"/>
 
   
-  <link rel="alternate" type="application/rss&#43;xml" href="https://blog.monsterxx03.com/index.xml">
+  <link rel="alternate" type="application/rss&#43;xml" href="http://localhost:1313/index.xml">
   
 
   <title>Shining Moon</title>
 
-  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
+  <link rel="shortcut icon" href="http://localhost:1313/images/favicon.ico"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/animate.min.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/remixicon.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/zozo.css"/>
+  <link rel="stylesheet" href="http://localhost:1313/css/highlight.css"/>
 
   
   
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/home.css">
+  <link rel="stylesheet" href="http://localhost:1313/css/home.css">
   
 </head>
 
@@ -68,9 +68,9 @@
   <div class="site_title_container">
     <div class="site_title">
       <h1>
-        <a href="https://blog.monsterxx03.com/">
+        <a href="http://localhost:1313/">
           <span>Shining Moon</span>
-          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
+          <img width="90px" src="http://localhost:1313/logo.png"/>
         </a>
       </h1>
     </div>
@@ -87,6 +87,47 @@
   <div class="content">
     
 
+
+<div class="post animated fadeInDown">
+  <div class="post_title">
+    <h2><a href='/2026/02/15/hacking-claude-code-in-realtime/'>Hacking Claude Code in Realtime</a></h2>
+  </div>
+  
+  <div class="list">
+    <div class="post_content markdown">
+      <p><p>做了个新玩具 <a href="https://github.com/monsterxx03/linko">linko</a>, 本质上是个透明 mitm proxy, 但给他加上了可视化 ai agent 和 llm api 之间对话的能力.</p>
+<p>限制:</p>
+<ul>
+<li>目前只支持 MacOS (透明代理的实现用了MacOS 上的pfctl, linux 的支持很简单, 有空可以加下)</li>
+<li>支持的 llm api 只有 anthropic 的接口格式, 任意兼容的第三方接口应该都可以(测试过minimax 和 deepseek)</li>
+</ul>
+<p>原理上和 charles 之类的工具的主要区别在&quot;透明&quot;, 不需要客户端指定<code>http_proxy</code>(有些工具不支持), 通过防火墙强行劫持https流量, 来做流量解密.</p>......</p>
+    </div>
+  </div>
+  
+  <div class="post_footer">
+    <div class="meta">
+      <div class="info">
+        <span class="field">
+          <i class="remixicon-map-pin-time-line"></i>
+          <span class="date">2026.02.15</span>
+        </span>
+        
+        <span class="field tags">
+          <i class="remixicon-stack-line"></i>
+          
+          <a href="http://localhost:1313/tags/claude-code/">claude code</a>
+          
+          <a href="http://localhost:1313/tags/ai/">ai</a>
+          
+          <a href="http://localhost:1313/tags/linko/">linko</a>
+          
+        </span>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post animated fadeInDown">
   <div class="post_title">
@@ -117,9 +158,9 @@
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/gospy/">gospy</a>
+          <a href="http://localhost:1313/tags/gospy/">gospy</a>
           
-          <a href="https://blog.monsterxx03.com/tags/golang/">golang</a>
+          <a href="http://localhost:1313/tags/golang/">golang</a>
           
         </span>
         
@@ -156,7 +197,7 @@
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/database/">Database</a>
+          <a href="http://localhost:1313/tags/database/">Database</a>
           
         </span>
         
@@ -182,7 +223,7 @@
 <h2 id="配置文件">配置文件</h2>
 <p>配置文件是yaml 格式, 具体见 <a href="https://patroni.readthedocs.io/en/latest/SETTINGS.html">https://patroni.readthedocs.io/en/latest/SETTINGS.html</a><br>
 使用 patroni postgres.yaml 命令启动一个 patroni 实例</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># 集群名字, 同一集群内的 patroni 必须设置一样, 会成为 postgres.conf 内的 cluster_name参数</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># 集群名字, 同一集群内的 patroni 必须设置一样, 会成为 postgres.conf 内的 cluster_name参数</span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">scope</span>: <span style="color:#ae81ff">xsky-test</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># patroni 会将一些动态配置存在 DCS 内, namespace 是在 DCS 内的存储路径, eg: 使用 etcdv3 作为 DCS, 可以通过 etdctl get /service --prefix 看到 patroni 在 DCS 内存了什么</span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">/service  </span>
@@ -246,7 +287,7 @@
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/database/">Database</a>
+          <a href="http://localhost:1313/tags/database/">Database</a>
           
         </span>
         
@@ -296,15 +337,15 @@
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
+          <a href="http://localhost:1313/tags/aws/">aws</a>
           
-          <a href="https://blog.monsterxx03.com/tags/eks/">eks</a>
+          <a href="http://localhost:1313/tags/eks/">eks</a>
           
-          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
+          <a href="http://localhost:1313/tags/k8s/">k8s</a>
           
-          <a href="https://blog.monsterxx03.com/tags/redis/">redis</a>
+          <a href="http://localhost:1313/tags/redis/">redis</a>
           
-          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
+          <a href="http://localhost:1313/tags/server-infra/">server-infra</a>
           
         </span>
         
@@ -345,9 +386,9 @@
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/docker/">docker</a>
+          <a href="http://localhost:1313/tags/docker/">docker</a>
           
-          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
+          <a href="http://localhost:1313/tags/k8s/">k8s</a>
           
         </span>
         
@@ -419,7 +460,7 @@
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/linux/">linux</a>
+          <a href="http://localhost:1313/tags/linux/">linux</a>
           
         </span>
         
@@ -466,9 +507,9 @@
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/redis/">redis</a>
+          <a href="http://localhost:1313/tags/redis/">redis</a>
           
-          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
+          <a href="http://localhost:1313/tags/k8s/">k8s</a>
           
         </span>
         
@@ -506,70 +547,11 @@ redis 实例上的, 这在一定程度上减少了 cache 的 miss. 可以看作 
         <span class="field tags">
           <i class="remixicon-stack-line"></i>
           
-          <a href="https://blog.monsterxx03.com/tags/redis/">redis</a>
+          <a href="http://localhost:1313/tags/redis/">redis</a>
           
-          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
+          <a href="http://localhost:1313/tags/k8s/">k8s</a>
           
-          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2020/06/30/snet-dev-note-stats-api-and-terminal-ui/'>snet dev note: stats api and terminal UI</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>从 <a href="https://github.com/monsterxx03/snet/releases">0.10.0</a> 版本开始给 snet 加了 stats api 来暴露内部的一些统计数据.</p>
-<p>设置 <code>&quot;enable-stats&quot;: true</code> 开启, 默认监听 8810 端口, <code>curl http://localhost:8810/stats</code></p>
-<pre><code>    {
-        &quot;Uptime&quot;: &quot;26m42s&quot;,
-        &quot;Total&quot;: {
-            &quot;RxSize&quot;: 161539743,
-            &quot;TxSize&quot;: 1960171
-        },
-        &quot;Hosts&quot;: [
-            {
-                &quot;Host&quot;: &quot;112.113.115.113&quot;,
-                &quot;Port&quot;: 443,
-                &quot;RxRate&quot;: 0,
-                &quot;TxRate&quot;: 0,
-                &quot;RxSize&quot;: 840413,
-                &quot;TxSize&quot;: 172528
-            },
-            ...
-        ]
-    }
-</code></pre>
-<p>分 host, 统计从该地址接收的字节数(RxSize), 发送字节数(TxSize), 和相应的 rate/s (RxRate, TxRate).</p>
-<p>默认只记录 ip, 可以设置 <code>&quot;stats-enable-tls-sni-sniffer&quot;: true</code>, 开启对去往 443 端口的流量进行 sni sniffer, 尝试解析出域名.
-<code>&quot;stats-enable-http-host-sniffer&quot;: true</code>, 对发往 80 端口流量尝试解析 http host 字段, 两者都会给连接建立过程增加一些 overhead.</p>
-<p>server 开启 stats api 后, 用 <code>./snet -top</code> 可以显示一个类似 top 的 terminal UI 作流量监控.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2020.06.30</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/snet/">snet</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/network/">network</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/golang/">golang</a>
+          <a href="http://localhost:1313/tags/server-infra/">server-infra</a>
           
         </span>
         
@@ -605,11 +587,11 @@ redis 实例上的, 这在一定程度上减少了 cache 的 miss. 可以看作 
 
 
 
-<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
-<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
-<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
-<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
-<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
+<script src="http://localhost:1313/js/jquery-3.3.1.min.js"></script>
+<script src="http://localhost:1313/js/zozo.js"></script>
+<script src="http://localhost:1313/js/highlight.pack.js"></script>
+<link  href="http://localhost:1313/css/fancybox.min.css" rel="stylesheet">
+<script src="http://localhost:1313/js/fancybox.min.js"></script>
 
 <script>hljs.initHighlightingOnLoad()</script>
 
@@ -653,7 +635,7 @@ code.has-jax {
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
       <script>
         var doNotTrack = false;
-        if ( false ) {
+        if ( true ) {
           var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
           var doNotTrack = (dnt == "1" || dnt == "yes");
         }
