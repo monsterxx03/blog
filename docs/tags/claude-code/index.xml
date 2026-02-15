@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Claude Code on Shining Moon</title>
-    <link>http://localhost:1313/tags/claude-code/</link>
+    <link>https://blog.monsterxx03.com/tags/claude-code/</link>
     <description>Recent content in Claude Code on Shining Moon</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <copyright>monsterxx03</copyright>
     <lastBuildDate>Sun, 15 Feb 2026 19:25:07 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/claude-code/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://blog.monsterxx03.com/tags/claude-code/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Hacking Claude Code in Realtime</title>
-      <link>http://localhost:1313/2026/02/15/hacking-claude-code-in-realtime/</link>
+      <link>https://blog.monsterxx03.com/2026/02/15/hacking-claude-code-in-realtime/</link>
       <pubDate>Sun, 15 Feb 2026 19:25:07 +0800</pubDate>
-      <guid>http://localhost:1313/2026/02/15/hacking-claude-code-in-realtime/</guid>
+      <guid>https://blog.monsterxx03.com/2026/02/15/hacking-claude-code-in-realtime/</guid>
       <description>&lt;p&gt;做了个新玩具 &lt;a href=&#34;https://github.com/monsterxx03/linko&#34;&gt;linko&lt;/a&gt;, 本质上是个透明 mitm proxy, 但给他加上了可视化 ai agent 和 llm api 之间对话的能力.&lt;/p&gt;&#xA;&lt;p&gt;限制:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;目前只支持 MacOS (透明代理的实现用了MacOS 上的pfctl, linux 的支持很简单, 有空可以加下)&lt;/li&gt;&#xA;&lt;li&gt;支持的 llm api 只有 anthropic 的接口格式, 任意兼容的第三方接口应该都可以(测试过minimax 和 deepseek)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;原理上和 charles 之类的工具的主要区别在&amp;quot;透明&amp;quot;, 不需要客户端指定&lt;code&gt;http_proxy&lt;/code&gt;(有些工具不支持), 通过防火墙强行劫持https流量, 来做流量解密.&lt;/p&gt;</description>
     </item>
   </channel>
