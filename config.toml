@@ -2,43 +2,56 @@ baseURL = "https://blog.monsterxx03.com"
 languageCode = "zh-cn"
 defaultContentLanguage = "zh-cn"
 title = "Shining Moon"
-theme = "zozo"
+theme = "literary"
 hasCJKLanguage = true
 summaryLength = 200
 copyright = "monsterxx03"
-enableRobotsTXT = true # generate robots.txt
+enableRobotsTXT = true
 enableEmoji = true
-googleAnalytics = "G-P32CTT1G2G"
-disqusShortname = "mx03"
+publishDir = "docs"
 
-publishDir="docs"
+ignoreLogs = ['warning-goldmark-raw-html']
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    style = "solarized-light"
+    lineNos = false
+    noClasses = true
+
+[services]
+  [services.googleAnalytics]
+    ID = "G-P32CTT1G2G"
+  [services.disqus]
+    shortname = "mx03"
 
 [author]
-    name = "monsterxx03"
+  name = "monsterxx03"
 
 [[menu.main]]
-    name = "Home"
-    url = "/"
-    weight = 10
+  name = "Home"
+  url = "/"
+  weight = 10
 [[menu.main]]
-    name = "Archive"
-    url = "/posts/"
-    weight = 20
+  name = "Archive"
+  url = "/posts/"
+  weight = 20
 [[menu.main]]
-    name = "About"
-    url = "/about/"
-    weight = 30
+  name = "About"
+  url = "/about/"
+  weight = 30
 [[menu.main]]
-    name = "Tags"
-    url = "/tags"
-    weight = 40
+  name = "Tags"
+  url = "/tags"
+  weight = 40
 
 [params]
-    subtitle = "百种弊病,皆从懒生"
-    enableMathJax = true
-    enableSummary = true
-    customCSS = ["home.css"]
+  subtitle = "百种弊病,皆从懒生"
+  enableMathJax = true
+  enableSummary = true
 
 [permalinks]
-page = "/:slug/"
-posts = "/:year/:month/:day/:title/"
+  page = "/:slug/"
+  posts = "/:year/:month/:day/:title/"

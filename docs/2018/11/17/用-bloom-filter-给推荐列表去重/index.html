@@ -1,98 +1,120 @@
 <!DOCTYPE html>
-<html lang="zh-cn" >
+<html lang="zh-cn">
 <head>
-  <meta charset="utf-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  
-  <meta name="author"
-        content=""/>
+  <title>用 Bloom filter 给推荐列表去重 · Shining Moon</title>
 
   
   <meta name="description" content="之前产品里有一个功能是每天给用户推荐一批文章,要保证最后推给用户的文章每天不重复. 原先的实现很直接, 每次推送时候记录下用户 id 和 topic id 的键值对, 拿到新 topic 列表后,取出曾经给该用户推送过的文章列表, 两个 set 去重.
-这个实现的问题很明显, 存储空间量太大(M * N), user id (int64) &#43; topic id (int64) = 16 bytes, 1 million 的用户, 每天给用户推送10篇文章, 一年要存储: 16 * 10 * 365 * 1M = 54.4GB. 查询效率也很低,要么一次取所有已读 topic id, 要么把要推送的 topic id 都丢进数据库去重.
-"/>
+这个实现的问题很明显, 存储空间量太大(M * N), user …">
+  
+
+  <meta name="author" content="Shining Moon">
+  <link rel="canonical" href="https://blog.monsterxx03.com/2018/11/17/%E7%94%A8-bloom-filter-%E7%BB%99%E6%8E%A8%E8%8D%90%E5%88%97%E8%A1%A8%E5%8E%BB%E9%87%8D/">
   
 
   
 
-  
-  <link rel="canonical" href="https://blog.monsterxx03.com/2018/11/17/%E7%94%A8-bloom-filter-%E7%BB%99%E6%8E%A8%E8%8D%90%E5%88%97%E8%A1%A8%E5%8E%BB%E9%87%8D/"/>
-
-  
-
-  <title>用 Bloom filter 给推荐列表去重 &middot; Shining Moon</title>
-
-  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
-
-  
-  
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css">
   <link rel="stylesheet" href="https://blog.monsterxx03.com/css/home.css">
+
   
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  
+
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 </head>
-
 <body>
-<div class="main animated">
-  <div class="nav_container animated fadeInDown">
-  <div class="site_nav" id="site_nav">
-    <ul>
-      
-      <li>
-        <a href="/">Home</a>
-      </li>
-      
-      <li>
-        <a href="/posts/">Archive</a>
-      </li>
-      
-      <li>
-        <a href="/about/">About</a>
-      </li>
-      
-      <li>
-        <a href="/tags">Tags</a>
-      </li>
-      
-    </ul>
-  </div>
-  <div class="menu_icon">
-    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
-  </div>
-</div>
-
-  <div class="header animated fadeInDown">
-  <div class="site_title_container">
-    <div class="site_title">
-      <h1>
-        <a href="https://blog.monsterxx03.com/">
-          <span>Shining Moon</span>
-          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
-        </a>
-      </h1>
-    </div>
-    <div class="description">
-      <p class="sub_title">百种弊病,皆从懒生</p>
-      <div class="my_socials">
-        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
-      </div>
-    </div>
-  </div>
-</div>
-
-  <div class="content">
-    <div class="post_page">
-      <div class="post animated fadeInDown">
-        <div class="post_title post_detail_title">
-          <h2><a href='/2018/11/17/%E7%94%A8-bloom-filter-%E7%BB%99%E6%8E%A8%E8%8D%90%E5%88%97%E8%A1%A8%E5%8E%BB%E9%87%8D/'>用 Bloom filter 给推荐列表去重</a></h2>
-          <span class="date">2018.11.17</span>
+  <div class="wrapper">
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div>
+          <h1 class="site-title"><a href="/">Shining Moon</a></h1>
+          
+          <p class="site-subtitle">百种弊病,皆从懒生</p>
+          
         </div>
-        <div class="post_content markdown"><p>之前产品里有一个功能是每天给用户推荐一批文章,要保证最后推给用户的文章每天不重复. 原先的实现很直接, 每次推送时候记录下用户 id 和 topic id 的键值对, 拿到新 topic 列表后,取出曾经给该用户推送过的文章列表, 两个 set 去重.</p>
+        <nav class="main-nav">
+          
+          
+          <a href="/" >
+            Home
+          </a>
+          
+          <a href="/posts/" >
+            Archive
+          </a>
+          
+          <a href="/about/" >
+            About
+          </a>
+          
+          <a href="/tags" >
+            Tags
+          </a>
+          
+          <a href="https://github.com/monsterxx03" target="_blank" rel="noopener" title="GitHub" class="nav-github">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: -3px; margin-right: 2px;">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="content">
+      
+<article>
+  <header class="post-header">
+    <h1 class="post-title">用 Bloom filter 给推荐列表去重</h1>
+    <div class="post-meta">
+      <span class="post-meta-date">
+        <time datetime="2018-11-17">2018 年 11 月 17 日</time>
+      </span>
+      
+      
+      <span class="post-meta-category">· <a href="https://blog.monsterxx03.com/categories/tech/">tech</a></span>
+      
+      <span class="post-meta-reading">· 3 分钟阅读</span>
+      <span class="post-meta-words">· 1310 字</span>
+    </div>
+  </header>
+
+  
+
+  <div class="post-content">
+    <p>之前产品里有一个功能是每天给用户推荐一批文章,要保证最后推给用户的文章每天不重复. 原先的实现很直接, 每次推送时候记录下用户 id 和 topic id 的键值对, 拿到新 topic 列表后,取出曾经给该用户推送过的文章列表, 两个 set 去重.</p>
 <p>这个实现的问题很明显, 存储空间量太大(M * N), user id (int64) + topic id (int64) = 16 bytes, 1 million 的用户, 每天给用户推送10篇文章, 一年要存储: 16 * 10 * 365 * 1M = 54.4GB. 查询效率也很低,要么一次取所有已读 topic id, 要么把要推送的 topic id 都丢进数据库去重.</p>
 <p>Bloom filter 比较合适解决大集合去重的问题, 给定一个 key, bloom filter 返回不存在,则该 key 在集合中<strong>一定</strong>不存在, bloom filter 返回存在, 该元素仍旧<strong>可能</strong>存在集合中.</p>
 <p>可以看出当元素存在时, bloom filter 是有一定误判率的, 所以说 bloom filter 是一种 probabilistic 数据结构, 存在 false positive 的情况, 但当元素不存在时结果正确, 很适合上面那个去重的例子, 只要 error rate 足够低, 就会有小概率漏推, 但不会重推.</p>
@@ -131,34 +153,49 @@ if __name__ == '__main__':
 <p>error rate 的推导过程可以看 <a href="https://en.wikipedia.org/wiki/Bloom_filter#Probability_of_false_positives">wiki</a>, 这里只记录几个数学结论公式, 辅助选择合适的参数构建 bloom filter.</p>
 <p>假设 bit array 的大小为 m, 插入元素为 n, hash 次数为 k, error rate 为 p:</p>
 <ul>
-<li>m = -nlog<!-- raw HTML omitted -->2<!-- raw HTML omitted -->p / ln2</li>
-<li>k = log<!-- raw HTML omitted -->2<!-- raw HTML omitted -->(1/p)</li>
+<li>m = -nlog<sub>2</sub>p / ln2</li>
+<li>k = log<sub>2</sub>(1/p)</li>
 </ul>
 <p>也可以用这个在线版的 bloom filter 参数计算器: <a href="https://hur.st/bloomfilter">https://hur.st/bloomfilter</a></p>
 <p>回到开始的推荐列表那个问题, 现在用 bloom filter 来存储每个用户的已读列表, 假设每个用户一天 10 条, 存储 1 年份, 10 * 365  / 8.0 / 1024 = 0.45 KB, 这是有效bits容量, 通过上面的计算器可以得出在保持 0.01 误判率的情况下, 一个用户需要总 bits 容量是 4.27KB . 1 million 的用户需要 4GB, 只需要原先实现的 7% 空间, 而且在数据库中可以只用一行来记录一个用户的数据.</p>
 <p>这里还有问题, bloom filter 的 bit arrary 大小需要开始就划定, 而且不能更改, 如果一开始规划存 100 年的量, 一个用户就要在一开始预留 427KB 空间, 1 million 用户开始就要预留 407 GB, 一点都不省空间. 于是有人提出了 <a href="http://gsd.di.uminho.pt/members/cbm/ps/dbloom.pdf">scalable bloom filter</a>, 可以渐进扩展 bloom filter 的总大小,并且把全局最大 error rate 控制在一个预设大小内, 和普通的 bloom filter 比, 缺点是空间利用率会比较低.</p>
 <p><a href="https://github.com/jaybaird/python-bloomfilter">https://github.com/jaybaird/python-bloomfilter</a>  里提供了普通 bloom filter 和 scalable bloom filter 的实现, 打算基于它改写一版, 把数据存到 dynamodb 里去.</p>
-</div>
-        <div class="post_footer">
-          
-          <div class="meta">
-            <div class="info">
-              <span class="field tags">
-                <i class="remixicon-stack-line"></i>
-                
-                <a href="https://blog.monsterxx03.com/tags/algorithm/">algorithm</a>
-                
-                <a href="https://blog.monsterxx03.com/tags/bloomfilter/">bloomfilter</a>
-                
-                <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
-                
-              </span>
-            </div>
-          </div>
-          
-        </div>
-      </div>
-    <div id="disqus_thread"></div>
+
+  </div>
+
+  <footer class="post-footer">
+    
+    <div class="post-tags">
+      <span class="post-tags-label">Tags:</span>
+      
+      <a href="https://blog.monsterxx03.com/tags/algorithm/" class="tag">algorithm</a>
+      
+      <a href="https://blog.monsterxx03.com/tags/bloomfilter/" class="tag">bloomfilter</a>
+      
+      <a href="https://blog.monsterxx03.com/tags/code-infra/" class="tag">code-infra</a>
+      
+    </div>
+    
+
+    <nav class="post-nav">
+      
+      <a href="/2018/11/04/%E6%BF%91%E6%88%B7%E5%86%85%E6%B5%B7%E7%9A%84%E9%A3%8E%E4%B8%8E%E9%98%B3/" rel="prev" class="post-nav-prev">
+        <span class="post-nav-direction">← 上一篇</span>
+        <span class="post-nav-title">濑户内海的风与阳</span>
+      </a>
+      
+      
+      <a href="/2018/11/30/%E6%9D%82%E8%B0%88/" rel="next" class="post-nav-next">
+        <span class="post-nav-direction">下一篇 →</span>
+        <span class="post-nav-title">杂谈</span>
+      </a>
+      
+    </nav>
+  </footer>
+</article>
+
+
+<div id="disqus_thread"></div>
 <script>
     window.disqus_config = function () {
     
@@ -178,85 +215,89 @@ if __name__ == '__main__':
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-      
-      
-    </div>
-  </div>
-  <a id="back_to_top" href="#" class="back_to_top"><span>△</span></a>
-</div>
-<footer class="footer">
-  <div class="powered_by">
-    <a href="https://zeuk.me">Designed by Zeuk,</a>
-    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
+
+
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; 2026 <a href="https://blog.monsterxx03.com/">Shining Moon</a>.</p>
+      <p class="footer-meta">Powered by <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a> · Theme Literary</p>
+    </footer>
   </div>
 
-  <div class="footer_slogan">
-    <span></span>
-  </div>
-</footer>
+  <a href="#" class="back-to-top" id="backToTop" title="回到顶部">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+      <path d="M10 2.5a.75.75 0 01.75.75v12.69l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 111.06-1.06L9.25 15.94V3.25A.75.75 0 0110 2.5z"/>
+    </svg>
+  </a>
 
-
-
-<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
-<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
-<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
-<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
-<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
-
-<script>hljs.initHighlightingOnLoad()</script>
-
-
-  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-MathJax.Hub.Config({
-  tex2jax: {
-    inlineMath: [['$','$'], ['\\(','\\)']],
-    displayMath: [['$$','$$'], ['\[\[','\]\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-    TeX: { equationNumbers: { autoNumber: "AMS" },
-         extensions: ["AMSmath.js", "AMSsymbols.js"] }
-  }
-});
-
-MathJax.Hub.Queue(function() {
+  <script>
     
-    
-    
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i = 0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';
+    var backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) {
+          backToTop.classList.add('visible');
+        } else {
+          backToTop.classList.remove('visible');
+        }
+      });
+      backToTop.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
     }
-});
-</script>
 
-<style>
-code.has-jax {
-    font: inherit;
-    font-size: 100%;
-    background: inherit;
-    border: inherit;
-    color: #515151;
-}
-</style>
+    
+    var tocLinks = document.querySelectorAll('.post-toc a');
+    if (tocLinks.length > 0) {
+      var headings = [];
+      tocLinks.forEach(function(link) {
+        var id = link.getAttribute('href').slice(1);
+        var h = document.getElementById(id);
+        if (h) headings.push(h);
+      });
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            tocLinks.forEach(function(link) {
+              link.classList.remove('active');
+              if (link.getAttribute('href') === '#' + entry.target.id) {
+                link.classList.add('active');
+              }
+            });
+          }
+        });
+      }, { rootMargin: '-80px 0px -70% 0px' });
+      headings.forEach(function(h) { observer.observe(h); });
+    }
+  </script>
 
-
-
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-      <script>
-        var doNotTrack = false;
-        if ( true ) {
-          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
-          var doNotTrack = (dnt == "1" || dnt == "yes");
+  
+  <script>
+    
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      if (target.tagName === 'IMG' && target.closest('.post-content')) {
+        if (target.classList.contains('lightbox-active')) {
+          target.classList.remove('lightbox-active');
+          return;
         }
-        if (!doNotTrack) {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-P32CTT1G2G');
-        }
-      </script>
-
-
+        var overlay = document.createElement('div');
+        overlay.className = 'lightbox-overlay';
+        overlay.addEventListener('click', function() {
+          target.classList.remove('lightbox-active');
+          overlay.remove();
+        });
+        document.body.appendChild(overlay);
+        target.classList.add('lightbox-active');
+        setTimeout(function() {
+          overlay.classList.add('open');
+          target.classList.add('open');
+        }, 10);
+      }
+    });
+  </script>
+  
 </body>
 </html>

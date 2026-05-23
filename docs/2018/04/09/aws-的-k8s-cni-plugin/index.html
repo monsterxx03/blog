@@ -1,100 +1,133 @@
 <!DOCTYPE html>
-<html lang="zh-cn" >
+<html lang="zh-cn">
 <head>
-  <meta charset="utf-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  
-  <meta name="author"
-        content=""/>
+  <title>AWS 的 K8S CNI Plugin · Shining Moon</title>
 
   
   <meta name="description" content="EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别.
 K8S 集群对网络有几个基本要求:
-container 之间网络必须可达，且不通过 NAT 所有 node 必须可以和所有 container 通信, 且不通过 NAT container 自己看到的 IP, 必须和其他 container 看到的它的 ip 相同. Flannel in VPC flannel 是 K8S 的一个 CNI 插件, 在 VPC 里使用 flannel 的话, 有几个选择:
-通过 VXLAN/UDP 进行封包, 封包影响网络性能, 而且不好 debug 用 aws vpc backend, 这种方式会把每台主机的 docker 网段添加进 vpc routing table, 但默认 routing table 里只能有50条规则, 所以只能 50 个 node, 可以发 ticket 提升, 但数量太多会影响 vpc 性能. host-gw, 在每个 node 上直接维护集群中所有节点的路由, 没测试过, 感觉出问题也很难 debug, 假如用 autoscaling group 管理 node 集群, 能否让 K8S 在 scale in/out 的时候修改所有节点的路由? 以上方式都只能利用 EC2 上的单网卡, security group 也没法作用在 pod 上.
-"/>
+container 之间网络必须可达，且不通过 NAT 所有 node 必须可以和所有 container 通信, 且不通过 NAT …">
+  
+
+  <meta name="author" content="Shining Moon">
+  <link rel="canonical" href="https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/">
   
 
   
 
-  
-  <link rel="canonical" href="https://blog.monsterxx03.com/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/"/>
-
-  
-
-  <title>AWS 的 K8S CNI Plugin &middot; Shining Moon</title>
-
-  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
-
-  
-  
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css">
   <link rel="stylesheet" href="https://blog.monsterxx03.com/css/home.css">
+
   
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  
+
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 </head>
-
 <body>
-<div class="main animated">
-  <div class="nav_container animated fadeInDown">
-  <div class="site_nav" id="site_nav">
-    <ul>
-      
-      <li>
-        <a href="/">Home</a>
-      </li>
-      
-      <li>
-        <a href="/posts/">Archive</a>
-      </li>
-      
-      <li>
-        <a href="/about/">About</a>
-      </li>
-      
-      <li>
-        <a href="/tags">Tags</a>
-      </li>
-      
-    </ul>
-  </div>
-  <div class="menu_icon">
-    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
-  </div>
-</div>
-
-  <div class="header animated fadeInDown">
-  <div class="site_title_container">
-    <div class="site_title">
-      <h1>
-        <a href="https://blog.monsterxx03.com/">
-          <span>Shining Moon</span>
-          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
-        </a>
-      </h1>
-    </div>
-    <div class="description">
-      <p class="sub_title">百种弊病,皆从懒生</p>
-      <div class="my_socials">
-        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
-      </div>
-    </div>
-  </div>
-</div>
-
-  <div class="content">
-    <div class="post_page">
-      <div class="post animated fadeInDown">
-        <div class="post_title post_detail_title">
-          <h2><a href='/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/'>AWS 的 K8S CNI Plugin</a></h2>
-          <span class="date">2018.04.09</span>
+  <div class="wrapper">
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div>
+          <h1 class="site-title"><a href="/">Shining Moon</a></h1>
+          
+          <p class="site-subtitle">百种弊病,皆从懒生</p>
+          
         </div>
-        <div class="post_content markdown"><p>EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别.</p>
+        <nav class="main-nav">
+          
+          
+          <a href="/" >
+            Home
+          </a>
+          
+          <a href="/posts/" >
+            Archive
+          </a>
+          
+          <a href="/about/" >
+            About
+          </a>
+          
+          <a href="/tags" >
+            Tags
+          </a>
+          
+          <a href="https://github.com/monsterxx03" target="_blank" rel="noopener" title="GitHub" class="nav-github">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: -3px; margin-right: 2px;">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="content">
+      
+<article>
+  <header class="post-header">
+    <h1 class="post-title">AWS 的 K8S CNI Plugin</h1>
+    <div class="post-meta">
+      <span class="post-meta-date">
+        <time datetime="2018-04-09">2018 年 04 月 09 日</time>
+      </span>
+      
+      
+      <span class="post-meta-category">· <a href="https://blog.monsterxx03.com/categories/tech/">tech</a></span>
+      
+      <span class="post-meta-reading">· 2 分钟阅读</span>
+      <span class="post-meta-words">· 886 字</span>
+    </div>
+  </header>
+
+  
+  <details class="post-toc">
+    <summary class="post-toc-summary">目录</summary>
+    <div class="post-toc-body">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#flannel-in-vpc">Flannel in VPC</a></li>
+    <li><a href="#vpc-cni-plugin">VPC CNI plugin</a></li>
+  </ul>
+</nav>
+    </div>
+  </details>
+  
+
+  <div class="post-content">
+    <p>EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别.</p>
 <p>K8S 集群对网络有几个基本要求:</p>
 <ul>
 <li>container 之间网络必须可达，且不通过 NAT</li>
@@ -151,29 +184,44 @@ inet6 fe80::5441:95ff:fe26:1741/64 scope link
 <p>pod 到 vpc 外部的流量通过 EC2 的 primary ip 走 NAT 出去:</p>
 <pre><code>-A POSTROUTING ! -d &lt;VPC-CIDR&gt; -m comment --comment &quot;kubenetes: SNAT for outbound traffic from cluster&quot; -m addrtype ! --dst-type LOCAL -j SNAT --to-source &lt;Primary IP on the Primary ENI&gt;
 </code></pre>
-</div>
-        <div class="post_footer">
-          
-          <div class="meta">
-            <div class="info">
-              <span class="field tags">
-                <i class="remixicon-stack-line"></i>
-                
-                <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
-                
-                <a href="https://blog.monsterxx03.com/tags/vpc/">vpc</a>
-                
-                <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
-                
-                <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
-                
-              </span>
-            </div>
-          </div>
-          
-        </div>
-      </div>
-    <div id="disqus_thread"></div>
+
+  </div>
+
+  <footer class="post-footer">
+    
+    <div class="post-tags">
+      <span class="post-tags-label">Tags:</span>
+      
+      <a href="https://blog.monsterxx03.com/tags/aws/" class="tag">AWS</a>
+      
+      <a href="https://blog.monsterxx03.com/tags/vpc/" class="tag">vpc</a>
+      
+      <a href="https://blog.monsterxx03.com/tags/k8s/" class="tag">k8s</a>
+      
+      <a href="https://blog.monsterxx03.com/tags/server-infra/" class="tag">server-infra</a>
+      
+    </div>
+    
+
+    <nav class="post-nav">
+      
+      <a href="/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/" rel="prev" class="post-nav-prev">
+        <span class="post-nav-direction">← 上一篇</span>
+        <span class="post-nav-title">AWS lambda 的一些应用场景</span>
+      </a>
+      
+      
+      <a href="/2018/05/20/migrate-to-sqlalchemy/" rel="next" class="post-nav-next">
+        <span class="post-nav-direction">下一篇 →</span>
+        <span class="post-nav-title">Migrate to Sqlalchemy</span>
+      </a>
+      
+    </nav>
+  </footer>
+</article>
+
+
+<div id="disqus_thread"></div>
 <script>
     window.disqus_config = function () {
     
@@ -193,85 +241,89 @@ inet6 fe80::5441:95ff:fe26:1741/64 scope link
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-      
-      
-    </div>
-  </div>
-  <a id="back_to_top" href="#" class="back_to_top"><span>△</span></a>
-</div>
-<footer class="footer">
-  <div class="powered_by">
-    <a href="https://zeuk.me">Designed by Zeuk,</a>
-    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
+
+
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; 2026 <a href="https://blog.monsterxx03.com/">Shining Moon</a>.</p>
+      <p class="footer-meta">Powered by <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a> · Theme Literary</p>
+    </footer>
   </div>
 
-  <div class="footer_slogan">
-    <span></span>
-  </div>
-</footer>
+  <a href="#" class="back-to-top" id="backToTop" title="回到顶部">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+      <path d="M10 2.5a.75.75 0 01.75.75v12.69l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 111.06-1.06L9.25 15.94V3.25A.75.75 0 0110 2.5z"/>
+    </svg>
+  </a>
 
-
-
-<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
-<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
-<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
-<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
-<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
-
-<script>hljs.initHighlightingOnLoad()</script>
-
-
-  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-MathJax.Hub.Config({
-  tex2jax: {
-    inlineMath: [['$','$'], ['\\(','\\)']],
-    displayMath: [['$$','$$'], ['\[\[','\]\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-    TeX: { equationNumbers: { autoNumber: "AMS" },
-         extensions: ["AMSmath.js", "AMSsymbols.js"] }
-  }
-});
-
-MathJax.Hub.Queue(function() {
+  <script>
     
-    
-    
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i = 0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';
+    var backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) {
+          backToTop.classList.add('visible');
+        } else {
+          backToTop.classList.remove('visible');
+        }
+      });
+      backToTop.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
     }
-});
-</script>
 
-<style>
-code.has-jax {
-    font: inherit;
-    font-size: 100%;
-    background: inherit;
-    border: inherit;
-    color: #515151;
-}
-</style>
+    
+    var tocLinks = document.querySelectorAll('.post-toc a');
+    if (tocLinks.length > 0) {
+      var headings = [];
+      tocLinks.forEach(function(link) {
+        var id = link.getAttribute('href').slice(1);
+        var h = document.getElementById(id);
+        if (h) headings.push(h);
+      });
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            tocLinks.forEach(function(link) {
+              link.classList.remove('active');
+              if (link.getAttribute('href') === '#' + entry.target.id) {
+                link.classList.add('active');
+              }
+            });
+          }
+        });
+      }, { rootMargin: '-80px 0px -70% 0px' });
+      headings.forEach(function(h) { observer.observe(h); });
+    }
+  </script>
 
-
-
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-      <script>
-        var doNotTrack = false;
-        if ( true ) {
-          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
-          var doNotTrack = (dnt == "1" || dnt == "yes");
+  
+  <script>
+    
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      if (target.tagName === 'IMG' && target.closest('.post-content')) {
+        if (target.classList.contains('lightbox-active')) {
+          target.classList.remove('lightbox-active');
+          return;
         }
-        if (!doNotTrack) {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-P32CTT1G2G');
-        }
-      </script>
-
-
+        var overlay = document.createElement('div');
+        overlay.className = 'lightbox-overlay';
+        overlay.addEventListener('click', function() {
+          target.classList.remove('lightbox-active');
+          overlay.remove();
+        });
+        document.body.appendChild(overlay);
+        target.classList.add('lightbox-active');
+        setTimeout(function() {
+          overlay.classList.add('open');
+          target.classList.add('open');
+        }, 10);
+      }
+    });
+  </script>
+  
 </body>
 </html>

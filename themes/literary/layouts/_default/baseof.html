@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} · {{ .Site.Title }}{{ end }}</title>
+
+  {{ if .Description }}
+  <meta name="description" content="{{ .Description }}">
+  {{ else if .IsPage }}
+  <meta name="description" content="{{ .Summary | plainify | truncate 160 }}">
+  {{ else if .Site.Params.description }}
+  <meta name="description" content="{{ .Site.Params.description }}">
+  {{ end }}
+
+  <meta name="author" content="{{ .Site.Title }}">
+  <link rel="canonical" href="{{ .Permalink }}">
+  {{ with .Site.Params.favicon }}
+  <link rel="shortcut icon" href="{{ . | absURL }}">
+  {{ end }}
+
+  {{ range .AlternativeOutputFormats }}
+  <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink | safeURL }}">
+  {{ end }}
+
+  <link rel="stylesheet" href="{{ "css/style.css" | absURL }}">
+
+  {{ if .Site.Params.enableMathJax }}
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  {{ end }}
+
+  {{ template "_internal/google_analytics.html" . }}
+</head>
+<body>
+  <div class="wrapper">
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div>
+          <h1 class="site-title"><a href="{{ .Site.BaseURL | relLangURL }}">{{ .Site.Title }}</a></h1>
+          {{ with .Site.Params.subtitle }}
+          <p class="site-subtitle">{{ . }}</p>
+          {{ end }}
+        </div>
+        <nav class="main-nav">
+          {{ $currentPage := . }}
+          {{ range .Site.Menus.main }}
+          <a href="{{ .URL | relLangURL }}" {{ if eq $currentPage.RelPermalink (.URL | relLangURL) }}class="active"{{ end }}>
+            {{ .Name }}
+          </a>
+          {{ end }}
+          <a href="https://github.com/monsterxx03" target="_blank" rel="noopener" title="GitHub">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="content">
+      {{ block "main" . }}{{ end }}
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; {{ now.Format "2006" }} <a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a>. All rights reserved.</p>
+      <p>Powered by <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a> &middot; Theme Literary</p>
+    </footer>
+  </div>
+
+  <a href="#" class="back-to-top" id="backToTop" title="回到顶部">↑</a>
+
+  <script>
+    // Back to top
+    var backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 400) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    });
+    backToTop.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

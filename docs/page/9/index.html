@@ -1,546 +1,44 @@
 <!DOCTYPE html>
-<html lang="zh-cn" >
+<html lang="zh-cn">
 <head>
-	<meta name="generator" content="Hugo 0.155.3">
-  <meta charset="utf-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<meta name="generator" content="Hugo 0.159.2">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  
-  <meta name="author"
-        content=""/>
-
-  
+  <title>Shining Moon</title>
 
   
 
+  <meta name="author" content="Shining Moon">
+  <link rel="canonical" href="https://blog.monsterxx03.com/">
   
-  <link rel="canonical" href="https://blog.monsterxx03.com/"/>
 
   
   <link rel="alternate" type="application/rss&#43;xml" href="https://blog.monsterxx03.com/index.xml">
   
 
-  <title>Shining Moon</title>
-
-  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
-
-  
-  
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css">
   <link rel="stylesheet" href="https://blog.monsterxx03.com/css/home.css">
+
   
-</head>
-
-<body>
-<div class="main animated">
-  <div class="nav_container animated fadeInDown">
-  <div class="site_nav" id="site_nav">
-    <ul>
-      
-      <li>
-        <a href="/">Home</a>
-      </li>
-      
-      <li>
-        <a href="/posts/">Archive</a>
-      </li>
-      
-      <li>
-        <a href="/about/">About</a>
-      </li>
-      
-      <li>
-        <a href="/tags">Tags</a>
-      </li>
-      
-    </ul>
-  </div>
-  <div class="menu_icon">
-    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
-  </div>
-</div>
-
-  <div class="header animated fadeInDown">
-  <div class="site_title_container">
-    <div class="site_title">
-      <h1>
-        <a href="https://blog.monsterxx03.com/">
-          <span>Shining Moon</span>
-          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
-        </a>
-      </h1>
-    </div>
-    <div class="description">
-      <p class="sub_title">百种弊病,皆从懒生</p>
-      <div class="my_socials">
-        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
-      </div>
-    </div>
-  </div>
-</div>
-
-  <div class="content">
-    
-
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/05/17/designing-data-intensive-application-reading-notes-part-2/'>Designing data intensive application, reading notes, Part 2</a></h2>
-  </div>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
   
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>Chapter 4, 5, 6</p>
-<h2 id="encoding-formats">Encoding formats</h2>
-<p>xml, json, msgpack are text based encoding format, they can’t carry binary bytes (useless you encode them in base64, size grows 33%). And they cary schema definition with data, wast a lot of space.</p>
-<p>thrift, protobuf are binary format, can take binary bytes, only carry data, the schema is defined with IDL(interface definition language). They have code generation tool to generate code to encode and decode data, along with check. Every field of data is binded with a tag(mapped to a field in IDL file). If a field is defined is required, it can’t by removed or change tag value, otherwise old code will not be able to decode it.</p>
-<p>avro (used in hadoop), have a write schema and a read schema, when store a large file in avro format(contain many records with same schema), the avro write schama file is appended to the data. If use avro in RPC, the avro schema is exchanged during connection setup. When decoding avro, the lib will look both write schema and read schema, and translate write schema into read schema. Forward compatibility means that you can have a new version of the schema as writer and an old version of the schema as reader, backward compatibility means that you can have a new version of the schema as reader and an old version as writer.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.05.17</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/book/">book</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
 
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/05/04/designing-data-intensive-application-reading-notes-part-1/'>Designing data intensive application, reading notes, Part 1</a></h2>
-  </div>
   
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>Notes when reading chapter 2 “Data models and query languages”, chapter 3 “Storage and retrieval”</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.05.04</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/book/">book</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/database/">Database</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/04/23/4%E6%9C%88%E5%91%A8%E6%9C%AB%E6%9D%82%E8%AE%B0/'>4月周末杂记</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>月初的时候搬了家, 之后的周末一直在忙些琐琐碎碎的事情，嘛，仔细一想，除了去宜家搬了个电视柜回来都不记得干了啥…</p>
-<p>这周末心血来潮去听了两个讲座，一个人文的，一个技术的，还都碰到了点有意思的事情。</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.04.23</span>
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/04/21/infrastructure-as-code/'>Infrastructure as Code</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.</p>
-<p>You will come to:</p>
-<ul>
-<li>How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what’s the DHCP option set?), navigate around AWS console is okay, but not convenient.</li>
-<li>Who did what to which resource at when? AWS have a service called <code>Config</code>, can be used to track this change, but if you want to make things as clear as viewing git log, still a lot of works to do.</li>
-</ul>
-<p>Ideally, we should manage AWS resources like code, all changes kept in VCS, so called <code>Infrastructure as Code</code>.</p>
-<p>I’ve tried three ways to do it:</p>
-<ul>
-<li>ansible</li>
-<li>CloudFormation</li>
-<li>terraform</li>
-</ul>
-<p>In this article, I&rsquo;ll compare them, however, the conclusion is to use terraform 🙂</p>
-<h2 id="ansible">Ansible</h2>
-<p>Provision tools, like ansible/chef/puppet, all can be used to create aws resources, but they have some common problems:</p>
-<ul>
-<li>Hard to track changes after bootstrap.</li>
-<li>No confident what it will do to existing resources.</li>
-</ul>
-<p>For example, I define a security group in ansibble:</p>
-<pre><code>ec2_group:
-  name: &quot;web&quot;
-  description: &quot;security group in web&quot;
-  vpc_id: &quot;vpc-xxx&quot;
-  region: &quot;us-east-1&quot;
-  rules:
-    - proto: tcp
-      from_port: 80
-      to_port: 80
-      cidr_ip: 0.0.0.0/0
-</code></pre>
-<p>It will create a security group named “web” in vpc-xxx. At first glance, it’s convenient and straightforward.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.04.21</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/04/19/concurrency-in-go-reading-notes/'>Concurrency in Go, Reading Notes</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>A few notes taken when reading <!-- raw HTML omitted --></p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.04.19</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/book/">book</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/golang/">golang</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/04/05/mysql-partition-table/'>MySQL partition table</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><h1 id="overview">Overview</h1>
-<p>MySQL has buildin partition table support, which can help split data accross multi tables,</p>
-<p>and provide a unified query interface as normal tables.</p>
-<p>Benefit:</p>
-<ul>
-<li>Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly.</li>
-<li>Speed up query based on partition key(partitoin pruning)</li>
-</ul>
-<p>Limit:</p>
-<ul>
-<li>For partition table, every unique key must use every column in table’s partition expression(include primary key)</li>
-<li>For innodb engine, paritioned table can’t have foreign key,and can’t have columns referenced by foreign keys.</li>
-<li>For MyISAM engine, mysql version &lt;= 5.6.5, DML operation will lock all partition as a whole.</li>
-</ul>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.04.05</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/database/">Database</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/mysql/">MySQL</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/03/22/elasticsearch-cluster/'>ElasticSearch cluster</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>In this article, let’s talk about ElasticSearch’s cluster mode, which means multi nodes ElasticSearch.</p>
-<h2 id="basic-concepts">Basic concepts</h2>
-<p>cluster: A collection of server nodes with same <code>cluster.name</code> settings in elasticsearch.yaml</p>
-<p>primary shards: Divide a index into multi parts(by default 5), shards of an index can be distributed over multi nodes. It enables scale index horizontally and make access to index parallelly(accross multi nodes).</p>
-<p>replicas: backup for shards, also replicas can handle search requests, which means you can scale your search capacity horizontally via replicas.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.03.22</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/distribute/">distribute</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/elasticsearch/">elasticsearch</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/03/11/matrix-14-years-later/'>Matrix 14 years later</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>心血来潮, 又看了遍黑客帝国三部曲, 当年的沃卓斯基兄弟都变成沃卓斯基姐妹了, 唏嘘啊…</p>
-<p>第一次看的时候, 好像是初中吧, 记得看第三部还是姑父的盗版碟上看的, 那天还拉了个同学和我一起看,然后请他吃了泡面+冰淇淋,结果他回家就拉肚了,抱怨了我好久,所以印象特别深刻,哈哈.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.03.11</span>
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2016/12/11/bigtable-notes/'>Bigtable notes</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>杂乱笔记，辅助读paper.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2016.12.11</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/bigtable/">bigtable</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/distribute/">distribute</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/paper/">paper</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2016/11/19/gfs-notes/'>GFS notes</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>看了下很久前 google 的 GFS 论文， 做点笔记。</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2016.11.19</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/distribute/">distribute</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/gfs/">gfs</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/paper/">paper</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<div class="pagination">
-  
-  
-  <a href="/page/8/" class="pre">
-    返回上一页
-  </a>
-  
-  
-  <a href="/page/10/" class="next">
-    阅读更多文章
-  </a>
-  
-  
-</div>
-
-  </div>
-</div>
-<footer class="footer">
-  <div class="powered_by">
-    <a href="https://zeuk.me">Designed by Zeuk,</a>
-    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
-  </div>
-
-  <div class="footer_slogan">
-    <span></span>
-  </div>
-</footer>
-
-
-
-<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
-<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
-<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
-<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
-<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
-
-<script>hljs.initHighlightingOnLoad()</script>
-
-
-  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-MathJax.Hub.Config({
-  tex2jax: {
-    inlineMath: [['$','$'], ['\\(','\\)']],
-    displayMath: [['$$','$$'], ['\[\[','\]\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-    TeX: { equationNumbers: { autoNumber: "AMS" },
-         extensions: ["AMSmath.js", "AMSsymbols.js"] }
-  }
-});
-
-MathJax.Hub.Queue(function() {
-    
-    
-    
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i = 0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-});
-</script>
-
-<style>
-code.has-jax {
-    font: inherit;
-    font-size: 100%;
-    background: inherit;
-    border: inherit;
-    color: #515151;
-}
-</style>
-
-
-
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
       <script>
         var doNotTrack = false;
@@ -555,7 +53,401 @@ code.has-jax {
           gtag('config', 'G-P32CTT1G2G');
         }
       </script>
+</head>
+<body>
+  <div class="wrapper">
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div>
+          <h1 class="site-title"><a href="/">Shining Moon</a></h1>
+          
+          <p class="site-subtitle">百种弊病,皆从懒生</p>
+          
+        </div>
+        <nav class="main-nav">
+          
+          
+          <a href="/" class="active">
+            Home
+          </a>
+          
+          <a href="/posts/" >
+            Archive
+          </a>
+          
+          <a href="/about/" >
+            About
+          </a>
+          
+          <a href="/tags" >
+            Tags
+          </a>
+          
+          <a href="https://github.com/monsterxx03" target="_blank" rel="noopener" title="GitHub" class="nav-github">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: -3px; margin-right: 2px;">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="content">
+      
+<div class="post-list">
+  
+  
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2017-05-17">2017 年 05 月 17 日</time>
+      <span class="post-item-reading">5 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2017/05/17/designing-data-intensive-application-reading-notes-part-2/">Designing data intensive application, reading notes, Part 2</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      Chapter 4, 5, 6
+Encoding formats xml, json, msgpack are text based encoding format, they can’t carry binary bytes (useless you encode them in base64, size grows 33%). And they cary schema definition with data, wast a lot of space.
+thrift, protobuf are binary format, can take binary bytes, only carry …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/lang-en/" class="tag">lang-en</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/book/" class="tag">book</a>
+        
+      </div>
+      
+      <a href="/2017/05/17/designing-data-intensive-application-reading-notes-part-2/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2017-05-04">2017 年 05 月 04 日</time>
+      <span class="post-item-reading">4 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2017/05/04/designing-data-intensive-application-reading-notes-part-1/">Designing data intensive application, reading notes, Part 1</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      Notes when reading chapter 2 “Data models and query languages”, chapter 3 “Storage and retrieval”
+
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/lang-en/" class="tag">lang-en</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/book/" class="tag">book</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/database/" class="tag">Database</a>
+        
+      </div>
+      
+      <a href="/2017/05/04/designing-data-intensive-application-reading-notes-part-1/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2017-04-23">2017 年 04 月 23 日</time>
+      <span class="post-item-reading">3 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2017/04/23/4%E6%9C%88%E5%91%A8%E6%9C%AB%E6%9D%82%E8%AE%B0/">4月周末杂记</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      月初的时候搬了家, 之后的周末一直在忙些琐琐碎碎的事情，嘛，仔细一想，除了去宜家搬了个电视柜回来都不记得干了啥…
+这周末心血来潮去听了两个讲座，一个人文的，一个技术的，还都碰到了点有意思的事情。
+
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <a href="/2017/04/23/4%E6%9C%88%E5%91%A8%E6%9C%AB%E6%9D%82%E8%AE%B0/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2017-04-21">2017 年 04 月 21 日</time>
+      <span class="post-item-reading">7 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2017/04/21/infrastructure-as-code/">Infrastructure as Code</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      Create virtual resource on AWS is very convenient, but how to manage them will be a problem when your size grow.
+You will come to:
+How to explain the detail online settings for your colleagues (like: how our prod vpc is setup?what’s the DHCP option set?), navigate around AWS console is okay, but not …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/lang-en/" class="tag">lang-en</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/aws/" class="tag">AWS</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/server-infra/" class="tag">server-infra</a>
+        
+      </div>
+      
+      <a href="/2017/04/21/infrastructure-as-code/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2017-04-19">2017 年 04 月 19 日</time>
+      <span class="post-item-reading">3 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2017/04/19/concurrency-in-go-reading-notes/">Concurrency in Go, Reading Notes</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      A few notes taken when reading 
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/lang-en/" class="tag">lang-en</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/book/" class="tag">book</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/golang/" class="tag">golang</a>
+        
+      </div>
+      
+      <a href="/2017/04/19/concurrency-in-go-reading-notes/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2017-04-05">2017 年 04 月 05 日</time>
+      <span class="post-item-reading">3 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2017/04/05/mysql-partition-table/">MySQL partition table</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      Overview MySQL has buildin partition table support, which can help split data accross multi tables,
+and provide a unified query interface as normal tables.
+Benefit:
+Easy data management: If we need to archive old data, and our table is partitioned by datetime, we can drop old partition directly. …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/database/" class="tag">Database</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/mysql/" class="tag">MySQL</a>
+        
+      </div>
+      
+      <a href="/2017/04/05/mysql-partition-table/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2017-03-22">2017 年 03 月 22 日</time>
+      <span class="post-item-reading">3 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2017/03/22/elasticsearch-cluster/">ElasticSearch cluster</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      In this article, let’s talk about ElasticSearch’s cluster mode, which means multi nodes ElasticSearch.
+Basic concepts cluster: A collection of server nodes with same cluster.name settings in elasticsearch.yaml
+primary shards: Divide a index into multi parts(by default 5), shards of an index can be …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/distribute/" class="tag">distribute</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/elasticsearch/" class="tag">elasticsearch</a>
+        
+      </div>
+      
+      <a href="/2017/03/22/elasticsearch-cluster/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2017-03-11">2017 年 03 月 11 日</time>
+      <span class="post-item-reading">3 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2017/03/11/matrix-14-years-later/">Matrix 14 years later</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      心血来潮, 又看了遍黑客帝国三部曲, 当年的沃卓斯基兄弟都变成沃卓斯基姐妹了, 唏嘘啊…
+第一次看的时候, 好像是初中吧, 记得看第三部还是姑父的盗版碟上看的, 那天还拉了个同学和我一起看,然后请他吃了泡面+冰淇淋,结果他回家就拉肚了,抱怨了我好久,所以印象特别深刻,哈哈.
+
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <a href="/2017/03/11/matrix-14-years-later/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2016-12-11">2016 年 12 月 11 日</time>
+      <span class="post-item-reading">6 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2016/12/11/bigtable-notes/">Bigtable notes</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      杂乱笔记，辅助读paper.
+
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/bigtable/" class="tag">bigtable</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/distribute/" class="tag">distribute</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/paper/" class="tag">paper</a>
+        
+      </div>
+      
+      <a href="/2016/12/11/bigtable-notes/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2016-11-19">2016 年 11 月 19 日</time>
+      <span class="post-item-reading">6 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2016/11/19/gfs-notes/">GFS notes</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      看了下很久前 google 的 GFS 论文， 做点笔记。
+
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/distribute/" class="tag">distribute</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/gfs/" class="tag">gfs</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/paper/" class="tag">paper</a>
+        
+      </div>
+      
+      <a href="/2016/11/19/gfs-notes/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+</div>
 
 
+<div class="pagination">
+  
+  <a href="/page/8/" class="prev">← 上一页</a>
+  
+  
+  <a href="/page/10/" class="next">下一页 →</a>
+  
+</div>
+
+
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; 2026 <a href="https://blog.monsterxx03.com/">Shining Moon</a>.</p>
+      <p class="footer-meta">Powered by <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a> · Theme Literary</p>
+    </footer>
+  </div>
+
+  <a href="#" class="back-to-top" id="backToTop" title="回到顶部">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+      <path d="M10 2.5a.75.75 0 01.75.75v12.69l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 111.06-1.06L9.25 15.94V3.25A.75.75 0 0110 2.5z"/>
+    </svg>
+  </a>
+
+  <script>
+    
+    var backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) {
+          backToTop.classList.add('visible');
+        } else {
+          backToTop.classList.remove('visible');
+        }
+      });
+      backToTop.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    
+    var tocLinks = document.querySelectorAll('.post-toc a');
+    if (tocLinks.length > 0) {
+      var headings = [];
+      tocLinks.forEach(function(link) {
+        var id = link.getAttribute('href').slice(1);
+        var h = document.getElementById(id);
+        if (h) headings.push(h);
+      });
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            tocLinks.forEach(function(link) {
+              link.classList.remove('active');
+              if (link.getAttribute('href') === '#' + entry.target.id) {
+                link.classList.add('active');
+              }
+            });
+          }
+        });
+      }, { rootMargin: '-80px 0px -70% 0px' });
+      headings.forEach(function(h) { observer.observe(h); });
+    }
+  </script>
+
+  
 </body>
 </html>

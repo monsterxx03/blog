@@ -1,100 +1,119 @@
 <!DOCTYPE html>
-<html lang="zh-cn" >
+<html lang="zh-cn">
 <head>
-  <meta charset="utf-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>老代码里和 MySQL 的事务隔离相关的一个bug · Shining Moon</title>
 
   
-  <meta name="author"
-        content=""/>
-
+  <meta name="description" content="这两天在调试代码的时候, 发现 db 层的代码在每次把 connection 放回 db pool 的时候,即使之前执行的是 select 语句,也会 rollback 一下, 这代码很古老, 我也不知道为啥, 尝试把 rollback 去掉, 结果单元测试挂了一堆, 大多都是数据不一致的问题, debug 了一下, …">
   
-  <meta name="description" content="这两天在调试代码的时候, 发现 db 层的代码在每次把 connection 放回 db pool 的时候,即使之前执行的是 select 语句,也会 rollback 一下, 这代码很古老, 我也不知道为啥, 尝试把 rollback 去掉, 结果单元测试挂了一堆, 大多都是数据不一致的问题, debug 了一下, 最后发现这坑还挺大的.
-为什么去掉 select 的 rollback 后会出现数据不一致?
-pymysql 默认关闭了 autocommit, connection A 进行 select 之后, 其实 MySQL 内部为 select 也开启了一个 transaction(Repeatable Read), 可以通过 SELECT * FROM information_schema.innodb_trx\G 查看.
-所以当 connection A 先 select 一次, connection B 在 transaction 内更新数据并 commit, connection A 再次 select (之前的 transaction 并没 rollback 或 commit), 得到了老的数据. MySQL 在 repeatable read 下, 为了 consistent read 会使用一个 snapshot, 时间是第一次 read 发生的时间: https://dev.mysql.com/doc/refman/5.7/en/glossary.html#glos_consistent_read
-"/>
+
+  <meta name="author" content="Shining Moon">
+  <link rel="canonical" href="https://blog.monsterxx03.com/2019/10/31/%E8%80%81%E4%BB%A3%E7%A0%81%E9%87%8C%E5%92%8C-mysql-%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%80%E4%B8%AAbug/">
   
 
   
 
-  
-  <link rel="canonical" href="https://blog.monsterxx03.com/2019/10/31/%E8%80%81%E4%BB%A3%E7%A0%81%E9%87%8C%E5%92%8C-mysql-%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%80%E4%B8%AAbug/"/>
-
-  
-
-  <title>老代码里和 MySQL 的事务隔离相关的一个bug &middot; Shining Moon</title>
-
-  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
-
-  
-  
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css">
   <link rel="stylesheet" href="https://blog.monsterxx03.com/css/home.css">
+
   
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  
+
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 </head>
-
 <body>
-<div class="main animated">
-  <div class="nav_container animated fadeInDown">
-  <div class="site_nav" id="site_nav">
-    <ul>
-      
-      <li>
-        <a href="/">Home</a>
-      </li>
-      
-      <li>
-        <a href="/posts/">Archive</a>
-      </li>
-      
-      <li>
-        <a href="/about/">About</a>
-      </li>
-      
-      <li>
-        <a href="/tags">Tags</a>
-      </li>
-      
-    </ul>
-  </div>
-  <div class="menu_icon">
-    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
-  </div>
-</div>
-
-  <div class="header animated fadeInDown">
-  <div class="site_title_container">
-    <div class="site_title">
-      <h1>
-        <a href="https://blog.monsterxx03.com/">
-          <span>Shining Moon</span>
-          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
-        </a>
-      </h1>
-    </div>
-    <div class="description">
-      <p class="sub_title">百种弊病,皆从懒生</p>
-      <div class="my_socials">
-        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
-      </div>
-    </div>
-  </div>
-</div>
-
-  <div class="content">
-    <div class="post_page">
-      <div class="post animated fadeInDown">
-        <div class="post_title post_detail_title">
-          <h2><a href='/2019/10/31/%E8%80%81%E4%BB%A3%E7%A0%81%E9%87%8C%E5%92%8C-mysql-%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%80%E4%B8%AAbug/'>老代码里和 MySQL 的事务隔离相关的一个bug</a></h2>
-          <span class="date">2019.10.31</span>
+  <div class="wrapper">
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div>
+          <h1 class="site-title"><a href="/">Shining Moon</a></h1>
+          
+          <p class="site-subtitle">百种弊病,皆从懒生</p>
+          
         </div>
-        <div class="post_content markdown"><p>这两天在调试代码的时候, 发现 db 层的代码在每次把 connection 放回 db pool 的时候,即使之前执行的是 select 语句,也会 rollback 一下,
+        <nav class="main-nav">
+          
+          
+          <a href="/" >
+            Home
+          </a>
+          
+          <a href="/posts/" >
+            Archive
+          </a>
+          
+          <a href="/about/" >
+            About
+          </a>
+          
+          <a href="/tags" >
+            Tags
+          </a>
+          
+          <a href="https://github.com/monsterxx03" target="_blank" rel="noopener" title="GitHub" class="nav-github">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: -3px; margin-right: 2px;">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="content">
+      
+<article>
+  <header class="post-header">
+    <h1 class="post-title">老代码里和 MySQL 的事务隔离相关的一个bug</h1>
+    <div class="post-meta">
+      <span class="post-meta-date">
+        <time datetime="2019-10-31">2019 年 10 月 31 日</time>
+      </span>
+      
+      
+      <span class="post-meta-category">· <a href="https://blog.monsterxx03.com/categories/tech/">tech</a></span>
+      
+      <span class="post-meta-reading">· 1 分钟阅读</span>
+      <span class="post-meta-words">· 423 字</span>
+    </div>
+  </header>
+
+  
+
+  <div class="post-content">
+    <p>这两天在调试代码的时候, 发现 db 层的代码在每次把 connection 放回 db pool 的时候,即使之前执行的是 select 语句,也会 rollback 一下,
 这代码很古老, 我也不知道为啥, 尝试把 rollback 去掉, 结果单元测试挂了一堆, 大多都是数据不一致的问题, debug 了一下, 最后发现这坑还挺大的.</p>
 <p>为什么去掉 select 的 rollback 后会出现数据不一致?</p>
 <p>pymysql 默认关闭了 autocommit, connection A 进行 select 之后, 其实 MySQL 内部为 select 也开启了一个 transaction(Repeatable Read),
@@ -104,25 +123,40 @@ pymysql 默认关闭了 autocommit, connection A 进行 select 之后, 其实 My
 <p>connection A 执行一次 rollback 就能看到新的数据, 我去掉了 rollback 自然就挂了&hellip;&hellip;</p>
 <p>不想在每条 select 后都发一句 rollback, 只要打开 autocommit 就行了. 但这份老代码因为某些原因, connection 的建立过程包装了一下,是 lazy 的, 当一个 connection 调用 <code>begin()</code> 函数尝试开始一个 transaction 的时候, 底下真正的 dbc 还没建立, <code>begin()</code> 函数有可能空跑了一下,啥都没干. 如果开了 autocommit, 会导致一些 write 没法 rollback.</p>
 <p>陈年老代码就是坑, 彻底改需要对这整套逻辑重构了.</p>
-</div>
-        <div class="post_footer">
-          
-          <div class="meta">
-            <div class="info">
-              <span class="field tags">
-                <i class="remixicon-stack-line"></i>
-                
-                <a href="https://blog.monsterxx03.com/tags/mysql/">mysql</a>
-                
-                <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
-                
-              </span>
-            </div>
-          </div>
-          
-        </div>
-      </div>
-    <div id="disqus_thread"></div>
+
+  </div>
+
+  <footer class="post-footer">
+    
+    <div class="post-tags">
+      <span class="post-tags-label">Tags:</span>
+      
+      <a href="https://blog.monsterxx03.com/tags/mysql/" class="tag">mysql</a>
+      
+      <a href="https://blog.monsterxx03.com/tags/code-infra/" class="tag">code-infra</a>
+      
+    </div>
+    
+
+    <nav class="post-nav">
+      
+      <a href="/2019/09/29/gospy-dev-note/" rel="prev" class="post-nav-prev">
+        <span class="post-nav-direction">← 上一篇</span>
+        <span class="post-nav-title">gospy dev note</span>
+      </a>
+      
+      
+      <a href="/2019/11/15/%E9%9B%86%E6%88%90-opentracing/" rel="next" class="post-nav-next">
+        <span class="post-nav-direction">下一篇 →</span>
+        <span class="post-nav-title">集成 opentracing</span>
+      </a>
+      
+    </nav>
+  </footer>
+</article>
+
+
+<div id="disqus_thread"></div>
 <script>
     window.disqus_config = function () {
     
@@ -142,85 +176,89 @@ pymysql 默认关闭了 autocommit, connection A 进行 select 之后, 其实 My
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-      
-      
-    </div>
-  </div>
-  <a id="back_to_top" href="#" class="back_to_top"><span>△</span></a>
-</div>
-<footer class="footer">
-  <div class="powered_by">
-    <a href="https://zeuk.me">Designed by Zeuk,</a>
-    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
+
+
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; 2026 <a href="https://blog.monsterxx03.com/">Shining Moon</a>.</p>
+      <p class="footer-meta">Powered by <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a> · Theme Literary</p>
+    </footer>
   </div>
 
-  <div class="footer_slogan">
-    <span></span>
-  </div>
-</footer>
+  <a href="#" class="back-to-top" id="backToTop" title="回到顶部">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+      <path d="M10 2.5a.75.75 0 01.75.75v12.69l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 111.06-1.06L9.25 15.94V3.25A.75.75 0 0110 2.5z"/>
+    </svg>
+  </a>
 
-
-
-<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
-<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
-<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
-<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
-<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
-
-<script>hljs.initHighlightingOnLoad()</script>
-
-
-  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-MathJax.Hub.Config({
-  tex2jax: {
-    inlineMath: [['$','$'], ['\\(','\\)']],
-    displayMath: [['$$','$$'], ['\[\[','\]\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-    TeX: { equationNumbers: { autoNumber: "AMS" },
-         extensions: ["AMSmath.js", "AMSsymbols.js"] }
-  }
-});
-
-MathJax.Hub.Queue(function() {
+  <script>
     
-    
-    
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i = 0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';
+    var backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) {
+          backToTop.classList.add('visible');
+        } else {
+          backToTop.classList.remove('visible');
+        }
+      });
+      backToTop.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
     }
-});
-</script>
 
-<style>
-code.has-jax {
-    font: inherit;
-    font-size: 100%;
-    background: inherit;
-    border: inherit;
-    color: #515151;
-}
-</style>
+    
+    var tocLinks = document.querySelectorAll('.post-toc a');
+    if (tocLinks.length > 0) {
+      var headings = [];
+      tocLinks.forEach(function(link) {
+        var id = link.getAttribute('href').slice(1);
+        var h = document.getElementById(id);
+        if (h) headings.push(h);
+      });
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            tocLinks.forEach(function(link) {
+              link.classList.remove('active');
+              if (link.getAttribute('href') === '#' + entry.target.id) {
+                link.classList.add('active');
+              }
+            });
+          }
+        });
+      }, { rootMargin: '-80px 0px -70% 0px' });
+      headings.forEach(function(h) { observer.observe(h); });
+    }
+  </script>
 
-
-
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-      <script>
-        var doNotTrack = false;
-        if ( true ) {
-          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
-          var doNotTrack = (dnt == "1" || dnt == "yes");
+  
+  <script>
+    
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      if (target.tagName === 'IMG' && target.closest('.post-content')) {
+        if (target.classList.contains('lightbox-active')) {
+          target.classList.remove('lightbox-active');
+          return;
         }
-        if (!doNotTrack) {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-P32CTT1G2G');
-        }
-      </script>
-
-
+        var overlay = document.createElement('div');
+        overlay.className = 'lightbox-overlay';
+        overlay.addEventListener('click', function() {
+          target.classList.remove('lightbox-active');
+          overlay.remove();
+        });
+        document.body.appendChild(overlay);
+        target.classList.add('lightbox-active');
+        setTimeout(function() {
+          overlay.classList.add('open');
+          target.classList.add('open');
+        }, 10);
+      }
+    });
+  </script>
+  
 </body>
 </html>

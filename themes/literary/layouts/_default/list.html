@@ -1,0 +1,49 @@
+{{ define "main" }}
+{{ if eq .RelPermalink "/posts/" }}
+  <h1 class="post-title" style="margin-bottom: 1em;">{{ i18n "archive" }}</h1>
+  {{ $pages := .Site.RegularPages.GroupByDate "2006" }}
+  {{ range $pages }}
+  <div class="archive-year">
+    <h2 class="archive-year-title">{{ .Key }}</h2>
+    <ul class="archive-list">
+      {{ range .Pages }}
+      <li class="archive-item">
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        <span class="archive-item-date">{{ .Date.Format "01-02" }}</span>
+      </li>
+      {{ end }}
+    </ul>
+  </div>
+  {{ end }}
+{{ else }}
+  <h1 class="post-title" style="margin-bottom: 1em;">{{ i18n "tags" }}</h1>
+  {{ if eq .RelPermalink "/tags/" }}
+  <div class="tags-page">
+    <div class="tags-cloud">
+      {{ range .Site.Taxonomies.tags.ByCount }}
+      <a href="{{ .Page.RelPermalink }}">
+        {{ .Page.Title }}
+        <span class="tag-count">({{ .Count }})</span>
+      </a>
+      {{ end }}
+    </div>
+  </div>
+  {{ else }}
+  <div class="post-list">
+    {{ range .Pages }}
+    <article class="post-item">
+      <div class="post-item-meta">
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006 年 01 月 02 日" }}</time>
+      </div>
+      <h2 class="post-item-title">
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+      </h2>
+      <div class="post-item-summary">
+        {{ .Summary | plainify | truncate 300 }}
+      </div>
+    </article>
+    {{ end }}
+  </div>
+  {{ end }}
+{{ end }}
+{{ end }}

@@ -1,107 +1,140 @@
 <!DOCTYPE html>
-<html lang="zh-cn" >
+<html lang="zh-cn">
 <head>
-  <meta charset="utf-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>Debug Skills on Linux · Shining Moon</title>
 
   
-  <meta name="author"
-        content=""/>
-
+  <meta name="description" content="This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04, some tools are not installed by default, you …">
   
-  <meta name="description" content="This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04, some tools are not installed by default, you can installl by sudo apt install xxx. Some commands must be used via sudo.
-System resources can be classified in three main categories: compute, storage, and network. Usually, when you come to a performance issue, it&rsquo;s always caused by exhaustion of those resources.
-Universal metric: System load There&rsquo;re several ways to get system load, w, uptime, top, cat /proc/loadavg
-uptime example:
-03:34:23 up 20:31, 1 user, load average: 1.02, 0.65, 0.45 Top right corner three values named load average is system load.
-They means: average system load during last minute/last 5 minutes/last 15 minutes periods.
-If load/(# of cpu core) &gt; 1 means there&rsquo;re tasks pending in cpu queue. Usually, you will feel slow.
-It&rsquo;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.
-If system load is high, means tasks are pending in CPU queue, maybe a result of:
-High cpu usage. Poor disk performance(disk io). Exhaustion of ram. &hellip; free free -k/-m/-g show memory usage in KB/MB/GB
-free -h humanize output (automatically show in KB/MB/GB&hellip;)
-"/>
+
+  <meta name="author" content="Shining Moon">
+  <link rel="canonical" href="https://blog.monsterxx03.com/2018/12/03/debug-skills-on-linux/">
   
 
   
 
-  
-  <link rel="canonical" href="https://blog.monsterxx03.com/2018/12/03/debug-skills-on-linux/"/>
-
-  
-
-  <title>Debug Skills on Linux &middot; Shining Moon</title>
-
-  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
-
-  
-  
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css">
   <link rel="stylesheet" href="https://blog.monsterxx03.com/css/home.css">
+
   
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  
+
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 </head>
-
 <body>
-<div class="main animated">
-  <div class="nav_container animated fadeInDown">
-  <div class="site_nav" id="site_nav">
-    <ul>
-      
-      <li>
-        <a href="/">Home</a>
-      </li>
-      
-      <li>
-        <a href="/posts/">Archive</a>
-      </li>
-      
-      <li>
-        <a href="/about/">About</a>
-      </li>
-      
-      <li>
-        <a href="/tags">Tags</a>
-      </li>
-      
-    </ul>
-  </div>
-  <div class="menu_icon">
-    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
-  </div>
-</div>
-
-  <div class="header animated fadeInDown">
-  <div class="site_title_container">
-    <div class="site_title">
-      <h1>
-        <a href="https://blog.monsterxx03.com/">
-          <span>Shining Moon</span>
-          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
-        </a>
-      </h1>
-    </div>
-    <div class="description">
-      <p class="sub_title">百种弊病,皆从懒生</p>
-      <div class="my_socials">
-        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
-      </div>
-    </div>
-  </div>
-</div>
-
-  <div class="content">
-    <div class="post_page">
-      <div class="post animated fadeInDown">
-        <div class="post_title post_detail_title">
-          <h2><a href='/2018/12/03/debug-skills-on-linux/'>Debug Skills on Linux</a></h2>
-          <span class="date">2018.12.03</span>
+  <div class="wrapper">
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div>
+          <h1 class="site-title"><a href="/">Shining Moon</a></h1>
+          
+          <p class="site-subtitle">百种弊病,皆从懒生</p>
+          
         </div>
-        <div class="post_content markdown"><p>This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04,
+        <nav class="main-nav">
+          
+          
+          <a href="/" >
+            Home
+          </a>
+          
+          <a href="/posts/" >
+            Archive
+          </a>
+          
+          <a href="/about/" >
+            About
+          </a>
+          
+          <a href="/tags" >
+            Tags
+          </a>
+          
+          <a href="https://github.com/monsterxx03" target="_blank" rel="noopener" title="GitHub" class="nav-github">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: -3px; margin-right: 2px;">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="content">
+      
+<article>
+  <header class="post-header">
+    <h1 class="post-title">Debug Skills on Linux</h1>
+    <div class="post-meta">
+      <span class="post-meta-date">
+        <time datetime="2018-12-03">2018 年 12 月 03 日</time>
+      </span>
+      
+      
+      <span class="post-meta-category">· <a href="https://blog.monsterxx03.com/categories/lang-en/">lang-en</a></span>
+      
+      <span class="post-meta-reading">· 9 分钟阅读</span>
+      <span class="post-meta-words">· 1731 字</span>
+    </div>
+  </header>
+
+  
+  <details class="post-toc">
+    <summary class="post-toc-summary">目录</summary>
+    <div class="post-toc-body">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#universal-metric-system-load">Universal metric: System load</a></li>
+    <li><a href="#free">free</a></li>
+    <li><a href="#top">top</a></li>
+    <li><a href="#storage">Storage</a>
+      <ul>
+        <li><a href="#disk-space-usage">disk space usage</a></li>
+        <li><a href="#disk-performance">disk performance</a></li>
+      </ul>
+    </li>
+    <li><a href="#network">Network</a></li>
+    <li><a href="#debug-process">Debug process</a></li>
+  </ul>
+</nav>
+    </div>
+  </details>
+  
+
+  <div class="post-content">
+    <p>This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04,
 some tools are not installed by default, you can installl by <code>sudo apt install xxx</code>.
 Some commands must be used via <code>sudo</code>.</p>
 <p>System resources can be classified in three main categories: compute, storage, and network.
@@ -338,23 +371,38 @@ rt_sigsuspend([], 8
 </code></pre>
 <p>It&rsquo;s calling <code>rt_sigsuspend</code>, from <code>main rt_sigsuspend</code>, you know it&rsquo;s waiting for signal.</p>
 <p>More advanced and complex debug tools including: perf, systemtap, dtrace&hellip;</p>
-</div>
-        <div class="post_footer">
-          
-          <div class="meta">
-            <div class="info">
-              <span class="field tags">
-                <i class="remixicon-stack-line"></i>
-                
-                <a href="https://blog.monsterxx03.com/tags/linux/">linux</a>
-                
-              </span>
-            </div>
-          </div>
-          
-        </div>
-      </div>
-    <div id="disqus_thread"></div>
+
+  </div>
+
+  <footer class="post-footer">
+    
+    <div class="post-tags">
+      <span class="post-tags-label">Tags:</span>
+      
+      <a href="https://blog.monsterxx03.com/tags/linux/" class="tag">linux</a>
+      
+    </div>
+    
+
+    <nav class="post-nav">
+      
+      <a href="/2018/11/30/%E6%9D%82%E8%B0%88/" rel="prev" class="post-nav-prev">
+        <span class="post-nav-direction">← 上一篇</span>
+        <span class="post-nav-title">杂谈</span>
+      </a>
+      
+      
+      <a href="/2018/12/16/kubernetes-%E4%B8%AD%E7%9A%84-pod-%E8%B0%83%E5%BA%A6/" rel="next" class="post-nav-next">
+        <span class="post-nav-direction">下一篇 →</span>
+        <span class="post-nav-title">Kubernetes 中的 pod 调度</span>
+      </a>
+      
+    </nav>
+  </footer>
+</article>
+
+
+<div id="disqus_thread"></div>
 <script>
     window.disqus_config = function () {
     
@@ -374,85 +422,89 @@ rt_sigsuspend([], 8
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-      
-      
-    </div>
-  </div>
-  <a id="back_to_top" href="#" class="back_to_top"><span>△</span></a>
-</div>
-<footer class="footer">
-  <div class="powered_by">
-    <a href="https://zeuk.me">Designed by Zeuk,</a>
-    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
+
+
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; 2026 <a href="https://blog.monsterxx03.com/">Shining Moon</a>.</p>
+      <p class="footer-meta">Powered by <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a> · Theme Literary</p>
+    </footer>
   </div>
 
-  <div class="footer_slogan">
-    <span></span>
-  </div>
-</footer>
+  <a href="#" class="back-to-top" id="backToTop" title="回到顶部">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+      <path d="M10 2.5a.75.75 0 01.75.75v12.69l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 111.06-1.06L9.25 15.94V3.25A.75.75 0 0110 2.5z"/>
+    </svg>
+  </a>
 
-
-
-<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
-<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
-<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
-<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
-<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
-
-<script>hljs.initHighlightingOnLoad()</script>
-
-
-  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-MathJax.Hub.Config({
-  tex2jax: {
-    inlineMath: [['$','$'], ['\\(','\\)']],
-    displayMath: [['$$','$$'], ['\[\[','\]\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-    TeX: { equationNumbers: { autoNumber: "AMS" },
-         extensions: ["AMSmath.js", "AMSsymbols.js"] }
-  }
-});
-
-MathJax.Hub.Queue(function() {
+  <script>
     
-    
-    
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i = 0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';
+    var backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) {
+          backToTop.classList.add('visible');
+        } else {
+          backToTop.classList.remove('visible');
+        }
+      });
+      backToTop.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
     }
-});
-</script>
 
-<style>
-code.has-jax {
-    font: inherit;
-    font-size: 100%;
-    background: inherit;
-    border: inherit;
-    color: #515151;
-}
-</style>
+    
+    var tocLinks = document.querySelectorAll('.post-toc a');
+    if (tocLinks.length > 0) {
+      var headings = [];
+      tocLinks.forEach(function(link) {
+        var id = link.getAttribute('href').slice(1);
+        var h = document.getElementById(id);
+        if (h) headings.push(h);
+      });
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            tocLinks.forEach(function(link) {
+              link.classList.remove('active');
+              if (link.getAttribute('href') === '#' + entry.target.id) {
+                link.classList.add('active');
+              }
+            });
+          }
+        });
+      }, { rootMargin: '-80px 0px -70% 0px' });
+      headings.forEach(function(h) { observer.observe(h); });
+    }
+  </script>
 
-
-
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-      <script>
-        var doNotTrack = false;
-        if ( true ) {
-          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
-          var doNotTrack = (dnt == "1" || dnt == "yes");
+  
+  <script>
+    
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      if (target.tagName === 'IMG' && target.closest('.post-content')) {
+        if (target.classList.contains('lightbox-active')) {
+          target.classList.remove('lightbox-active');
+          return;
         }
-        if (!doNotTrack) {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-P32CTT1G2G');
-        }
-      </script>
-
-
+        var overlay = document.createElement('div');
+        overlay.className = 'lightbox-overlay';
+        overlay.addEventListener('click', function() {
+          target.classList.remove('lightbox-active');
+          overlay.remove();
+        });
+        document.body.appendChild(overlay);
+        target.classList.add('lightbox-active');
+        setTimeout(function() {
+          overlay.classList.add('open');
+          target.classList.add('open');
+        }, 10);
+      }
+    });
+  </script>
+  
 </body>
 </html>

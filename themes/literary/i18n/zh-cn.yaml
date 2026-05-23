@@ -1,0 +1,18 @@
+- id: prev_page
+  translation: "← 上一页"
+- id: next_page
+  translation: "下一页 →"
+- id: home
+  translation: "首页"
+- id: archive
+  translation: "归档"
+- id: tags
+  translation: "标签"
+- id: about
+  translation: "关于"
+- id: posts
+  translation: "文章"
+- id: post_count
+  translation: "共 {{ .Count }} 篇"
+- id: toc
+  translation: "目录"

@@ -1,8 +1,709 @@
-p {
-    margin: 10px 0;
+/* ============================================
+   Literary Theme Custom Refinements
+   — Subtle polish for a more refined reading experience
+   ============================================ */
+
+/* --- Code Highlight Overrides (solarized-light) --- */
+/* Make code blocks blend with the warm paper aesthetic */
+
+/* Override the dark background from monokai for legacy content */
+.post-content div.highlight pre {
+  background: #fdf6e3 !important;  /* solarized light bg */
+  border-color: #e8e3d9;
 }
 
-.markdown strong {
-    background-color: white;
-    font-weight: bold;
+.post-content div.highlight {
+  background: #fdf6e3;
+  border-radius: 6px;
+  margin: 1.5em 0;
+}
+
+/* Code block header for copy indication */
+.post-content div.highlight {
+  position: relative;
+}
+
+/* Inline code refinements */
+code {
+  font-size: 0.85em;
+  padding: 0.15em 0.5em;
+}
+
+/* Pre > code (fenced code blocks without highlight shortcode) */
+.post-content pre code {
+  background: none;
+  padding: 0;
+}
+
+.post-content pre {
+  background: #fdf6e3;
+  border-color: #e8e3d9;
+  position: relative;
+}
+
+/* --- Selection color --- */
+::selection {
+  background: #e8d5c8;
+  color: #1a1a1a;
+}
+
+::-moz-selection {
+  background: #e8d5c8;
+  color: #1a1a1a;
+}
+
+/* --- Focus styles for accessibility --- */
+a:focus-visible,
+button:focus-visible,
+.tag:focus-visible {
+  outline: 2px solid #b85c38;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* --- Smooth scroll for anchor links --- */
+html {
+  scroll-padding-top: 2em;
+}
+
+/* --- Homepage: Post list refinements --- */
+.post-item {
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.post-item:hover {
+  transform: translateX(4px);
+}
+
+.post-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+}
+
+.post-item-reading {
+  font-size: 0.75rem;
+  color: #b8b8b8;
+  font-variant-numeric: tabular-nums;
+}
+
+.post-item-summary {
+  position: relative;
+}
+
+/* Fade gradient at bottom of summary */
+.post-item-summary::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1.5em;
+  background: linear-gradient(transparent, #faf7f2);
+  pointer-events: none;
+}
+
+.post-item-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.6em;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+
+.post-item-readmore {
+  font-size: 0.8rem;
+  color: #b85c38;
+  text-decoration: none;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  transform: translateX(-4px);
+  white-space: nowrap;
+}
+
+.post-item:hover .post-item-readmore {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.post-item-readmore:hover {
+  text-decoration: underline;
+}
+
+/* --- Tags refinement --- */
+.tag {
+  font-size: 0.72rem;
+  padding: 0.15em 0.7em;
+  letter-spacing: 0.3px;
+}
+
+/* --- Post meta refinements --- */
+.post-meta {
+  font-size: 0.8rem;
+  color: #9a9a9a;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2em;
+  align-items: center;
+}
+
+.post-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2em;
+}
+
+.post-meta-words {
+  color: #b8b8b8;
+}
+
+.post-meta-category a {
+  color: #b85c38;
+}
+
+/* --- Post header refined --- */
+.post-title {
+  font-size: 1.85rem;
+  letter-spacing: -0.3px;
+}
+
+/* --- Post content refinements --- */
+.post-content {
+  font-size: 1.05rem;
+  line-height: 1.95;
+}
+
+/* Better list styling */
+.post-content ul,
+.post-content ol {
+  padding-left: 1.5em;
+}
+
+.post-content li {
+  margin: 0.3em 0;
+}
+
+.post-content li::marker {
+  color: #b85c38;
+}
+
+/* Blockquote refinements */
+.post-content blockquote {
+  position: relative;
+}
+
+.post-content blockquote::before {
+  content: '"';
+  position: absolute;
+  top: -0.1em;
+  left: 0.1em;
+  font-size: 3em;
+  color: #d4c5b0;
+  font-family: Georgia, serif;
+  line-height: 1;
+  opacity: 0.4;
+}
+
+.post-content blockquote {
+  padding-left: 2.2em;
+}
+
+/* Heading anchor links */
+.post-content h2,
+.post-content h3 {
+  position: relative;
+}
+
+.post-content h2 a,
+.post-content h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.post-content h2 a::before,
+.post-content h3 a::before {
+  content: '#';
+  position: absolute;
+  left: -1.2em;
+  color: #d4c5b0;
+  opacity: 0;
+  transition: opacity 0.2s;
+  font-weight: 400;
+}
+
+.post-content h2:hover a::before,
+.post-content h3:hover a::before {
+  opacity: 1;
+}
+
+/* --- Table refinements --- */
+.post-content table {
+  font-size: 0.875rem;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.post-content th {
+  background: #f0ece4;
+  font-weight: 600;
+}
+
+.post-content tr:nth-child(even) {
+  background: #faf7f2;
+}
+
+.post-content tr:hover {
+  background: #f5f0e8;
+}
+
+/* --- Image lightbox --- */
+.post-content img {
+  cursor: zoom-in;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.post-content img:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 9998;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  cursor: zoom-out;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.lightbox-overlay.open {
+  opacity: 1;
+}
+
+img.lightbox-active {
+  position: fixed;
+  z-index: 9999;
+  max-width: 90vw;
+  max-height: 90vh;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1) !important;
+  cursor: zoom-out;
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* --- Inline TOC (collapsible, at top of article) --- */
+.post-toc {
+  margin: 1.5em 0 2em;
+  background: #f5f2ed;
+  border: 1px solid #e8e3d9;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.post-toc-summary {
+  padding: 0.6em 1em;
+  font-family: "Noto Serif CJK SC", "Source Han Serif SC", Georgia, serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.post-toc-summary::-webkit-details-marker {
+  display: none;
+}
+
+.post-toc-summary::before {
+  content: '▶';
+  font-size: 0.7rem;
+  color: #b85c38;
+  transition: transform 0.2s ease;
+}
+
+details[open] .post-toc-summary::before {
+  transform: rotate(90deg);
+}
+
+.post-toc-summary:hover {
+  color: #b85c38;
+}
+
+.post-toc-body {
+  padding: 0.2em 1em 0.8em;
+  border-top: 1px solid #e8e3d9;
+}
+
+/* Hugo's built-in TOC output */
+.post-toc-body nav#TableOfContents ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.post-toc-body nav#TableOfContents ul ul {
+  padding-left: 1.2em;
+}
+
+.post-toc-body nav#TableOfContents li {
+  margin: 0.15em 0;
+  line-height: 1.6;
+}
+
+.post-toc-body nav#TableOfContents a {
+  display: block;
+  padding: 0.2em 0.4em;
+  color: #6b6b6b;
+  font-size: 0.85rem;
+  text-decoration: none;
+  border-radius: 3px;
+  transition: all 0.2s;
+  border-left: 2px solid transparent;
+}
+
+.post-toc-body nav#TableOfContents a:hover {
+  color: #b85c38;
+  background: #ece6dc;
+  border-left-color: #b85c38;
+}
+
+.post-toc-body nav#TableOfContents a.active {
+  color: #b85c38;
+  border-left-color: #b85c38;
+  font-weight: 500;
+}
+
+/* --- Back to top refinements --- */
+.back-to-top {
+  width: 40px;
+  height: 40px;
+  background: rgba(184, 92, 56, 0.08);
+  border: 1px solid #e8e3d9;
+  color: #b85c38;
+  transition: all 0.3s ease;
+  display: none;
+}
+
+.back-to-top.visible {
+  display: flex;
+}
+
+.back-to-top:hover {
+  background: #b85c38;
+  color: #fff;
+  border-color: #b85c38;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(184, 92, 56, 0.2);
+}
+
+/* --- Post navigation refinements --- */
+.post-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2.5em;
+  gap: 1.5em;
+  flex-wrap: wrap;
+}
+
+.post-nav-prev,
+.post-nav-next {
+  font-size: 0.9rem;
+  color: #b85c38;
+  max-width: 45%;
+  text-decoration: none;
+  padding: 0.8em 1em;
+  border: 1px solid #e8e3d9;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.post-nav-prev:hover,
+.post-nav-next:hover {
+  border-color: #b85c38;
+  background: rgba(184, 92, 56, 0.04);
+  text-decoration: none;
+}
+
+.post-nav-direction {
+  display: block;
+  font-size: 0.75rem;
+  color: #9a9a9a;
+  margin-bottom: 0.2em;
+}
+
+.post-nav-title {
+  display: block;
+  line-height: 1.4;
+}
+
+.post-nav-next {
+  text-align: right;
+}
+
+/* --- Header refinements --- */
+.site-header {
+  padding: 2em 0 1.2em;
+}
+
+.site-title {
+  font-size: 1.5rem;
+  letter-spacing: 3px;
+}
+
+.site-subtitle {
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+/* GitHub nav link with icon */
+.nav-github svg {
+  transition: transform 0.2s ease;
+}
+
+.nav-github:hover svg {
+  transform: scale(1.15);
+}
+
+/* --- Footer refinements --- */
+.site-footer {
+  margin-top: 3em;
+  padding: 1.5em 0;
+}
+
+.site-footer p {
+  margin: 0.2em 0;
+  line-height: 1.6;
+}
+
+.footer-meta {
+  font-size: 0.75rem;
+  color: #b8b8b8;
+}
+
+/* --- Pagination refinements --- */
+.pagination {
+  gap: 0.5em;
+}
+
+.pagination a,
+.pagination span {
+  padding: 0.35em 0.9em;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+/* --- Archive page refinements --- */
+.archive-item a {
+  transition: color 0.2s ease;
+}
+
+.archive-item a:hover {
+  padding-left: 4px;
+}
+
+/* --- About page refinements --- */
+/* Target the about page specifically */
+body:has([class="post-title"] a[href*="about"]) .post-content {
+  font-size: 1rem;
+}
+
+/* --- Scrollbar refinements --- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4c5b0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b8a08a;
+}
+
+/* --- Print refinements --- */
+@media print {
+  .back-to-top,
+  .post-item-readmore,
+  .post-toc,
+  .lightbox-overlay {
+    display: none !important;
+  }
+
+  img.lightbox-active {
+    position: static !important;
+    transform: none !important;
+    max-width: 100% !important;
+    max-height: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/* --- Responsive refinements --- */
+@media (max-width: 600px) {
+  .post-title {
+    font-size: 1.5rem;
+  }
+
+  .post-item:hover {
+    transform: none;
+  }
+
+  .post-item-readmore {
+    opacity: 1;
+    transform: none;
+    font-size: 0.75rem;
+  }
+
+  .post-nav-prev,
+  .post-nav-next {
+    max-width: 100%;
+    padding: 0.6em 0.8em;
+  }
+
+  .post-content blockquote {
+    padding-left: 1.6em;
+  }
+
+  .post-content blockquote::before {
+    font-size: 2em;
+    top: -0.05em;
+    left: 0.05em;
+  }
+
+  .post-content h2 a::before,
+  .post-content h3 a::before {
+    display: none;
+  }
+
+  .post-item-summary::after {
+    height: 1em;
+  }
+
+  .back-to-top {
+    bottom: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .nav-github svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-width: 380px) {
+  .post-title {
+    font-size: 1.3rem;
+  }
+}
+
+/* --- Smooth reveal for post items (enhanced) --- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.post-item {
+  animation: fadeInUp 0.45s ease both;
+}
+
+.post-item:nth-child(1) { animation-delay: 0.03s; }
+.post-item:nth-child(2) { animation-delay: 0.06s; }
+.post-item:nth-child(3) { animation-delay: 0.09s; }
+.post-item:nth-child(4) { animation-delay: 0.12s; }
+.post-item:nth-child(5) { animation-delay: 0.15s; }
+.post-item:nth-child(6) { animation-delay: 0.18s; }
+.post-item:nth-child(7) { animation-delay: 0.21s; }
+.post-item:nth-child(8) { animation-delay: 0.24s; }
+.post-item:nth-child(9) { animation-delay: 0.27s; }
+.post-item:nth-child(10) { animation-delay: 0.30s; }
+
+/* --- Keyboard shortcut hint style --- */
+kbd {
+  display: inline-block;
+  padding: 0.1em 0.4em;
+  font-size: 0.8em;
+  font-family: "SF Mono", "JetBrains Mono", monospace;
+  background: #f5f2ed;
+  border: 1px solid #e0dbd0;
+  border-radius: 3px;
+  box-shadow: 0 1px 0 #d4c5b0;
+  line-height: 1.4;
+}
+
+/* --- Footnote refinements --- */
+.footnotes {
+  margin-top: 3em;
+  padding-top: 1.5em;
+  border-top: 1px solid #e8e3d9;
+  font-size: 0.85rem;
+  color: #6b6b6b;
+}
+
+.footnotes ol {
+  padding-left: 1.2em;
+}
+
+.footnotes li {
+  margin: 0.5em 0;
+}
+
+/* --- Definition list refinement --- */
+.post-content dt {
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-top: 1em;
+}
+
+.post-content dd {
+  padding-left: 1em;
+  color: #5a5a5a;
+  margin-bottom: 0.5em;
+}
+
+/* --- Horizontal rule refinement --- */
+.post-content hr {
+  margin: 2em 0;
+  position: relative;
+}
+
+.post-content hr::after {
+  content: '✦';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #faf7f2;
+  padding: 0 0.8em;
+  color: #d4c5b0;
+  font-size: 0.8rem;
 }

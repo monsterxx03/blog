@@ -1,0 +1,39 @@
+{{ define "main" }}
+<div class="post-list">
+  {{ $pages := where .Site.RegularPages "Type" "posts" }}
+  {{ $paginator := .Paginate $pages }}
+  {{ range $paginator.Pages }}
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006 年 01 月 02 日" }}</time>
+    </div>
+    <h2 class="post-item-title">
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    </h2>
+    {{ if .Site.Params.enableSummary }}
+    <div class="post-item-summary">
+      {{ .Summary | plainify | truncate 300 }}
+    </div>
+    {{ end }}
+    {{ with .Params.tags }}
+    <div class="post-item-tags">
+      {{ range . }}
+      <a href="{{ "tags" | absLangURL }}/{{ . | urlize }}/" class="tag">{{ . }}</a>
+      {{ end }}
+    </div>
+    {{ end }}
+  </article>
+  {{ end }}
+</div>
+
+{{ if gt $paginator.TotalPages 1 }}
+<div class="pagination">
+  {{ if $paginator.HasPrev }}
+  <a href="{{ $paginator.Prev.URL }}" class="prev">{{ i18n "prev_page" }}</a>
+  {{ end }}
+  {{ if $paginator.HasNext }}
+  <a href="{{ $paginator.Next.URL }}" class="next">{{ i18n "next_page" }}</a>
+  {{ end }}
+</div>
+{{ end }}
+{{ end }}

@@ -1,0 +1,7 @@
+{{ define "main" }}
+<div class="page-404">
+  <h1>404</h1>
+  <p>页面走丢了……</p>
+  <p><a href="{{ .Site.BaseURL | relLangURL }}">← {{ i18n "home" }}</a></p>
+</div>
+{{ end }}

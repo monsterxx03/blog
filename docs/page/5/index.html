@@ -1,588 +1,44 @@
 <!DOCTYPE html>
-<html lang="zh-cn" >
+<html lang="zh-cn">
 <head>
-	<meta name="generator" content="Hugo 0.155.3">
-  <meta charset="utf-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<meta name="generator" content="Hugo 0.159.2">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  
-  <meta name="author"
-        content=""/>
-
-  
+  <title>Shining Moon</title>
 
   
 
+  <meta name="author" content="Shining Moon">
+  <link rel="canonical" href="https://blog.monsterxx03.com/">
   
-  <link rel="canonical" href="https://blog.monsterxx03.com/"/>
 
   
   <link rel="alternate" type="application/rss&#43;xml" href="https://blog.monsterxx03.com/index.xml">
   
 
-  <title>Shining Moon</title>
-
-  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
-
-  
-  
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css">
   <link rel="stylesheet" href="https://blog.monsterxx03.com/css/home.css">
+
   
-</head>
-
-<body>
-<div class="main animated">
-  <div class="nav_container animated fadeInDown">
-  <div class="site_nav" id="site_nav">
-    <ul>
-      
-      <li>
-        <a href="/">Home</a>
-      </li>
-      
-      <li>
-        <a href="/posts/">Archive</a>
-      </li>
-      
-      <li>
-        <a href="/about/">About</a>
-      </li>
-      
-      <li>
-        <a href="/tags">Tags</a>
-      </li>
-      
-    </ul>
-  </div>
-  <div class="menu_icon">
-    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
-  </div>
-</div>
-
-  <div class="header animated fadeInDown">
-  <div class="site_title_container">
-    <div class="site_title">
-      <h1>
-        <a href="https://blog.monsterxx03.com/">
-          <span>Shining Moon</span>
-          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
-        </a>
-      </h1>
-    </div>
-    <div class="description">
-      <p class="sub_title">百种弊病,皆从懒生</p>
-      <div class="my_socials">
-        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
-      </div>
-    </div>
-  </div>
-</div>
-
-  <div class="content">
-    
-
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2019/03/28/celery-time-limit-%E7%9A%84%E5%9D%91/'>Celery Time Limit 的坑</a></h2>
-  </div>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
   
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>之前用 celery 做的 task 都是一些很简单轻量级的 task, 从来没触发过 timeout, 最近加入了一些复杂很耗时的 task, 碰到一些 time limit 的坑.</p>
-<p>celery 中 time limit 有两种, soft_time_limit 和 hard_time_limit, 区别是 soft_time_limit 会在内部抛一个 Exception, task 可以 catch 自行处理.
-hard time limit 没法被 catch.</p>
-<p>使用如下:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> myapp <span style="color:#f92672">import</span> app
-</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> celery.exceptions <span style="color:#f92672">import</span> SoftTimeLimitExceeded
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@app.task</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mytask</span>():
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
-</span></span><span style="display:flex;"><span>        do_work()
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> SoftTimeLimitExceeded:
-</span></span><span style="display:flex;"><span>        clean_up_in_a_hurry()</span></span></code></pre></div>
-<p>我 celery pool 用的是 gevent, 实际上在现在的实现里 gevent 做 worker pool 的时候会忽略 soft_time_limit, 只有 hard_time_limit 会被触发(通过 gevent.Timeout 实现).</p>
-<p>坑爹的是文档里写的是错的: <a href="http://docs.celeryproject.org/en/latest/userguide/workers.html#time-limit">http://docs.celeryproject.org/en/latest/userguide/workers.html#time-limit</a></p>
-<p>soft_time_limit 只在 prefork pool 里支持.</p>
-<p>我现在想让 celery 把这个 hard timeout 的情况 report 到 sentry, 看了圈代码并没法从外面 override timeout 的 callback. 只能很丑得做了个 monkey patch, 在初始化 celeryapp
-的代码里:</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2019.03.28</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/python/">python</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/celery/">celery</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
 
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/'>管理负载</a></h2>
-  </div>
   
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>最近在看 google 的 <code>&lt;The Site Reliablity Workbook&gt;</code>, 其中有一章是&quot;Manage load&quot;, 内容还挺详细的, 结合在 aws 上的经验做点笔记.</p>
-<h2 id="load-balancing">Load Balancing</h2>
-<p>流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存.</p>
-<p>google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual ip), 通过 BGP routing 来将用户的数据包发送到最近的 frontend server, 以此来减少 latency.</p>
-<p>但只依赖 BGP 会带来两个问题:</p>
-<ul>
-<li>某个地区的用户过多会给最近的 frontend server 带来过高的负载</li>
-<li>ISP 的 BGP 路由会重计算, 当 BGP routing 变化后, 进行中的 tcp connection 会被 reset(同一个 connection 上的后续数据包被发送到不同的 server, tcp session 不存在于新 server 上)</li>
-</ul>
-<p>为了解决原生 BGP anycast 的问题, google 开发了 Maglev, 即使路由发生了变化(routing flap), connection 也不断开, 把这种方式叫做 stablized anycast.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2019.02.12</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/gce/">gce</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/book/">book</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/12/29/%E4%BB%8E%E5%8E%BB%E5%B9%B4%E7%9A%84%E4%B8%80%E4%B8%AApatch%E8%AF%B4%E8%B5%B7/'>从去年的一个patch说起</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>去年对线上业务做了一些性能优化, 当时把 http client 从 requests 换成了 geventhttpclient ,
-上线后发起 rpc 调用的 server 整体负载低了很多, 但 client 端 latency 却高了很多, 经过 debug
-觉得问题是 geventhttpclient 把 header 和 body 通过两次 sock send 发出的额外开销造成的, 尝试
-修改成一次 send 后 latency 就恢复了: <a href="https://github.com/gwik/geventhttpclient/pull/85">https://github.com/gwik/geventhttpclient/pull/85</a></p>
-<p>最近在调试 gunicorn 的代码时候, 看到它建立 socket 的时候设置了 TCP_NODELAY, 在很多项目里看到过这个
-tcp option, 但没细究过, <code>man tcp</code> 得知是用来关闭 tcp 里的 nagle 算法的. nagle 在 linux 的
-默认 tcp 协议栈里是开启的, 当发送的数据包 size 小于 mss 的时候会在内存里 buffer 起来, 积累起来后再发送,
-目的是提高带宽利用率, 毕竟 payload 只发一次字节也要带上 40 字节的 ip+tcp header.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.12.29</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/http/">http</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/tcp/">tcp</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/12/16/kubernetes-%E4%B8%AD%E7%9A%84-pod-%E8%B0%83%E5%BA%A6/'>Kubernetes 中的 pod 调度</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>定义 pod 的时候通过添加 node selector 可以让 pod 调度到有特定 label 的 node 上去, 这是最简单的调度方式.
-其他还有更复杂的调度方式: node-taints/tolerations, node-affinity, pod-affinity, 来达到让某些类型的 pod 调度到一起,
-让某些类型的 pod 不跑一起的效果.</p>
-<h2 id="taints-and-tolerations">Taints and Tolerations</h2>
-<p>如果 node 有 taints, 那只有能 tolerate 这些 taints 的 pod 才能调度到上面.</p>
-<p>taint 的基本格式是: <code>&lt;key&gt;&lt;operator&gt;&lt;value&gt;:&lt;effect&gt;</code></p>
-<p><code>kubectl describe node xxx</code> 可以看到节点的 taints, 比如 master 节点上会有:</p>
-<pre><code>Taints:       node-role.kubernetes.io/master:NoSchedule 
-</code></pre>
-<p>这里 key 是 <code>node-role.kubernetes.io/master</code>, 没有等号和 value, operator 就是 <code>Exists</code> , effect 是 <code>NoSchedule</code>.</p>
-<p>master 节点上的这条 taint 就定义了只有能 tolerate 它的 pod 能调度到上面, 一般都是些系统 pod.</p>
-<p>比如看下 kube-proxy: <code>kubectl describe pod kube-proxy-efiv -n kube-system</code></p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.12.16</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/12/03/debug-skills-on-linux/'>Debug Skills on Linux</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04,
-some tools are not installed by default, you can installl by <code>sudo apt install xxx</code>.
-Some commands must be used via <code>sudo</code>.</p>
-<p>System resources can be classified in three main categories: compute, storage, and network.
-Usually, when you come to a performance issue, it&rsquo;s always caused by exhaustion of those
-resources.</p>
-<h2 id="universal-metric-system-load">Universal metric: System load</h2>
-<p>There&rsquo;re several ways to get system load, <code>w</code>, <code>uptime</code>, <code>top</code>, <code>cat /proc/loadavg</code></p>
-<p><code>uptime</code> example:</p>
-<pre><code>03:34:23 up 20:31,  1 user,  load average: 1.02, 0.65, 0.45
-</code></pre>
-<p>Top right corner three values named <code>load average</code> is system load.</p>
-<p>They means: average system load during last minute/last 5 minutes/last 15 minutes periods.</p>
-<p>If <code>load/(# of cpu core) &gt; 1</code>  means there&rsquo;re tasks pending in cpu queue. Usually, you will feel <strong>slow</strong>.</p>
-<p>It&rsquo;s different with cpu utilization. CPU utilization is a metrics shows how busy cpu is handling tasks.</p>
-<p>If system load is high, means tasks are pending in CPU queue, maybe a result of:</p>
-<ul>
-<li>High cpu usage.</li>
-<li>Poor disk performance(disk io).</li>
-<li>Exhaustion of ram.</li>
-<li>&hellip;</li>
-</ul>
-<h2 id="free">free</h2>
-<p><code>free -k/-m/-g</code> show memory usage in KB/MB/GB</p>
-<p><code>free -h</code>  humanize output (automatically show in KB/MB/GB&hellip;)</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.12.03</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/linux/">linux</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/11/30/%E6%9D%82%E8%B0%88/'>杂谈</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>屋里有两个钟，一个快 5 分钟，　一个慢 5 分钟,　一直懒得把它们调正, 有种莫名的时间撕裂感, 好像还挺喜欢.还有一个月 2018 就过去了,
-我想想最近都干嘛了.</p>
-<h2 id="最近看的书">最近看的书</h2>
-<p>读完了 <code>&lt;a philosophy of software design&gt;</code>, 书是好书, 就是好贵(花了我260&hellip;). 本来想专门写一篇的,但开了个头发却发现没太多可写的. 书里提到的问题都碰到过, 解决方法和建议其实也一直在用,
-没有什么银弹, 等再践行一段时间再说吧. PS: 收益最大的是讲注释的章节.</p>
-<p>昨晚看完了 <code>&lt;夜行&gt;</code>. 森见登美彦的书, 改编的动画倒是看过不少, 书以前只看过 <code>&lt;有顶天家族&gt;</code>. 这本风格差得挺远,　通篇五里雾中的感觉, 有点　<code>&lt;1Q84&gt;</code>　的意思. &ldquo;世界是一场夜&rdquo;, 后半部分看到这句话的时候, 起了鸡皮疙瘩,　夜行和曙光世界里的岸田过着完全不同的生活, 契机只是鞍马火祭上的偶遇. 是不是真的存在一个和现实完全对立的世界, 跨越的分界线只是那一点点契机?那个世界的自己又过得到好还是差呢?　</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.11.30</span>
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/11/17/%E7%94%A8-bloom-filter-%E7%BB%99%E6%8E%A8%E8%8D%90%E5%88%97%E8%A1%A8%E5%8E%BB%E9%87%8D/'>用 Bloom filter 给推荐列表去重</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>之前产品里有一个功能是每天给用户推荐一批文章,要保证最后推给用户的文章每天不重复. 原先的实现很直接, 每次推送时候记录下用户 id 和 topic id 的键值对, 拿到新 topic 列表后,取出曾经给该用户推送过的文章列表, 两个 set 去重.</p>
-<p>这个实现的问题很明显, 存储空间量太大(M * N), user id (int64) + topic id (int64) = 16 bytes, 1 million 的用户, 每天给用户推送10篇文章, 一年要存储: 16 * 10 * 365 * 1M = 54.4GB. 查询效率也很低,要么一次取所有已读 topic id, 要么把要推送的 topic id 都丢进数据库去重.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.11.17</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/algorithm/">algorithm</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/bloomfilter/">bloomfilter</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/11/04/%E6%BF%91%E6%88%B7%E5%86%85%E6%B5%B7%E7%9A%84%E9%A3%8E%E4%B8%8E%E9%98%B3/'>濑户内海的风与阳</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>上月休假去濑户内海溜达了一圈, 一个比想象中美太多的地方.</p>
-<p>对濑户内海的印象, 要追溯到高中时看的一部搞笑番 &lt;濑户花嫁&gt;, 挺有意思的片子, 爆笑之余, 对濑户内海这个地方有了模模糊糊的印象.</p>
-<p>去年去了青森和九州, 就想着再去个日本犄角旮旯的地吧, 四国就被提上了日程, 稍做攻略, 发现濑户内海就这里, 兴趣来了.</p>
-<p>明年三月的时候濑户内海有艺术祭, 那会估计就被世界各地的人给挤爆了, 不凑这热闹, 还是10月去吧.</p>
-<p>大致行程: 上海 -&gt; 高松 -&gt; 小豆岛 -&gt; 丰岛 -&gt; 直岛. 除了在小豆岛上呆了一晚上，其他时候都住在了高松.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.11.04</span>
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/10/31/aws-aurora-db/'>AWS Aurora DB</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比.</p>
-<h2 id="paper-notes">Paper notes</h2>
-<ul>
-<li>存储计算分离</li>
-<li>redo log 下推到存储层</li>
-<li>副本: 6 副本 3 AZ(2 per az), 失去一个 AZ + 1 additoinal node 不会丢数据(可读不可写). 失去一个 AZ (或任意2 node) 不影响数据写入.</li>
-<li>10GB 一个 segment, 每个 segment 6 副本一个 PG (protection group), 一 AZ　两副本.</li>
-<li>在 10Gbps 的网络上, 修复一个 10GB 的segment 需要 10s.</li>
-</ul>
-<p>MySQL 一个应用层的写会在底层产生很多额外的写操作，会带来写放大问题:</p>
-<p><img src="/posts/images/aurora-mysql-replication.png" alt=""></p>
-<p>redo log 用来 crash recovery, binlog 会上传 s3　用于 point in time restore.</p>
-<p>在 aurora 里，只有 redo log 会通过网络复制到各个 replica, master 会等待 4/6 replicas 完成 redo log 的写入就认为写入成功 (所以失去3副本就无法写入数据了). 其他副本会根据 redo log 重建数据(单独的 redo log applicator 进程).</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.10.31</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">aws</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/mysql/">mysql</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/database/">database</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/10/15/%E4%B8%BA-service-%E5%88%B6%E5%AE%9A-slo/'>为 service 制定 SLO</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>通常我们使用云服务的时候, 服务提供商会提供 SLA(Service Level Aggrement),作为他们提供的服务质量的标准(常说的几个9),达不到会进行赔偿.
-比如 AWS 的计算类服务: <a href="https://aws.amazon.com/compute/sla/">https://aws.amazon.com/compute/sla/</a> .</p>
-<p>对公司自己 host 的 service, 我们内部也需要一些技术指标来 track 我们为客户提供的服务质量如何, 这个叫做
-SLO(Service Level Objective). 也可以把他当成一个对内的,没有赔偿协议的SLA.</p>
-<h2 id="定义指标">定义指标</h2>
-<p>我主要 track 两个指标:</p>
-<ul>
-<li>Availability (服务的可用性)</li>
-<li>Quality (服务质量)</li>
-</ul>
-<p>Availability 的定义, 以前用简单的 service  uptime 来定义, 在集群外部用一个 service check 定时 ping 我们 service　的 check endpoint,
-失败就定义为 failure.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.10.15</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<div class="pagination">
-  
-  
-  <a href="/page/4/" class="pre">
-    返回上一页
-  </a>
-  
-  
-  <a href="/page/6/" class="next">
-    阅读更多文章
-  </a>
-  
-  
-</div>
-
-  </div>
-</div>
-<footer class="footer">
-  <div class="powered_by">
-    <a href="https://zeuk.me">Designed by Zeuk,</a>
-    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
-  </div>
-
-  <div class="footer_slogan">
-    <span></span>
-  </div>
-</footer>
-
-
-
-<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
-<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
-<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
-<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
-<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
-
-<script>hljs.initHighlightingOnLoad()</script>
-
-
-  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-MathJax.Hub.Config({
-  tex2jax: {
-    inlineMath: [['$','$'], ['\\(','\\)']],
-    displayMath: [['$$','$$'], ['\[\[','\]\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-    TeX: { equationNumbers: { autoNumber: "AMS" },
-         extensions: ["AMSmath.js", "AMSsymbols.js"] }
-  }
-});
-
-MathJax.Hub.Queue(function() {
-    
-    
-    
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i = 0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-});
-</script>
-
-<style>
-code.has-jax {
-    font: inherit;
-    font-size: 100%;
-    background: inherit;
-    border: inherit;
-    color: #515151;
-}
-</style>
-
-
-
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
       <script>
         var doNotTrack = false;
@@ -597,7 +53,402 @@ code.has-jax {
           gtag('config', 'G-P32CTT1G2G');
         }
       </script>
+</head>
+<body>
+  <div class="wrapper">
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div>
+          <h1 class="site-title"><a href="/">Shining Moon</a></h1>
+          
+          <p class="site-subtitle">百种弊病,皆从懒生</p>
+          
+        </div>
+        <nav class="main-nav">
+          
+          
+          <a href="/" class="active">
+            Home
+          </a>
+          
+          <a href="/posts/" >
+            Archive
+          </a>
+          
+          <a href="/about/" >
+            About
+          </a>
+          
+          <a href="/tags" >
+            Tags
+          </a>
+          
+          <a href="https://github.com/monsterxx03" target="_blank" rel="noopener" title="GitHub" class="nav-github">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: -3px; margin-right: 2px;">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="content">
+      
+<div class="post-list">
+  
+  
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2019-03-28">2019 年 03 月 28 日</time>
+      <span class="post-item-reading">1 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2019/03/28/celery-time-limit-%E7%9A%84%E5%9D%91/">Celery Time Limit 的坑</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      之前用 celery 做的 task 都是一些很简单轻量级的 task, 从来没触发过 timeout, 最近加入了一些复杂很耗时的 task, 碰到一些 time limit 的坑.
+celery 中 time limit 有两种, soft_time_limit 和 hard_time_limit, 区别是 soft_time_limit 会在内部抛一个 Exception, task 可以 catch 自行处理. hard time limit 没法被 catch.
+使用如下:
+from myapp import app from celery.exceptions import …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/python/" class="tag">python</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/celery/" class="tag">celery</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/code-infra/" class="tag">code-infra</a>
+        
+      </div>
+      
+      <a href="/2019/03/28/celery-time-limit-%E7%9A%84%E5%9D%91/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2019-02-12">2019 年 02 月 12 日</time>
+      <span class="post-item-reading">4 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/">管理负载</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      最近在看 google 的 &lt;The Site Reliablity Workbook&gt;, 其中有一章是&quot;Manage load&quot;, 内容还挺详细的, 结合在 aws 上的经验做点笔记.
+Load Balancing 流量的入口是负载均衡, 最最简单的做法是在 DNS 上做 round robin, 但这样很依赖 client, 不同的 client 可能不完全遵守 DNS 的 TTL, 当地的 ISP 也会有缓存.
+google 用 anycast 技术在自己的网络中通过 BGP 给一个域名发布多个 endpoint, 共享一个 vip(virtual …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/gce/" class="tag">gce</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/aws/" class="tag">aws</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/book/" class="tag">book</a>
+        
+      </div>
+      
+      <a href="/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2018-12-29">2018 年 12 月 29 日</time>
+      <span class="post-item-reading">3 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2018/12/29/%E4%BB%8E%E5%8E%BB%E5%B9%B4%E7%9A%84%E4%B8%80%E4%B8%AApatch%E8%AF%B4%E8%B5%B7/">从去年的一个patch说起</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      去年对线上业务做了一些性能优化, 当时把 http client 从 requests 换成了 geventhttpclient , 上线后发起 rpc 调用的 server 整体负载低了很多, 但 client 端 latency 却高了很多, 经过 debug 觉得问题是 geventhttpclient 把 header 和 body 通过两次 sock send 发出的额外开销造成的, 尝试 修改成一次 send 后 latency 就恢复了: https://github.com/gwik/geventhttpclient/pull/85
+最近在调试 gunicorn 的代码时候, …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/http/" class="tag">http</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/tcp/" class="tag">tcp</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/code-infra/" class="tag">code-infra</a>
+        
+      </div>
+      
+      <a href="/2018/12/29/%E4%BB%8E%E5%8E%BB%E5%B9%B4%E7%9A%84%E4%B8%80%E4%B8%AApatch%E8%AF%B4%E8%B5%B7/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2018-12-16">2018 年 12 月 16 日</time>
+      <span class="post-item-reading">3 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2018/12/16/kubernetes-%E4%B8%AD%E7%9A%84-pod-%E8%B0%83%E5%BA%A6/">Kubernetes 中的 pod 调度</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      定义 pod 的时候通过添加 node selector 可以让 pod 调度到有特定 label 的 node 上去, 这是最简单的调度方式. 其他还有更复杂的调度方式: node-taints/tolerations, node-affinity, pod-affinity, 来达到让某些类型的 pod 调度到一起, 让某些类型的 pod 不跑一起的效果.
+Taints and Tolerations 如果 node 有 taints, 那只有能 tolerate 这些 taints 的 pod 才能调度到上面.
+taint 的基本格式是: …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/k8s/" class="tag">k8s</a>
+        
+      </div>
+      
+      <a href="/2018/12/16/kubernetes-%E4%B8%AD%E7%9A%84-pod-%E8%B0%83%E5%BA%A6/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2018-12-03">2018 年 12 月 03 日</time>
+      <span class="post-item-reading">9 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2018/12/03/debug-skills-on-linux/">Debug Skills on Linux</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      This post will show several commands used for debugging on linux server, all examples are tested on ubuntu 18.04, some tools are not installed by default, you can installl by sudo apt install xxx. Some commands must be used via sudo.
+System resources can be classified in three main categories: …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/linux/" class="tag">linux</a>
+        
+      </div>
+      
+      <a href="/2018/12/03/debug-skills-on-linux/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2018-11-30">2018 年 11 月 30 日</time>
+      <span class="post-item-reading">2 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2018/11/30/%E6%9D%82%E8%B0%88/">杂谈</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      屋里有两个钟，一个快 5 分钟，　一个慢 5 分钟,　一直懒得把它们调正, 有种莫名的时间撕裂感, 好像还挺喜欢.还有一个月 2018 就过去了, 我想想最近都干嘛了.
+最近看的书 读完了 &lt;a philosophy of software design&gt;, 书是好书, 就是好贵(花了我260&hellip;). 本来想专门写一篇的,但开了个头发却发现没太多可写的. 书里提到的问题都碰到过, 解决方法和建议其实也一直在用, 没有什么银弹, 等再践行一段时间再说吧. PS: 收益最大的是讲注释的章节.
+昨晚看完了 &lt;夜行&gt;. 森见登美彦的书, 改编的动画倒是看过不少, 书 …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <a href="/2018/11/30/%E6%9D%82%E8%B0%88/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2018-11-17">2018 年 11 月 17 日</time>
+      <span class="post-item-reading">3 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2018/11/17/%E7%94%A8-bloom-filter-%E7%BB%99%E6%8E%A8%E8%8D%90%E5%88%97%E8%A1%A8%E5%8E%BB%E9%87%8D/">用 Bloom filter 给推荐列表去重</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      之前产品里有一个功能是每天给用户推荐一批文章,要保证最后推给用户的文章每天不重复. 原先的实现很直接, 每次推送时候记录下用户 id 和 topic id 的键值对, 拿到新 topic 列表后,取出曾经给该用户推送过的文章列表, 两个 set 去重.
+这个实现的问题很明显, 存储空间量太大(M * N), user id (int64) + topic id (int64) = 16 bytes, 1 million 的用户, 每天给用户推送10篇文章, 一年要存储: 16 * 10 * 365 * 1M = 54.4GB. 查询效率也很低,要么一次取所有已读 topic id, 要么把要推 …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/algorithm/" class="tag">algorithm</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/bloomfilter/" class="tag">bloomfilter</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/code-infra/" class="tag">code-infra</a>
+        
+      </div>
+      
+      <a href="/2018/11/17/%E7%94%A8-bloom-filter-%E7%BB%99%E6%8E%A8%E8%8D%90%E5%88%97%E8%A1%A8%E5%8E%BB%E9%87%8D/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2018-11-04">2018 年 11 月 04 日</time>
+      <span class="post-item-reading">3 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2018/11/04/%E6%BF%91%E6%88%B7%E5%86%85%E6%B5%B7%E7%9A%84%E9%A3%8E%E4%B8%8E%E9%98%B3/">濑户内海的风与阳</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      上月休假去濑户内海溜达了一圈, 一个比想象中美太多的地方.
+对濑户内海的印象, 要追溯到高中时看的一部搞笑番 &lt;濑户花嫁&gt;, 挺有意思的片子, 爆笑之余, 对濑户内海这个地方有了模模糊糊的印象.
+去年去了青森和九州, 就想着再去个日本犄角旮旯的地吧, 四国就被提上了日程, 稍做攻略, 发现濑户内海就这里, 兴趣来了.
+明年三月的时候濑户内海有艺术祭, 那会估计就被世界各地的人给挤爆了, 不凑这热闹, 还是10月去吧.
+大致行程: 上海 -&gt; 高松 -&gt; 小豆岛 -&gt; 丰岛 -&gt; 直岛. 除了在小豆岛上呆了一晚上，其他时候都住在了高松.
+
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <a href="/2018/11/04/%E6%BF%91%E6%88%B7%E5%86%85%E6%B5%B7%E7%9A%84%E9%A3%8E%E4%B8%8E%E9%98%B3/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2018-10-31">2018 年 10 月 31 日</time>
+      <span class="post-item-reading">3 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2018/10/31/aws-aurora-db/">AWS Aurora DB</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      最近在把部分用 RDS 的 MySQL 迁移到 aurora 上去, 读了下 aurora 的 paper, 顺便和 RDS 的架构做些对比.
+Paper notes 存储计算分离 redo log 下推到存储层 副本: 6 副本 3 AZ(2 per az), 失去一个 AZ + 1 additoinal node 不会丢数据(可读不可写). 失去一个 AZ (或任意2 node) 不影响数据写入. 10GB 一个 segment, 每个 segment 6 副本一个 PG (protection group), 一 AZ　两副本. 在 10Gbps 的网络上, 修复一个 10GB 的 …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/aws/" class="tag">aws</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/mysql/" class="tag">mysql</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/database/" class="tag">database</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/server-infra/" class="tag">server-infra</a>
+        
+      </div>
+      
+      <a href="/2018/10/31/aws-aurora-db/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2018-10-15">2018 年 10 月 15 日</time>
+      <span class="post-item-reading">2 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2018/10/15/%E4%B8%BA-service-%E5%88%B6%E5%AE%9A-slo/">为 service 制定 SLO</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      通常我们使用云服务的时候, 服务提供商会提供 SLA(Service Level Aggrement),作为他们提供的服务质量的标准(常说的几个9),达不到会进行赔偿. 比如 AWS 的计算类服务: https://aws.amazon.com/compute/sla/ .
+对公司自己 host 的 service, 我们内部也需要一些技术指标来 track 我们为客户提供的服务质量如何, 这个叫做 SLO(Service Level Objective). 也可以把他当成一个对内的,没有赔偿协议的SLA.
+定义指标 我主要 track 两个指标:
+Availability (服务的可用性) …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/server-infra/" class="tag">server-infra</a>
+        
+      </div>
+      
+      <a href="/2018/10/15/%E4%B8%BA-service-%E5%88%B6%E5%AE%9A-slo/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+</div>
 
 
+<div class="pagination">
+  
+  <a href="/page/4/" class="prev">← 上一页</a>
+  
+  
+  <a href="/page/6/" class="next">下一页 →</a>
+  
+</div>
+
+
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; 2026 <a href="https://blog.monsterxx03.com/">Shining Moon</a>.</p>
+      <p class="footer-meta">Powered by <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a> · Theme Literary</p>
+    </footer>
+  </div>
+
+  <a href="#" class="back-to-top" id="backToTop" title="回到顶部">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+      <path d="M10 2.5a.75.75 0 01.75.75v12.69l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 111.06-1.06L9.25 15.94V3.25A.75.75 0 0110 2.5z"/>
+    </svg>
+  </a>
+
+  <script>
+    
+    var backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) {
+          backToTop.classList.add('visible');
+        } else {
+          backToTop.classList.remove('visible');
+        }
+      });
+      backToTop.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    
+    var tocLinks = document.querySelectorAll('.post-toc a');
+    if (tocLinks.length > 0) {
+      var headings = [];
+      tocLinks.forEach(function(link) {
+        var id = link.getAttribute('href').slice(1);
+        var h = document.getElementById(id);
+        if (h) headings.push(h);
+      });
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            tocLinks.forEach(function(link) {
+              link.classList.remove('active');
+              if (link.getAttribute('href') === '#' + entry.target.id) {
+                link.classList.add('active');
+              }
+            });
+          }
+        });
+      }, { rootMargin: '-80px 0px -70% 0px' });
+      headings.forEach(function(h) { observer.observe(h); });
+    }
+  </script>
+
+  
 </body>
 </html>

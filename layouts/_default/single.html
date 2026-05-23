@@ -1,0 +1,61 @@
+{{ define "main" }}
+<article>
+  <header class="post-header">
+    <h1 class="post-title">{{ .Title }}</h1>
+    <div class="post-meta">
+      <span class="post-meta-date">
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006 年 01 月 02 日" }}</time>
+      </span>
+      {{ with .Params.categories }}
+      {{ $cat := index . 0 }}
+      <span class="post-meta-category">· <a href="{{ "categories" | absLangURL }}/{{ $cat | urlize }}/">{{ $cat }}</a></span>
+      {{ end }}
+      <span class="post-meta-reading">· {{ .ReadingTime }} 分钟阅读</span>
+      <span class="post-meta-words">· {{ .WordCount }} 字</span>
+    </div>
+  </header>
+
+  {{ if and .TableOfContents (gt (len .TableOfContents) 50) }}
+  <details class="post-toc">
+    <summary class="post-toc-summary">目录</summary>
+    <div class="post-toc-body">
+      {{ .TableOfContents }}
+    </div>
+  </details>
+  {{ end }}
+
+  <div class="post-content">
+    {{ .Content }}
+  </div>
+
+  <footer class="post-footer">
+    {{ with .Params.tags }}
+    <div class="post-tags">
+      <span class="post-tags-label">Tags:</span>
+      {{ range . }}
+      <a href="{{ "tags" | absLangURL }}/{{ . | urlize }}/" class="tag">{{ . }}</a>
+      {{ end }}
+    </div>
+    {{ end }}
+
+    <nav class="post-nav">
+      {{ with .PrevInSection }}
+      <a href="{{ .RelPermalink }}" rel="prev" class="post-nav-prev">
+        <span class="post-nav-direction">← 上一篇</span>
+        <span class="post-nav-title">{{ .Title }}</span>
+      </a>
+      {{ end }}
+      {{ with .NextInSection }}
+      <a href="{{ .RelPermalink }}" rel="next" class="post-nav-next">
+        <span class="post-nav-direction">下一篇 →</span>
+        <span class="post-nav-title">{{ .Title }}</span>
+      </a>
+      {{ end }}
+    </nav>
+  </footer>
+</article>
+
+{{ if .Site.Config.Services.Disqus.Shortname }}
+{{ template "_internal/disqus.html" . }}
+{{ end }}
+{{ end }}

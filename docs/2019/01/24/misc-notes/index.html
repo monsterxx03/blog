@@ -1,124 +1,143 @@
 <!DOCTYPE html>
-<html lang="zh-cn" >
+<html lang="zh-cn">
 <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
-  <meta charset="utf-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  
-  <meta name="author"
-        content=""/>
+  <title>misc notes · Shining Moon</title>
 
   
   <meta name="description" content="Refactor 年前在对公司的代码做一次大的重构, 主要目的是把 repo 拆开, 以前虽然每个项目一个 repo, 但是因为很早期的原因， 所有 repo 之间都有很混乱的 import 关系.这次为了拆开 import 关系，　必须对所有代码做一次大重构, 过程中记录一些比较差的实现, 和怎么修改的.
-滥用 *args, **kwargs 在内部代码中经常能在一些接口函数中看到 *args, **kwargs, 这样子的接口暴露给别人用是极其没意义的, 某个函数我一路往下看了好几层代码，到最底层的 db 处理处才弄明白要往里面传什么参数.
-什么时候用 *args, **kwargs, 当该函数只作为一个 delegate 层时可以用, 此时该函数不应该尝试获取或修改 *args, **kwargs 的内容, 而仅仅将参数往下传递, 最常用的自然是在 decorator 中传参了.
-"/>
+滥用 …">
+  
+
+  <meta name="author" content="Shining Moon">
+  <link rel="canonical" href="http://localhost:1313/2019/01/24/misc-notes/">
   
 
   
 
-  
-  <link rel="canonical" href="http://localhost:1313/2019/01/24/misc-notes/"/>
-
-  
-
-  <title>misc notes &middot; Shining Moon</title>
-
-  <link rel="shortcut icon" href="http://localhost:1313/images/favicon.ico"/>
-  <link rel="stylesheet" href="http://localhost:1313/css/animate.min.css"/>
-  <link rel="stylesheet" href="http://localhost:1313/css/remixicon.css"/>
-  <link rel="stylesheet" href="http://localhost:1313/css/zozo.css"/>
-  <link rel="stylesheet" href="http://localhost:1313/css/highlight.css"/>
-
-  
-  
+  <link rel="stylesheet" href="http://localhost:1313/css/style.css">
   <link rel="stylesheet" href="http://localhost:1313/css/home.css">
+
   
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  
+
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 </head>
-
 <body>
-<div class="main animated">
-  <div class="nav_container animated fadeInDown">
-  <div class="site_nav" id="site_nav">
-    <ul>
-      
-      <li>
-        <a href="/">Home</a>
-      </li>
-      
-      <li>
-        <a href="/posts/">Archive</a>
-      </li>
-      
-      <li>
-        <a href="/about/">About</a>
-      </li>
-      
-      <li>
-        <a href="/tags">Tags</a>
-      </li>
-      
-    </ul>
-  </div>
-  <div class="menu_icon">
-    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
-  </div>
-</div>
-
-  <div class="header animated fadeInDown">
-  <div class="site_title_container">
-    <div class="site_title">
-      <h1>
-        <a href="http://localhost:1313/">
-          <span>Shining Moon</span>
-          <img width="90px" src="http://localhost:1313/logo.png"/>
-        </a>
-      </h1>
-    </div>
-    <div class="description">
-      <p class="sub_title">百种弊病,皆从懒生</p>
-      <div class="my_socials">
-        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
-      </div>
-    </div>
-  </div>
-</div>
-
-  <div class="content">
-    <div class="post_page">
-      <div class="post animated fadeInDown">
-        <div class="post_title post_detail_title">
-          <h2><a href='/2019/01/24/misc-notes/'>misc notes</a></h2>
-          <span class="date">2019.01.24</span>
+  <div class="wrapper">
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div>
+          <h1 class="site-title"><a href="/">Shining Moon</a></h1>
+          
+          <p class="site-subtitle">百种弊病,皆从懒生</p>
+          
         </div>
-        <div class="post_content markdown"><h1 id="refactor">Refactor</h1>
+        <nav class="main-nav">
+          
+          
+          <a href="/" >
+            Home
+          </a>
+          
+          <a href="/posts/" >
+            Archive
+          </a>
+          
+          <a href="/about/" >
+            About
+          </a>
+          
+          <a href="/tags" >
+            Tags
+          </a>
+          
+          <a href="https://github.com/monsterxx03" target="_blank" rel="noopener" title="GitHub" class="nav-github">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: -3px; margin-right: 2px;">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="content">
+      
+<article>
+  <header class="post-header">
+    <h1 class="post-title">misc notes</h1>
+    <div class="post-meta">
+      <span class="post-meta-date">
+        <time datetime="2019-01-24">2019 年 01 月 24 日</time>
+      </span>
+      
+      
+      <span class="post-meta-category">· <a href="http://localhost:1313/categories/tech/">tech</a></span>
+      
+      <span class="post-meta-reading">· 2 分钟阅读</span>
+      <span class="post-meta-words">· 561 字</span>
+    </div>
+  </header>
+
+  <div class="post-content">
+    <h1 id="refactor">Refactor</h1>
 <p>年前在对公司的代码做一次大的重构, 主要目的是把 repo 拆开, 以前虽然每个项目一个 repo, 但是因为很早期的原因， 所有 repo 之间都有很混乱的 import 关系.这次为了拆开 import 关系，　必须对所有代码做一次大重构, 过程中记录一些比较差的实现, 和怎么修改的.</p>
 <h2 id="滥用-args-kwargs">滥用 *args, **kwargs</h2>
 <p>在内部代码中经常能在一些接口函数中看到 <code>*args, **kwargs</code>, 这样子的接口暴露给别人用是极其没意义的, 某个函数我一路往下看了好几层代码，到最底层的
 db 处理处才弄明白要往里面传什么参数.</p>
 <p>什么时候用 <code>*args, **kwargs</code>, 当该函数只作为一个 delegate 层时可以用, 此时该函数不应该尝试获取或修改 <code>*args, **kwargs</code> 的内容, 而仅仅将参数往下传递,
 最常用的自然是在 <code>decorator</code> 中传参了.</p>
-<pre><code><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">demo_dec</span>(func):
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">wrapper</span>(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> func(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> wrapper</span></span></code></pre></div>
+<pre><code><div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#859900">def</span> <span style="color:#268bd2">demo_dec</span>(<span style="color:#268bd2">func</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#859900">def</span> <span style="color:#268bd2">wrapper</span>(*<span style="color:#268bd2">args</span>, **<span style="color:#268bd2">kwargs</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#859900">return</span> <span style="color:#268bd2">func</span>(*<span style="color:#268bd2">args</span>, **<span style="color:#268bd2">kwargs</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#859900">return</span> <span style="color:#268bd2">wrapper</span></span></span></code></pre></div>
 </code></pre>
 <p>接口函数务必把参数名定义清楚.</p>
 <h2 id="keyword-参数不写参数名">keyword 参数不写参数名</h2>
 <p>还有一种情况是函数定义了可选参数, 但调用方传参时候不写参数名.</p>
-<pre><code><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test</span>(a, b<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pass</span>
+<pre><code><div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#859900">def</span> <span style="color:#268bd2">test</span>(<span style="color:#268bd2">a</span>, <span style="color:#268bd2">b</span>=<span style="color:#859900;font-weight:bold">None</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#859900">pass</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>test(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>)</span></span></code></pre></div>
+</span></span><span style="display:flex;"><span><span style="color:#268bd2">test</span>(<span style="color:#2aa198;font-weight:bold">1</span>, <span style="color:#2aa198;font-weight:bold">2</span>)</span></span></code></pre></div>
 </code></pre>
 <p>我一直就觉得 python 里这个设计很失败, 给需要修改原始函数的人带来极大麻烦, test 函数如果添加一个可选参数在 a 和 b 之间, 调用方参数就传错了.</p>
 <p>还好 python3　里引入了 keyword only arguments, 可以把函数定义成:</p>
-<pre><code><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test</span>(a, <span style="color:#f92672">*</span>, b<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pass</span>
+<pre><code><div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#859900">def</span> <span style="color:#268bd2">test</span>(<span style="color:#268bd2">a</span>, *, <span style="color:#268bd2">b</span>=<span style="color:#859900;font-weight:bold">None</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#859900">pass</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>test(<span style="color:#ae81ff">1</span>, b<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)</span></span></code></pre></div>
+</span></span><span style="display:flex;"><span><span style="color:#268bd2">test</span>(<span style="color:#2aa198;font-weight:bold">1</span>, <span style="color:#268bd2">b</span>=<span style="color:#2aa198;font-weight:bold">2</span>)</span></span></code></pre></div>
 </code></pre>
 <p>调用方必须显示写参数名，否则直接报错.</p>
 <h1 id="reading-notes-of-site-reliability-workbook">Reading notes of Site Reliability Workbook</h1>
@@ -144,23 +163,38 @@ db 处理处才弄明白要往里面传什么参数.</p>
 </li>
 </ul>
 <p>A postmortem is a factual artifact that should be free from personal judgments and subjective language.</p>
-</div>
-        <div class="post_footer">
-          
-          <div class="meta">
-            <div class="info">
-              <span class="field tags">
-                <i class="remixicon-stack-line"></i>
-                
-                <a href="http://localhost:1313/tags/python/">python</a>
-                
-              </span>
-            </div>
-          </div>
-          
-        </div>
-      </div>
-    <div id="disqus_thread"></div>
+
+  </div>
+
+  <footer class="post-footer">
+    
+    <div class="post-tags">
+      <span class="post-tags-label">Tags:</span>
+      
+      <a href="http://localhost:1313/tags/python/" class="tag">python</a>
+      
+    </div>
+    
+
+    <nav class="post-nav">
+      
+      <a href="/2018/12/29/%E4%BB%8E%E5%8E%BB%E5%B9%B4%E7%9A%84%E4%B8%80%E4%B8%AApatch%E8%AF%B4%E8%B5%B7/" rel="prev" class="post-nav-prev">
+        <span class="post-nav-direction">← 上一篇</span>
+        <span class="post-nav-title">从去年的一个patch说起</span>
+      </a>
+      
+      
+      <a href="/2019/02/09/%E8%B1%86%E6%9B%B0/" rel="next" class="post-nav-next">
+        <span class="post-nav-direction">下一篇 →</span>
+        <span class="post-nav-title">豆曰</span>
+      </a>
+      
+    </nav>
+  </footer>
+</article>
+
+
+<div id="disqus_thread"></div>
 <script>
     window.disqus_config = function () {
     
@@ -180,85 +214,151 @@ db 处理处才弄明白要往里面传什么参数.</p>
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-      
-      
+
+
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; 2026 <a href="http://localhost:1313/">Shining Moon</a>.</p>
+      <p class="footer-meta">Powered by <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a> · Theme <a href="#" target="_blank" rel="noopener">Literary</a></p>
+    </footer>
+  </div>
+
+  <a href="#" class="back-to-top" id="backToTop" title="回到顶部">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+      <path d="M10 2.5a.75.75 0 01.75.75v12.69l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 111.06-1.06L9.25 15.94V3.25A.75.75 0 0110 2.5z"/>
+    </svg>
+  </a>
+
+  
+  <div class="toc-overlay" id="tocOverlay"></div>
+  <aside class="floating-toc" id="floatingToc">
+    <div class="floating-toc-header">
+      <span class="floating-toc-label">目录</span>
+      <button class="floating-toc-close" id="tocClose" aria-label="关闭目录">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M4.646 4.646a.5.5 0 01.708 0L8 7.293l2.646-2.647a.5.5 0 01.708.708L8.707 8l2.647 2.646a.5.5 0 01-.708.708L8 8.707l-2.646 2.647a.5.5 0 01-.708-.708L7.293 8 4.646 5.354a.5.5 0 010-.708z"/>
+        </svg>
+      </button>
     </div>
-  </div>
-  <a id="back_to_top" href="#" class="back_to_top"><span>△</span></a>
-</div>
-<footer class="footer">
-  <div class="powered_by">
-    <a href="https://zeuk.me">Designed by Zeuk,</a>
-    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
-  </div>
+    <nav class="floating-toc-body" id="floatingTocBody"></nav>
+  </aside>
+  <button class="toc-toggle" id="tocToggle" title="目录" aria-label="打开目录">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+      <path d="M2 4.5A1.5 1.5 0 013.5 3h11a1.5 1.5 0 010 3h-11A1.5 1.5 0 012 4.5zM2 9a1.5 1.5 0 011.5-1.5h11a1.5 1.5 0 010 3h-11A1.5 1.5 0 012 9zM3.5 13.5A1.5 1.5 0 002 15a1.5 1.5 0 001.5 1.5h11a1.5 1.5 0 000-3h-11z"/>
+    </svg>
+  </button>
+  
 
-  <div class="footer_slogan">
-    <span></span>
-  </div>
-</footer>
-
-
-
-<script src="http://localhost:1313/js/jquery-3.3.1.min.js"></script>
-<script src="http://localhost:1313/js/zozo.js"></script>
-<script src="http://localhost:1313/js/highlight.pack.js"></script>
-<link  href="http://localhost:1313/css/fancybox.min.css" rel="stylesheet">
-<script src="http://localhost:1313/js/fancybox.min.js"></script>
-
-<script>hljs.initHighlightingOnLoad()</script>
-
-
-  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-MathJax.Hub.Config({
-  tex2jax: {
-    inlineMath: [['$','$'], ['\\(','\\)']],
-    displayMath: [['$$','$$'], ['\[\[','\]\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-    TeX: { equationNumbers: { autoNumber: "AMS" },
-         extensions: ["AMSmath.js", "AMSsymbols.js"] }
-  }
-});
-
-MathJax.Hub.Queue(function() {
+  <script>
     
-    
-    
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i = 0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';
+    var backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) {
+          backToTop.classList.add('visible');
+        } else {
+          backToTop.classList.remove('visible');
+        }
+      });
+      backToTop.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
     }
-});
-</script>
 
-<style>
-code.has-jax {
-    font: inherit;
-    font-size: 100%;
-    background: inherit;
-    border: inherit;
-    color: #515151;
-}
-</style>
+    
+    var tocToggle = document.getElementById('tocToggle');
+    var tocOverlay = document.getElementById('tocOverlay');
+    var tocClose = document.getElementById('tocClose');
+    var floatingToc = document.getElementById('floatingToc');
 
+    function openToc() {
+      if (floatingToc) floatingToc.classList.add('open');
+      if (tocOverlay) tocOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
 
+    function closeToc() {
+      if (floatingToc) floatingToc.classList.remove('open');
+      if (tocOverlay) tocOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
 
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-      <script>
-        var doNotTrack = false;
-        if ( false ) {
-          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
-          var doNotTrack = (dnt == "1" || dnt == "yes");
+    if (tocToggle) tocToggle.addEventListener('click', openToc);
+    if (tocOverlay) tocOverlay.addEventListener('click', closeToc);
+    if (tocClose) tocClose.addEventListener('click', closeToc);
+
+    
+    var contentArea = document.querySelector('.post-content');
+    var tocBody = document.getElementById('floatingTocBody');
+    var tocToggle = document.getElementById('tocToggle');
+    if (contentArea && tocBody && tocToggle) {
+      var headings = contentArea.querySelectorAll('h2, h3');
+      if (headings.length >= 2) {
+        var tocList = document.createElement('ul');
+        tocList.className = 'toc-list';
+        headings.forEach(function(h, i) {
+          if (!h.id) {
+            h.id = 'heading-' + i;
+          }
+          var li = document.createElement('li');
+          li.className = 'toc-item toc-' + h.tagName.toLowerCase();
+          var a = document.createElement('a');
+          a.href = '#' + h.id;
+          a.textContent = h.textContent;
+          li.appendChild(a);
+          tocList.appendChild(li);
+        });
+        tocBody.appendChild(tocList);
+
+        
+        tocToggle.classList.add('visible');
+
+        
+        var tocLinks = tocList.querySelectorAll('a');
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              tocLinks.forEach(function(link) {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + entry.target.id) {
+                  link.classList.add('active');
+                }
+              });
+            }
+          });
+        }, { rootMargin: '-80px 0px -70% 0px' });
+        headings.forEach(function(h) { observer.observe(h); });
+      }
+    }
+  </script>
+
+  
+  <script>
+    
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      if (target.tagName === 'IMG' && target.closest('.post-content')) {
+        if (target.classList.contains('lightbox-active')) {
+          target.classList.remove('lightbox-active');
+          return;
         }
-        if (!doNotTrack) {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-P32CTT1G2G');
-        }
-      </script>
-
-
+        var overlay = document.createElement('div');
+        overlay.className = 'lightbox-overlay';
+        overlay.addEventListener('click', function() {
+          target.classList.remove('lightbox-active');
+          overlay.remove();
+        });
+        document.body.appendChild(overlay);
+        target.classList.add('lightbox-active');
+        setTimeout(function() {
+          overlay.classList.add('open');
+          target.classList.add('open');
+        }, 10);
+      }
+    });
+  </script>
+  
 </body>
 </html>

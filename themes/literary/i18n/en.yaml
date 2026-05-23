@@ -1,0 +1,18 @@
+- id: prev_page
+  translation: "← Prev"
+- id: next_page
+  translation: "Next →"
+- id: home
+  translation: "Home"
+- id: archive
+  translation: "Archive"
+- id: tags
+  translation: "Tags"
+- id: about
+  translation: "About"
+- id: posts
+  translation: "Posts"
+- id: post_count
+  translation: "{{ .Count }} posts in total"
+- id: toc
+  translation: "Table of Contents"

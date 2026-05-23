@@ -1,693 +1,44 @@
 <!DOCTYPE html>
-<html lang="zh-cn" >
+<html lang="zh-cn">
 <head>
-	<meta name="generator" content="Hugo 0.155.3">
-  <meta charset="utf-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<meta name="generator" content="Hugo 0.159.2">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  
-  <meta name="author"
-        content=""/>
-
-  
+  <title>Shining Moon</title>
 
   
 
+  <meta name="author" content="Shining Moon">
+  <link rel="canonical" href="https://blog.monsterxx03.com/">
   
-  <link rel="canonical" href="https://blog.monsterxx03.com/"/>
 
   
   <link rel="alternate" type="application/rss&#43;xml" href="https://blog.monsterxx03.com/index.xml">
   
 
-  <title>Shining Moon</title>
-
-  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
-
-  
-  
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css">
   <link rel="stylesheet" href="https://blog.monsterxx03.com/css/home.css">
+
   
-</head>
-
-<body>
-<div class="main animated">
-  <div class="nav_container animated fadeInDown">
-  <div class="site_nav" id="site_nav">
-    <ul>
-      
-      <li>
-        <a href="/">Home</a>
-      </li>
-      
-      <li>
-        <a href="/posts/">Archive</a>
-      </li>
-      
-      <li>
-        <a href="/about/">About</a>
-      </li>
-      
-      <li>
-        <a href="/tags">Tags</a>
-      </li>
-      
-    </ul>
-  </div>
-  <div class="menu_icon">
-    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
-  </div>
-</div>
-
-  <div class="header animated fadeInDown">
-  <div class="site_title_container">
-    <div class="site_title">
-      <h1>
-        <a href="https://blog.monsterxx03.com/">
-          <span>Shining Moon</span>
-          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
-        </a>
-      </h1>
-    </div>
-    <div class="description">
-      <p class="sub_title">百种弊病,皆从懒生</p>
-      <div class="my_socials">
-        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
-      </div>
-    </div>
-  </div>
-</div>
-
-  <div class="content">
-    
-
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/'>在python3.7 中实现python2.7 的内置 hash 函数</a></h2>
-  </div>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
   
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>最近着手准备从 python2.7 迁移到 python3.7, 还没开始就碰到一个问题. 老系统里有一部分竟然是将 python 内置 hash 函数的结果存进了数据库, 这个做法绝对是错的,
-hash 的结果本来就没有保证过在各个版本的 python 中保证一致. 而且 python3 中算法完全变了, 默认在进程初始化的时候会用随机种子加进 hash 过程, 所以python 进程
-一重启结果就不一样了. 木已成舟， 目前看将数据库里的值全部改掉是不可能了, 只能在 python3 中重新实现一下这个算法.</p>
-<p>python2.7 中的hash 算法是 fnv (有修改), python3 中变成了 sip, <a href="https://www.python.org/dev/peps/pep-0456">pep-456</a>.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.06.01</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/python/">python</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
 
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/05/23/use-sns-sqs-to-build-pub/sub-system/'>Use SNS &amp; SQS to build Pub/Sub System</a></h2>
-  </div>
   
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, take some notes.</p>
-<p>Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s
-really simple, and mainly for cross app operations. Now we have needs to enhance it to support more complex
-pubsub logic, eg: topic based distribution. It don&rsquo;t support redelivery as well, if subscribers failed to process
-the message, message will be dropped.</p>
-<p>There&rsquo;re three obvious choices in my mind:</p>
-<ol>
-<li>kafka</li>
-<li>AMQP based system (rabbitmq,activemq &hellip;)</li>
-<li>SNS + SQS</li>
-</ol>
-<p>My demands for this system are:</p>
-<ul>
-<li>Support message persistence.</li>
-<li>Support topic based message distribution.</li>
-<li>Easy to manage.</li>
-</ul>
-<p>The data volume won&rsquo;t be very large, so performance and throughput won&rsquo;t be critical concerns.</p>
-<p>I choose SNS + SQS, main concerns are from operation side:</p>
-<ul>
-<li>kafka need zookeeper to support cluster.</li>
-<li>rabbitmq need extra configuration for HA, and AMQP model is relatively complex for programming.</li>
-</ul>
-<p>So my decision is:</p>
-<ul>
-<li>application publish message to SNS topic</li>
-<li>Setup multi SQS queues to subscribe SNS topic</li>
-<li>Let different application processes to subscribe to different queues to finish its logic.</li>
-</ul>
-<p>SQS and SNS is very simple, not too much to say, just some notes:</p>
-<ul>
-<li>SQS queue have two types, FIFO queue and standard queue. FIFO queue will ensure message order, and ensure exactly once delivery, tps is limited(3000/s)
-standard queue is at least once delivery, message order is not ensured, tps is unlimited. In my case, I use standard queue, order is not very important.</li>
-<li>SQS message size limit is 256KB.</li>
-<li>Use <a href="https://github.com/p4tin/goaws">goaws</a> for local development, it has problem on processing message attributes, but I just use message body. messages only store in ram,
-will be cleared after restarted.</li>
-<li>If you failed to deliver message to sqs from sns, can setup topic&rsquo;s <code>sqs failure feedback role</code> to log to cloudwatch, in most case it&rsquo;s caused by iam permission.</li>
-<li>Message in sqs can retain at most 14 days.</li>
-<li>Once a message is received by a client, it will be invisible to other clients in <code>visibility_timeout_seconds</code>(default 30s). It means if your client failed to process
-the message, it will be redelivered after 30s.</li>
-<li>SQS client use long polling to receive message, set <code>receive_wait_time_seconds</code> to reduce api call to reduce fee.</li>
-<li>If your client failed to process a message due to bug, the message will be redelivered looply, set <code>redrive_policy</code> for the queue to limit retry count, and set a dead letter
-queue to store those messages. You can decide how to handle them late.</li>
-</ul>
-<p>I setup SNS and SQS via terraform, used following resources:</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.05.23</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/sns/">SNS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/sqs/">SQS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/05/20/migrate-to-sqlalchemy/'>Migrate to Sqlalchemy</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些.</p>
-<p>原来的 db 层代码历史非常古老(10年以上&hellip;), 最早写代码的人早就不在了, 问题很多:</p>
-<ul>
-<li>完全没有单元测试.</li>
-<li>暴露出的接口命名很混乱, 多数是为了兼容一些历史问题.</li>
-<li>里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便.</li>
-<li>老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表结构，只能直接看数据库.</li>
-</ul>
-<p>重写时候要考虑到的:</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.05.20</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/python/">python</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/sqlalchemy/">sqlalchemy</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/'>AWS 的 K8S CNI Plugin</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别.</p>
-<p>K8S 集群对网络有几个基本要求:</p>
-<ul>
-<li>container 之间网络必须可达，且不通过 NAT</li>
-<li>所有 node 必须可以和所有 container 通信, 且不通过 NAT</li>
-<li>container 自己看到的 IP, 必须和其他 container 看到的它的 ip 相同.</li>
-</ul>
-<h2 id="flannel-in-vpc">Flannel in VPC</h2>
-<p>flannel 是 K8S 的一个 CNI 插件, 在 VPC 里使用 flannel 的话, 有几个选择:</p>
-<ol>
-<li>通过 VXLAN/UDP 进行封包, 封包影响网络性能, 而且不好 debug</li>
-<li>用 aws vpc backend, 这种方式会把每台主机的 docker 网段添加进 vpc routing table, 但默认 routing table 里只能有50条规则, 所以只能 50 个 node, 可以发 ticket 提升, 但数量太多会影响 vpc 性能.</li>
-<li>host-gw, 在每个 node 上直接维护集群中所有节点的路由, 没测试过, 感觉出问题也很难 debug, 假如用 autoscaling group 管理 node 集群, 能否让 K8S 在 scale in/out 的时候修改所有节点的路由?</li>
-</ol>
-<p>以上方式都只能利用 EC2 上的单网卡, security group 也没法作用在 pod 上.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.04.09</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/vpc/">vpc</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/k8s/">k8s</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/'>AWS lambda 的一些应用场景</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>这几年吹 serverless 的比较多,  在公司内部也用 lambda , 记录一下, 这东西挺有用, 但远不到万能, 场景比较有限.</p>
-<p>lambda 的代码的部署用的 <a href="https://serverless.com">serverless</a> 框架, 本身支持多种 cloud 平台, 我们就只在 aws lambda 上了.</p>
-<p>我基本上就把 lambda 当成 trigger 和 web hook 用.</p>
-<h2 id="和--auto-scaling-group-一起用">和  auto scaling group 一起用</h2>
-<p>线上所有分组的机器都是用 auto scaling group 管理的, 只不过 stateless 的 server 开了自动伸缩, 带状态的 (ElasticSearch cluster, redis cache cluster) 只用来维护固定 size.</p>
-<p>在往一个 group 里加 server 的时候, 要做的事情挺多的, 给新 server 添加组内编号 tag, 添加内网域名, provision, 部署最新代码.</p>
-<p>这些事都用 jenkins 来做, 但怎么触发 jenkins job 呢?</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.03.23</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/lambda/">lambda</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/03/17/%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/'>一次失败的性能问题排查</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>一叶障目, 不见泰山. 前阵子一直在排查一个性能问题, 结果由于一些惯性思维, 费了好大劲才弄明白原因, 而且原因非常简单&hellip;.把这事记录下来,免得以后再掉坑里去.</p>
-<p>现象是到了晚上10点多, server lantency 突然一瞬间变高, 但持续时间很短，马上就会恢复, timeout 的请求也不多，影响不大.问题其实从蛮久前就出现了, 但一直也没很重视, 因为持续时间短,影响也不大,简单看了下也没看出明显的问题, 就一直搁置着. 直到最近，觉得问题变严重了, latency 变的更高了，而且在10～11点间多次变高, 开始认真看为什么.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.03.17</span>
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/02/28/access-sensitive-variables-on-aws-lambda/'>Access sensitive variables on AWS lambda</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&hellip;</p>
-<p>Usually, we inject secrets as environment variables, but they&rsquo;re still visable on lambda console. I don&rsquo;t use it in aws lambda.</p>
-<p>The better way is use <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html">aws parameter store</a> as configuration center. It can work with KMS to encrypt your data.</p>
-<p>Code example:</p>
-<pre><code>client = boto3.client('ssm')
-resp = client.get_parameter(
-    Name='/redshift/admin/password',
-    WithDecryption=True
-)
-resp:
-
-    {
-        &quot;Parameter&quot;: {
-            &quot;Name&quot;: &quot;/redshift/admin/password&quot;,
-            &quot;Type&quot;: &quot;SecureString&quot;,
-            &quot;Value&quot;: &quot;password value&quot;,
-            &quot;Version&quot;: 1
-        }
-    }
-</code></pre>
-<p>Things you need to do to make it work:</p>
-<ul>
-<li>Create a new KMS key</li>
-<li>Use new created KMS key to encrypt your data in parameter store.</li>
-<li>Set a execution role for your lambda function.</li>
-<li>In the KMS key&rsquo;s setting page, add the lambda execution role to the list which can read this KMS key.</li>
-</ul>
-<p>Then your lambda code can access encrypted data at runtime, and you needn&rsquo;t set aws access_key/secret_key, lambda execution role enable access to data in parameter store.</p>
-<p>BTW, parameter store support hierarchy(at most 15 levels), splitted by <code>/</code>. You can retrive data under same level in one call, deltails can be found in doc, eg: <a href="http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path">http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameters_by_path</a></p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.02.28</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/lambda/">lambda</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/02/23/glow-infra-evolution/'>Glow Infra Evolution</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><h1 id="glow-data-infrastructure-的演化">Glow data infrastructure 的演化</h1>
-<p>Glow 一向是一个 data driven 做决策的公司，稳定高效的平台是必不可少的支撑, 本文总结几年里公司 data infrastructure 的演进过程.</p>
-<p>结合业务特点做技术选型和实现时候的几个原则:</p>
-<ol>
-<li>real time 分析的需求不高，时间 delta 控制在1 小时以内可接受 .</li>
-<li>支持快速的交互式查询.</li>
-<li>底层平台尽量选择 AWS 托管服务, 减少维护成本.</li>
-<li>遇到故障, 数据可以 delay 但不能丢.</li>
-<li>可回溯历史数据.</li>
-<li>成本可控.</li>
-</ol>
-<p>用到的 AWS 服务:</p>
-<ul>
-<li>数据存储和查询:  S3, Redshift (spectrum), Athena</li>
-<li>ETL: DMS, EMR, Kinesis, Firehose, Lambda</li>
-</ul>
-<p>开源软件: td-agent, maxwell</p>
-<p>数据来源:</p>
-<ol>
-<li>线上业务数据库</li>
-<li>用户活动产生的 metrics log</li>
-<li>从各种第三方服务 api 拉下来的数据 (email之类)</li>
-</ol>
-<h2 id="最早期">最早期</h2>
-<p>刚开始的时候业务单纯，数据量也少, 所有数据都用 MySQL 存储，搭了台 slave, 分析查询都在 slave 上进行.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.02.23</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/redshift/">redshift</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/spectrum/">spectrum</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/athena/">athena</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/glow/">glow</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/data-infra/">data-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2018/02/01/get-real-client-ip-on-aws/'>Get Real Client Ip on AWS</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>If you run a webserver on AWS, get real client ip will be tricky if you didn&rsquo;t configure server right and write code correctly.</p>
-<p>Things related to client real ip:</p>
-<ul>
-<li>CloudFront (cdn)</li>
-<li>ALB (loadbalancer)</li>
-<li>nginx (on ec2)</li>
-<li>webserver (maybe a python flask application).</li>
-</ul>
-<p>Request sequence diagram will be like following:</p>
-<p><img src="/posts/images/cf-alb-nginx.png" alt="req"></p>
-<p>User&rsquo;s real client ip is forwarded by front proxies one by one in head <code>X-Forwarded-For</code>.</p>
-<p>For CloudFront:</p>
-<ul>
-<li>If user&rsquo;s req header don&rsquo;t  have <code>X-Forwarded-For</code>, it will set user&rsquo;s ip(from tcp connection) in <code>X-Forwarded-For</code></li>
-<li>If user&rsquo;s req already have <code>X-Forwarded-For</code>, it will append user&rsquo;s ip(from tcp connection) to the end of <code>X-Forwarded-For</code></li>
-</ul>
-<p>For ALB, rule is same as CloudFront, so the <code>X-Forwarded-For</code> header pass to nginx will be the value received from CloudFront + CloudFront&rsquo;s ip.</p>
-<p>For nginx, things will be tricky depends on your config.</p>
-<p>Things maybe involved in nginx:</p>
-<ul>
-<li>real ip module</li>
-<li>proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</li>
-</ul>
-<p>If you didn&rsquo;t use real ip module, you need to pass X-Forwarded-For head explictly.</p>
-<p><code>proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</code> will append ALB&rsquo;s ip to the end of <code>X-Forwarded-For</code> header received from ALB.</p>
-<p>So <code>X-Forwarded-For</code> header your webserver received will be <code>user ip,cloudfront ip, alb ip</code></p>
-<p>Or you can use real ip module to trust the value passed from ALB.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2018.02.01</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/lang-en/">lang-en</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/cloudfront/">CloudFront</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/alb/">ALB</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="post animated fadeInDown">
-  <div class="post_title">
-    <h2><a href='/2017/12/15/dynamodb/'>DynamoDB</a></h2>
-  </div>
-  
-  <div class="list">
-    <div class="post_content markdown">
-      <p><p>DynamoDB 是 AWS 的托管 NoSQL 数据库，可以当作简单的 KV 数据库使用，也可以作为文档数据库使用.</p>
-<h2 id="data-model">Data model</h2>
-<p>组织数据的单位是 table, 每张 table 必须设置 primary key, 可以设置可选的 sort key 来做索引.</p>
-<p>每条数据记作一个 item, 每个 item 含有一个或多个 attribute, 其中必须包括 primary key.</p>
-<p>attribute 对应的 value 支持以下几种类型:</p>
-<ul>
-<li>Number, 由于 DynamoDB 的传输协议是 http + json, 为了跨语言的兼容性, number 一律会被转成 string 传输.</li>
-<li>Binary, 用来表示任意的二进制数据，会用 base64 encode 后传输.</li>
-<li>Boolean, true or false</li>
-<li>Null</li>
-<li>Document 类型包含 List 和 Map, 可以互相嵌套.
-<ul>
-<li>List, 个数无限制, 总大小不超过 400KB</li>
-<li>Map, 属性个数无限制，总大小不超过 400 KB, 嵌套层级不超过 32 级.</li>
-</ul>
-</li>
-<li>Set,  一个 set 内元素数目无限制, 无序，不超过 400KB, 但必须属于同一类型, 支持 number set, binary set, string set.</li>
-</ul>
-<h2 id="选择-primary-key">选择 primary key</h2>
-<p>Table 的 primary key 支持单一的 partition key 或复合的 partition key + sort key. 不管哪种，最后的组成的primary key 在一张表中必须唯一.</p>......</p>
-    </div>
-  </div>
-  
-  <div class="post_footer">
-    <div class="meta">
-      <div class="info">
-        <span class="field">
-          <i class="remixicon-map-pin-time-line"></i>
-          <span class="date">2017.12.15</span>
-        </span>
-        
-        <span class="field tags">
-          <i class="remixicon-stack-line"></i>
-          
-          <a href="https://blog.monsterxx03.com/tags/aws/">AWS</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/database/">Database</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/nosql/">NoSQL</a>
-          
-          <a href="https://blog.monsterxx03.com/tags/server-infra/">server-infra</a>
-          
-        </span>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<div class="pagination">
-  
-  
-  <a href="/page/6/" class="pre">
-    返回上一页
-  </a>
-  
-  
-  <a href="/page/8/" class="next">
-    阅读更多文章
-  </a>
-  
-  
-</div>
-
-  </div>
-</div>
-<footer class="footer">
-  <div class="powered_by">
-    <a href="https://zeuk.me">Designed by Zeuk,</a>
-    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
-  </div>
-
-  <div class="footer_slogan">
-    <span></span>
-  </div>
-</footer>
-
-
-
-<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
-<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
-<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
-<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
-<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
-
-<script>hljs.initHighlightingOnLoad()</script>
-
-
-  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-MathJax.Hub.Config({
-  tex2jax: {
-    inlineMath: [['$','$'], ['\\(','\\)']],
-    displayMath: [['$$','$$'], ['\[\[','\]\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-    TeX: { equationNumbers: { autoNumber: "AMS" },
-         extensions: ["AMSmath.js", "AMSsymbols.js"] }
-  }
-});
-
-MathJax.Hub.Queue(function() {
-    
-    
-    
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i = 0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-});
-</script>
-
-<style>
-code.has-jax {
-    font: inherit;
-    font-size: 100%;
-    background: inherit;
-    border: inherit;
-    color: #515151;
-}
-</style>
-
-
-
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
       <script>
         var doNotTrack = false;
@@ -702,7 +53,436 @@ code.has-jax {
           gtag('config', 'G-P32CTT1G2G');
         }
       </script>
+</head>
+<body>
+  <div class="wrapper">
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div>
+          <h1 class="site-title"><a href="/">Shining Moon</a></h1>
+          
+          <p class="site-subtitle">百种弊病,皆从懒生</p>
+          
+        </div>
+        <nav class="main-nav">
+          
+          
+          <a href="/" class="active">
+            Home
+          </a>
+          
+          <a href="/posts/" >
+            Archive
+          </a>
+          
+          <a href="/about/" >
+            About
+          </a>
+          
+          <a href="/tags" >
+            Tags
+          </a>
+          
+          <a href="https://github.com/monsterxx03" target="_blank" rel="noopener" title="GitHub" class="nav-github">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: -3px; margin-right: 2px;">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="content">
+      
+<div class="post-list">
+  
+  
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2018-06-01">2018 年 06 月 01 日</time>
+      <span class="post-item-reading">2 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/">在python3.7 中实现python2.7 的内置 hash 函数</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      最近着手准备从 python2.7 迁移到 python3.7, 还没开始就碰到一个问题. 老系统里有一部分竟然是将 python 内置 hash 函数的结果存进了数据库, 这个做法绝对是错的, hash 的结果本来就没有保证过在各个版本的 python 中保证一致. 而且 python3 中算法完全变了, 默认在进程初始化的时候会用随机种子加进 hash 过程, 所以python 进程 一重启结果就不一样了. 木已成舟， 目前看将数据库里的值全部改掉是不可能了, 只能在 python3 中重新实现一下这个算法.
+python2.7 中的hash 算法是 fnv (有修改), python3 …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/python/" class="tag">python</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/code-infra/" class="tag">code-infra</a>
+        
+      </div>
+      
+      <a href="/2018/06/01/%E5%9C%A8python3.7-%E4%B8%AD%E5%AE%9E%E7%8E%B0python2.7-%E7%9A%84%E5%86%85%E7%BD%AE-hash-%E5%87%BD%E6%95%B0/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2018-05-23">2018 年 05 月 23 日</time>
+      <span class="post-item-reading">3 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2018/05/23/use-sns-sqs-to-build-pub/sub-system/">Use SNS &amp; SQS to build Pub/Sub System</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      Recently, we build pub/sub system based on AWS&rsquo;s SNS &amp; SQS service, take some notes.
+Originally, we have an pub/sub system based on redis(use BLPOP to listen to a redis list). It&rsquo;s really simple, and mainly for cross app operations. Now we have needs to enhance it to support more …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/lang-en/" class="tag">lang-en</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/aws/" class="tag">AWS</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/sns/" class="tag">SNS</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/sqs/" class="tag">SQS</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/code-infra/" class="tag">code-infra</a>
+        
+      </div>
+      
+      <a href="/2018/05/23/use-sns-sqs-to-build-pub/sub-system/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2018-05-20">2018 年 05 月 20 日</time>
+      <span class="post-item-reading">5 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2018/05/20/migrate-to-sqlalchemy/">Migrate to Sqlalchemy</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      最近把公司 db 层的封装代码基于 sqlalchemy 重写了, 记录一些.
+原来的 db 层代码历史非常古老(10年以上&hellip;), 最早写代码的人早就不在了, 问题很多:
+完全没有单元测试. 暴露出的接口命名很混乱, 多数是为了兼容一些历史问题. 里面带一套 client 端 db sharding 的逻辑, 但在新项目里完全用不到, 还导致无法做 join, 无法子查询, 很不方便. 老的 db 代码没有 model 层, 和 db migration 通过一种很 trick 的方式绑定在一起实现的, 导致开发时候对着代码完全无法知道数据库表结构，只能直接看数据库. 重写时候要 …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/python/" class="tag">python</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/sqlalchemy/" class="tag">sqlalchemy</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/code-infra/" class="tag">code-infra</a>
+        
+      </div>
+      
+      <a href="/2018/05/20/migrate-to-sqlalchemy/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2018-04-09">2018 年 04 月 09 日</time>
+      <span class="post-item-reading">2 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/">AWS 的 K8S CNI Plugin</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      EKS 还没有 launch, 但 AWS 先开源了自己的 CNI 插件, 简单看了下, 说说它的实现和其他 K8S 网络方案的差别.
+K8S 集群对网络有几个基本要求:
+container 之间网络必须可达，且不通过 NAT 所有 node 必须可以和所有 container 通信, 且不通过 NAT container 自己看到的 IP, 必须和其他 container 看到的它的 ip 相同. Flannel in VPC flannel 是 K8S 的一个 CNI 插件, 在 VPC 里使用 flannel 的话, 有几个选择:
+通过 VXLAN/UDP 进行封包, 封包影响网络性能, …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/aws/" class="tag">AWS</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/vpc/" class="tag">vpc</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/k8s/" class="tag">k8s</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/server-infra/" class="tag">server-infra</a>
+        
+      </div>
+      
+      <a href="/2018/04/09/aws-%E7%9A%84-k8s-cni-plugin/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2018-03-23">2018 年 03 月 23 日</time>
+      <span class="post-item-reading">2 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/">AWS lambda 的一些应用场景</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      这几年吹 serverless 的比较多, 在公司内部也用 lambda , 记录一下, 这东西挺有用, 但远不到万能, 场景比较有限.
+lambda 的代码的部署用的 serverless 框架, 本身支持多种 cloud 平台, 我们就只在 aws lambda 上了.
+我基本上就把 lambda 当成 trigger 和 web hook 用.
+和 auto scaling group 一起用 线上所有分组的机器都是用 auto scaling group 管理的, 只不过 stateless 的 server 开了自动伸缩, 带状态的 (ElasticSearch cluster, …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/aws/" class="tag">AWS</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/lambda/" class="tag">lambda</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/server-infra/" class="tag">server-infra</a>
+        
+      </div>
+      
+      <a href="/2018/03/23/aws-lambda-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2018-03-17">2018 年 03 月 17 日</time>
+      <span class="post-item-reading">4 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2018/03/17/%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/">一次失败的性能问题排查</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      一叶障目, 不见泰山. 前阵子一直在排查一个性能问题, 结果由于一些惯性思维, 费了好大劲才弄明白原因, 而且原因非常简单&hellip;.把这事记录下来,免得以后再掉坑里去.
+现象是到了晚上10点多, server lantency 突然一瞬间变高, 但持续时间很短，马上就会恢复, timeout 的请求也不多，影响不大.问题其实从蛮久前就出现了, 但一直也没很重视, 因为持续时间短,影响也不大,简单看了下也没看出明显的问题, 就一直搁置着. 直到最近，觉得问题变严重了, latency 变的更高了，而且在10～11点间多次变高, 开始认真看为什么.
+
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <a href="/2018/03/17/%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2018-02-28">2018 年 02 月 28 日</time>
+      <span class="post-item-reading">1 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2018/02/28/access-sensitive-variables-on-aws-lambda/">Access sensitive variables on AWS lambda</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      AWS lambda is convenient to run simple serverless application, but how to access sensitive data in code? like password,token&hellip;
+Usually, we inject secrets as environment variables, but they&rsquo;re still visable on lambda console. I don&rsquo;t use it in aws lambda.
+The better way is use aws …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/lang-en/" class="tag">lang-en</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/aws/" class="tag">AWS</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/lambda/" class="tag">lambda</a>
+        
+      </div>
+      
+      <a href="/2018/02/28/access-sensitive-variables-on-aws-lambda/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2018-02-23">2018 年 02 月 23 日</time>
+      <span class="post-item-reading">5 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2018/02/23/glow-infra-evolution/">Glow Infra Evolution</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      Glow data infrastructure 的演化 Glow 一向是一个 data driven 做决策的公司，稳定高效的平台是必不可少的支撑, 本文总结几年里公司 data infrastructure 的演进过程.
+结合业务特点做技术选型和实现时候的几个原则:
+real time 分析的需求不高，时间 delta 控制在1 小时以内可接受 . 支持快速的交互式查询. 底层平台尽量选择 AWS 托管服务, 减少维护成本. 遇到故障, 数据可以 delay 但不能丢. 可回溯历史数据. 成本可控. 用到的 AWS 服务:
+数据存储和查询: S3, Redshift (spectrum), …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/redshift/" class="tag">redshift</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/spectrum/" class="tag">spectrum</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/athena/" class="tag">athena</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/glow/" class="tag">glow</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/data-infra/" class="tag">data-infra</a>
+        
+      </div>
+      
+      <a href="/2018/02/23/glow-infra-evolution/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2018-02-01">2018 年 02 月 01 日</time>
+      <span class="post-item-reading">2 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2018/02/01/get-real-client-ip-on-aws/">Get Real Client Ip on AWS</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      If you run a webserver on AWS, get real client ip will be tricky if you didn&rsquo;t configure server right and write code correctly.
+Things related to client real ip:
+CloudFront (cdn) ALB (loadbalancer) nginx (on ec2) webserver (maybe a python flask application). Request sequence diagram will be …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/lang-en/" class="tag">lang-en</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/aws/" class="tag">AWS</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/cloudfront/" class="tag">CloudFront</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/alb/" class="tag">ALB</a>
+        
+      </div>
+      
+      <a href="/2018/02/01/get-real-client-ip-on-aws/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2017-12-15">2017 年 12 月 15 日</time>
+      <span class="post-item-reading">5 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2017/12/15/dynamodb/">DynamoDB</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      DynamoDB 是 AWS 的托管 NoSQL 数据库，可以当作简单的 KV 数据库使用，也可以作为文档数据库使用.
+Data model 组织数据的单位是 table, 每张 table 必须设置 primary key, 可以设置可选的 sort key 来做索引.
+每条数据记作一个 item, 每个 item 含有一个或多个 attribute, 其中必须包括 primary key.
+attribute 对应的 value 支持以下几种类型:
+Number, 由于 DynamoDB 的传输协议是 http + json, 为了跨语言的兼容性, number 一律会被转成 string …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/aws/" class="tag">AWS</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/database/" class="tag">Database</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/nosql/" class="tag">NoSQL</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/server-infra/" class="tag">server-infra</a>
+        
+      </div>
+      
+      <a href="/2017/12/15/dynamodb/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
+  
+</div>
 
 
+<div class="pagination">
+  
+  <a href="/page/6/" class="prev">← 上一页</a>
+  
+  
+  <a href="/page/8/" class="next">下一页 →</a>
+  
+</div>
+
+
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; 2026 <a href="https://blog.monsterxx03.com/">Shining Moon</a>.</p>
+      <p class="footer-meta">Powered by <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a> · Theme Literary</p>
+    </footer>
+  </div>
+
+  <a href="#" class="back-to-top" id="backToTop" title="回到顶部">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+      <path d="M10 2.5a.75.75 0 01.75.75v12.69l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 111.06-1.06L9.25 15.94V3.25A.75.75 0 0110 2.5z"/>
+    </svg>
+  </a>
+
+  <script>
+    
+    var backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) {
+          backToTop.classList.add('visible');
+        } else {
+          backToTop.classList.remove('visible');
+        }
+      });
+      backToTop.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    
+    var tocLinks = document.querySelectorAll('.post-toc a');
+    if (tocLinks.length > 0) {
+      var headings = [];
+      tocLinks.forEach(function(link) {
+        var id = link.getAttribute('href').slice(1);
+        var h = document.getElementById(id);
+        if (h) headings.push(h);
+      });
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            tocLinks.forEach(function(link) {
+              link.classList.remove('active');
+              if (link.getAttribute('href') === '#' + entry.target.id) {
+                link.classList.add('active');
+              }
+            });
+          }
+        });
+      }, { rootMargin: '-80px 0px -70% 0px' });
+      headings.forEach(function(h) { observer.observe(h); });
+    }
+  </script>
+
+  
 </body>
 </html>

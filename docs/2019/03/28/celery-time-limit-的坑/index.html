@@ -1,188 +1,220 @@
 <!DOCTYPE html>
-<html lang="zh-cn" >
+<html lang="zh-cn">
 <head>
-  <meta charset="utf-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  
-  <meta name="author"
-        content=""/>
+  <title>Celery Time Limit 的坑 · Shining Moon</title>
 
   
   <meta name="description" content="之前用 celery 做的 task 都是一些很简单轻量级的 task, 从来没触发过 timeout, 最近加入了一些复杂很耗时的 task, 碰到一些 time limit 的坑.
-celery 中 time limit 有两种, soft_time_limit 和 hard_time_limit, 区别是 soft_time_limit 会在内部抛一个 Exception, task 可以 catch 自行处理. hard time limit 没法被 catch.
-使用如下:
-from myapp import app from celery.exceptions import SoftTimeLimitExceeded @app.task def mytask(): try: do_work() except SoftTimeLimitExceeded: clean_up_in_a_hurry() 我 celery pool 用的是 gevent, 实际上在现在的实现里 gevent 做 worker pool 的时候会忽略 soft_time_limit, 只有 hard_time_limit 会被触发(通过 gevent.Timeout 实现).
-坑爹的是文档里写的是错的: http://docs.celeryproject.org/en/latest/userguide/workers.html#time-limit
-soft_time_limit 只在 prefork pool 里支持.
-我现在想让 celery 把这个 hard timeout 的情况 report 到 sentry, 看了圈代码并没法从外面 override timeout 的 callback. 只能很丑得做了个 monkey patch, 在初始化 celeryapp 的代码里:
-"/>
+celery 中 time limit 有两种, soft_time_limit 和 hard_time_limit, 区别是 …">
+  
+
+  <meta name="author" content="Shining Moon">
+  <link rel="canonical" href="https://blog.monsterxx03.com/2019/03/28/celery-time-limit-%E7%9A%84%E5%9D%91/">
   
 
   
 
-  
-  <link rel="canonical" href="https://blog.monsterxx03.com/2019/03/28/celery-time-limit-%E7%9A%84%E5%9D%91/"/>
-
-  
-
-  <title>Celery Time Limit 的坑 &middot; Shining Moon</title>
-
-  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
-
-  
-  
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css">
   <link rel="stylesheet" href="https://blog.monsterxx03.com/css/home.css">
+
   
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  
+
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 </head>
-
 <body>
-<div class="main animated">
-  <div class="nav_container animated fadeInDown">
-  <div class="site_nav" id="site_nav">
-    <ul>
-      
-      <li>
-        <a href="/">Home</a>
-      </li>
-      
-      <li>
-        <a href="/posts/">Archive</a>
-      </li>
-      
-      <li>
-        <a href="/about/">About</a>
-      </li>
-      
-      <li>
-        <a href="/tags">Tags</a>
-      </li>
-      
-    </ul>
-  </div>
-  <div class="menu_icon">
-    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
-  </div>
-</div>
-
-  <div class="header animated fadeInDown">
-  <div class="site_title_container">
-    <div class="site_title">
-      <h1>
-        <a href="https://blog.monsterxx03.com/">
-          <span>Shining Moon</span>
-          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
-        </a>
-      </h1>
-    </div>
-    <div class="description">
-      <p class="sub_title">百种弊病,皆从懒生</p>
-      <div class="my_socials">
-        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
-      </div>
-    </div>
-  </div>
-</div>
-
-  <div class="content">
-    <div class="post_page">
-      <div class="post animated fadeInDown">
-        <div class="post_title post_detail_title">
-          <h2><a href='/2019/03/28/celery-time-limit-%E7%9A%84%E5%9D%91/'>Celery Time Limit 的坑</a></h2>
-          <span class="date">2019.03.28</span>
+  <div class="wrapper">
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div>
+          <h1 class="site-title"><a href="/">Shining Moon</a></h1>
+          
+          <p class="site-subtitle">百种弊病,皆从懒生</p>
+          
         </div>
-        <div class="post_content markdown"><p>之前用 celery 做的 task 都是一些很简单轻量级的 task, 从来没触发过 timeout, 最近加入了一些复杂很耗时的 task, 碰到一些 time limit 的坑.</p>
+        <nav class="main-nav">
+          
+          
+          <a href="/" >
+            Home
+          </a>
+          
+          <a href="/posts/" >
+            Archive
+          </a>
+          
+          <a href="/about/" >
+            About
+          </a>
+          
+          <a href="/tags" >
+            Tags
+          </a>
+          
+          <a href="https://github.com/monsterxx03" target="_blank" rel="noopener" title="GitHub" class="nav-github">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: -3px; margin-right: 2px;">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="content">
+      
+<article>
+  <header class="post-header">
+    <h1 class="post-title">Celery Time Limit 的坑</h1>
+    <div class="post-meta">
+      <span class="post-meta-date">
+        <time datetime="2019-03-28">2019 年 03 月 28 日</time>
+      </span>
+      
+      
+      <span class="post-meta-category">· <a href="https://blog.monsterxx03.com/categories/tech/">tech</a></span>
+      
+      <span class="post-meta-reading">· 1 分钟阅读</span>
+      <span class="post-meta-words">· 411 字</span>
+    </div>
+  </header>
+
+  
+
+  <div class="post-content">
+    <p>之前用 celery 做的 task 都是一些很简单轻量级的 task, 从来没触发过 timeout, 最近加入了一些复杂很耗时的 task, 碰到一些 time limit 的坑.</p>
 <p>celery 中 time limit 有两种, soft_time_limit 和 hard_time_limit, 区别是 soft_time_limit 会在内部抛一个 Exception, task 可以 catch 自行处理.
 hard time limit 没法被 catch.</p>
 <p>使用如下:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> myapp <span style="color:#f92672">import</span> app
-</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> celery.exceptions <span style="color:#f92672">import</span> SoftTimeLimitExceeded
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">from</span> <span style="color:#268bd2">myapp</span> <span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">app</span>
+</span></span><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">from</span> <span style="color:#268bd2">celery.exceptions</span> <span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">SoftTimeLimitExceeded</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@app.task</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mytask</span>():
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
-</span></span><span style="display:flex;"><span>        do_work()
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> SoftTimeLimitExceeded:
-</span></span><span style="display:flex;"><span>        clean_up_in_a_hurry()</span></span></code></pre></div>
+</span></span><span style="display:flex;"><span><span style="color:#268bd2">@app.task</span>
+</span></span><span style="display:flex;"><span><span style="color:#859900">def</span> <span style="color:#268bd2">mytask</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#859900">try</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#268bd2">do_work</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#859900">except</span> <span style="color:#268bd2">SoftTimeLimitExceeded</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#268bd2">clean_up_in_a_hurry</span>()</span></span></code></pre></div>
 <p>我 celery pool 用的是 gevent, 实际上在现在的实现里 gevent 做 worker pool 的时候会忽略 soft_time_limit, 只有 hard_time_limit 会被触发(通过 gevent.Timeout 实现).</p>
 <p>坑爹的是文档里写的是错的: <a href="http://docs.celeryproject.org/en/latest/userguide/workers.html#time-limit">http://docs.celeryproject.org/en/latest/userguide/workers.html#time-limit</a></p>
 <p>soft_time_limit 只在 prefork pool 里支持.</p>
 <p>我现在想让 celery 把这个 hard timeout 的情况 report 到 sentry, 看了圈代码并没法从外面 override timeout 的 callback. 只能很丑得做了个 monkey patch, 在初始化 celeryapp
 的代码里:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> gevent <span style="color:#f92672">import</span> Timeout
-</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> celery.concurrency.base <span style="color:#f92672">import</span> apply_target <span style="color:#66d9ef">as</span> celery_apply_target
-</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> celery.concurrency <span style="color:#f92672">import</span> gevent <span style="color:#66d9ef">as</span>  celery_gevent_pool
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">from</span> <span style="color:#268bd2">gevent</span> <span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">Timeout</span>
+</span></span><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">from</span> <span style="color:#268bd2">celery.concurrency.base</span> <span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">apply_target</span> <span style="color:#859900">as</span> <span style="color:#268bd2">celery_apply_target</span>
+</span></span><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">from</span> <span style="color:#268bd2">celery.concurrency</span> <span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">gevent</span> <span style="color:#859900">as</span>  <span style="color:#268bd2">celery_gevent_pool</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>_original_apply_timeout <span style="color:#f92672">=</span> celery_gevent_pool<span style="color:#f92672">.</span>apply_timeout
+</span></span><span style="display:flex;"><span><span style="color:#268bd2">_original_apply_timeout</span> = <span style="color:#268bd2">celery_gevent_pool</span>.<span style="color:#268bd2">apply_timeout</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># monkey patch original timeout handler, to report error to sentry</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># when using gevent pool, celery will ignore soft_time_limit,</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># only hard_time_limit works.</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">apply_timeout_with_report</span>(target, args<span style="color:#f92672">=</span>(), kwargs<span style="color:#f92672">=</span>{}, callback<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>,
-</span></span><span style="display:flex;"><span>                  accept_callback<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, pid<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, timeout<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>,
-</span></span><span style="display:flex;"><span>                  timeout_callback<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, Timeout<span style="color:#f92672">=</span>Timeout,
-</span></span><span style="display:flex;"><span>                  apply_target<span style="color:#f92672">=</span>celery_apply_target, <span style="color:#f92672">**</span>rest):
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">with</span> Timeout(timeout):
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> apply_target(target, args, kwargs, callback,
-</span></span><span style="display:flex;"><span>                                accept_callback, pid, propagate<span style="color:#f92672">=</span>(Timeout,), <span style="color:#f92672">**</span>rest)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> Timeout <span style="color:#66d9ef">as</span> e:
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># report to sentry</span>
+</span></span><span style="display:flex;"><span><span style="color:#93a1a1;font-style:italic"># monkey patch original timeout handler, to report error to sentry</span>
+</span></span><span style="display:flex;"><span><span style="color:#93a1a1;font-style:italic"># when using gevent pool, celery will ignore soft_time_limit,</span>
+</span></span><span style="display:flex;"><span><span style="color:#93a1a1;font-style:italic"># only hard_time_limit works.</span>
+</span></span><span style="display:flex;"><span><span style="color:#859900">def</span> <span style="color:#268bd2">apply_timeout_with_report</span>(<span style="color:#268bd2">target</span>, <span style="color:#268bd2">args</span>=(), <span style="color:#268bd2">kwargs</span>={}, <span style="color:#268bd2">callback</span>=<span style="color:#859900;font-weight:bold">None</span>,
+</span></span><span style="display:flex;"><span>                  <span style="color:#268bd2">accept_callback</span>=<span style="color:#859900;font-weight:bold">None</span>, <span style="color:#268bd2">pid</span>=<span style="color:#859900;font-weight:bold">None</span>, <span style="color:#268bd2">timeout</span>=<span style="color:#859900;font-weight:bold">None</span>,
+</span></span><span style="display:flex;"><span>                  <span style="color:#268bd2">timeout_callback</span>=<span style="color:#859900;font-weight:bold">None</span>, <span style="color:#268bd2">Timeout</span>=<span style="color:#268bd2">Timeout</span>,
+</span></span><span style="display:flex;"><span>                  <span style="color:#268bd2">apply_target</span>=<span style="color:#268bd2">celery_apply_target</span>, **<span style="color:#268bd2">rest</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#859900">try</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#859900">with</span> <span style="color:#268bd2">Timeout</span>(<span style="color:#268bd2">timeout</span>):
+</span></span><span style="display:flex;"><span>            <span style="color:#859900">return</span> <span style="color:#268bd2">apply_target</span>(<span style="color:#268bd2">target</span>, <span style="color:#268bd2">args</span>, <span style="color:#268bd2">kwargs</span>, <span style="color:#268bd2">callback</span>,
+</span></span><span style="display:flex;"><span>                                <span style="color:#268bd2">accept_callback</span>, <span style="color:#268bd2">pid</span>, <span style="color:#268bd2">propagate</span>=(<span style="color:#268bd2">Timeout</span>,), **<span style="color:#268bd2">rest</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#859900">except</span> <span style="color:#268bd2">Timeout</span> <span style="color:#859900">as</span> <span style="color:#268bd2">e</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#93a1a1;font-style:italic"># report to sentry</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>celery_gevent_pool<span style="color:#f92672">.</span>apply_timeout <span style="color:#f92672">=</span> apply_timeout_with_report</span></span></code></pre></div>
+</span></span><span style="display:flex;"><span><span style="color:#268bd2">celery_gevent_pool</span>.<span style="color:#268bd2">apply_timeout</span> = <span style="color:#268bd2">apply_timeout_with_report</span></span></span></code></pre></div>
 <p>其实稍微修改下 <a href="https://github.com/celery/celery/blob/v4.3.0rc3/celery/concurrency/gevent.py#L21">https://github.com/celery/celery/blob/v4.3.0rc3/celery/concurrency/gevent.py#L21</a>  这个函数就能让celery 支持 soft time limit:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">apply_timeout</span>(target, args<span style="color:#f92672">=</span>(), kwargs<span style="color:#f92672">=</span>{}, callback<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>,
-</span></span><span style="display:flex;"><span>                  accept_callback<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, pid<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, timeout<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>,
-</span></span><span style="display:flex;"><span>                  soft_timeout<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, timeout_callback<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>,
-</span></span><span style="display:flex;"><span>                  Timeout<span style="color:#f92672">=</span>Timeout, apply_target<span style="color:#f92672">=</span>base<span style="color:#f92672">.</span>apply_target, <span style="color:#f92672">**</span>rest):
-</span></span><span style="display:flex;"><span>    hard_timeout <span style="color:#f92672">=</span> Timeout(timeout)
-</span></span><span style="display:flex;"><span>    soft_timeout <span style="color:#f92672">=</span> Timeout(soft_timeout, SoftTimeLimitExceeded)
-</span></span><span style="display:flex;"><span>    hard_timeout<span style="color:#f92672">.</span>start()
-</span></span><span style="display:flex;"><span>    soft_timeout<span style="color:#f92672">.</span>start()
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> apply_target(target, args, kwargs, callback,
-</span></span><span style="display:flex;"><span>                            accept_callback, pid,
-</span></span><span style="display:flex;"><span>                            propagate<span style="color:#f92672">=</span>(Timeout,), <span style="color:#f92672">**</span>rest)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> Timeout <span style="color:#66d9ef">as</span> t:
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> isinstance(t, hard_timeout):
-</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># only catch gevent.Timeout set by us</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> timeout_callback(<span style="color:#66d9ef">False</span>, timeout)
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">raise</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">finally</span>:
-</span></span><span style="display:flex;"><span>        hard_timeout<span style="color:#f92672">.</span>close()
-</span></span><span style="display:flex;"><span>        soft_timeout<span style="color:#f92672">.</span>close()</span></span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#859900">def</span> <span style="color:#268bd2">apply_timeout</span>(<span style="color:#268bd2">target</span>, <span style="color:#268bd2">args</span>=(), <span style="color:#268bd2">kwargs</span>={}, <span style="color:#268bd2">callback</span>=<span style="color:#859900;font-weight:bold">None</span>,
+</span></span><span style="display:flex;"><span>                  <span style="color:#268bd2">accept_callback</span>=<span style="color:#859900;font-weight:bold">None</span>, <span style="color:#268bd2">pid</span>=<span style="color:#859900;font-weight:bold">None</span>, <span style="color:#268bd2">timeout</span>=<span style="color:#859900;font-weight:bold">None</span>,
+</span></span><span style="display:flex;"><span>                  <span style="color:#268bd2">soft_timeout</span>=<span style="color:#859900;font-weight:bold">None</span>, <span style="color:#268bd2">timeout_callback</span>=<span style="color:#859900;font-weight:bold">None</span>,
+</span></span><span style="display:flex;"><span>                  <span style="color:#268bd2">Timeout</span>=<span style="color:#268bd2">Timeout</span>, <span style="color:#268bd2">apply_target</span>=<span style="color:#268bd2">base</span>.<span style="color:#268bd2">apply_target</span>, **<span style="color:#268bd2">rest</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#268bd2">hard_timeout</span> = <span style="color:#268bd2">Timeout</span>(<span style="color:#268bd2">timeout</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#268bd2">soft_timeout</span> = <span style="color:#268bd2">Timeout</span>(<span style="color:#268bd2">soft_timeout</span>, <span style="color:#268bd2">SoftTimeLimitExceeded</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#268bd2">hard_timeout</span>.<span style="color:#268bd2">start</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#268bd2">soft_timeout</span>.<span style="color:#268bd2">start</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#859900">try</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#859900">return</span> <span style="color:#268bd2">apply_target</span>(<span style="color:#268bd2">target</span>, <span style="color:#268bd2">args</span>, <span style="color:#268bd2">kwargs</span>, <span style="color:#268bd2">callback</span>,
+</span></span><span style="display:flex;"><span>                            <span style="color:#268bd2">accept_callback</span>, <span style="color:#268bd2">pid</span>,
+</span></span><span style="display:flex;"><span>                            <span style="color:#268bd2">propagate</span>=(<span style="color:#268bd2">Timeout</span>,), **<span style="color:#268bd2">rest</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#859900">except</span> <span style="color:#268bd2">Timeout</span> <span style="color:#859900">as</span> <span style="color:#268bd2">t</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#859900">if</span> <span style="color:#cb4b16">isinstance</span>(<span style="color:#268bd2">t</span>, <span style="color:#268bd2">hard_timeout</span>):
+</span></span><span style="display:flex;"><span>            <span style="color:#93a1a1;font-style:italic"># only catch gevent.Timeout set by us</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#859900">return</span> <span style="color:#268bd2">timeout_callback</span>(<span style="color:#859900;font-weight:bold">False</span>, <span style="color:#268bd2">timeout</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#859900">else</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#859900">raise</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#859900">finally</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#268bd2">hard_timeout</span>.<span style="color:#268bd2">close</span>()
+</span></span><span style="display:flex;"><span>        <span style="color:#268bd2">soft_timeout</span>.<span style="color:#268bd2">close</span>()</span></span></code></pre></div>
 <p>但这块单元测试很难写啊&hellip;先凑合着用了.</p>
-</div>
-        <div class="post_footer">
-          
-          <div class="meta">
-            <div class="info">
-              <span class="field tags">
-                <i class="remixicon-stack-line"></i>
-                
-                <a href="https://blog.monsterxx03.com/tags/python/">python</a>
-                
-                <a href="https://blog.monsterxx03.com/tags/celery/">celery</a>
-                
-                <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
-                
-              </span>
-            </div>
-          </div>
-          
-        </div>
-      </div>
-    <div id="disqus_thread"></div>
+
+  </div>
+
+  <footer class="post-footer">
+    
+    <div class="post-tags">
+      <span class="post-tags-label">Tags:</span>
+      
+      <a href="https://blog.monsterxx03.com/tags/python/" class="tag">python</a>
+      
+      <a href="https://blog.monsterxx03.com/tags/celery/" class="tag">celery</a>
+      
+      <a href="https://blog.monsterxx03.com/tags/code-infra/" class="tag">code-infra</a>
+      
+    </div>
+    
+
+    <nav class="post-nav">
+      
+      <a href="/2019/02/12/%E7%AE%A1%E7%90%86%E8%B4%9F%E8%BD%BD/" rel="prev" class="post-nav-prev">
+        <span class="post-nav-direction">← 上一篇</span>
+        <span class="post-nav-title">管理负载</span>
+      </a>
+      
+      
+      <a href="/2019/03/31/snet-transparent-ss-proxy-on-linux/" rel="next" class="post-nav-next">
+        <span class="post-nav-direction">下一篇 →</span>
+        <span class="post-nav-title">snet: transparent ss proxy on Linux</span>
+      </a>
+      
+    </nav>
+  </footer>
+</article>
+
+
+<div id="disqus_thread"></div>
 <script>
     window.disqus_config = function () {
     
@@ -202,85 +234,89 @@ hard time limit 没法被 catch.</p>
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-      
-      
-    </div>
-  </div>
-  <a id="back_to_top" href="#" class="back_to_top"><span>△</span></a>
-</div>
-<footer class="footer">
-  <div class="powered_by">
-    <a href="https://zeuk.me">Designed by Zeuk,</a>
-    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
+
+
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; 2026 <a href="https://blog.monsterxx03.com/">Shining Moon</a>.</p>
+      <p class="footer-meta">Powered by <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a> · Theme Literary</p>
+    </footer>
   </div>
 
-  <div class="footer_slogan">
-    <span></span>
-  </div>
-</footer>
+  <a href="#" class="back-to-top" id="backToTop" title="回到顶部">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+      <path d="M10 2.5a.75.75 0 01.75.75v12.69l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 111.06-1.06L9.25 15.94V3.25A.75.75 0 0110 2.5z"/>
+    </svg>
+  </a>
 
-
-
-<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
-<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
-<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
-<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
-<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
-
-<script>hljs.initHighlightingOnLoad()</script>
-
-
-  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-MathJax.Hub.Config({
-  tex2jax: {
-    inlineMath: [['$','$'], ['\\(','\\)']],
-    displayMath: [['$$','$$'], ['\[\[','\]\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-    TeX: { equationNumbers: { autoNumber: "AMS" },
-         extensions: ["AMSmath.js", "AMSsymbols.js"] }
-  }
-});
-
-MathJax.Hub.Queue(function() {
+  <script>
     
-    
-    
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i = 0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';
+    var backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) {
+          backToTop.classList.add('visible');
+        } else {
+          backToTop.classList.remove('visible');
+        }
+      });
+      backToTop.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
     }
-});
-</script>
 
-<style>
-code.has-jax {
-    font: inherit;
-    font-size: 100%;
-    background: inherit;
-    border: inherit;
-    color: #515151;
-}
-</style>
+    
+    var tocLinks = document.querySelectorAll('.post-toc a');
+    if (tocLinks.length > 0) {
+      var headings = [];
+      tocLinks.forEach(function(link) {
+        var id = link.getAttribute('href').slice(1);
+        var h = document.getElementById(id);
+        if (h) headings.push(h);
+      });
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            tocLinks.forEach(function(link) {
+              link.classList.remove('active');
+              if (link.getAttribute('href') === '#' + entry.target.id) {
+                link.classList.add('active');
+              }
+            });
+          }
+        });
+      }, { rootMargin: '-80px 0px -70% 0px' });
+      headings.forEach(function(h) { observer.observe(h); });
+    }
+  </script>
 
-
-
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-      <script>
-        var doNotTrack = false;
-        if ( true ) {
-          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
-          var doNotTrack = (dnt == "1" || dnt == "yes");
+  
+  <script>
+    
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      if (target.tagName === 'IMG' && target.closest('.post-content')) {
+        if (target.classList.contains('lightbox-active')) {
+          target.classList.remove('lightbox-active');
+          return;
         }
-        if (!doNotTrack) {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-P32CTT1G2G');
-        }
-      </script>
-
-
+        var overlay = document.createElement('div');
+        overlay.className = 'lightbox-overlay';
+        overlay.addEventListener('click', function() {
+          target.classList.remove('lightbox-active');
+          overlay.remove();
+        });
+        document.body.appendChild(overlay);
+        target.classList.add('lightbox-active');
+        setTimeout(function() {
+          overlay.classList.add('open');
+          target.classList.add('open');
+        }, 10);
+      }
+    });
+  </script>
+  
 </body>
 </html>

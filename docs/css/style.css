@@ -1,0 +1,819 @@
+/* ============================================
+   Literary — A clean, literary Hugo theme
+   Crafted for comfortable reading
+   ============================================ */
+
+/* --- Reset & Base --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family:
+    -apple-system,
+    "PingFang SC",
+    "Noto Sans CJK SC",
+    "Source Han Sans SC",
+    "Microsoft YaHei",
+    sans-serif;
+  font-size: 1rem;
+  line-height: 1.9;
+  color: #2d2d2d;
+  background-color: #faf7f2;
+  min-height: 100vh;
+}
+
+/* --- Typography --- */
+h1, h2, h3, h4, h5, h6 {
+  font-family:
+    "Noto Serif CJK SC",
+    "Source Han Serif SC",
+    "STSong",
+    "SimSun",
+    "Georgia",
+    serif;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #1a1a1a;
+  margin: 2.2em 0 1em;
+}
+
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.45rem; border-bottom: 1px solid #eee; padding-bottom: 0.4em; }
+h3 { font-size: 1.2rem; }
+h4 { font-size: 1.1rem; }
+
+p {
+  margin: 0 0 1.2em;
+  line-height: 1.9;
+}
+
+a {
+  color: #b85c38;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #8a4528;
+  text-decoration: underline;
+}
+
+strong, b {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+em, i {
+  font-style: italic;
+}
+
+blockquote {
+  margin: 1.8em 0;
+  padding: 0.8em 1.2em 0.8em 1.8em;
+  border-left: 3px solid #d4c5b0;
+  background: #f5f0e8;
+  color: #5a5a5a;
+  font-style: normal;
+  border-radius: 0 4px 4px 0;
+}
+
+blockquote p {
+  margin: 0.4em 0;
+}
+
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+code {
+  font-family:
+    "SF Mono",
+    "JetBrains Mono",
+    "Fira Code",
+    "Cascadia Code",
+    "Menlo",
+    "Consolas",
+    monospace;
+  font-size: 0.875em;
+  background: #f0ece4;
+  color: #6b4c3b;
+  padding: 2px 6px;
+  border-radius: 3px;
+  word-break: break-word;
+}
+
+pre {
+  margin: 1.5em 0;
+  padding: 1em 1.2em;
+  background: #f5f2ed;
+  border: 1px solid #e8e3d9;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+  white-space: pre;
+  word-break: normal;
+}
+
+pre::-webkit-scrollbar {
+  height: 6px;
+}
+
+pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+pre::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+:not(pre) > code {
+  white-space: normal;
+}
+
+ul, ol {
+  margin: 1em 0;
+  padding-left: 1.8em;
+}
+
+li {
+  margin: 0.4em 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 1.2em 0;
+  display: block;
+}
+
+hr {
+  border: none;
+  height: 1px;
+  background: #e8e3d9;
+  margin: 2.5em 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+  font-size: 0.9rem;
+}
+
+th, td {
+  padding: 0.6em 0.8em;
+  border: 1px solid #e0dbd0;
+  text-align: left;
+}
+
+th {
+  background: #f5f2ed;
+  font-weight: 600;
+}
+
+/* --- Layout --- */
+.wrapper {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* --- Header --- */
+.site-header {
+  padding: 2.5em 0 1.5em;
+  border-bottom: 1px solid #e8e3d9;
+  margin-bottom: 2em;
+}
+
+.site-header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+
+.site-title {
+  font-family:
+    "Noto Serif CJK SC",
+    "Source Han Serif SC",
+    "Georgia",
+    serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.site-title a {
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
+.site-title a:hover {
+  color: #b85c38;
+  text-decoration: none;
+}
+
+.site-subtitle {
+  font-size: 0.85rem;
+  color: #8a8a8a;
+  margin-top: 0.2em;
+  font-weight: 400;
+}
+
+/* --- Navigation --- */
+.main-nav {
+  display: flex;
+  gap: 1.5em;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.main-nav a {
+  font-size: 0.9rem;
+  color: #6b6b6b;
+  text-decoration: none;
+  padding: 0.3em 0;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.main-nav a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #b85c38;
+  transition: width 0.2s ease;
+}
+
+.main-nav a:hover {
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
+.main-nav a:hover::after {
+  width: 100%;
+}
+
+.main-nav a.active {
+  color: #1a1a1a;
+}
+
+/* --- Content Area --- */
+.content {
+  min-height: 50vh;
+}
+
+/* --- Post List (Homepage) --- */
+.post-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.post-item {
+  padding: 1.2em 0;
+  border-bottom: 1px solid #f0ebe3;
+}
+
+.post-item:first-child {
+  padding-top: 0;
+}
+
+.post-item:last-child {
+  border-bottom: none;
+}
+
+.post-item-meta {
+  font-size: 0.8rem;
+  color: #9a9a9a;
+  margin-bottom: 0.3em;
+  font-variant-numeric: tabular-nums;
+}
+
+.post-item-title {
+  font-family:
+    "Noto Serif CJK SC",
+    "Source Han Serif SC",
+    "Georgia",
+    serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.post-item-title a {
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
+.post-item-title a:hover {
+  color: #b85c38;
+  text-decoration: none;
+}
+
+.post-item-summary {
+  font-size: 0.9rem;
+  color: #6b6b6b;
+  margin-top: 0.4em;
+  line-height: 1.7;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.post-item-tags {
+  margin-top: 0.5em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em;
+}
+
+.tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: #8a8a8a;
+  background: #f0ece4;
+  padding: 0.15em 0.6em;
+  border-radius: 3px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.tag:hover {
+  color: #fff;
+  background: #b85c38;
+  text-decoration: none;
+}
+
+/* --- Single Post --- */
+.post-header {
+  margin-bottom: 2em;
+}
+
+.post-title {
+  font-family:
+    "Noto Serif CJK SC",
+    "Source Han Serif SC",
+    "Georgia",
+    serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #1a1a1a;
+  margin: 0 0 0.3em;
+}
+
+.post-meta {
+  font-size: 0.85rem;
+  color: #9a9a9a;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3em 1em;
+  align-items: center;
+}
+
+.post-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+}
+
+.post-content {
+  font-size: 1.05rem;
+  line-height: 1.95;
+  color: #2d2d2d;
+}
+
+.post-content p {
+  margin-bottom: 1.3em;
+}
+
+/* --- Post Footer (Tags, Share) --- */
+.post-footer {
+  margin-top: 3em;
+  padding-top: 1.5em;
+  border-top: 1px solid #e8e3d9;
+}
+
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  align-items: center;
+}
+
+.post-tags-label {
+  font-size: 0.85rem;
+  color: #8a8a8a;
+}
+
+/* --- Page Navigation (prev/next) --- */
+.post-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2em;
+  gap: 1em;
+  flex-wrap: wrap;
+}
+
+.post-nav a {
+  font-size: 0.9rem;
+  color: #b85c38;
+  max-width: 45%;
+  text-decoration: none;
+}
+
+.post-nav a:hover {
+  text-decoration: underline;
+}
+
+/* --- Pagination --- */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.8em;
+  margin: 2.5em 0;
+  padding-top: 1.5em;
+  border-top: 1px solid #e8e3d9;
+}
+
+.pagination a,
+.pagination span {
+  display: inline-block;
+  padding: 0.4em 0.8em;
+  font-size: 0.9rem;
+  color: #6b6b6b;
+  border: 1px solid #e0dbd0;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.pagination a:hover {
+  color: #fff;
+  background: #b85c38;
+  border-color: #b85c38;
+  text-decoration: none;
+}
+
+.pagination .active {
+  color: #fff;
+  background: #b85c38;
+  border-color: #b85c38;
+}
+
+/* --- Archive Page --- */
+.archive-year {
+  margin-bottom: 2em;
+}
+
+.archive-year-title {
+  font-family:
+    "Noto Serif CJK SC",
+    "Source Han Serif SC",
+    "Georgia",
+    serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  border-bottom: 2px solid #e8e3d9;
+  padding-bottom: 0.3em;
+  margin-bottom: 0.8em;
+}
+
+.archive-list {
+  list-style: none;
+  padding: 0;
+}
+
+.archive-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.4em 0;
+  gap: 1em;
+}
+
+.archive-item a {
+  color: #2d2d2d;
+  text-decoration: none;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.archive-item a:hover {
+  color: #b85c38;
+  text-decoration: none;
+}
+
+.archive-item-date {
+  font-size: 0.8rem;
+  color: #9a9a9a;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* --- Tags Page --- */
+.tags-page {
+  text-align: center;
+  padding: 2em 0;
+}
+
+.tags-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8em;
+  padding: 1em 0;
+}
+
+.tags-cloud a {
+  display: inline-block;
+  padding: 0.4em 1em;
+  background: #f5f2ed;
+  color: #5a5a5a;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.tags-cloud a:hover {
+  background: #b85c38;
+  color: #fff;
+  text-decoration: none;
+}
+
+.tags-cloud .tag-count {
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-left: 0.3em;
+}
+
+.tags-cloud a:hover .tag-count {
+  color: rgba(255,255,255,0.7);
+}
+
+/* --- Footer --- */
+.site-footer {
+  margin-top: 4em;
+  padding: 2em 0;
+  border-top: 1px solid #e8e3d9;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #9a9a9a;
+}
+
+.site-footer a {
+  color: #8a8a8a;
+}
+
+.site-footer a:hover {
+  color: #b85c38;
+}
+
+.site-footer p {
+  margin: 0.3em 0;
+}
+
+/* --- 404 --- */
+.page-404 {
+  text-align: center;
+  padding: 4em 0;
+}
+
+.page-404 h1 {
+  font-size: 4rem;
+  color: #d4c5b0;
+  margin: 0;
+}
+
+.page-404 p {
+  color: #8a8a8a;
+  margin-top: 1em;
+}
+
+/* --- Back to Top --- */
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.06);
+  color: #8a8a8a;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  text-decoration: none;
+  transition: all 0.3s;
+  z-index: 100;
+}
+
+.back-to-top:hover {
+  background: #b85c38;
+  color: #fff;
+  text-decoration: none;
+}
+
+.back-to-top.visible {
+  display: flex;
+}
+
+/* --- MathJax --- */
+.mathjax-warning {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #aaa;
+  padding: 1em 0;
+}
+
+/* --- Image in content --- */
+.post-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 1.5em auto;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* --- Responsive --- */
+@media (max-width: 600px) {
+  html {
+    font-size: 15px;
+  }
+
+  .wrapper {
+    padding: 0 16px;
+  }
+
+  .site-header {
+    padding: 1.5em 0 1em;
+  }
+
+  .site-header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .site-title {
+    font-size: 1.4rem;
+  }
+
+  .main-nav {
+    gap: 1em;
+  }
+
+  .main-nav a {
+    font-size: 0.85rem;
+  }
+
+  .post-title {
+    font-size: 1.5rem;
+  }
+
+  .post-content {
+    font-size: 1rem;
+  }
+
+  .post-content blockquote {
+    margin: 1.2em 0;
+    padding: 0.6em 1em;
+    padding-left: 1.2em;
+  }
+
+  .post-content pre {
+    margin: 1em 0;
+    padding: 0.8em 1em;
+    font-size: 0.8rem;
+    border-radius: 4px;
+  }
+
+  .post-nav {
+    flex-direction: column;
+  }
+
+  .post-nav a {
+    max-width: 100%;
+  }
+
+  .archive-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2em;
+  }
+
+  .back-to-top {
+    bottom: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  .tags-cloud a {
+    font-size: 0.85rem;
+    padding: 0.3em 0.8em;
+  }
+
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.3rem; }
+  h3 { font-size: 1.1rem; }
+}
+
+@media (max-width: 380px) {
+  html {
+    font-size: 14px;
+  }
+
+  .wrapper {
+    padding: 0 12px;
+  }
+}
+
+/* --- Print --- */
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 12pt;
+  }
+
+  .back-to-top,
+  .main-nav,
+  .post-nav {
+    display: none !important;
+  }
+
+  .wrapper {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  a {
+    color: #000 !important;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+}
+
+/* --- Smooth reveal for post items --- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.post-item {
+  animation: fadeInUp 0.4s ease both;
+}
+
+.post-item:nth-child(1) { animation-delay: 0.02s; }
+.post-item:nth-child(2) { animation-delay: 0.04s; }
+.post-item:nth-child(3) { animation-delay: 0.06s; }
+.post-item:nth-child(4) { animation-delay: 0.08s; }
+.post-item:nth-child(5) { animation-delay: 0.10s; }
+.post-item:nth-child(6) { animation-delay: 0.12s; }
+.post-item:nth-child(7) { animation-delay: 0.14s; }
+.post-item:nth-child(8) { animation-delay: 0.16s; }
+.post-item:nth-child(9) { animation-delay: 0.18s; }
+.post-item:nth-child(10) { animation-delay: 0.20s; }

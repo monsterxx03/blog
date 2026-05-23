@@ -1,0 +1,11 @@
+name = "Literary"
+license = "MIT"
+licenselink = "https://mit-license.org"
+description = "A clean, literary-style theme for Hugo — crafted for comfortable reading"
+homepage = ""
+tags = ["blog", "literary", "clean", "minimal", "mobile-friendly", "cjk"]
+features = ["blog", "reading", "cjk-typography", "responsive", "mathjax"]
+min_version = "0.120"
+
+[author]
+  name = "Tachi"

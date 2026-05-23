@@ -1,0 +1,13 @@
+{{ define "main" }}
+<div class="tags-page">
+  <h1 class="post-title" style="margin-bottom: 1em;">{{ i18n "tags" }}</h1>
+  <div class="tags-cloud">
+    {{ range .Site.Taxonomies.tags.ByCount }}
+    <a href="{{ .Page.RelPermalink }}">
+      {{ .Page.Title }}
+      <span class="tag-count">({{ .Count }})</span>
+    </a>
+    {{ end }}
+  </div>
+</div>
+{{ end }}

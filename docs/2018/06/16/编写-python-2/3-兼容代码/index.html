@@ -1,100 +1,148 @@
 <!DOCTYPE html>
-<html lang="zh-cn" >
+<html lang="zh-cn">
 <head>
-  <meta charset="utf-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  
-  <meta name="author"
-        content=""/>
+  <title>编写 python 2/3 兼容代码 · Shining Moon</title>
 
   
   <meta name="description" content="上一篇 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情.
-_future_ python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件.
-首先是几个在 python 2.7 里不用特意写，已经默认开启的特性:
-from __future__ import nested_scopes 2.2 开始就默认开启了，用于修改嵌套函数内的变量搜索作用域, 在此之前, 全局模块的优先级比被嵌套函数的父函数要高, 现在都没这个问题了. from __future__ import generators, yield 关键词, 2.3 默认支持. from __future__ import with_statement, with 关键词, 2.6 默认支持. 我显示开启的两个特性:
-"/>
+_future_ python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里 …">
+  
+
+  <meta name="author" content="Shining Moon">
+  <link rel="canonical" href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/">
   
 
   
 
-  
-  <link rel="canonical" href="https://blog.monsterxx03.com/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/"/>
-
-  
-
-  <title>编写 python 2/3 兼容代码 &middot; Shining Moon</title>
-
-  <link rel="shortcut icon" href="https://blog.monsterxx03.com/images/favicon.ico"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/animate.min.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/remixicon.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/zozo.css"/>
-  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/highlight.css"/>
-
-  
-  
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css">
   <link rel="stylesheet" href="https://blog.monsterxx03.com/css/home.css">
+
   
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  
+
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
 </head>
-
 <body>
-<div class="main animated">
-  <div class="nav_container animated fadeInDown">
-  <div class="site_nav" id="site_nav">
-    <ul>
-      
-      <li>
-        <a href="/">Home</a>
-      </li>
-      
-      <li>
-        <a href="/posts/">Archive</a>
-      </li>
-      
-      <li>
-        <a href="/about/">About</a>
-      </li>
-      
-      <li>
-        <a href="/tags">Tags</a>
-      </li>
-      
-    </ul>
-  </div>
-  <div class="menu_icon">
-    <a id="menu_icon"><i class="remixicon-links-line"></i></a>
-  </div>
-</div>
-
-  <div class="header animated fadeInDown">
-  <div class="site_title_container">
-    <div class="site_title">
-      <h1>
-        <a href="https://blog.monsterxx03.com/">
-          <span>Shining Moon</span>
-          <img width="90px" src="https://blog.monsterxx03.com/logo.png"/>
-        </a>
-      </h1>
-    </div>
-    <div class="description">
-      <p class="sub_title">百种弊病,皆从懒生</p>
-      <div class="my_socials">
-        <a href="https://github.com/monsterxx03" title="github" target="_blank"><i class="remixicon-github-fill"></i></a>
-        <a href="/index.xml" type="application/rss+xml" title="rss" target="_blank"><i class="remixicon-rss-fill"></i></a>
-      </div>
-    </div>
-  </div>
-</div>
-
-  <div class="content">
-    <div class="post_page">
-      <div class="post animated fadeInDown">
-        <div class="post_title post_detail_title">
-          <h2><a href='/2018/06/16/%E7%BC%96%E5%86%99-python-2/3-%E5%85%BC%E5%AE%B9%E4%BB%A3%E7%A0%81/'>编写 python 2/3 兼容代码</a></h2>
-          <span class="date">2018.06.16</span>
+  <div class="wrapper">
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div>
+          <h1 class="site-title"><a href="/">Shining Moon</a></h1>
+          
+          <p class="site-subtitle">百种弊病,皆从懒生</p>
+          
         </div>
-        <div class="post_content markdown"><p><a href="https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/">上一篇</a> 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情.</p>
+        <nav class="main-nav">
+          
+          
+          <a href="/" >
+            Home
+          </a>
+          
+          <a href="/posts/" >
+            Archive
+          </a>
+          
+          <a href="/about/" >
+            About
+          </a>
+          
+          <a href="/tags" >
+            Tags
+          </a>
+          
+          <a href="https://github.com/monsterxx03" target="_blank" rel="noopener" title="GitHub" class="nav-github">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: -3px; margin-right: 2px;">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="content">
+      
+<article>
+  <header class="post-header">
+    <h1 class="post-title">编写 python 2/3 兼容代码</h1>
+    <div class="post-meta">
+      <span class="post-meta-date">
+        <time datetime="2018-06-16">2018 年 06 月 16 日</time>
+      </span>
+      
+      
+      <span class="post-meta-category">· <a href="https://blog.monsterxx03.com/categories/tech/">tech</a></span>
+      
+      <span class="post-meta-reading">· 5 分钟阅读</span>
+      <span class="post-meta-words">· 2450 字</span>
+    </div>
+  </header>
+
+  
+  <details class="post-toc">
+    <summary class="post-toc-summary">目录</summary>
+    <div class="post-toc-body">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#_future_">_<em>future</em>_</a></li>
+    <li><a href="#list-comprehension-中变量作用域的变化">list comprehension 中变量作用域的变化</a></li>
+    <li><a href="#长整型">长整型</a></li>
+    <li><a href="#reload">reload</a></li>
+    <li><a href="#zip-map-filter">zip, map, filter</a></li>
+    <li><a href="#reduce">reduce</a></li>
+    <li><a href="#xrange">xrange</a></li>
+    <li><a href="#dict">dict</a></li>
+    <li><a href="#异常处理">异常处理</a></li>
+    <li><a href="#stringio">StringIO</a></li>
+    <li><a href="#其他标准库的变化">其他标准库的变化</a></li>
+    <li><a href="#unicode-和-str">unicode 和 str</a>
+      <ul>
+        <li><a href="#in-py2">in py2</a></li>
+        <li><a href="#in-py3">in py3</a></li>
+        <li><a href="#兼容-py23">兼容 py2/3</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </details>
+  
+
+  <div class="post-content">
+    <p><a href="https://blog.monsterxx03.com/2018/06/07/from-python2-to-python3/">上一篇</a> 里简单得提了一点开始做 python 2 到 python3 迁移时候碰到的问题, 和工具的选择(推荐用 six).这篇讲下编写 python 2 / 3 兼容代码要注意的事情.</p>
 <h2 id="_future_">_<em>future</em>_</h2>
 <p>python2 里自带的向后兼容模块，将 python3 的一些语法行为 backport 到 python2 里, 使用的时候需要在文件头部声明, 作用域只在当前文件.</p>
 <p>首先是几个在 python 2.7 里不用特意写，已经默认开启的特性:</p>
@@ -114,33 +162,33 @@ from __future__ import nested_scopes 2.2 开始就默认开启了，用于修改
 <li><code>from __future__ import unicode_literals</code>, 开启后默认所有的字符串定义都会变成 unicode, 不过 <code>str</code> 还是 byte string 啦, 这个并没法解决 unicode 的问题, 所以也没用.</li>
 </ul>
 <h2 id="list-comprehension-中变量作用域的变化">list comprehension 中变量作用域的变化</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>    [i <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10</span>)]
-</span></span><span style="display:flex;"><span>    print(i)
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#268bd2">i</span>=<span style="color:#2aa198;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span>    [<span style="color:#268bd2">i</span> <span style="color:#859900">for</span> <span style="color:#268bd2">i</span> <span style="color:#859900">in</span> <span style="color:#cb4b16">range</span>(<span style="color:#2aa198;font-weight:bold">10</span>)]
+</span></span><span style="display:flex;"><span>    <span style="color:#cb4b16">print</span>(<span style="color:#268bd2">i</span>)
 </span></span></code></pre></div><p>这段代码在 py2 中会打印9, 在 py3 中打印0, list comprehension 中的变量不再污染外部作用域.</p>
 <p>不过普通 for 循环中的变量作用域并没什么变化:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    i <span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10</span>):
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
-</span></span><span style="display:flex;"><span>    print(i)
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#268bd2">i</span> =<span style="color:#2aa198;font-weight:bold">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#859900">for</span> <span style="color:#268bd2">i</span> <span style="color:#859900">in</span> <span style="color:#cb4b16">range</span>(<span style="color:#2aa198;font-weight:bold">10</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#859900">pass</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cb4b16">print</span>(<span style="color:#268bd2">i</span>)
 </span></span></code></pre></div><p>py2 / 3 中都打印 9, 原因是 python 中并没有 block 的概念.</p>
 <p>list comprehension 如果作用在 class define 中行为也不太一样, 下面代码在 py2 里是队的， 但在 py3 里就会报错:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>(object):
-</span></span><span style="display:flex;"><span>        name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;test&#39;</span>
-</span></span><span style="display:flex;"><span>        d <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;a&#39;</span>: <span style="color:#e6db74">&#39;1&#39;</span>, <span style="color:#e6db74">&#39;b&#39;</span>: <span style="color:#e6db74">&#39;2&#39;</span>}
-</span></span><span style="display:flex;"><span>        [d<span style="color:#f92672">.</span>update({_k: name}) <span style="color:#66d9ef">for</span> _k <span style="color:#f92672">in</span> d]
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#859900">class</span> <span style="color:#cb4b16">A</span>(<span style="color:#cb4b16">object</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#268bd2">name</span> = <span style="color:#2aa198">&#39;test&#39;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#268bd2">d</span> = {<span style="color:#2aa198">&#39;a&#39;</span>: <span style="color:#2aa198">&#39;1&#39;</span>, <span style="color:#2aa198">&#39;b&#39;</span>: <span style="color:#2aa198">&#39;2&#39;</span>}
+</span></span><span style="display:flex;"><span>        [<span style="color:#268bd2">d</span>.<span style="color:#268bd2">update</span>({<span style="color:#268bd2">_k</span>: <span style="color:#268bd2">name</span>}) <span style="color:#859900">for</span> <span style="color:#268bd2">_k</span> <span style="color:#859900">in</span> <span style="color:#268bd2">d</span>]
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#a6e22e">NameError</span>: name <span style="color:#e6db74">&#39;d&#39;</span> <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> defined
+</span></span><span style="display:flex;"><span>    &gt;&gt;&gt; <span style="color:#268bd2">NameError</span>: <span style="color:#268bd2">name</span> <span style="color:#2aa198">&#39;d&#39;</span> <span style="color:#859900">is</span> <span style="color:#859900">not</span> <span style="color:#268bd2">defined</span>
 </span></span></code></pre></div><p>解决方法1, 在 class 的定义之外做更改操作:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>(object):
-</span></span><span style="display:flex;"><span>        name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;test&#39;</span>
-</span></span><span style="display:flex;"><span>        d <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;a&#39;</span>: <span style="color:#e6db74">&#39;1&#39;</span>, <span style="color:#e6db74">&#39;b&#39;</span>: <span style="color:#e6db74">&#39;2&#39;</span>}
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#859900">class</span> <span style="color:#cb4b16">A</span>(<span style="color:#cb4b16">object</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#268bd2">name</span> = <span style="color:#2aa198">&#39;test&#39;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#268bd2">d</span> = {<span style="color:#2aa198">&#39;a&#39;</span>: <span style="color:#2aa198">&#39;1&#39;</span>, <span style="color:#2aa198">&#39;b&#39;</span>: <span style="color:#2aa198">&#39;2&#39;</span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    [A<span style="color:#f92672">.</span>d<span style="color:#f92672">.</span>update({_k: A<span style="color:#f92672">.</span>name}) <span style="color:#66d9ef">for</span> _k <span style="color:#f92672">in</span> A<span style="color:#f92672">.</span>d]
+</span></span><span style="display:flex;"><span>    [<span style="color:#268bd2">A</span>.<span style="color:#268bd2">d</span>.<span style="color:#268bd2">update</span>({<span style="color:#268bd2">_k</span>: <span style="color:#268bd2">A</span>.<span style="color:#268bd2">name</span>}) <span style="color:#859900">for</span> <span style="color:#268bd2">_k</span> <span style="color:#859900">in</span> <span style="color:#268bd2">A</span>.<span style="color:#268bd2">d</span>]
 </span></span></code></pre></div><p>方法2, 用一个匿名lambda 函数将 class variable 传进去:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>(object):
-</span></span><span style="display:flex;"><span>        name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;test&#39;</span>
-</span></span><span style="display:flex;"><span>        (<span style="color:#66d9ef">lambda</span> name<span style="color:#f92672">=</span>name, d<span style="color:#f92672">=</span>d: [d<span style="color:#f92672">.</span>update({_k: name}) <span style="color:#66d9ef">for</span> _k <span style="color:#f92672">in</span> d])()
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#859900">class</span> <span style="color:#cb4b16">A</span>(<span style="color:#cb4b16">object</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#268bd2">name</span> = <span style="color:#2aa198">&#39;test&#39;</span>
+</span></span><span style="display:flex;"><span>        (<span style="color:#859900">lambda</span> <span style="color:#268bd2">name</span>=<span style="color:#268bd2">name</span>, <span style="color:#268bd2">d</span>=<span style="color:#268bd2">d</span>: [<span style="color:#268bd2">d</span>.<span style="color:#268bd2">update</span>({<span style="color:#268bd2">_k</span>: <span style="color:#268bd2">name</span>}) <span style="color:#859900">for</span> <span style="color:#268bd2">_k</span> <span style="color:#859900">in</span> <span style="color:#268bd2">d</span>])()
 </span></span></code></pre></div><p>方法2 看上去太 trick, 我用 1.</p>
 <h2 id="长整型">长整型</h2>
 <p>py2 中如果 int 数值大于 <code>sys.maxint</code> (2**63-1), 会被隐式得转换成 long, 定义数值变量的时候可以在最后加上 <code>l</code> 或 <code>L</code> 声明这是个 long, py3 中去把 int 和long 合并了, 只用 int 就行, <code>long</code> 不存在了, 使用会报错, <code>l</code> 和 <code>L</code> 也不能再加了,对代码的影响主要是类型判断.</p>
@@ -188,37 +236,37 @@ raise ValueError(&quot;yahaha&quot;)
 <p>这个坑是最大的, py2 里 <code>str</code> 表示 byte string, 实际上是是带有些字符串行为的 binary data, 它和 <code>unicode</code> 的边界非常模糊,为了使用方便做了很多 hack, 所以 py2 里 <code>str</code> 和 <code>unicode</code> 经常混用, 而 <code>bytes</code> 和 <code>str</code> 完全等价,只是个 alias. py3 里 <code>str</code> 默认就是 unicode, <code>bytes</code> 就是二进制字节, <code>unicode</code> 关键词没了, 而且 <code>str</code> 和 <code>bytes</code> 分界明显,不能混在一起.</p>
 <h3 id="in-py2">in py2</h3>
 <p>你明白下面的语句,哪些会失败,哪些成功, 失败是报 <code>UnicodeDecodeError</code> 还是 <code>UnicodeEncodeError</code>, 成功的话返回值是 <code>str</code> 还是 <code>unicode</code> 呢? 准确说出来你就明白啦.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;啊啊&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;yaha&#39;</span>
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#2aa198">&#39;啊啊&#39;</span> + <span style="color:#2aa198">&#39;yaha&#39;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;yaha&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#2aa198">u</span><span style="color:#2aa198">&#39;啊&#39;</span> + <span style="color:#2aa198">&#39;yaha&#39;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;yaha&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#2aa198">u</span><span style="color:#2aa198">&#39;啊&#39;</span> + <span style="color:#2aa198">u</span><span style="color:#2aa198">&#39;yaha&#39;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74">&#39;啊&#39;</span>,  <span style="color:#e6db74">&#39;yaha&#39;</span>])
+</span></span><span style="display:flex;"><span><span style="color:#2aa198">&#39;.&#39;</span>.<span style="color:#268bd2">join</span>([<span style="color:#2aa198">&#39;啊&#39;</span>,  <span style="color:#2aa198">&#39;yaha&#39;</span>])
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span>, <span style="color:#e6db74">&#39;啊&#39;</span>])
+</span></span><span style="display:flex;"><span><span style="color:#2aa198">&#39;.&#39;</span>.<span style="color:#268bd2">join</span>([<span style="color:#2aa198">u</span><span style="color:#2aa198">&#39;啊&#39;</span>, <span style="color:#2aa198">&#39;啊&#39;</span>])
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74">&#39;啊&#39;</span>, <span style="color:#e6db74">&#39;abc&#39;</span>])
+</span></span><span style="display:flex;"><span><span style="color:#2aa198">u</span><span style="color:#2aa198">&#39;.&#39;</span>.<span style="color:#268bd2">join</span>([<span style="color:#2aa198">&#39;啊&#39;</span>, <span style="color:#2aa198">&#39;abc&#39;</span>])
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span>, <span style="color:#e6db74">&#39;abc&#39;</span>])
+</span></span><span style="display:flex;"><span><span style="color:#2aa198">u</span><span style="color:#2aa198">&#39;.&#39;</span>.<span style="color:#268bd2">join</span>([<span style="color:#2aa198">u</span><span style="color:#2aa198">&#39;啊&#39;</span>, <span style="color:#2aa198">&#39;abc&#39;</span>])
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;test </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(<span style="color:#e6db74">&#39;啊&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#2aa198">u</span><span style="color:#2aa198">&#39;test </span><span style="color:#2aa198">{}</span><span style="color:#2aa198">&#39;</span>.<span style="color:#268bd2">format</span>(<span style="color:#2aa198">&#39;啊&#39;</span>)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;test </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#2aa198">&#39;test </span><span style="color:#2aa198">{}</span><span style="color:#2aa198">&#39;</span>.<span style="color:#268bd2">format</span>(<span style="color:#2aa198">u</span><span style="color:#2aa198">&#39;啊&#39;</span>)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;test </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(<span style="color:#e6db74">&#39;啊&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#2aa198">&#39;test </span><span style="color:#2aa198">{}</span><span style="color:#2aa198">&#39;</span>.<span style="color:#268bd2">format</span>(<span style="color:#2aa198">&#39;啊&#39;</span>)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;test </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(<span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#2aa198">u</span><span style="color:#2aa198">&#39;test </span><span style="color:#2aa198">{}</span><span style="color:#2aa198">&#39;</span>.<span style="color:#268bd2">format</span>(<span style="color:#2aa198">u</span><span style="color:#2aa198">&#39;啊&#39;</span>)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;test </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> <span style="color:#e6db74">&#39;啊&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#2aa198">&#39;test </span><span style="color:#2aa198">%s</span><span style="color:#2aa198">&#39;</span> % <span style="color:#2aa198">&#39;啊&#39;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;test </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> <span style="color:#e6db74">&#39;啊&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#2aa198">u</span><span style="color:#2aa198">&#39;test </span><span style="color:#2aa198">%s</span><span style="color:#2aa198">&#39;</span> % <span style="color:#2aa198">&#39;啊&#39;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;test </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> <span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#2aa198">&#39;test </span><span style="color:#2aa198">%s</span><span style="color:#2aa198">&#39;</span> % <span style="color:#2aa198">u</span><span style="color:#2aa198">&#39;啊&#39;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;黑test </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> <span style="color:#e6db74">u</span><span style="color:#e6db74">&#39;啊&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#2aa198">&#39;黑test </span><span style="color:#2aa198">%s</span><span style="color:#2aa198">&#39;</span> % <span style="color:#2aa198">u</span><span style="color:#2aa198">&#39;啊&#39;</span>
 </span></span></code></pre></div><p>我把规则总结下, <code>%s</code> 格式化, 字符串内置的 <code>join, replace</code>,其实行为和 <code>+</code> 是一样的:</p>
 <ul>
 <li>所有部分都是 <code>str</code>, 结果就是 <code>str</code>, 不会发生 decode, encode</li>
@@ -238,25 +286,40 @@ raise ValueError(&quot;yahaha&quot;)
 <p>不要用 <code>isinstance(v, str)</code> 做类型检查, 检查bytes, 用 <code>isinstance(v, bytes)</code>, 检查text, 用 <code>isinstance(v, six.text_type)</code>.</p>
 <p>basestring 也没了, 用 <code>isinstance(v, six.string_types)</code>, 注意 py3 下这个就是 <code>str</code>, 所以正确与否要看上下文语义.</p>
 <p>在函数之间传递的时候, 统一使用 unicode 类型, 只在程序的边界 encode 成 bytes,比如写入文件, 通过网络发送, base64 编码, 丢给散列函数等.</p>
-</div>
-        <div class="post_footer">
-          
-          <div class="meta">
-            <div class="info">
-              <span class="field tags">
-                <i class="remixicon-stack-line"></i>
-                
-                <a href="https://blog.monsterxx03.com/tags/python/">python</a>
-                
-                <a href="https://blog.monsterxx03.com/tags/code-infra/">code-infra</a>
-                
-              </span>
-            </div>
-          </div>
-          
-        </div>
-      </div>
-    <div id="disqus_thread"></div>
+
+  </div>
+
+  <footer class="post-footer">
+    
+    <div class="post-tags">
+      <span class="post-tags-label">Tags:</span>
+      
+      <a href="https://blog.monsterxx03.com/tags/python/" class="tag">python</a>
+      
+      <a href="https://blog.monsterxx03.com/tags/code-infra/" class="tag">code-infra</a>
+      
+    </div>
+    
+
+    <nav class="post-nav">
+      
+      <a href="/2018/06/10/%E6%9D%82%E8%B0%88%E6%9D%BE%E6%9C%AC%E6%B8%85%E5%BC%A0/" rel="prev" class="post-nav-prev">
+        <span class="post-nav-direction">← 上一篇</span>
+        <span class="post-nav-title">杂谈松本清张</span>
+      </a>
+      
+      
+      <a href="/2018/06/22/%E5%8D%87%E7%BA%A7celery-%E5%88%B0-4.2.0-%E7%A2%B0%E5%88%B0%E7%9A%84%E5%9D%91/" rel="next" class="post-nav-next">
+        <span class="post-nav-direction">下一篇 →</span>
+        <span class="post-nav-title">升级celery 到 4.2.0 碰到的坑</span>
+      </a>
+      
+    </nav>
+  </footer>
+</article>
+
+
+<div id="disqus_thread"></div>
 <script>
     window.disqus_config = function () {
     
@@ -276,85 +339,89 @@ raise ValueError(&quot;yahaha&quot;)
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-      
-      
-    </div>
-  </div>
-  <a id="back_to_top" href="#" class="back_to_top"><span>△</span></a>
-</div>
-<footer class="footer">
-  <div class="powered_by">
-    <a href="https://zeuk.me">Designed by Zeuk,</a>
-    <a href="http://www.gohugo.io/">Proudly published with Hugo</a>
+
+
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; 2026 <a href="https://blog.monsterxx03.com/">Shining Moon</a>.</p>
+      <p class="footer-meta">Powered by <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a> · Theme Literary</p>
+    </footer>
   </div>
 
-  <div class="footer_slogan">
-    <span></span>
-  </div>
-</footer>
+  <a href="#" class="back-to-top" id="backToTop" title="回到顶部">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+      <path d="M10 2.5a.75.75 0 01.75.75v12.69l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 111.06-1.06L9.25 15.94V3.25A.75.75 0 0110 2.5z"/>
+    </svg>
+  </a>
 
-
-
-<script src="https://blog.monsterxx03.com/js/jquery-3.3.1.min.js"></script>
-<script src="https://blog.monsterxx03.com/js/zozo.js"></script>
-<script src="https://blog.monsterxx03.com/js/highlight.pack.js"></script>
-<link  href="https://blog.monsterxx03.com/css/fancybox.min.css" rel="stylesheet">
-<script src="https://blog.monsterxx03.com/js/fancybox.min.js"></script>
-
-<script>hljs.initHighlightingOnLoad()</script>
-
-
-  <script type="text/javascript" async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-MathJax.Hub.Config({
-  tex2jax: {
-    inlineMath: [['$','$'], ['\\(','\\)']],
-    displayMath: [['$$','$$'], ['\[\[','\]\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-    TeX: { equationNumbers: { autoNumber: "AMS" },
-         extensions: ["AMSmath.js", "AMSsymbols.js"] }
-  }
-});
-
-MathJax.Hub.Queue(function() {
+  <script>
     
-    
-    
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i = 0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';
+    var backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) {
+          backToTop.classList.add('visible');
+        } else {
+          backToTop.classList.remove('visible');
+        }
+      });
+      backToTop.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
     }
-});
-</script>
 
-<style>
-code.has-jax {
-    font: inherit;
-    font-size: 100%;
-    background: inherit;
-    border: inherit;
-    color: #515151;
-}
-</style>
+    
+    var tocLinks = document.querySelectorAll('.post-toc a');
+    if (tocLinks.length > 0) {
+      var headings = [];
+      tocLinks.forEach(function(link) {
+        var id = link.getAttribute('href').slice(1);
+        var h = document.getElementById(id);
+        if (h) headings.push(h);
+      });
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            tocLinks.forEach(function(link) {
+              link.classList.remove('active');
+              if (link.getAttribute('href') === '#' + entry.target.id) {
+                link.classList.add('active');
+              }
+            });
+          }
+        });
+      }, { rootMargin: '-80px 0px -70% 0px' });
+      headings.forEach(function(h) { observer.observe(h); });
+    }
+  </script>
 
-
-
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
-      <script>
-        var doNotTrack = false;
-        if ( true ) {
-          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
-          var doNotTrack = (dnt == "1" || dnt == "yes");
+  
+  <script>
+    
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      if (target.tagName === 'IMG' && target.closest('.post-content')) {
+        if (target.classList.contains('lightbox-active')) {
+          target.classList.remove('lightbox-active');
+          return;
         }
-        if (!doNotTrack) {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-P32CTT1G2G');
-        }
-      </script>
-
-
+        var overlay = document.createElement('div');
+        overlay.className = 'lightbox-overlay';
+        overlay.addEventListener('click', function() {
+          target.classList.remove('lightbox-active');
+          overlay.remove();
+        });
+        document.body.appendChild(overlay);
+        target.classList.add('lightbox-active');
+        setTimeout(function() {
+          overlay.classList.add('open');
+          target.classList.add('open');
+        }, 10);
+      }
+    });
+  </script>
+  
 </body>
 </html>
