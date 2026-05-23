@@ -123,7 +123,7 @@
 
     <footer class="site-footer">
       <p>&copy; 2026 <a href="http://localhost:1313/">Shining Moon</a>.</p>
-      <p class="footer-meta">Powered by <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a> · Theme <a href="#" target="_blank" rel="noopener">Literary</a></p>
+      <p class="footer-meta">Powered by <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a> · Theme Literary</p>
     </footer>
   </div>
 
@@ -132,8 +132,6 @@
       <path d="M10 2.5a.75.75 0 01.75.75v12.69l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 111.06-1.06L9.25 15.94V3.25A.75.75 0 0110 2.5z"/>
     </svg>
   </a>
-
-  
 
   <script>
     
@@ -153,69 +151,27 @@
     }
 
     
-    var tocToggle = document.getElementById('tocToggle');
-    var tocOverlay = document.getElementById('tocOverlay');
-    var tocClose = document.getElementById('tocClose');
-    var floatingToc = document.getElementById('floatingToc');
-
-    function openToc() {
-      if (floatingToc) floatingToc.classList.add('open');
-      if (tocOverlay) tocOverlay.classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeToc() {
-      if (floatingToc) floatingToc.classList.remove('open');
-      if (tocOverlay) tocOverlay.classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    if (tocToggle) tocToggle.addEventListener('click', openToc);
-    if (tocOverlay) tocOverlay.addEventListener('click', closeToc);
-    if (tocClose) tocClose.addEventListener('click', closeToc);
-
-    
-    var contentArea = document.querySelector('.post-content');
-    var tocBody = document.getElementById('floatingTocBody');
-    var tocToggle = document.getElementById('tocToggle');
-    if (contentArea && tocBody && tocToggle) {
-      var headings = contentArea.querySelectorAll('h2, h3');
-      if (headings.length >= 2) {
-        var tocList = document.createElement('ul');
-        tocList.className = 'toc-list';
-        headings.forEach(function(h, i) {
-          if (!h.id) {
-            h.id = 'heading-' + i;
+    var tocLinks = document.querySelectorAll('.post-toc a');
+    if (tocLinks.length > 0) {
+      var headings = [];
+      tocLinks.forEach(function(link) {
+        var id = link.getAttribute('href').slice(1);
+        var h = document.getElementById(id);
+        if (h) headings.push(h);
+      });
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            tocLinks.forEach(function(link) {
+              link.classList.remove('active');
+              if (link.getAttribute('href') === '#' + entry.target.id) {
+                link.classList.add('active');
+              }
+            });
           }
-          var li = document.createElement('li');
-          li.className = 'toc-item toc-' + h.tagName.toLowerCase();
-          var a = document.createElement('a');
-          a.href = '#' + h.id;
-          a.textContent = h.textContent;
-          li.appendChild(a);
-          tocList.appendChild(li);
         });
-        tocBody.appendChild(tocList);
-
-        
-        tocToggle.classList.add('visible');
-
-        
-        var tocLinks = tocList.querySelectorAll('a');
-        var observer = new IntersectionObserver(function(entries) {
-          entries.forEach(function(entry) {
-            if (entry.isIntersecting) {
-              tocLinks.forEach(function(link) {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === '#' + entry.target.id) {
-                  link.classList.add('active');
-                }
-              });
-            }
-          });
-        }, { rootMargin: '-80px 0px -70% 0px' });
-        headings.forEach(function(h) { observer.observe(h); });
-      }
+      }, { rootMargin: '-80px 0px -70% 0px' });
+      headings.forEach(function(h) { observer.observe(h); });
     }
   </script>
 
