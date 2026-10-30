@@ -140,7 +140,7 @@ redis subscribe channel 的时候出的错, channel list 还很长.</p>
 来监听 <code>celery-meta-{task_uuid}</code> 这个channel, 但 redis client 的 pubsub 不是线程安全的, 也不能跨 greenlet 使用.</p>
 <p>redis client 的 pubsub 在建立socket 后会执行 <code>self.on_connect</code> callback: <a href="https://github.com/andymccurdy/redis-py/blob/master/redis/client.py#L2369">https://github.com/andymccurdy/redis-py/blob/master/redis/client.py#L2369</a>, 目的是在重连的时候重新 sub 之前的 channnel. 但是 gevent patch 之后, socket 的建立会变成异步的, 并行建立执行redis pubsub 的<code>execute_command</code> 的时候会重复subscribe channel.</p>
 <p>原因是猜测, 我也没在开发环境完全复现线上的错误, 但写了个脚本证实 subscribe 的问题:</p>
-<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">gevent</span>
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">gevent</span>
 </span></span><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">gevent.monkey</span>
 </span></span><span style="display:flex;"><span><span style="color:#268bd2">gevent</span>.<span style="color:#268bd2">monkey</span>.<span style="color:#268bd2">patch_all</span>()
 </span></span><span style="display:flex;"><span>
@@ -176,7 +176,7 @@ redis subscribe channel 的时候出的错, channel list 还很长.</p>
 <p>因为升级了 gevent 和 celery, 开始不太确定问题出在哪. 但是内存异常的 service 并不是 celery 的worker 进程, 但会执行大量的 <code>apply_async</code> 的插入task 的操作.</p>
 <p>所以我猜测问题只出在 <code>apply_async</code> 这个函数上. 开始尝试在本地复现问题.</p>
 <p>写了一个简单脚本测试 <code>apply_async</code>, 因为不涉及执行 task, 所以直接不引入 gevent:</p>
-<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">resource</span>
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">resource</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">from</span> <span style="color:#268bd2">celery</span> <span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">Celery</span>
 </span></span><span style="display:flex;"><span>
@@ -269,8 +269,9 @@ Memory usage: 44592 (kb)
         (d.head || d.body).appendChild(s);
     })();
 </script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+		<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+		<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+	
 
 
     </main>

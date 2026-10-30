@@ -126,25 +126,25 @@ p95 latency 表示该时间段内 95% 的 reqeust 都比这个值快.
 );
 </code></pre>
 <table>
-  <thead>
-      <tr>
-          <th>url</th>
-          <th>time</th>
-          <th>resp_time</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>/test1</td>
-          <td>2018-10-11T00:10:00.418480Z</td>
-          <td>0.123</td>
-      </tr>
-      <tr>
-          <td>/test2</td>
-          <td>2018-10-11T00:12:00.512340Z</td>
-          <td>0.321</td>
-      </tr>
-  </tbody>
+	<thead>
+			<tr>
+					<th>url</th>
+					<th>time</th>
+					<th>resp_time</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>/test1</td>
+					<td>2018-10-11T00:10:00.418480Z</td>
+					<td>0.123</td>
+			</tr>
+			<tr>
+					<td>/test2</td>
+					<td>2018-10-11T00:12:00.512340Z</td>
+					<td>0.321</td>
+			</tr>
+	</tbody>
 </table>
 <p>要算 p95 很简单, 把 log 按分钟数分组, 用 <code>percentile_cont</code> 在组内按 <code>resp_time</code> 排序计算 就能得到:</p>
 <pre><code>select date_trunc('minute', time::timestamp) as ts,
@@ -234,8 +234,9 @@ order by 1;
         (d.head || d.body).appendChild(s);
     })();
 </script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+		<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+		<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+	
 
 
     </main>

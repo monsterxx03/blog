@@ -160,31 +160,31 @@ ingress       pod/mean-quetzal-nginx-ingress-default-backend-75696ffd5d-x7ld5   
 <p><code>nginx-ingress-default-backend</code> service type 是 LoadBalancer, 在 aws 上默认会创建一个 classic ELB.</p>
 <p>这个 ELB 的 liseners 配置如下:</p>
 <table>
-  <thead>
-      <tr>
-          <th>Load Balancer Protocol</th>
-          <th>Load Balancer Port</th>
-          <th>Instance Protocol</th>
-          <th>Instance Port</th>
-          <th>SSL Certificate</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>HTTPS</td>
-          <td>443</td>
-          <td>HTTP</td>
-          <td>32273</td>
-          <td>xxxxx (ACM)</td>
-      </tr>
-      <tr>
-          <td>HTTP</td>
-          <td>80</td>
-          <td>HTTP</td>
-          <td>30312</td>
-          <td>N/A</td>
-      </tr>
-  </tbody>
+	<thead>
+			<tr>
+					<th>Load Balancer Protocol</th>
+					<th>Load Balancer Port</th>
+					<th>Instance Protocol</th>
+					<th>Instance Port</th>
+					<th>SSL Certificate</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>HTTPS</td>
+					<td>443</td>
+					<td>HTTP</td>
+					<td>32273</td>
+					<td>xxxxx (ACM)</td>
+			</tr>
+			<tr>
+					<td>HTTP</td>
+					<td>80</td>
+					<td>HTTP</td>
+					<td>30312</td>
+					<td>N/A</td>
+			</tr>
+	</tbody>
 </table>
 <p>在 helm charts 的默认值基础上做了些修改:</p>
 <ul>
@@ -323,8 +323,9 @@ server {
         (d.head || d.body).appendChild(s);
     })();
 </script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+		<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+		<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+	
 
 
     </main>

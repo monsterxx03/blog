@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>Tachi: agent 组网(mDNS,Gossip,TailScale) 和 A2A · Shining Moon</title>
+
+  
+  <meta name="description" content="我一直觉得用 agent 干几种事情是没意义的:
+cosplay 人类工种(什么架构师，工程师，reviewer, designer&hellip;.), 把这种人类社会的低效分工强行塞给 AI 不觉得很搞笑么. 单机上的并行 agent team, 不能说没用，在 tachi 里我也并行开 subagent，但这个本 …">
+  
+
+  <meta name="author" content="Shining Moon">
+  <link rel="canonical" href="https://blog.monsterxx03.com/2026/10/30/tachi-agent-%E7%BB%84%E7%BD%91mdnsgossiptailscale-%E5%92%8C-a2a/">
+  
+
+  
+
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/style.css">
+  <link rel="stylesheet" href="https://blog.monsterxx03.com/css/home.css">
+
+  
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  
+
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-P32CTT1G2G"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-P32CTT1G2G');
+        }
+      </script>
+</head>
+<body>
+  <div class="wrapper">
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div>
+          <h1 class="site-title"><a href="/">Shining Moon</a></h1>
+          
+          <p class="site-subtitle">百种弊病,皆从懒生</p>
+          
+        </div>
+        <nav class="main-nav">
+          
+          
+          <a href="/" >
+            Home
+          </a>
+          
+          <a href="/posts/" >
+            Archive
+          </a>
+          
+          <a href="/about/" >
+            About
+          </a>
+          
+          <a href="/tags" >
+            Tags
+          </a>
+          
+          <a href="https://github.com/monsterxx03" target="_blank" rel="noopener" title="GitHub" class="nav-github">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: -3px; margin-right: 2px;">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="content">
+      
+<article>
+  <header class="post-header">
+    <h1 class="post-title">Tachi: agent 组网(mDNS,Gossip,TailScale) 和 A2A</h1>
+    <div class="post-meta">
+      <span class="post-meta-date">
+        <time datetime="2026-10-30">2026 年 10 月 30 日</time>
+      </span>
+      
+      
+      <span class="post-meta-category">· <a href="https://blog.monsterxx03.com/categories/tech/">tech</a></span>
+      
+      <span class="post-meta-reading">· 5 分钟阅读</span>
+      <span class="post-meta-words">· 2440 字</span>
+    </div>
+  </header>
+
+  
+  <details class="post-toc">
+    <summary class="post-toc-summary">目录</summary>
+    <div class="post-toc-body">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#什么是-mdns">什么是 mDNS</a></li>
+    <li><a href="#什么是-gossip">什么是 Gossip</a></li>
+    <li><a href="#用-mdns--gossip--tailscale-来组网">用 mDNS + Gossip + TailScale 来组网</a></li>
+    <li><a href="#a2a">A2A</a></li>
+    <li><a href="#实际使用场景">实际使用场景</a></li>
+  </ul>
+</nav>
+    </div>
+  </details>
+  
+
+  <div class="post-content">
+    <p>我一直觉得用 agent 干几种事情是没意义的:</p>
+<ul>
+<li>cosplay 人类工种(什么架构师，工程师，reviewer, designer&hellip;.), 把这种人类社会的低效分工强行塞给 AI 不觉得很搞笑么.</li>
+<li>单机上的并行 agent team, 不能说没用，在 tachi 里我也并行开 subagent，但这个本质上是把一个大任务拆解成可并行化的小任务去做，最后主 agent 还要汇总继续，目的主要在隔离上下文，但随着模型能力的增强，个人感觉这个的价值在渐渐降低，子 agent 返回的总归只能是摘要，存在信息损失，主 agent 还要再去做一遍 fact check, 到最后到底能省多少上下文，真难说.</li>
+</ul>
+<p>个人认为： 多 agent 是有价值的，但价值在每个 Agent 都有自己的独立执行环境, 这个环境包括:不同的网络环境，能访问到不同的数据, 能有独立的 memory.</p>
+<p>以我日常为例, 有这么几台机器在同时用:</p>
+<ul>
+<li>家里一台 nas.</li>
+<li>家里一台mini itx 小主机, 上面跑了 omarchy linux.</li>
+<li>一台境外 vps.</li>
+<li>自己的 MBP, 有时在家里，有时在外面.</li>
+</ul>
+<p>只是想打通网络环境很简单，tailscale 之类的工具够多了，都行.</p>
+<p>但每台机器上都跑一个 agent，怎么让 agent 之间互相感知呢？</p>
+<ul>
+<li>tachi@nas</li>
+<li>tachi@itx</li>
+<li>tachi@vps</li>
+<li>tachi@mbp</li>
+</ul>
+<p>每个都在配置里写另外三个节点的 ip 地址? 当然可以，可哪天我要加个设备，或者那台 vps 挂了要换，还要去找到所有跑着 tachi 的设备换地址？</p>
+<p>所以第一个问题是我要解决异构受信网络环境中的 agent 动态组网问题(mbp 不是常开，一会在线，一会不在，有时在家，有时在外), 然后再通过 a2a 来做任务委托, 每个节点都知道其他节点， a2a 就可以做成任意点对点.</p>
+<h2 id="什么是-mdns">什么是 mDNS</h2>
+<p>简单讲，就是在局域网里不依赖 DNS 服务器, 通过组播来实现服务发现，比如在局域网里连打印机，AirPlay/DLNA 投屏怎么找到电视, 都走的 mDNS.</p>
+<p>机器启动时往 224.0.0.251:5353 宣告自己的存在, 发 udp DNS 包：</p>
+<table>
+	<thead>
+			<tr>
+					<th>记录</th>
+					<th>类型</th>
+					<th>值</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>_tachi._tcp.local.</td>
+					<td>PTR</td>
+					<td>Tachi@nas-9e47c7a3._tachi._tcp.local.</td>
+			</tr>
+			<tr>
+					<td>_services._dns-sd._udp.local.</td>
+					<td>PTR</td>
+					<td>_tachi._tcp.local.</td>
+			</tr>
+			<tr>
+					<td>Tachi@nas-9e47c7a3._tachi._tcp.local.</td>
+					<td>SRV</td>
+					<td>0 0 9990 nas.local.</td>
+			</tr>
+			<tr>
+					<td>Tachi@nas-9e47c7a3._tachi._tcp.local.</td>
+					<td>TXT</td>
+					<td>&ldquo;id=9e47c7a3c6101f0b5cac9ce22c4d2b00&rdquo; &ldquo;v=1&rdquo; &ldquo;scheme=https&rdquo;</td>
+			</tr>
+			<tr>
+					<td>nas.local.</td>
+					<td>A</td>
+					<td>192.168.11.166</td>
+			</tr>
+	</tbody>
+</table>
+<p>几种记录的作用:</p>
+<ul>
+<li>PTR 记录用于宣告： 我是 <code>_tachi._tcp</code> 服务的一个实例</li>
+<li>SRV 记录用于宣告:  这个服务实例指向 nas.local:9990 这个地址</li>
+<li>TXT 记录，理解成服务自己写的 metadata， id 在我的系统内就是一个tachi 节点的唯一 id，用来固定身份.</li>
+<li>A 记录： 把nas.local 这个主机名翻译成 ip 地址.</li>
+</ul>
+<p>宣告的包会被其他机器上的订阅组播地址(224.0.0.251)的进程(即其他 tachi 实例)收到， 从 dns 包里拼出连接地址 https://192.168.11.166:9990, 并且知道它的节点 id 是 9e47c7a3c6101f0b5cac9ce22c4d2b00(后续会和 mTLS 里的证书公钥算出的 node id 做比对).</p>
+<p>到此， mDNS 就结束了，目的是在 0 配置的情况下，让局域网里的 tachi 实例互相发现.</p>
+<h2 id="什么是-gossip">什么是 Gossip</h2>
+<p>mDNS 只能在局域网里生效，对于在公网的 vps 怎么办？</p>
+<p>Gossip 是传播“我认识的 tachi” 的方式.</p>
+<p>具体到配置，局域网里只要有一台机器配置那台公网 vps 地址即可，比如在我 mbp 上的 tachi 配置:</p>
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#268bd2;font-weight:bold">peers</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#268bd2;font-weight:bold">url</span>: <span style="color:#2aa198">https://49.199.10.22:9990</span>
+</span></span></code></pre></div><p>tachi@mpb 启动后就会连上去，把这台 tachi@vps 加进自己的已知列表里，此时我的 tachi@mpb 就同时知道局域网里的所有其他 tachi + tachi@vps.</p>
+<p>局域网里的 tachi@nas, tachi@itx, 会定时向自己认识的邻居(通过 mDNS 发现的那些)，询问:&ldquo;你还认识谁&rdquo;， 问到 tachi@mbp 时，就发现了那台公网的 tachi@vps, 一定时间后，局域网里的所有机器就都认识了 tachi@vps.</p>
+<p>后续局域网里来了新机器，先通过 mDNS 找到其他局域网邻居，再通过 gossip，问邻居得知这台 tachi@vps 的存在，整个过程 0 配置。</p>
+<p>如果后面我又买了台国内的 vps 呢(tachi@cn-vps)？</p>
+<p>局域网里任意一台机器的 peers 配置里只要加上它，最终通过 gossip，所有其他机器全都会认识它，这就是“流言蜚语”的好处.</p>
+<h2 id="用-mdns--gossip--tailscale-来组网">用 mDNS + Gossip + TailScale 来组网</h2>
+<p>上一节的实例里，那台作为种子连接目标的 gossip 对象用的是公网 ip，但如果这么配的结果是，所有局域网的机器都能连上它，但它没法连上局域网里的设备.</p>
+<p>最简单的解决方法就是把公网 vps 和家里设备通过 tailscale 来组网， 大家一起进到 100.x.x.x 的 tailscale 网段来， 这样公网 vps 也连上了局域网 tachi 节点.</p>
+<h2 id="a2a">A2A</h2>
+<p>a2a 主要解决 agent 之间的任务委托， 每个agent 节点用一个 card 来表明自己的身份, tachi 中返回的实际 card 格式如下:</p>
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#268bd2;font-weight:bold">&#34;name&#34;</span>: <span style="color:#2aa198">&#34;Tachi@nas&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#268bd2;font-weight:bold">&#34;description&#34;</span>: <span style="color:#2aa198">&#34;跑在家里 nas 上(fnos), 可给用户发送微信消息&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#268bd2;font-weight:bold">&#34;version&#34;</span>: <span style="color:#2aa198">&#34;dev&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#268bd2;font-weight:bold">&#34;supportedInterfaces&#34;</span>: [
+</span></span><span style="display:flex;"><span>    { <span style="color:#268bd2;font-weight:bold">&#34;url&#34;</span>: <span style="color:#2aa198">&#34;https://100.12.47.91:9990&#34;</span>, <span style="color:#268bd2;font-weight:bold">&#34;protocolBinding&#34;</span>: <span style="color:#2aa198">&#34;HTTP+JSON&#34;</span>, <span style="color:#268bd2;font-weight:bold">&#34;protocolVersion&#34;</span>: <span style="color:#2aa198">&#34;1.0&#34;</span> }
+</span></span><span style="display:flex;"><span>  ],
+</span></span><span style="display:flex;"><span>  <span style="color:#268bd2;font-weight:bold">&#34;capabilities&#34;</span>: { <span style="color:#268bd2;font-weight:bold">&#34;pushNotifications&#34;</span>: <span style="color:#859900;font-weight:bold">false</span>, <span style="color:#268bd2;font-weight:bold">&#34;streaming&#34;</span>: <span style="color:#859900;font-weight:bold">false</span> },
+</span></span><span style="display:flex;"><span>  <span style="color:#268bd2;font-weight:bold">&#34;defaultInputModes&#34;</span>: [<span style="color:#2aa198">&#34;text/plain&#34;</span>],
+</span></span><span style="display:flex;"><span>  <span style="color:#268bd2;font-weight:bold">&#34;defaultOutputModes&#34;</span>: [<span style="color:#2aa198">&#34;text/plain&#34;</span>],
+</span></span><span style="display:flex;"><span>  <span style="color:#268bd2;font-weight:bold">&#34;securityRequirements&#34;</span>: [{ <span style="color:#268bd2;font-weight:bold">&#34;schemes&#34;</span>: { <span style="color:#268bd2;font-weight:bold">&#34;mtls&#34;</span>: {} } }],
+</span></span><span style="display:flex;"><span>  <span style="color:#268bd2;font-weight:bold">&#34;securitySchemes&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#268bd2;font-weight:bold">&#34;mtls&#34;</span>: { <span style="color:#268bd2;font-weight:bold">&#34;mtlsSecurityScheme&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#268bd2;font-weight:bold">&#34;description&#34;</span>: <span style="color:#2aa198">&#34;A Tachi node&#39;s own self-signed certificate. Any such certificate is accepted: this node identifies callers rather than authorising them.&#34;</span>
+</span></span><span style="display:flex;"><span>    }}
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#268bd2;font-weight:bold">&#34;skills&#34;</span>: [
+</span></span><span style="display:flex;"><span>    { <span style="color:#268bd2;font-weight:bold">&#34;id&#34;</span>: <span style="color:#2aa198">&#34;fnos&#34;</span>, <span style="color:#268bd2;font-weight:bold">&#34;name&#34;</span>: <span style="color:#2aa198">&#34;fnos&#34;</span>, <span style="color:#268bd2;font-weight:bold">&#34;tags&#34;</span>: <span style="color:#859900;font-weight:bold">null</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#268bd2;font-weight:bold">&#34;description&#34;</span>: <span style="color:#2aa198">&#34;Use trim-cli to sign in to and manage fnOS devices, including files, photos, applications, Docker, downloads, logs, monitoring, networking, storage, users, and Baidu Netdisk. …&#34;</span> }
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>agent 之间通过前几节的 mDNS + gossip 得知节点地址 100.x.x.x:9990.</p>
+<p>然后通过 GET <a href="https://100.x.x.x:9990/.well-known/agent-card.json">https://100.x.x.x:9990/.well-known/agent-card.json</a> 得到每个节点的身份, 内存里就有了所有 tachi 节点的身份信息(地址是什么，叫什么，能干什么).</p>
+<p>在 agent 层面，我做了几个事:</p>
+<ul>
+<li>每轮 user prompt 里通过 system reminder 的形式注入当前可达的 agent 列表&lt;name: tachi@xxx, node id: xxxxx&gt;</li>
+<li>提供两个工具: DelegateTask(按node id 来选 tachi 节点委托任务，返回 task_id), RemoteTask(根据 task_id 查询任务状态).</li>
+</ul>
+<p><img src="/posts/images/a2a.png" alt="a2a"></p>
+<p>task_id 可以理解成常规agent loop 里的一个 turn, 每次任务委托会有个contextId, 可以理解成 agent loop 的 session, DelegateTask 时支持传continue_from 参数，传入对应的contextId, 就续上了远端之前的session，达成了多轮会话的效果.</p>
+<p>在我的实现里， contextId 并不完全等于 session id, 原因在于我的 session 压缩后是创建一个新 session，新 session 的 parent_id 指向之前被压缩的 session，所以是个链式的，contextId 总是指向同链上最新的 session.</p>
+<h2 id="实际使用场景">实际使用场景</h2>
+<p>nas 上跑的 tachi 接了 weixin 的 ilink 协议，国内网络稳定，可以给我发微信消息, vps 上跑的 tachi 接了 discord，我在上面分了一堆 channel，订阅我感兴趣的 newsletter，blog 等信息, 境外网络稳定，不依赖代理，但访问 discord 本身要代理.</p>
+<p>我在本地 mpb 的 tachi 上跑着长任务，然后打算出门了，就补上一句，跑完了把结果发给 tachi@nas，让他用微信通知我， 于是过了半小时，我收到了任务结果.</p>
+<p>在 mpb 上干着活，刷着 b 站，看到某部电影的推荐，在本地 tachi 里说：“让tachi@nas 去下 xxx”, 于是 nas 上的 tachi 找到磁力链接，加进了 fnos 的下载队列, 不需要切到微信里去说.</p>
+<p>目前在个人使用场景里 a2a 不能算非常有用，主要意义是本地上下文接上远端环境，但远端收到消息的那个会话里回话没法接上本地的会话，比如上面那个出门后收到微信任务结果的场景里，我没法直接回话说：“继续干 xxx”, 可以让它开个新委托给 mpb 干活，但对 mpb 来说，是个新 session 了，接不上之前的 session.</p>
+
+  </div>
+
+  <footer class="post-footer">
+    
+    <div class="post-tags">
+      <span class="post-tags-label">Tags:</span>
+      
+      <a href="https://blog.monsterxx03.com/tags/tachi/" class="tag">tachi</a>
+      
+      <a href="https://blog.monsterxx03.com/tags/ai/" class="tag">ai</a>
+      
+      <a href="https://blog.monsterxx03.com/tags/network/" class="tag">network</a>
+      
+      <a href="https://blog.monsterxx03.com/tags/a2a/" class="tag">a2a</a>
+      
+    </div>
+    
+
+    <nav class="post-nav">
+      
+      <a href="/2026/05/23/tachi-%E4%BB%8E-0-%E5%BC%80%E5%A7%8B%E5%81%9A-agent/" rel="prev" class="post-nav-prev">
+        <span class="post-nav-direction">← 上一篇</span>
+        <span class="post-nav-title">Tachi: 从 0 开始做 agent</span>
+      </a>
+      
+      
+    </nav>
+  </footer>
+</article>
+
+
+<div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mx03" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+		<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+		<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+	
+
+
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; 2026 <a href="https://blog.monsterxx03.com/">Shining Moon</a>.</p>
+      <p class="footer-meta">Powered by <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a> · Theme Literary</p>
+    </footer>
+  </div>
+
+  <a href="#" class="back-to-top" id="backToTop" title="回到顶部">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+      <path d="M10 2.5a.75.75 0 01.75.75v12.69l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 111.06-1.06L9.25 15.94V3.25A.75.75 0 0110 2.5z"/>
+    </svg>
+  </a>
+
+  <script>
+    
+    var backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) {
+          backToTop.classList.add('visible');
+        } else {
+          backToTop.classList.remove('visible');
+        }
+      });
+      backToTop.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    
+    var tocLinks = document.querySelectorAll('.post-toc a');
+    if (tocLinks.length > 0) {
+      var headings = [];
+      tocLinks.forEach(function(link) {
+        var id = link.getAttribute('href').slice(1);
+        var h = document.getElementById(id);
+        if (h) headings.push(h);
+      });
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            tocLinks.forEach(function(link) {
+              link.classList.remove('active');
+              if (link.getAttribute('href') === '#' + entry.target.id) {
+                link.classList.add('active');
+              }
+            });
+          }
+        });
+      }, { rootMargin: '-80px 0px -70% 0px' });
+      headings.forEach(function(h) { observer.observe(h); });
+    }
+  </script>
+
+  
+  <script>
+    
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      if (target.tagName === 'IMG' && target.closest('.post-content')) {
+        if (target.classList.contains('lightbox-active')) {
+          target.classList.remove('lightbox-active');
+          return;
+        }
+        var overlay = document.createElement('div');
+        overlay.className = 'lightbox-overlay';
+        overlay.addEventListener('click', function() {
+          target.classList.remove('lightbox-active');
+          overlay.remove();
+        });
+        document.body.appendChild(overlay);
+        target.classList.add('lightbox-active');
+        setTimeout(function() {
+          overlay.classList.add('open');
+          target.classList.add('open');
+        }, 10);
+      }
+    });
+  </script>
+  
+</body>
+</html>

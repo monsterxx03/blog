@@ -118,7 +118,7 @@ celery 中 time limit 有两种, soft_time_limit 和 hard_time_limit, 区别是 
 <p>celery 中 time limit 有两种, soft_time_limit 和 hard_time_limit, 区别是 soft_time_limit 会在内部抛一个 Exception, task 可以 catch 自行处理.
 hard time limit 没法被 catch.</p>
 <p>使用如下:</p>
-<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">from</span> <span style="color:#268bd2">myapp</span> <span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">app</span>
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">from</span> <span style="color:#268bd2">myapp</span> <span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">app</span>
 </span></span><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">from</span> <span style="color:#268bd2">celery.exceptions</span> <span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">SoftTimeLimitExceeded</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#268bd2">@app.task</span>
@@ -132,7 +132,7 @@ hard time limit 没法被 catch.</p>
 <p>soft_time_limit 只在 prefork pool 里支持.</p>
 <p>我现在想让 celery 把这个 hard timeout 的情况 report 到 sentry, 看了圈代码并没法从外面 override timeout 的 callback. 只能很丑得做了个 monkey patch, 在初始化 celeryapp
 的代码里:</p>
-<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">from</span> <span style="color:#268bd2">gevent</span> <span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">Timeout</span>
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">from</span> <span style="color:#268bd2">gevent</span> <span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">Timeout</span>
 </span></span><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">from</span> <span style="color:#268bd2">celery.concurrency.base</span> <span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">apply_target</span> <span style="color:#859900">as</span> <span style="color:#268bd2">celery_apply_target</span>
 </span></span><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">from</span> <span style="color:#268bd2">celery.concurrency</span> <span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">gevent</span> <span style="color:#859900">as</span>  <span style="color:#268bd2">celery_gevent_pool</span>
 </span></span><span style="display:flex;"><span>
@@ -157,7 +157,7 @@ hard time limit 没法被 catch.</p>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#268bd2">celery_gevent_pool</span>.<span style="color:#268bd2">apply_timeout</span> = <span style="color:#268bd2">apply_timeout_with_report</span></span></span></code></pre></div>
 <p>其实稍微修改下 <a href="https://github.com/celery/celery/blob/v4.3.0rc3/celery/concurrency/gevent.py#L21">https://github.com/celery/celery/blob/v4.3.0rc3/celery/concurrency/gevent.py#L21</a>  这个函数就能让celery 支持 soft time limit:</p>
-<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#859900">def</span> <span style="color:#268bd2">apply_timeout</span>(<span style="color:#268bd2">target</span>, <span style="color:#268bd2">args</span>=(), <span style="color:#268bd2">kwargs</span>={}, <span style="color:#268bd2">callback</span>=<span style="color:#859900;font-weight:bold">None</span>,
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#859900">def</span> <span style="color:#268bd2">apply_timeout</span>(<span style="color:#268bd2">target</span>, <span style="color:#268bd2">args</span>=(), <span style="color:#268bd2">kwargs</span>={}, <span style="color:#268bd2">callback</span>=<span style="color:#859900;font-weight:bold">None</span>,
 </span></span><span style="display:flex;"><span>                  <span style="color:#268bd2">accept_callback</span>=<span style="color:#859900;font-weight:bold">None</span>, <span style="color:#268bd2">pid</span>=<span style="color:#859900;font-weight:bold">None</span>, <span style="color:#268bd2">timeout</span>=<span style="color:#859900;font-weight:bold">None</span>,
 </span></span><span style="display:flex;"><span>                  <span style="color:#268bd2">soft_timeout</span>=<span style="color:#859900;font-weight:bold">None</span>, <span style="color:#268bd2">timeout_callback</span>=<span style="color:#859900;font-weight:bold">None</span>,
 </span></span><span style="display:flex;"><span>                  <span style="color:#268bd2">Timeout</span>=<span style="color:#268bd2">Timeout</span>, <span style="color:#268bd2">apply_target</span>=<span style="color:#268bd2">base</span>.<span style="color:#268bd2">apply_target</span>, **<span style="color:#268bd2">rest</span>):
@@ -232,8 +232,9 @@ hard time limit 没法被 catch.</p>
         (d.head || d.body).appendChild(s);
     })();
 </script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+		<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+		<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+	
 
 
     </main>

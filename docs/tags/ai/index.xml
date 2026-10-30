@@ -1,27 +1,40 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Ai on Shining Moon</title>
-    <link>https://blog.monsterxx03.com/tags/ai/</link>
-    <description>Recent content in Ai on Shining Moon</description>
-    <generator>Hugo</generator>
-    <language>zh-cn</language>
-    <copyright>monsterxx03</copyright>
-    <lastBuildDate>Sat, 23 May 2026 17:34:10 +0800</lastBuildDate>
-    <atom:link href="https://blog.monsterxx03.com/tags/ai/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Tachi: 从 0 开始做 agent</title>
-      <link>https://blog.monsterxx03.com/2026/05/23/tachi-%E4%BB%8E-0-%E5%BC%80%E5%A7%8B%E5%81%9A-agent/</link>
-      <pubDate>Sat, 23 May 2026 17:34:10 +0800</pubDate>
-      <guid>https://blog.monsterxx03.com/2026/05/23/tachi-%E4%BB%8E-0-%E5%BC%80%E5%A7%8B%E5%81%9A-agent/</guid>
-      <description>&lt;p&gt;市面上各种 agent 用过不少，cursor、claudecode、codex、opencode、trae、openclaw、pi……其实也没感觉哪个对其他有降维打击，反而各有各的不爽：&#xA;要么有模型限制，换别的兼容接口要各种转接，运行过程不透明——之前做了 &lt;a href=&#34;https://github.com/monsterxx03/linko&#34;&gt;linko&lt;/a&gt;，初衷也是为了搞清楚各种 agent 都在干嘛。&#xA;要么天天升级弄出各种奇怪 bug，要么过度臃肿，要配各种看着有用实际用起来又没什么卵用的插件。&lt;/p&gt;&#xA;&lt;p&gt;所以，在 2026 年这个时间点，自己从 0 开始做一个 agent 到底有门槛吗（不限于 coding）？于是 4 月的时候开始做了 &lt;a href=&#34;https://github.com/monsterxx03/tachi&#34;&gt;tachi&lt;/a&gt;。&#xA;结论是：做一个匹配个人需求和工作流的 agent，毫无门槛，有手就能干，效果不会比任何现有工具差。要做满足通用需求的 agent，有门槛，门槛主要在产品细节的打磨和各种适配——这些对个人使用其实毫无价值，偏偏又是通用工具里工程量最大的部分。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Hacking Claude Code in Realtime</title>
-      <link>https://blog.monsterxx03.com/2026/02/15/hacking-claude-code-in-realtime/</link>
-      <pubDate>Sun, 15 Feb 2026 19:25:07 +0800</pubDate>
-      <guid>https://blog.monsterxx03.com/2026/02/15/hacking-claude-code-in-realtime/</guid>
-      <description>&lt;p&gt;做了个新玩具 &lt;a href=&#34;https://github.com/monsterxx03/linko&#34;&gt;linko&lt;/a&gt;, 本质上是个透明 mitm proxy, 但给他加上了可视化 ai agent 和 llm api 之间对话的能力.&lt;/p&gt;&#xA;&lt;p&gt;限制:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;目前只支持 MacOS (透明代理的实现用了MacOS 上的pfctl, linux 的支持很简单, 有空可以加下)&lt;/li&gt;&#xA;&lt;li&gt;支持的 llm api 只有 anthropic 的接口格式, 任意兼容的第三方接口应该都可以(测试过minimax 和 deepseek)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;原理上和 charles 之类的工具的主要区别在&amp;quot;透明&amp;quot;, 不需要客户端指定&lt;code&gt;http_proxy&lt;/code&gt;(有些工具不支持), 通过防火墙强行劫持https流量, 来做流量解密.&lt;/p&gt;</description>
-    </item>
-  </channel>
+	<channel>
+		<title>Ai on Shining Moon</title>
+		<link>https://blog.monsterxx03.com/tags/ai/</link>
+		<description>Recent content in Ai on Shining Moon</description>
+		<generator>Hugo</generator>
+		<language>zh-cn</language>
+		
+		
+		
+			<copyright>monsterxx03</copyright>
+		
+		
+			<lastBuildDate>Fri, 30 Oct 2026 22:40:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://blog.monsterxx03.com/tags/ai/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Tachi: agent 组网(mDNS,Gossip,TailScale) 和 A2A</title>
+				<link>https://blog.monsterxx03.com/2026/10/30/tachi-agent-%E7%BB%84%E7%BD%91mdnsgossiptailscale-%E5%92%8C-a2a/</link>
+				<pubDate>Fri, 30 Oct 2026 22:40:00 +0800</pubDate>
+				<guid>https://blog.monsterxx03.com/2026/10/30/tachi-agent-%E7%BB%84%E7%BD%91mdnsgossiptailscale-%E5%92%8C-a2a/</guid>
+				<description>&lt;p&gt;我一直觉得用 agent 干几种事情是没意义的:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;cosplay 人类工种(什么架构师，工程师，reviewer, designer&amp;hellip;.), 把这种人类社会的低效分工强行塞给 AI 不觉得很搞笑么.&lt;/li&gt;&#xA;&lt;li&gt;单机上的并行 agent team, 不能说没用，在 tachi 里我也并行开 subagent，但这个本质上是把一个大任务拆解成可并行化的小任务去做，最后主 agent 还要汇总继续，目的主要在隔离上下文，但随着模型能力的增强，个人感觉这个的价值在渐渐降低，子 agent 返回的总归只能是摘要，存在信息损失，主 agent 还要再去做一遍 fact check, 到最后到底能省多少上下文，真难说.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;个人认为： 多 agent 是有价值的，但价值在每个 Agent 都有自己的独立执行环境, 这个环境包括:不同的网络环境，能访问到不同的数据, 能有独立的 memory.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Tachi: 从 0 开始做 agent</title>
+				<link>https://blog.monsterxx03.com/2026/05/23/tachi-%E4%BB%8E-0-%E5%BC%80%E5%A7%8B%E5%81%9A-agent/</link>
+				<pubDate>Sat, 23 May 2026 17:34:10 +0800</pubDate>
+				<guid>https://blog.monsterxx03.com/2026/05/23/tachi-%E4%BB%8E-0-%E5%BC%80%E5%A7%8B%E5%81%9A-agent/</guid>
+				<description>&lt;p&gt;市面上各种 agent 用过不少，cursor、claudecode、codex、opencode、trae、openclaw、pi……其实也没感觉哪个对其他有降维打击，反而各有各的不爽：&#xA;要么有模型限制，换别的兼容接口要各种转接，运行过程不透明——之前做了 &lt;a href=&#34;https://github.com/monsterxx03/linko&#34;&gt;linko&lt;/a&gt;，初衷也是为了搞清楚各种 agent 都在干嘛。&#xA;要么天天升级弄出各种奇怪 bug，要么过度臃肿，要配各种看着有用实际用起来又没什么卵用的插件。&lt;/p&gt;&#xA;&lt;p&gt;所以，在 2026 年这个时间点，自己从 0 开始做一个 agent 到底有门槛吗（不限于 coding）？于是 4 月的时候开始做了 &lt;a href=&#34;https://github.com/monsterxx03/tachi&#34;&gt;tachi&lt;/a&gt;。&#xA;结论是：做一个匹配个人需求和工作流的 agent，毫无门槛，有手就能干，效果不会比任何现有工具差。要做满足通用需求的 agent，有门槛，门槛主要在产品细节的打磨和各种适配——这些对个人使用其实毫无价值，偏偏又是通用工具里工程量最大的部分。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Hacking Claude Code in Realtime</title>
+				<link>https://blog.monsterxx03.com/2026/02/15/hacking-claude-code-in-realtime/</link>
+				<pubDate>Sun, 15 Feb 2026 19:25:07 +0800</pubDate>
+				<guid>https://blog.monsterxx03.com/2026/02/15/hacking-claude-code-in-realtime/</guid>
+				<description>&lt;p&gt;做了个新玩具 &lt;a href=&#34;https://github.com/monsterxx03/linko&#34;&gt;linko&lt;/a&gt;, 本质上是个透明 mitm proxy, 但给他加上了可视化 ai agent 和 llm api 之间对话的能力.&lt;/p&gt;&#xA;&lt;p&gt;限制:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;目前只支持 MacOS (透明代理的实现用了MacOS 上的pfctl, linux 的支持很简单, 有空可以加下)&lt;/li&gt;&#xA;&lt;li&gt;支持的 llm api 只有 anthropic 的接口格式, 任意兼容的第三方接口应该都可以(测试过minimax 和 deepseek)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;原理上和 charles 之类的工具的主要区别在&amp;quot;透明&amp;quot;, 不需要客户端指定&lt;code&gt;http_proxy&lt;/code&gt;(有些工具不支持), 通过防火墙强行劫持https流量, 来做流量解密.&lt;/p&gt;</description>
+			</item>
+	</channel>
 </rss>

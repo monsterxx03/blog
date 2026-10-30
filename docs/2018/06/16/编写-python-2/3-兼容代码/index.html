@@ -162,31 +162,31 @@ _future_ python2 里自带的向后兼容模块，将 python3 的一些语法行
 <li><code>from __future__ import unicode_literals</code>, 开启后默认所有的字符串定义都会变成 unicode, 不过 <code>str</code> 还是 byte string 啦, 这个并没法解决 unicode 的问题, 所以也没用.</li>
 </ul>
 <h2 id="list-comprehension-中变量作用域的变化">list comprehension 中变量作用域的变化</h2>
-<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#268bd2">i</span>=<span style="color:#2aa198;font-weight:bold">0</span>
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#268bd2">i</span>=<span style="color:#2aa198;font-weight:bold">0</span>
 </span></span><span style="display:flex;"><span>    [<span style="color:#268bd2">i</span> <span style="color:#859900">for</span> <span style="color:#268bd2">i</span> <span style="color:#859900">in</span> <span style="color:#cb4b16">range</span>(<span style="color:#2aa198;font-weight:bold">10</span>)]
 </span></span><span style="display:flex;"><span>    <span style="color:#cb4b16">print</span>(<span style="color:#268bd2">i</span>)
 </span></span></code></pre></div><p>这段代码在 py2 中会打印9, 在 py3 中打印0, list comprehension 中的变量不再污染外部作用域.</p>
 <p>不过普通 for 循环中的变量作用域并没什么变化:</p>
-<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#268bd2">i</span> =<span style="color:#2aa198;font-weight:bold">0</span>
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#268bd2">i</span> =<span style="color:#2aa198;font-weight:bold">0</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#859900">for</span> <span style="color:#268bd2">i</span> <span style="color:#859900">in</span> <span style="color:#cb4b16">range</span>(<span style="color:#2aa198;font-weight:bold">10</span>):
 </span></span><span style="display:flex;"><span>        <span style="color:#859900">pass</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#cb4b16">print</span>(<span style="color:#268bd2">i</span>)
 </span></span></code></pre></div><p>py2 / 3 中都打印 9, 原因是 python 中并没有 block 的概念.</p>
 <p>list comprehension 如果作用在 class define 中行为也不太一样, 下面代码在 py2 里是队的， 但在 py3 里就会报错:</p>
-<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#859900">class</span> <span style="color:#cb4b16">A</span>(<span style="color:#cb4b16">object</span>):
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#859900">class</span> <span style="color:#cb4b16">A</span>(<span style="color:#cb4b16">object</span>):
 </span></span><span style="display:flex;"><span>        <span style="color:#268bd2">name</span> = <span style="color:#2aa198">&#39;test&#39;</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#268bd2">d</span> = {<span style="color:#2aa198">&#39;a&#39;</span>: <span style="color:#2aa198">&#39;1&#39;</span>, <span style="color:#2aa198">&#39;b&#39;</span>: <span style="color:#2aa198">&#39;2&#39;</span>}
 </span></span><span style="display:flex;"><span>        [<span style="color:#268bd2">d</span>.<span style="color:#268bd2">update</span>({<span style="color:#268bd2">_k</span>: <span style="color:#268bd2">name</span>}) <span style="color:#859900">for</span> <span style="color:#268bd2">_k</span> <span style="color:#859900">in</span> <span style="color:#268bd2">d</span>]
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    &gt;&gt;&gt; <span style="color:#268bd2">NameError</span>: <span style="color:#268bd2">name</span> <span style="color:#2aa198">&#39;d&#39;</span> <span style="color:#859900">is</span> <span style="color:#859900">not</span> <span style="color:#268bd2">defined</span>
 </span></span></code></pre></div><p>解决方法1, 在 class 的定义之外做更改操作:</p>
-<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#859900">class</span> <span style="color:#cb4b16">A</span>(<span style="color:#cb4b16">object</span>):
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#859900">class</span> <span style="color:#cb4b16">A</span>(<span style="color:#cb4b16">object</span>):
 </span></span><span style="display:flex;"><span>        <span style="color:#268bd2">name</span> = <span style="color:#2aa198">&#39;test&#39;</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#268bd2">d</span> = {<span style="color:#2aa198">&#39;a&#39;</span>: <span style="color:#2aa198">&#39;1&#39;</span>, <span style="color:#2aa198">&#39;b&#39;</span>: <span style="color:#2aa198">&#39;2&#39;</span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    [<span style="color:#268bd2">A</span>.<span style="color:#268bd2">d</span>.<span style="color:#268bd2">update</span>({<span style="color:#268bd2">_k</span>: <span style="color:#268bd2">A</span>.<span style="color:#268bd2">name</span>}) <span style="color:#859900">for</span> <span style="color:#268bd2">_k</span> <span style="color:#859900">in</span> <span style="color:#268bd2">A</span>.<span style="color:#268bd2">d</span>]
 </span></span></code></pre></div><p>方法2, 用一个匿名lambda 函数将 class variable 传进去:</p>
-<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#859900">class</span> <span style="color:#cb4b16">A</span>(<span style="color:#cb4b16">object</span>):
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#859900">class</span> <span style="color:#cb4b16">A</span>(<span style="color:#cb4b16">object</span>):
 </span></span><span style="display:flex;"><span>        <span style="color:#268bd2">name</span> = <span style="color:#2aa198">&#39;test&#39;</span>
 </span></span><span style="display:flex;"><span>        (<span style="color:#859900">lambda</span> <span style="color:#268bd2">name</span>=<span style="color:#268bd2">name</span>, <span style="color:#268bd2">d</span>=<span style="color:#268bd2">d</span>: [<span style="color:#268bd2">d</span>.<span style="color:#268bd2">update</span>({<span style="color:#268bd2">_k</span>: <span style="color:#268bd2">name</span>}) <span style="color:#859900">for</span> <span style="color:#268bd2">_k</span> <span style="color:#859900">in</span> <span style="color:#268bd2">d</span>])()
 </span></span></code></pre></div><p>方法2 看上去太 trick, 我用 1.</p>
@@ -236,7 +236,7 @@ raise ValueError(&quot;yahaha&quot;)
 <p>这个坑是最大的, py2 里 <code>str</code> 表示 byte string, 实际上是是带有些字符串行为的 binary data, 它和 <code>unicode</code> 的边界非常模糊,为了使用方便做了很多 hack, 所以 py2 里 <code>str</code> 和 <code>unicode</code> 经常混用, 而 <code>bytes</code> 和 <code>str</code> 完全等价,只是个 alias. py3 里 <code>str</code> 默认就是 unicode, <code>bytes</code> 就是二进制字节, <code>unicode</code> 关键词没了, 而且 <code>str</code> 和 <code>bytes</code> 分界明显,不能混在一起.</p>
 <h3 id="in-py2">in py2</h3>
 <p>你明白下面的语句,哪些会失败,哪些成功, 失败是报 <code>UnicodeDecodeError</code> 还是 <code>UnicodeEncodeError</code>, 成功的话返回值是 <code>str</code> 还是 <code>unicode</code> 呢? 准确说出来你就明白啦.</p>
-<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#2aa198">&#39;啊啊&#39;</span> + <span style="color:#2aa198">&#39;yaha&#39;</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#2aa198">u</span><span style="color:#2aa198">&#39;啊&#39;</span> + <span style="color:#2aa198">&#39;yaha&#39;</span>
@@ -337,8 +337,9 @@ raise ValueError(&quot;yahaha&quot;)
         (d.head || d.body).appendChild(s);
     })();
 </script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+		<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+		<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+	
 
 
     </main>

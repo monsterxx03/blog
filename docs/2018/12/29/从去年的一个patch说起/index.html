@@ -166,7 +166,7 @@ server 在等 client 发完整数据包. 最后就到了超时时间 40ms.</p>
 <li>server 端 socket 设置 TCP_QUICKACK, 就会关闭 delayed ack. server 端的返回 ack 包会变多.</li>
 </ul>
 <p>写个测试程序验证一下这个 40ms 问题, server 端用的是默认配置的 nginx(没有设置 TCP_QUICKACK):</p>
-<pre><code>    <div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">socket</span>
+<pre><code>    <div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">socket</span>
 </span></span><span style="display:flex;"><span><span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">time</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#268bd2">host</span> = <span style="color:#2aa198">&#39;192.168.33.10&#39;</span>
@@ -297,8 +297,9 @@ server 在等 client 发完整数据包. 最后就到了超时时间 40ms.</p>
         (d.head || d.body).appendChild(s);
     })();
 </script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+		<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+		<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+	
 
 
     </main>

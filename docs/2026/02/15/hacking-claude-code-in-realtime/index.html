@@ -145,24 +145,24 @@
 </ul>
 <p>原理上和 charles 之类的工具的主要区别在&quot;透明&quot;, 不需要客户端指定<code>http_proxy</code>(有些工具不支持), 通过防火墙强行劫持https流量, 来做流量解密.</p>
 <h2 id="安装">安装</h2>
-<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>brew tap monsterxx03/tap
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>brew tap monsterxx03/tap
 </span></span><span style="display:flex;"><span>brew install linko
 </span></span></code></pre></div><p>或者直接去 <a href="https://github.com/monsterxx03/linko/releases"> releases </a> 下 binary.</p>
 <h2 id="怎么玩">怎么玩</h2>
 <h3 id="生成-ca-证书">生成 CA 证书</h3>
-<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>linko gen-ca
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>linko gen-ca
 </span></span></code></pre></div><p>会在 <code>~/.config/linko/certs/</code> 下生成 <code>ca.crt</code> 和 <code>ca.key</code>.</p>
 <h3 id="信任证书">信任证书</h3>
-<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ~/.config/linko/certs/ca.crt
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ~/.config/linko/certs/ca.crt
 </span></span></code></pre></div><h3 id="启动-mitm-proxy">启动 MITM proxy</h3>
-<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo linko mitm
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo linko mitm
 </span></span></code></pre></div><p>proxy 默认在 9890 端口. 需要 sudo 是因为要用 pfctl 把系统流量重定向过来.</p>
 <p>默认会对系统中所有发往 443 端口的https 流量做MITM, 可以用 <code>--whitelist</code> 参数限定只对特定host 做MITM.</p>
 <p>e.g.:</p>
 <pre><code>sudo linko mitm --whitelist api.minimaxi.com,*.deepseek.com
 </code></pre>
 <p>验证:</p>
-<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl -v https://api.minimaxi.com
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl -v https://api.minimaxi.com
 </span></span></code></pre></div><p>如果看到证书是 &ldquo;Linko MITM CA&rdquo; 签的, 说明已经正常工作了.</p>
 <h3 id="打开管理界面">打开管理界面</h3>
 <p>浏览器访问 <code>http://localhost:9810</code>.</p>
@@ -170,7 +170,7 @@
 <p><img src="/posts/images/mitm.png" alt="mitm"></p>
 <h2 id="配合-claude-code-用">配合 Claude Code 用</h2>
 <p>Claude Code 用的库默认不识别自签名证书, 要手动关掉:</p>
-<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#268bd2">NODE_TLS_REJECT_UNAUTHORIZED</span>=<span style="color:#2aa198;font-weight:bold">0</span> claude
+<div class="highlight"><pre tabindex="0" style="color:#586e75;background-color:#fdf6e3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#268bd2">NODE_TLS_REJECT_UNAUTHORIZED</span>=<span style="color:#2aa198;font-weight:bold">0</span> claude
 </span></span></code></pre></div><p>然后你就可以在管理界面(LLM tab)看到 Claude Code 发的请求和收的响应了.</p>
 <p>默认的系统提示词:</p>
 <p><img src="/posts/images/cc-system.png" alt="cc-system"></p>
@@ -251,8 +251,9 @@ cursor 和 server 的交互走的connect rpc + protobuf, 如果能逆向出pb文
         (d.head || d.body).appendChild(s);
     })();
 </script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+		<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+		<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+	
 
 
     </main>

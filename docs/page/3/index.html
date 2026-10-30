@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
-	<meta name="generator" content="Hugo 0.159.2">
+	<meta name="generator" content="Hugo 0.165.0">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -98,6 +98,38 @@
 <div class="post-list">
   
   
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2019-11-29">2019 年 11 月 29 日</time>
+      <span class="post-item-reading">2 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2019/11/29/snet-dev-note/">snet dev note</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      snet: 0.5 ~ 0.6.1, 整理从上一篇以来的一些更新.
+新增选项 proxy-scope, 默认 bypassCN, 可选 global. bypassCN 会做国内外分流, global 直接让所有流量去往国外.
+host-map, 为域名指定 ip. 之前在测试一个功能的时候需要在内网让手机对某个域名的解析切换到我的测试 ip 上, 坑爹的是公司的路由器竟然没这功能, 索性在 snet 里写了这个功能, 让我的台式机发射 wifi, 手机连上来, snet 的 mode 切换成 router, listen-host 改为 0.0.0.0 就好了.
+block-hosts, 因 …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/network/" class="tag">network</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/golang/" class="tag">golang</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/snet/" class="tag">snet</a>
+        
+      </div>
+      
+      <a href="/2019/11/29/snet-dev-note/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
   
   <article class="post-item">
     <div class="post-item-meta">
@@ -334,28 +366,6 @@ ScheduleQueue 是关键, …
       </div>
       
       <a href="/2019/07/28/pyflame-%E7%9A%84-kubectl-plugin/" class="post-item-readmore">阅读全文 →</a>
-    </div>
-  </article>
-  
-  <article class="post-item">
-    <div class="post-item-meta">
-      <time datetime="2019-07-24">2019 年 07 月 24 日</time>
-      <span class="post-item-reading">2 分钟</span>
-    </div>
-    <h2 class="post-item-title">
-      <a href="/2019/07/24/%E6%9D%82%E8%B0%88/">杂谈</a>
-    </h2>
-    
-    <div class="post-item-summary">
-      回首一看, 大半年没写过杂谈系列了, 今年都没休假, 也是醉了. 随便唠叨几句.
-小区门口的大爷养的花猫生了二胎, 长特别好看, 随它们妈, 颜值吊打白猫大哥, 每天下班路过看它们在马路口咬报纸也是很有意思. 犹豫了几天要不要抱只回来, 犹豫着犹豫着就都被别人领走了, 叹.
-最近在看西泽保彦的书, 看完了一本&lt;死了7次的男人&gt;, 正在读&lt;解体诸因&gt;. 简直是发现了宝藏, 好久没有看到喜欢的推理小说了, 真的是看到最后会喊一声&quot;牛逼&quot;, 这书还是20多年前写的, 行文中的黑色幽默真是非常喜欢了. 觉着这人估计挺烦恼家庭关系的, 书里多处夹带私货.
-
-    </div>
-    
-    <div class="post-item-footer">
-      
-      <a href="/2019/07/24/%E6%9D%82%E8%B0%88/" class="post-item-readmore">阅读全文 →</a>
     </div>
   </article>
   

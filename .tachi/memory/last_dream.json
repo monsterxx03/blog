@@ -1,0 +1,113 @@
+{
+  "last_dream_at": "2026-10-30T22:57:04.320145+08:00",
+  "sessions_dreamed": 1,
+  "topics_created": 0,
+  "facts_added": 0,
+  "facts_superseded": 0,
+  "facts_pruned": 0,
+  "fact_states": {
+    "topic:blog-site.md:48e8ae01": {
+      "id": "topic:blog-site.md:48e8ae01",
+      "topic_file": "blog-site.md",
+      "decay": 1,
+      "reinforcements": 0,
+      "last_reinforced": "0001-01-01T00:00:00Z",
+      "created_at": "2026-10-30T22:58:02.24047+08:00",
+      "superseded": false
+    },
+    "topic:tachi.md:1035e79f": {
+      "id": "topic:tachi.md:1035e79f",
+      "topic_file": "tachi.md",
+      "decay": 1,
+      "reinforcements": 0,
+      "last_reinforced": "0001-01-01T00:00:00Z",
+      "created_at": "2026-10-30T22:58:02.24047+08:00",
+      "superseded": false
+    },
+    "topic:tachi.md:61544274": {
+      "id": "topic:tachi.md:61544274",
+      "topic_file": "tachi.md",
+      "decay": 1,
+      "reinforcements": 0,
+      "last_reinforced": "0001-01-01T00:00:00Z",
+      "created_at": "2026-10-30T22:58:02.24047+08:00",
+      "superseded": false
+    },
+    "topic:tachi.md:68850a38": {
+      "id": "topic:tachi.md:68850a38",
+      "topic_file": "tachi.md",
+      "decay": 1,
+      "reinforcements": 0,
+      "last_reinforced": "0001-01-01T00:00:00Z",
+      "created_at": "2026-10-30T22:58:02.24047+08:00",
+      "superseded": false
+    },
+    "topic:tachi.md:b08525b5": {
+      "id": "topic:tachi.md:b08525b5",
+      "topic_file": "tachi.md",
+      "decay": 1,
+      "reinforcements": 0,
+      "last_reinforced": "0001-01-01T00:00:00Z",
+      "created_at": "2026-10-30T22:58:02.24047+08:00",
+      "superseded": false
+    },
+    "topic:tachi.md:e939cf5a": {
+      "id": "topic:tachi.md:e939cf5a",
+      "topic_file": "tachi.md",
+      "decay": 1,
+      "reinforcements": 0,
+      "last_reinforced": "0001-01-01T00:00:00Z",
+      "created_at": "2026-10-30T22:58:02.24047+08:00",
+      "superseded": false
+    },
+    "topic:writing-conventions.md:0bab9f40": {
+      "id": "topic:writing-conventions.md:0bab9f40",
+      "topic_file": "writing-conventions.md",
+      "decay": 1,
+      "reinforcements": 0,
+      "last_reinforced": "0001-01-01T00:00:00Z",
+      "created_at": "2026-10-30T22:58:02.24047+08:00",
+      "superseded": false
+    },
+    "topic:writing-conventions.md:1239fda3": {
+      "id": "topic:writing-conventions.md:1239fda3",
+      "topic_file": "writing-conventions.md",
+      "decay": 1,
+      "reinforcements": 0,
+      "last_reinforced": "0001-01-01T00:00:00Z",
+      "created_at": "2026-10-30T22:58:02.24047+08:00",
+      "superseded": false
+    },
+    "topic:writing-conventions.md:5bb05725": {
+      "id": "topic:writing-conventions.md:5bb05725",
+      "topic_file": "writing-conventions.md",
+      "decay": 1,
+      "reinforcements": 0,
+      "last_reinforced": "0001-01-01T00:00:00Z",
+      "created_at": "2026-10-30T22:58:02.24047+08:00",
+      "superseded": false
+    },
+    "topic:writing-conventions.md:7d423472": {
+      "id": "topic:writing-conventions.md:7d423472",
+      "topic_file": "writing-conventions.md",
+      "decay": 1,
+      "reinforcements": 0,
+      "last_reinforced": "0001-01-01T00:00:00Z",
+      "created_at": "2026-10-30T22:58:02.24047+08:00",
+      "superseded": false
+    },
+    "topic:writing-conventions.md:828f6c40": {
+      "id": "topic:writing-conventions.md:828f6c40",
+      "topic_file": "writing-conventions.md",
+      "decay": 1,
+      "reinforcements": 0,
+      "last_reinforced": "0001-01-01T00:00:00Z",
+      "created_at": "2026-10-30T22:58:02.24047+08:00",
+      "superseded": false
+    }
+  },
+  "session_watermarks": {
+    "2026-10-30-225112-e02997ea": "2026-10-30T22:57:04.320145+08:00",
+    "2026-10-30-225610-8fb3f1a4": "2026-10-30T22:57:04.320145+08:00"
+  }
+}

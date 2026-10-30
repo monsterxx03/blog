@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
-	<meta name="generator" content="Hugo 0.159.2">
+	<meta name="generator" content="Hugo 0.165.0">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -98,6 +98,35 @@
 <div class="post-list">
   
   
+  
+  <article class="post-item">
+    <div class="post-item-meta">
+      <time datetime="2020-08-04">2020 年 08 月 04 日</time>
+      <span class="post-item-reading">3 分钟</span>
+    </div>
+    <h2 class="post-item-title">
+      <a href="/2020/08/04/kubectl-plugin-for-redis-cluster/">Kubectl Plugin for Redis Cluster</a>
+    </h2>
+    
+    <div class="post-item-summary">
+      在 k8s 上部署 redis cluster 后, 感觉 redis-cli 管理 redis cluster 非常别扭, 写了个 kubectl 的插件 kubectl-rc 来辅助管理 redis-cluster.
+redis-cli 难用在哪 不直观 &amp; 不统一 部分 cluster 信息是直接通过 redis protocol 获得的, 比如 cluster nodes, cluster slots, 但部分管理命令又是通过 redis-cli --cluster 执行的.
+cluster nodes, cluster slots 这些命令输出的又是 ip 和 node …
+    </div>
+    
+    <div class="post-item-footer">
+      
+      <div class="post-item-tags">
+        
+        <a href="https://blog.monsterxx03.com/tags/redis/" class="tag">redis</a>
+        
+        <a href="https://blog.monsterxx03.com/tags/k8s/" class="tag">k8s</a>
+        
+      </div>
+      
+      <a href="/2020/08/04/kubectl-plugin-for-redis-cluster/" class="post-item-readmore">阅读全文 →</a>
+    </div>
+  </article>
   
   <article class="post-item">
     <div class="post-item-meta">
@@ -363,38 +392,6 @@ instance fee, 实际支付的是 CPU+RAM 的费用 EBS fee, server 的根分区�
       </div>
       
       <a href="/2019/12/30/%E8%81%8A%E8%81%8A-aws-%E7%9A%84%E8%AE%A1%E8%B4%B9%E6%A8%A1%E5%BC%8F/" class="post-item-readmore">阅读全文 →</a>
-    </div>
-  </article>
-  
-  <article class="post-item">
-    <div class="post-item-meta">
-      <time datetime="2019-11-29">2019 年 11 月 29 日</time>
-      <span class="post-item-reading">2 分钟</span>
-    </div>
-    <h2 class="post-item-title">
-      <a href="/2019/11/29/snet-dev-note/">snet dev note</a>
-    </h2>
-    
-    <div class="post-item-summary">
-      snet: 0.5 ~ 0.6.1, 整理从上一篇以来的一些更新.
-新增选项 proxy-scope, 默认 bypassCN, 可选 global. bypassCN 会做国内外分流, global 直接让所有流量去往国外.
-host-map, 为域名指定 ip. 之前在测试一个功能的时候需要在内网让手机对某个域名的解析切换到我的测试 ip 上, 坑爹的是公司的路由器竟然没这功能, 索性在 snet 里写了这个功能, 让我的台式机发射 wifi, 手机连上来, snet 的 mode 切换成 router, listen-host 改为 0.0.0.0 就好了.
-block-hosts, 因 …
-    </div>
-    
-    <div class="post-item-footer">
-      
-      <div class="post-item-tags">
-        
-        <a href="https://blog.monsterxx03.com/tags/network/" class="tag">network</a>
-        
-        <a href="https://blog.monsterxx03.com/tags/golang/" class="tag">golang</a>
-        
-        <a href="https://blog.monsterxx03.com/tags/snet/" class="tag">snet</a>
-        
-      </div>
-      
-      <a href="/2019/11/29/snet-dev-note/" class="post-item-readmore">阅读全文 →</a>
     </div>
   </article>
   
